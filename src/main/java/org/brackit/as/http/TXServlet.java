@@ -35,13 +35,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.brackit.as.xquery.ASXQuery;
 import org.brackit.server.ServerException;
 import org.brackit.server.metadata.TXQueryContext;
 import org.brackit.server.session.Session;
 import org.brackit.server.session.SessionException;
 import org.brackit.server.tx.IsolationLevel;
 import org.brackit.server.tx.Tx;
-import org.brackit.xquery.XQuery;
 
 /**
  * 
@@ -53,7 +53,7 @@ public abstract class TXServlet extends AbstractServlet {
 
 	protected String query(Session session, String query) throws Exception {
 		ByteArrayOutputStream buf = new ByteArrayOutputStream();
-		new XQuery(query).serialize(new TXQueryContext(session.getTX(),
+		new ASXQuery(query, metaDataMgr).serialize(new TXQueryContext(session.getTX(),
 				metaDataMgr), new PrintStream(buf));
 		return buf.toString("UTF-8");
 	}
