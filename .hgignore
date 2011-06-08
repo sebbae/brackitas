@@ -1,0 +1,11 @@
+
+syntax: regexp
+^\.classpath$
+syntax: regexp
+^\.project$
+syntax: regexp
+^container$
+syntax: regexp
+^log$
+syntax: regexp
+^\.settings$
