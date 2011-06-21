@@ -51,6 +51,7 @@ import org.brackit.server.session.SessionMgr;
  * 
  */
 public abstract class AbstractServlet extends HttpServlet {
+	
 	protected static final Logger log = Logger.getLogger(AbstractServlet.class);
 
 	public static MimetypesFileTypeMap mimeMap;

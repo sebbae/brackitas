@@ -25,31 +25,37 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.xquery;
+package org.brackit.as.xquery.function.http;
 
-import org.brackit.server.metadata.manager.MetaDataMgr;
-import org.brackit.server.xquery.compiler.DBCompiler;
-import org.brackit.server.xquery.optimizer.DBOptimizer;
+import javax.servlet.http.HttpSession;
+
+import org.brackit.xquery.HttpSessionQueryContext;
+import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
-import org.brackit.xquery.XQuery;
-import org.brackit.xquery.compiler.parser.ANTLRParser;
-import org.brackit.xquery.module.Functions;
+import org.brackit.xquery.atomic.QNm;
+import org.brackit.xquery.function.AbstractFunction;
+import org.brackit.xquery.function.Signature;
+import org.brackit.xquery.xdm.Item;
+import org.brackit.xquery.xdm.Sequence;
 
 /**
- * @author Sebastian Baechle
- *
+ * 
+ * @author Henrique Valer
+ * 
  */
-public class ASXQuery extends XQuery {
+public class GetSessionAtt extends AbstractFunction {
 	
-	static {
-		Functions.predefine(function);
-		// TODO register db-specific functions
-		// Example:
-		// Functions.predefine(new GetSession());
+	public GetSessionAtt(QNm name, Signature signature) {
+		super(name, signature, true);
 	}
-	
 
-	public ASXQuery(String query, MetaDataMgr mdm) throws QueryException {
-		super(query, new ANTLRParser(), new DBOptimizer(mdm), new DBCompiler());
+	@Override
+	public Sequence execute(QueryContext ctx, Sequence[] args)
+			throws QueryException {
+		HttpSession httpSession = ((HttpSessionQueryContext) ctx)
+				.getHttpSession();
+		String vAttName = ((Item) args[0]).atomize().stringValue();
+		return (Item) httpSession.getAttribute(vAttName);
 	}
+	
 }

@@ -25,31 +25,47 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.xquery;
+package org.brackit.as.xquery.function.bit;
 
-import org.brackit.server.metadata.manager.MetaDataMgr;
-import org.brackit.server.xquery.compiler.DBCompiler;
-import org.brackit.server.xquery.optimizer.DBOptimizer;
+import java.io.PrintStream;
+
+import org.brackit.as.Util.FunctionUtils;
+import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.XQuery;
-import org.brackit.xquery.compiler.parser.ANTLRParser;
-import org.brackit.xquery.module.Functions;
+import org.brackit.xquery.atomic.Atomic;
+import org.brackit.xquery.atomic.QNm;
+import org.brackit.xquery.function.AbstractFunction;
+import org.brackit.xquery.function.Signature;
+import org.brackit.xquery.node.SubtreePrinter;
+import org.brackit.xquery.xdm.Node;
+import org.brackit.xquery.xdm.Sequence;
 
 /**
- * @author Sebastian Baechle
+ * 
+ * @author Henrique Valer
  *
  */
-public class ASXQuery extends XQuery {
-	
-	static {
-		Functions.predefine(function);
-		// TODO register db-specific functions
-		// Example:
-		// Functions.predefine(new GetSession());
-	}
-	
+public class Eval extends AbstractFunction {
+	private FunctionUtils fUtils = new FunctionUtils();
 
-	public ASXQuery(String query, MetaDataMgr mdm) throws QueryException {
-		super(query, new ANTLRParser(), new DBOptimizer(mdm), new DBCompiler());
+	public Eval(QNm name, Signature signature) {
+		super(name, signature, true);
+	}
+
+	@Override
+	public Sequence execute(QueryContext ctx, Sequence[] args)
+			throws QueryException {
+		String vQuery = null;
+		if (args[0] instanceof Atomic) {
+			vQuery = ((Atomic) args[0]).stringValue();
+		} else {
+			PrintStream buf = fUtils.createBuffer();
+			SubtreePrinter.print((Node<?>) args[0], buf);
+			vQuery = buf.toString();
+		}
+		XQuery x = new XQuery(vQuery);
+		Sequence seq = x.execute(ctx);
+		return seq;
 	}
 }

@@ -25,31 +25,49 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.xquery;
+package org.brackit.as.xquery.function.bit;
 
-import org.brackit.server.metadata.manager.MetaDataMgr;
-import org.brackit.server.xquery.compiler.DBCompiler;
-import org.brackit.server.xquery.optimizer.DBOptimizer;
+import javax.servlet.http.HttpSession;
+
+import org.brackit.server.metadata.TXQueryContext;
+import org.brackit.xquery.HttpSessionQueryContext;
+import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
-import org.brackit.xquery.XQuery;
-import org.brackit.xquery.compiler.parser.ANTLRParser;
-import org.brackit.xquery.module.Functions;
+import org.brackit.xquery.atomic.Atomic;
+import org.brackit.xquery.atomic.Bool;
+import org.brackit.xquery.atomic.QNm;
+import org.brackit.xquery.function.AbstractFunction;
+import org.brackit.xquery.function.Signature;
+import org.brackit.xquery.xdm.Sequence;
 
 /**
- * @author Sebastian Baechle
- *
+ * 
+ * @author Henrique Valer
+ * 
  */
-public class ASXQuery extends XQuery {
-	
-	static {
-		Functions.predefine(function);
-		// TODO register db-specific functions
-		// Example:
-		// Functions.predefine(new GetSession());
-	}
-	
+public class DeleteFile extends AbstractFunction {
 
-	public ASXQuery(String query, MetaDataMgr mdm) throws QueryException {
-		super(query, new ANTLRParser(), new DBOptimizer(mdm), new DBCompiler());
+	public DeleteFile(QNm name, Signature signature) {
+		super(name, signature, true);
 	}
+
+	@Override
+	public Sequence execute(QueryContext ctx, Sequence[] args)
+			throws QueryException {
+		try {
+			HttpSession httpSession = ((HttpSessionQueryContext) ctx)
+					.getHttpSession();
+			String vAppName = ((Atomic) httpSession.getAttribute("appName"))
+					.stringValue();
+			String vFileName = ((Atomic) args[0]).stringValue();
+			String delPath = "/" + vAppName + "/" + vFileName + ".xml";
+			((TXQueryContext) ctx).getMDM().drop(
+					((TXQueryContext) ctx).getTX(), delPath);
+			return Bool.TRUE;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Bool.FALSE;
+		}
+	}
+
 }

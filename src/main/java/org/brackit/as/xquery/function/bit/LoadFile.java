@@ -25,31 +25,56 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.xquery;
+package org.brackit.as.xquery.function.bit;
 
-import org.brackit.server.metadata.manager.MetaDataMgr;
-import org.brackit.server.xquery.compiler.DBCompiler;
-import org.brackit.server.xquery.optimizer.DBOptimizer;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+
+import org.brackit.xquery.ErrorCode;
+import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
-import org.brackit.xquery.XQuery;
-import org.brackit.xquery.compiler.parser.ANTLRParser;
-import org.brackit.xquery.module.Functions;
+import org.brackit.xquery.atomic.Atomic;
+import org.brackit.xquery.atomic.QNm;
+import org.brackit.xquery.atomic.Str;
+import org.brackit.xquery.function.AbstractFunction;
+import org.brackit.xquery.function.Signature;
+import org.brackit.xquery.xdm.Item;
+import org.brackit.xquery.xdm.Sequence;
 
 /**
- * @author Sebastian Baechle
- *
+ * 
+ * @author Henrique Valer
+ * 
  */
-public class ASXQuery extends XQuery {
-	
-	static {
-		Functions.predefine(function);
-		// TODO register db-specific functions
-		// Example:
-		// Functions.predefine(new GetSession());
-	}
-	
+public class LoadFile extends AbstractFunction {
 
-	public ASXQuery(String query, MetaDataMgr mdm) throws QueryException {
-		super(query, new ANTLRParser(), new DBOptimizer(mdm), new DBCompiler());
+	public LoadFile(QNm name, Signature signature) {
+		super(name, signature, true);
+	}
+
+	@Override
+	public Sequence execute(QueryContext ctx, Sequence[] args)
+			throws QueryException {
+		String fName = ((Atomic) args[0]).stringValue();
+		File f = new File(fName);
+
+		byte[] buffer = new byte[(int) f.length()];
+		BufferedInputStream in = null;
+		try {
+			in = new BufferedInputStream(new FileInputStream(f));
+			in.read(buffer);
+		} catch (IOException e) {
+			throw new QueryException(e, ErrorCode.ERR_PARSING_ERROR, e
+					.getMessage());
+		} finally {
+			if (in != null)
+				try {
+					in.close();
+				} catch (IOException ignored) {
+				}
+		}
+		return (Item) new Str(new String(buffer));
 	}
 }
