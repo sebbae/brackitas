@@ -35,6 +35,9 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
 import org.apache.log4j.Logger;
+import org.brackit.as.http.app.AppController;
+import org.brackit.as.http.app.AppDispatcher;
+import org.brackit.as.http.app.AppError;
 import org.brackit.as.http.rpc.DBServlet;
 import org.brackit.as.http.rpc.ProcedureServlet;
 import org.brackit.as.http.rpc.XQueryServlet;
@@ -79,6 +82,10 @@ public class HttpConnector {
 	public static final String UI_DISPATCHER_PREFIX = "/ui/dispatcher/*";
 	public static final String UI_ERROR_PREFIX = "/ui/error/*";
 	public static final String UI_PREFIX = "/ui/*";
+	// Path specifications for eCommerce platform
+	public static final String APP_ERROR_PREFIX = "/app/error/*";
+	public static final String APP_DISPATCHER_PREFIX = "/app/dispatcher/*";
+	public static final String APP_CONTROLLER_PREFIX = "/app/*";
 
 	private final Server server;
 
@@ -118,6 +125,14 @@ public class HttpConnector {
 				UI_DISPATCHER_PREFIX);
 		servletContextHandler.addServlet(ErrorServlet.class, UI_ERROR_PREFIX);
 		servletContextHandler.addServlet(FrontController.class, UI_PREFIX);
+
+		// applications platform servlets
+		servletContextHandler.addServlet(AppDispatcher.class,
+				APP_DISPATCHER_PREFIX);
+		servletContextHandler.addServlet(AppController.class,
+				APP_CONTROLLER_PREFIX);
+		servletContextHandler.addServlet(AppError.class, APP_ERROR_PREFIX);
+
 		server.setHandler(servletContextHandler);
 
 		servletContextHandler.addEventListener(new HttpSessionListener() {

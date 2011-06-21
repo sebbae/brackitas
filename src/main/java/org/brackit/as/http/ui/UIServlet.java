@@ -102,21 +102,22 @@ public abstract class UIServlet extends TXServlet {
 	private void createDefaultDocuments(Tx tx) throws ServerException,
 			IOException, DocumentException {
 		// store files for http access
+		String docPath = "src/main/html/";
 		metaDataMgr.create(tx, "form.html", new DocumentParser(new File(
-				"html/form.html")));
+				docPath + "form.html")));
 		metaDataMgr.create(tx, "upload.html", new DocumentParser(new File(
-				"html/upload.html")));
+				docPath + "upload.html")));
 		metaDataMgr.create(tx, "download.html", new DocumentParser(new File(
-				"html/download.html")));
+				docPath + "download.html")));
 		metaDataMgr.create(tx, "procedure.html", new DocumentParser(new File(
-				"html/procedure.html")));
+				docPath + "procedure.html")));
 		metaDataMgr.create(tx, "error.html", new DocumentParser(new File(
-				"html/error.html")));
-		InputStream in = new FileInputStream("html/css/XTCcss.css");
+				docPath + "error.html")));
+		InputStream in = new FileInputStream(docPath + "css/XTCcss.css");
 		metaDataMgr.putBlob(tx, in, "/XTCcss.css", -1);
-		in = new FileInputStream("html/js/XTCjs.js");
+		in = new FileInputStream(docPath + "js/XTCjs.js");
 		metaDataMgr.putBlob(tx, in, "/XTCjs.js", -1);
-		in = new FileInputStream("html/images/xtc.png");
+		in = new FileInputStream(docPath + "images/xtc.png");
 		metaDataMgr.putBlob(tx, in, "/xtc.png", -1);
 	}
 

@@ -77,7 +77,7 @@ public abstract class AbstractServlet extends HttpServlet {
 		mimeMap = new MimetypesFileTypeMap();
 
 		try {
-			FileInputStream fs = new FileInputStream("html/mime.types");
+			FileInputStream fs = new FileInputStream("src/main/html/mime.types");
 			DataInputStream in = new DataInputStream(fs);
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
 			String strLine = null;

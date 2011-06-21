@@ -25,57 +25,50 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.http.ui;
+package org.brackit.as.http.app;
 
+import org.brackit.server.session.Session;
+import org.brackit.xquery.QueryContext;
+import org.brackit.xquery.XQuery;
+
+import java.io.IOException;
 import java.io.PrintStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.brackit.server.session.Session;
-import org.brackit.server.session.SessionException;
-import org.brackit.server.tx.TxException;
+import org.brackit.as.http.TXServlet;
 
-public class FormDownloadServlet extends UIServlet {
-	/**
-	 * Executes a query to select all files in the database, returning a html
-	 * list with this files and the link for their download places. Then
-	 * executes a query to retrieve the download form and insert the HTML list
-	 * in this download form.
-	 * 
-	 * @param req
-	 *            HTTP request
-	 * @param resp
-	 *            HTTP response
-	 * @return String with the web page containing form for upload files to XTC
-	 *         database
-	 * @throws SessionException
-	 * @throws TxException
-	 * @throws XQueryException
-	 */
+/**
+ * 
+ * @author Henrique Valer
+ *
+ */
+public class AppError extends TXServlet {
+
+	private void showError(HttpServletRequest req, HttpServletResponse resp,
+			Session session) throws IOException {
+		try {
+			QueryContext ctx = new QueryContext();
+			XQuery x = new XQuery("util:template("
+					+ (String) req.getAttribute("errorMsg") + ")");
+			x.serialize(ctx, new PrintStream(resp.getOutputStream()));
+			resp.setStatus(HttpServletResponse.SC_OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp,
-			Session session) throws Exception {
-		String vReturn = null;
-
-		String XQuery_DB_FILES = "let $master := doc(\"_master.xml\")/xtc//dir[@name=\"%s\"] return <ul>"
-				+ "{for $i in $master/doc "
-				+ "let $preText := \"http://localhost:8080/ui/?payload=file_download&amp;file_name=\" "
-				+ "return <li><a href=\"{concat(data($preText),data($i/@name))}\">File:{data($i/@name)}</a></li>} "
-				+ "{for $i in $master/blob "
-				+ "let $preText := \"http://localhost:8080/ui/?payload=file_download&amp;file_name=\" "
-				+ "return <li><a href=\"{concat(data($preText),data($i/@name))}\">File:{data($i/@name)}</a></li>} "
-				+ "</ul>";
-
-		vReturn = query(session, "fn:doc('download.html')");
-		String strListFile = query(session, String.format(XQuery_DB_FILES, "/"));
-		strListFile = strListFile.replaceAll("&", "&amp;").replaceAll(
-				"file_name=/", "file_name=");
-		vReturn = vReturn.replaceAll(
-				"<input type=\"hidden\" name=\"result\" />", strListFile);
-
-		// result output
-		new PrintStream(resp.getOutputStream()).append(vReturn);
-		resp.setStatus(HttpServletResponse.SC_OK);
+			Session session) throws IOException {
+		this.showError(req, resp, session);
 	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp,
+			Session session) throws IOException {
+		this.showError(req, resp, session);
+	}
+
 }
