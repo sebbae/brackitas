@@ -40,8 +40,15 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.brackit.as.http.HttpConnector;
 import org.brackit.server.metadata.DBItem;
 import org.brackit.server.session.Session;
+import org.brackit.xquery.ErrorCode;
+import org.brackit.xquery.QueryException;
+import org.brackit.xquery.atomic.Bool;
+import org.brackit.xquery.compiler.parser.XQueryParser.catchClause_return;
 import org.brackit.xquery.node.parser.DocumentParser;
 import org.brackit.xquery.util.path.Path;
+import org.brackit.xquery.xdm.Collection;
+import org.brackit.xquery.xdm.Node;
+import org.brackit.xquery.xdm.Stream;
 
 /**
  * 
@@ -54,14 +61,36 @@ public class DBServlet extends RPCServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp,
 			Session session) throws Exception {
-		String document = req.getRequestURI();
-		document = document.substring(HttpConnector.GET_PREFIX.length() - 1);
-		DBItem<?> dbitem = metaDataMgr.getItem(session.getTX(), document);
-		resp.setContentType(getMimeType(dbitem.getName()));
-		Path<String> path = Path.parse(dbitem.getName());
+		String docName = req.getRequestURI();
+		docName = docName.substring(HttpConnector.GET_PREFIX.length() - 1);
+		DBItem<?> dbitem =  metaDataMgr.getItem(session.getTX(), docName);
+
+		
+		//Collection<?> collection = metaDataMgr.getItem(session.getTX(), docName); // .lookup(session.getTX(), docName);
+		//Stream<? extends Node<?>> docs = collection.getDocuments();
+//		Node<?> document;
+//		String vReturn = "null";
+//		try {
+//			document = (Node<?>) docs.next();
+//
+//			if (document == null) {
+//					vReturn = "Error acessing the document " + docName;
+//			} else {
+//					vReturn = document.getSubtree().toString();
+//			}
+//		}
+//		catch (Exception E) {
+//			
+//		}
+		
+		
+		resp.setContentType(getMimeType(docName));
+		Path<String> path = Path.parse(docName);
 		String tail = path.tail();
 		resp.setHeader("Content-disposition", String.format(
 				"inline; filename=%s", tail));
+		//resp.getOutputStream().print(vReturn);
+		
 		dbitem.serialize(resp.getOutputStream());
 	}
 

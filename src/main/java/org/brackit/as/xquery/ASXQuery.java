@@ -42,7 +42,7 @@ import org.brackit.xquery.module.Functions;
 public class ASXQuery extends XQuery {
 	
 	static {
-		Functions.predefine(function);
+		//Functions.predefine(function);
 		// TODO register db-specific functions
 		// Example:
 		// Functions.predefine(new GetSession());
