@@ -37,6 +37,11 @@ import org.brackit.server.session.Session;
 import org.brackit.server.session.SessionException;
 import org.brackit.server.tx.TxException;
 
+/**
+ * 
+ * @author Henrique Valer
+ * 
+ */
 public class QueryServlet extends UIServlet {
 	/**
 	 * Executes a query on the database to select the HTML form, then takes the

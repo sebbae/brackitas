@@ -18,13 +18,13 @@ let $content :=
         (string-length($itemDescription) > 0) and 
         (not(contains($itemName,' ')))) then
     	let 
-    		$a := xtc:storeFile(concat(http:getSessionAtt('appName'),'/items/',$itemName),
+    		$a := bit:storeFile(concat(http:getSessionAtt('appName'),'/items/',$itemName),
     		                    local:Item($itemName,$itemDescription))
     	return
     		<p> Item {$a/item/data(name)} created sucessfully </p>
     else
     	<p> Item {$itemName} not created. Validation problems. </p>
 return 
-	xtc:template($content)
+	util:template($content)
 
 	

@@ -36,6 +36,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * 
+ * @author Henrique Valer
+ * 
+ */
 public class ErrorServlet extends UIServlet {
 	/**
 	 * Both get and post errors are processed equally. The message is displayed

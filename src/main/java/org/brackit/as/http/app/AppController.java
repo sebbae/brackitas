@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.brackit.as.http.TXServlet;
+import org.brackit.server.session.Session;
 import org.brackit.xquery.atomic.Atomic;
 import org.brackit.xquery.atomic.Str;
 
@@ -44,7 +45,7 @@ import org.brackit.xquery.atomic.Str;
  * @author Henrique Valer
  * 
  */
-public class AppController extends TXServlet {
+public class AppController extends AppServlet {
 
 	/**
 	 * Both get and post request are processed equally. The login is made and
@@ -94,14 +95,14 @@ public class AppController extends TXServlet {
 	 * can be send to the right servlet.
 	 */
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp,
+			Session session) throws Exception {
 		this.process(req, resp);
 	}
 
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp,
+			Session session) throws Exception {
 		this.process(req, resp);
 	}
 

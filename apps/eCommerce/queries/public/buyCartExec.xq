@@ -25,7 +25,7 @@ declare function local:cart($name as xs:string,
 
 let $content := 
     let 
-        $a := xtc:storeFile(concat(http:getSessionAtt('appName'),'/carts/',fn:concat($cliName,$cliAddress)),
+        $a := bit:storeFile(concat(http:getSessionAtt('appName'),'/carts/',fn:concat($cliName,$cliAddress)),
                             local:cart($cliName,$cliAddress))
     return
         if (http:removeSessionAtt('cart')) then
@@ -33,4 +33,4 @@ let $content :=
         else
             <p> Problems with buying order. </p>
 return 
-    xtc:template($content)
+    util:template($content)

@@ -28,9 +28,13 @@
 package org.brackit.as.http;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -49,6 +53,7 @@ import org.brackit.server.tx.Tx;
  * 
  */
 public abstract class TXServlet extends AbstractServlet {
+	
 	protected static final Logger log = Logger.getLogger(TXServlet.class);
 
 	protected String query(Session session, String query) throws Exception {
@@ -103,5 +108,5 @@ public abstract class TXServlet extends AbstractServlet {
 		} catch (SessionException e) {
 			throw new ServletException(e);
 		}
-	}
+	}	
 }

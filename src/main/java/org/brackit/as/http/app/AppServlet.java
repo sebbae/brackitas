@@ -25,15 +25,10 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.http.ui;
+package org.brackit.as.http.app;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -42,111 +37,20 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.brackit.as.http.TXServlet;
 import org.brackit.server.ServerException;
-import org.brackit.server.metadata.manager.impl.ItemNotFoundException;
 import org.brackit.server.session.Session;
-import org.brackit.server.session.SessionException;
 import org.brackit.server.tx.Tx;
-import org.brackit.xquery.node.parser.DocumentParser;
-import org.brackit.xquery.xdm.DocumentException;
 
 /**
  * 
- * @author Sebastian Baechle
+ * @author Henrique Valer
  * 
  */
-public abstract class UIServlet extends TXServlet {
-	protected static final Helper helper = new Helper();
+public class AppServlet extends TXServlet {
 
-	private static boolean initialized;
-
-	@Override
-	public void init(ServletConfig config) throws ServletException {
-		super.init(config);
-		checkDefaultDocuments();
-	}
-
-	private synchronized void checkDefaultDocuments() {
-		if (initialized) {
-			return;
-		}
-
-		Session session = null;
-		Tx tx = null;
-
-		try {
-			session = sessionMgr.getSession(sessionMgr.login());
-			tx = session.getTX();
-			try {
-				metaDataMgr.lookup(tx, "/form.html");
-			} catch (ItemNotFoundException e) {
-				createDefaultDocuments(tx);
-			}
-			session.commit();
-			initialized = true;
-		} catch (Throwable e) {
-			log.error(e);
-			if (tx != null) {
-				try {
-					session.rollback();
-				} catch (SessionException e1) {
-					log.error(e1);
-				}
-			}
-		} finally {
-			if (session != null) {
-				sessionMgr.logout(session.getSessionID());
-			}
-		}
-	}
-
-	private void createDefaultDocuments(Tx tx) throws ServerException,
-			IOException, DocumentException {
-		// store files for http access
-		String docPath = "src/main/html/";
-		metaDataMgr.create(tx, "form.html", new DocumentParser(new File(docPath
-				+ "form.html")));
-		metaDataMgr.create(tx, "upload.html", new DocumentParser(new File(
-				docPath + "upload.html")));
-		metaDataMgr.create(tx, "download.html", new DocumentParser(new File(
-				docPath + "download.html")));
-		metaDataMgr.create(tx, "procedure.html", new DocumentParser(new File(
-				docPath + "procedure.html")));
-		metaDataMgr.create(tx, "error.html", new DocumentParser(new File(
-				docPath + "error.html")));
-		InputStream in = new FileInputStream(docPath + "css/XTCcss.css");
-		metaDataMgr.putBlob(tx, in, "/XTCcss.css", -1);
-		in = new FileInputStream(docPath + "js/XTCjs.js");
-		metaDataMgr.putBlob(tx, in, "/XTCjs.js", -1);
-		in = new FileInputStream(docPath + "images/xtc.png");
-		metaDataMgr.putBlob(tx, in, "/xtc.png", -1);
-	}
+	protected static final String errorServ = "/app/error/";
 
 	@Override
-	protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		Session session = getSession(req);
-		Tx tx = session.checkTX();
-
-		try {
-			doDelete(req, resp, session);
-		} catch (Throwable e) {
-			log.error(e);
-			try {
-				if (tx == null) {
-					session.rollback();
-				}
-			} catch (ServerException e1) {
-				log.error(e1);
-			}
-			req.setAttribute("errorMsg", e.getMessage());
-			doDispatch(req, resp, "/ui/error/");
-		} finally {
-			cleanup(session, tx);
-		}
-	}
-
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+	protected final void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		Session session = getSession(req);
 		Tx tx = session.checkTX();
@@ -163,14 +67,14 @@ public abstract class UIServlet extends TXServlet {
 				log.error(e1);
 			}
 			req.setAttribute("errorMsg", e.getMessage());
-			doDispatch(req, resp, "/ui/error/");
+			doDispatch(req, resp, errorServ);
 		} finally {
 			cleanup(session, tx);
 		}
 	}
 
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+	protected final void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		Session session = getSession(req);
 		Tx tx = session.checkTX();
@@ -187,14 +91,14 @@ public abstract class UIServlet extends TXServlet {
 				log.error(e1);
 			}
 			req.setAttribute("errorMsg", e.getMessage());
-			doDispatch(req, resp, "/ui/error/");
+			doDispatch(req, resp, errorServ);
 		} finally {
 			cleanup(session, tx);
 		}
 	}
 
 	@Override
-	protected void doPut(HttpServletRequest req, HttpServletResponse resp)
+	protected final void doPut(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		Session session = getSession(req);
 		Tx tx = session.checkTX();
@@ -211,16 +115,15 @@ public abstract class UIServlet extends TXServlet {
 				log.error(e1);
 			}
 			req.setAttribute("errorMsg", e.getMessage());
-			doDispatch(req, resp, "/ui/error/");
+			doDispatch(req, resp, errorServ);
 		} finally {
 			cleanup(session, tx);
 		}
 	}
 
 	@Override
-	protected void service(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		ServletContext context = getServletContext();
+	protected final void service(HttpServletRequest req,
+			HttpServletResponse resp) throws ServletException, IOException {
 		Session session = getSession(req);
 		Tx tx = session.checkTX();
 
@@ -236,15 +139,16 @@ public abstract class UIServlet extends TXServlet {
 				log.error(e1);
 			}
 			req.setAttribute("errorMsg", e.getMessage());
-			doDispatch(req, resp, "/ui/error/");
+			doDispatch(req, resp, errorServ);
 		} finally {
 			cleanup(session, tx);
 		}
 	}
 
 	@Override
-	public void service(ServletRequest req, ServletResponse resp)
+	public final void service(ServletRequest arg0, ServletResponse arg1)
 			throws ServletException, IOException {
-		super.service(req, resp);
+		super.service(arg0, arg1);
 	}
+
 }

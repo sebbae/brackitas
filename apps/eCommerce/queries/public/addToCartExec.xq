@@ -48,7 +48,7 @@ let
                 (: first item to the cart :)
                 let 
                     (: TODO: improve searching mechanism with better xpath :)
-                    $docItem := fn:doc('_master.xml')/xtc//doc[(xs:string(@name))=fn:concat('/',http:getSessionAtt('appName'),'/items/',$itemName,'.xml')] 
+                    $docItem := fn:doc('_master.xml')/bit//doc[(xs:string(@name))=fn:concat('/',http:getSessionAtt('appName'),'/items/',$itemName,'.xml')] 
                 return 
                     let 
                         $item := fn:doc($docItem/@name) 
@@ -70,9 +70,9 @@ return
     (:  :)
     if (fn:string-length($content) > 0) then
         let 
-            $a := xtc:loadFile('apps/eCommerce/queries/public/showCartForm.xq') 
+            $a := bit:loadFile('apps/eCommerce/queries/public/showCartForm.xq') 
         return 
-            xtc:eval($a)
+            bit:eval($a)
     else
-        xtc:template(<p>Error adding item to cart!</p>) 
+        util:template(<p>Error adding item to cart!</p>) 
 

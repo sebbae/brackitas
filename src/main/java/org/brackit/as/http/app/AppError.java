@@ -37,14 +37,12 @@ import java.io.PrintStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.brackit.as.http.TXServlet;
-
 /**
  * 
  * @author Henrique Valer
- *
+ * 
  */
-public class AppError extends TXServlet {
+public class AppError extends AppServlet {
 
 	private void showError(HttpServletRequest req, HttpServletResponse resp,
 			Session session) throws IOException {

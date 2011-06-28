@@ -51,7 +51,7 @@ public class ProcedureServlet extends UIServlet {
 	 *            HTTP request
 	 * @param resp
 	 *            HTTP response
-	 * @return String with the web page containing form for upload files to XTC
+	 * @return String with the web page containing form for upload files to Brackit
 	 *         database
 	 * @throws SessionException
 	 * @throws TxException
@@ -163,7 +163,7 @@ public class ProcedureServlet extends UIServlet {
 
 	/**
 	 * getProceduresSelectList: List a HTML select like of the procedures
-	 * available under XTC database.
+	 * available under Brackit database.
 	 * 
 	 * @return a string with this HTML select list of procedures.
 	 */
@@ -188,7 +188,7 @@ public class ProcedureServlet extends UIServlet {
 	}
 
 	/**
-	 * getProceduresCount: Returns the number of procedures under XTC database.
+	 * getProceduresCount: Returns the number of procedures under Brackit database.
 	 * 
 	 * @return integer
 	 */

@@ -4,4 +4,4 @@ let $content :=
     else
         <p> Not loged out. Logout problems. </p>
 return 
-    xtc:template($content)
+    util:template($content)

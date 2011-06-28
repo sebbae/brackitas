@@ -35,6 +35,7 @@ import java.io.PrintStream;
 import javax.servlet.http.HttpSession;
 
 import org.brackit.as.Util.FunctionUtils;
+import org.brackit.as.xquery.ASXQuery;
 import org.brackit.xquery.HttpSessionQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -54,7 +55,7 @@ import org.brackit.xquery.xdm.Sequence;
  * 
  */
 public class Template extends AbstractFunction {
-	
+
 	public Template(QNm name, Signature signature) {
 		super(name, signature, true);
 		this.populateFields();
@@ -103,13 +104,13 @@ public class Template extends AbstractFunction {
 				arg = buf.toString();
 			}
 			if (arg.length() == 0) {
-				toBeEval = "xtc:eval(xtc:loadFile('apps/" + appName
+				toBeEval = "bit:eval(bit:loadFile('apps/" + appName
 						+ "/views/default/" + getTempField(i) + ".xq'))";
 			} else {
 				try {
 					FileInputStream in = new FileInputStream("apps/" + appName
 							+ "/views/" + getTempField(i) + ".xq");
-					toBeEval = "xtc:eval(xtc:loadFile('apps/" + appName
+					toBeEval = "bit:eval(bit:loadFile('apps/" + appName
 							+ "/views/" + getTempField(i) + ".xq'))";
 				} catch (FileNotFoundException e) {
 					toBeEval = arg;
@@ -120,13 +121,13 @@ public class Template extends AbstractFunction {
 		// case of call only with content parameter
 		if (args.length == 1) {
 			for (int i = 1; i < this.tempFields.length; i++) {
-				toBeEval = "xtc:eval(xtc:loadFile('apps/" + appName
+				toBeEval = "bit:eval(bit:loadFile('apps/" + appName
 						+ "/views/default/" + getTempField(i) + ".xq'))";
 				ctx.bind(new QNm(getTempField(i)), new Str(toBeEval));
 			}
 		}
 		File f = new File("apps/" + appName + "/views/default/template.xq");
-		XQuery x = new XQuery(f);
+		XQuery x = new ASXQuery(f);
 		x.setPrettyPrint(true);
 		return x.execute(ctx);
 	}

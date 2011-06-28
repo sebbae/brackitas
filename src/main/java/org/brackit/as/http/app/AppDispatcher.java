@@ -38,6 +38,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.brackit.as.http.TXServlet;
+import org.brackit.as.xquery.ASXQuery;
+import org.brackit.xquery.HttpSessionQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.XQuery;
 import org.brackit.xquery.atomic.Atomic;
@@ -55,7 +57,7 @@ import org.brackit.xquery.xdm.Type;
  * @author Henrique Valer
  * 
  */
-public class AppDispatcher extends TXServlet {
+public class AppDispatcher extends AppServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp,
@@ -79,11 +81,11 @@ public class AppDispatcher extends TXServlet {
 				.stringValue();
 
 		// was HttpSessionQueryContext
-		QueryContext ctx = new QueryContext();
+		QueryContext ctx = new HttpSessionQueryContext(req.getSession());
 		try {
 			// Dinamic binding of parameters: name = variable name
 			File fBase = getQueryFile(appName, pageName);
-			XQuery x = new XQuery(fBase);
+			XQuery x = new ASXQuery(fBase, metaDataMgr);
 			for (ExtVariable var : x.getMainModule().getVariables()) {
 				SequenceType type = var.getType();
 				if ((type != null) && (var.getType().getItemType().isAtomic())) {

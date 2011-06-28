@@ -1,6 +1,6 @@
 let $content := 
 	let 
-		$master := doc('_master.xml')/xtc//dir[xs:string(@name)=fn:concat('/',http:getSessionAtt('appName'),'/items')] 
+		$master := doc('_master.xml')/bit//dir[xs:string(@name)=fn:concat('/',http:getSessionAtt('appName'),'/items')] 
 	return 
 		<ul>
 			{

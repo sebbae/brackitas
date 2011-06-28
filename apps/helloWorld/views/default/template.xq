@@ -5,7 +5,7 @@ declare variable $content as xs:string external;
 declare variable $footer as xs:string external;
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
-{xtc:eval($head);}
+{bit:eval($head);}
 <body>
   <div class="page_margins">    
     <div id="border-top">
@@ -14,27 +14,27 @@ declare variable $footer as xs:string external;
     </div>
 	<div class="page">
 	  <div id="header" align="center">
-		{xtc:eval($header);}
+		{bit:eval($header);}
 	  </div>
 	  <div id="main">
 	    <div id="col1">
 		  <div id="nav">
 		    <a id="navigation" name="navigation"></a>
 		    <div class="vlist">
-		  	  {xtc:eval($menu);}
+		  	  {bit:eval($menu);}
 		    </div>
 		  </div>	    
 	    </div>
 	    <div id="col3">
 	      <div id="col3_content" class="clearfix">
-		  	{xtc:eval($content);}
+		  	{bit:eval($content);}
 	      </div>
 	      <div id="ie_clearing">
 	      </div>
 	    </div>
 	  </div>
 	  <div id="footer">
-		{xtc:eval($footer);}
+		{bit:eval($footer);}
 	  </div>
 	</div>
     <div id="border-bottom">

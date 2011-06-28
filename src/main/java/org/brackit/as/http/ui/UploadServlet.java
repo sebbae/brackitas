@@ -74,9 +74,9 @@ public class UploadServlet extends UIServlet {
 	}
 
 	/**
-	 * Receives a document via a Form post and insert the document in the XTC
-	 * database. Return the Upload page with the respective message of upload
-	 * success or fail
+	 * Receives a document via a Form post and insert the document in the
+	 * Brackit database. Return the Upload page with the respective message of
+	 * upload success or fail
 	 * 
 	 * @param req
 	 *            HTTP request

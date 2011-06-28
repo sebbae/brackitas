@@ -28,4 +28,4 @@ return
             </table>
         </form>
     return 
-        xtc:template($content)
+        util:template($content)

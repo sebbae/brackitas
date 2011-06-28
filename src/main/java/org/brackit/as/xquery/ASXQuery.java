@@ -27,6 +27,11 @@
  */
 package org.brackit.as.xquery;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+
 import org.brackit.as.xquery.function.bit.DeleteFile;
 import org.brackit.as.xquery.function.bit.Eval;
 import org.brackit.as.xquery.function.bit.LoadFile;
@@ -39,10 +44,13 @@ import org.brackit.as.xquery.function.util.Template;
 import org.brackit.server.metadata.manager.MetaDataMgr;
 import org.brackit.server.xquery.compiler.DBCompiler;
 import org.brackit.server.xquery.optimizer.DBOptimizer;
+import org.brackit.xquery.ErrorCode;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.XQuery;
 import org.brackit.xquery.atomic.QNm;
+import org.brackit.xquery.compiler.optimizer.DefaultOptimizer;
 import org.brackit.xquery.compiler.parser.ANTLRParser;
+import org.brackit.xquery.compiler.translator.PipelineCompiler;
 import org.brackit.xquery.function.Signature;
 import org.brackit.xquery.module.Functions;
 import org.brackit.xquery.module.Namespaces;
@@ -130,4 +138,21 @@ public class ASXQuery extends XQuery {
 	public ASXQuery(String query, MetaDataMgr mdm) throws QueryException {
 		super(query, new ANTLRParser(), new DBOptimizer(mdm), new DBCompiler());
 	}
+	
+	/**
+	 * Constructor receiving file directly, instead of pure XQuery as text.
+	 * 
+	 * @param pFile
+	 * @throws QueryException
+	 * @throws IOException
+	 */
+	public ASXQuery(File pFile, MetaDataMgr mdm) throws QueryException {
+		super(pFile, new ANTLRParser(), new DBOptimizer(mdm), new DBCompiler());
+	}
+
+	public ASXQuery(File pFile) throws QueryException {
+		super(pFile, new ANTLRParser(), new DefaultOptimizer(), new DBCompiler());
+	}
+	
+	
 }

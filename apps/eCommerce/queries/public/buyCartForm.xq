@@ -16,9 +16,9 @@ let
                     <td colspan="2">
                     {
                         let 
-                            $a := xtc:loadFile('apps/eCommerce/queries/public/showCart.xq') 
+                            $a := bit:loadFile('apps/eCommerce/queries/public/showCart.xq') 
                         return 
-                            xtc:eval($a)
+                            bit:eval($a)
                     }
                     </td>
                 </tr>

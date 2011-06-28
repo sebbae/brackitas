@@ -7,4 +7,4 @@ let $content :=
     else
         <p> User {$login} not logged. Loggin problems. </p>
 return 
-    xtc:template($content)
+    util:template($content)

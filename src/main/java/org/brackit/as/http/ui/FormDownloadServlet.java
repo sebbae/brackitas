@@ -47,7 +47,7 @@ public class FormDownloadServlet extends UIServlet {
 	 *            HTTP request
 	 * @param resp
 	 *            HTTP response
-	 * @return String with the web page containing form for upload files to XTC
+	 * @return String with the web page containing form for upload files to Brackit
 	 *         database
 	 * @throws SessionException
 	 * @throws TxException
@@ -58,7 +58,7 @@ public class FormDownloadServlet extends UIServlet {
 			Session session) throws Exception {
 		String vReturn = null;
 
-		String XQuery_DB_FILES = "let $master := doc(\"_master.xml\")/xtc//dir[@name=\"%s\"] return <ul>"
+		String XQuery_DB_FILES = "let $master := doc(\"_master.xml\")/bit//dir[@name=\"%s\"] return <ul>"
 				+ "{for $i in $master/doc "
 				+ "let $preText := \"http://localhost:8080/ui/?payload=file_download&amp;file_name=\" "
 				+ "return <li><a href=\"{concat(data($preText),data($i/@name))}\">File:{data($i/@name)}</a></li>} "
