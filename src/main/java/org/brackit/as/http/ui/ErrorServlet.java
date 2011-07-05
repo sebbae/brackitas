@@ -59,7 +59,7 @@ public class ErrorServlet extends UIServlet {
 		String str;
 
 		BufferedReader in = new BufferedReader(
-				new FileReader("html/error.html"));
+				new FileReader("src/main/html/error.html"));
 
 		while ((str = in.readLine()) != null) {
 			vReturn = vReturn + str;

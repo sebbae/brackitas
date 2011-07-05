@@ -34,7 +34,7 @@ import java.io.PrintStream;
 
 import javax.servlet.http.HttpSession;
 
-import org.brackit.as.Util.FunctionUtils;
+import org.brackit.as.util.FunctionUtils;
 import org.brackit.as.xquery.ASXQuery;
 import org.brackit.xquery.HttpSessionQueryContext;
 import org.brackit.xquery.QueryContext;

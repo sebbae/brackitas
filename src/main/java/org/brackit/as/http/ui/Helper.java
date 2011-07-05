@@ -44,11 +44,14 @@ public class Helper extends AbstractServlet {
 	};
 
 	public String LN = "\n";
-	public String FORM_RESULT_AREA = "<textarea cols=\"100\" name=\"result\" rows=\"6\" />";
-	public String FORM_QUERY_AREA = "<textarea cols=\"100\" name=\"query\" rows=\"6\" />";
-	public String FORM_SECONDS_AREA = "<input type=\"hidden\" value=\"In ... seconds\" />";
-	public String FORM_PROCEDURE_SELECT = "<select id=\"select_procedure\" name=\"select_procedure\" />";
-	public String FORM_PROCEDURE_DIV_LIST = "<div id=\"selected_procedure_parameters\" />";
+	
+	
+
+	public String FORM_RESULT_AREA = "<textarea cols=\"100\" name=\"result\" rows=\"6\"/>";
+	public String FORM_QUERY_AREA = "<textarea cols=\"100\" name=\"query\" rows=\"6\"/>";
+	public String FORM_SECONDS_AREA = "<input type=\"hidden\" value=\"In ... seconds\"/>";
+	public String FORM_PROCEDURE_SELECT = "<select id=\"select_procedure\" name=\"select_procedure\"/>";
+	public String FORM_PROCEDURE_DIV_LIST = "<div id=\"selected_procedure_parameters\"/>";
 	public String FORM_PROCEDURE_ONLOAD = "fieldsCountNumber";
 	public String FORM_ERROR_MESSAGE = "ERROR_MSG";
 

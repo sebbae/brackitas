@@ -73,10 +73,12 @@ public class QueryServlet extends UIServlet {
 				// executes, calculating times
 				procTime = System.currentTimeMillis();
 				String result = query(session, queryParameter);
+				
 				procTime = System.currentTimeMillis() - procTime;
 				// retrieves results
 				strResultEdited = result.replaceAll("<", "&lt;").replaceAll(
 						">", "&gt;");
+				
 				// replace results
 				vReturn = vFile.replaceAll(helper.FORM_RESULT_AREA,
 						"<textarea cols=\"100\" name=\"result\" rows=\"6\">"
