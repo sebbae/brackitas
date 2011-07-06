@@ -38,6 +38,7 @@ import org.apache.log4j.Logger;
 import org.brackit.as.http.app.AppController;
 import org.brackit.as.http.app.AppDispatcher;
 import org.brackit.as.http.app.AppError;
+import org.brackit.as.http.app.AppView;
 import org.brackit.as.http.rpc.DBServlet;
 import org.brackit.as.http.rpc.ProcedureServlet;
 import org.brackit.as.http.rpc.XQueryServlet;
@@ -83,6 +84,7 @@ public class HttpConnector {
 	public static final String UI_ERROR_PREFIX = "/ui/error/*";
 	public static final String UI_PREFIX = "/ui/*";
 	// Path specifications for eCommerce platform
+	public static final String APP_VIEW_PREFIX = "/app/view/*";
 	public static final String APP_ERROR_PREFIX = "/app/error/*";
 	public static final String APP_DISPATCHER_PREFIX = "/app/dispatcher/*";
 	public static final String APP_CONTROLLER_PREFIX = "/app/*";
@@ -132,6 +134,12 @@ public class HttpConnector {
 		servletContextHandler.addServlet(AppController.class,
 				APP_CONTROLLER_PREFIX);
 		servletContextHandler.addServlet(AppError.class, APP_ERROR_PREFIX);
+		
+		/*
+		 * Application testing servlets
+		 * TODO: Erase them after testing
+		 */
+		servletContextHandler.addServlet(AppView.class, APP_VIEW_PREFIX);
 
 		server.setHandler(servletContextHandler);
 

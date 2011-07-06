@@ -36,6 +36,7 @@ import org.brackit.as.xquery.function.bit.DeleteFile;
 import org.brackit.as.xquery.function.bit.Eval;
 import org.brackit.as.xquery.function.bit.LoadFile;
 import org.brackit.as.xquery.function.bit.MakeDirectory;
+import org.brackit.as.xquery.function.bit.Render;
 import org.brackit.as.xquery.function.bit.StoreFile;
 import org.brackit.as.xquery.function.http.GetSessionAtt;
 import org.brackit.as.xquery.function.http.RemoveSessionAtt;
@@ -109,14 +110,14 @@ public class ASXQuery extends XQuery {
 				// output: true OK or exception
 				new SequenceType(AnyItemType.ANY, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One)))); // att
-																		// name
+		// name
 
 		Functions.predefine(new RemoveSessionAtt(new QNm(Namespaces.BIT_NSURI,
 				Namespaces.HTTP_PREFIX, "removeSessionAtt"), new Signature(
 				// output: true OK or exception
 				new SequenceType(AnyItemType.ANY, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One)))); // att
-																		// name
+		// name
 
 		// Util
 		Functions.predefine(new Template(new QNm(Namespaces.BIT_NSURI,
@@ -133,12 +134,18 @@ public class ASXQuery extends XQuery {
 				Namespaces.UTIL_PREFIX, "template"), new Signature(
 				new SequenceType(AnyItemType.ANY, Cardinality.One), // result
 				new SequenceType(AnyItemType.ANY, Cardinality.One)))); // content
+
+		// Testing
+		Functions.predefine(new Render(new QNm(Namespaces.BIT_NSURI,
+				Namespaces.BIT_PREFIX, "render"), new Signature(
+				new SequenceType(AnyItemType.ANY, Cardinality.One), // result
+				new SequenceType(AtomicType.STR, Cardinality.One)))); // input
 	}
 
 	public ASXQuery(String query, MetaDataMgr mdm) throws QueryException {
 		super(query, new ANTLRParser(), new DBOptimizer(mdm), new DBCompiler());
 	}
-	
+
 	/**
 	 * Constructor receiving file directly, instead of pure XQuery as text.
 	 * 
@@ -151,8 +158,8 @@ public class ASXQuery extends XQuery {
 	}
 
 	public ASXQuery(File pFile) throws QueryException {
-		super(pFile, new ANTLRParser(), new DefaultOptimizer(), new DBCompiler());
+		super(pFile, new ANTLRParser(), new DefaultOptimizer(),
+				new DBCompiler());
 	}
-	
-	
+
 }
