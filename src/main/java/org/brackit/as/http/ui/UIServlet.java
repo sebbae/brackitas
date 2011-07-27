@@ -113,12 +113,12 @@ public abstract class UIServlet extends TXServlet {
 				docPath + "procedure.html")));
 		metaDataMgr.create(tx, "error.html", new DocumentParser(new File(
 				docPath + "error.html")));
-		InputStream in = new FileInputStream(docPath + "css/XTCcss.css");
-		metaDataMgr.putBlob(tx, in, "/XTCcss.css", -1);
-		in = new FileInputStream(docPath + "js/XTCjs.js");
-		metaDataMgr.putBlob(tx, in, "/XTCjs.js", -1);
-		in = new FileInputStream(docPath + "images/xtc.png");
-		metaDataMgr.putBlob(tx, in, "/xtc.png", -1);
+		InputStream in = new FileInputStream(docPath + "css/brackit.css");
+		metaDataMgr.putBlob(tx, in, "/brackit.css", -1);
+		in = new FileInputStream(docPath + "js/brackit.js");
+		metaDataMgr.putBlob(tx, in, "/brackit.js", -1);
+		in = new FileInputStream(docPath + "images/brackit.png");
+		metaDataMgr.putBlob(tx, in, "/brackit.png", -1);
 	}
 
 	@Override

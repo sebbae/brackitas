@@ -35,6 +35,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.brackit.server.session.Session;
 import org.brackit.server.session.SessionException;
 import org.brackit.server.tx.TxException;
+import org.brackit.xquery.QueryContext;
+import org.brackit.xquery.xdm.Collection;
+import org.brackit.xquery.xdm.Node;
+import org.brackit.xquery.xdm.Stream;
 
 public class FormDownloadServlet extends UIServlet {
 	/**

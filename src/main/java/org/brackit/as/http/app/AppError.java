@@ -27,7 +27,9 @@
  */
 package org.brackit.as.http.app;
 
+import org.brackit.as.xquery.ASXQuery;
 import org.brackit.server.session.Session;
+import org.brackit.xquery.HttpSessionQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.XQuery;
 
@@ -47,9 +49,10 @@ public class AppError extends AppServlet {
 	private void showError(HttpServletRequest req, HttpServletResponse resp,
 			Session session) throws IOException {
 		try {
-			QueryContext ctx = new QueryContext();
-			XQuery x = new XQuery("util:template("
-					+ (String) req.getAttribute("errorMsg") + ")");
+			HttpSessionQueryContext ctx = new HttpSessionQueryContext(req
+					.getSession());
+			ASXQuery x = new ASXQuery("util:template("
+					+ (String) req.getAttribute("errorMsg") + ")", metaDataMgr);
 			x.serialize(ctx, new PrintStream(resp.getOutputStream()));
 			resp.setStatus(HttpServletResponse.SC_OK);
 		} catch (Exception e) {

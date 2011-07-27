@@ -30,6 +30,8 @@ package org.brackit.as.http.app;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Collections;
+import java.util.Enumeration;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -46,6 +48,7 @@ import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.XQuery;
 import org.brackit.xquery.atomic.Atomic;
 import org.brackit.xquery.atomic.Str;
+import org.brackit.xquery.module.Functions;
 
 /**
  * 
@@ -72,7 +75,11 @@ public class AppView extends AppServlet {
 			ctx.getHttpSession().setAttribute("view", viewName);
 			ctx.getHttpSession().setAttribute("viewTree", tree);
 			File f = new File("apps/helloWorld/views/template/index.xq");
-			XQuery x = new ASXQuery(f);
+			ASXQuery x = new ASXQuery(f);
+			Functions fs = x.getMainModule().getFunctions();
+			//fs.
+			//e = Collections.enumeration(x.getMainModule().getFunctions());
+
 			x.setPrettyPrint(true);
 			x.serialize(ctx, new PrintStream(resp.getOutputStream()));
 		} catch (Exception e) {

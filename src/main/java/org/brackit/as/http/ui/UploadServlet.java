@@ -104,7 +104,7 @@ public class UploadServlet extends UIServlet {
 			String strResult = query(session, "fn:doc('upload.html')");
 			// Replace successful upload message
 			strResult = strResult.replaceAll(
-					"<input type=\"hidden\" name=\"result\" />",
+					"<input type=\"hidden\" name=\"result\"/>",
 					"<p style=\"color: green;\"><b>File " + docName
 							+ " uploaded successfully!</b></p>");
 

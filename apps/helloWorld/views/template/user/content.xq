@@ -1,3 +1,5 @@
+
+declare namespace math = "http://example.org/math-functions";;
 <p>
     <table>
         <tr>
