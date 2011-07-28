@@ -42,7 +42,7 @@ import org.brackit.xquery.xdm.Sequence;
 /**
  * 
  * @author Henrique Valer
- *
+ * 
  */
 public class SetSessionAtt extends AbstractFunction {
 

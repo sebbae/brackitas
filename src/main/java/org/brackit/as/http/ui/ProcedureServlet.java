@@ -41,6 +41,11 @@ import org.brackit.server.session.Session;
 import org.brackit.server.session.SessionException;
 import org.brackit.server.tx.TxException;
 
+/**
+ * 
+ * @author Henrique Valer
+ * 
+ */
 public class ProcedureServlet extends UIServlet {
 
 	/**
@@ -51,8 +56,8 @@ public class ProcedureServlet extends UIServlet {
 	 *            HTTP request
 	 * @param resp
 	 *            HTTP response
-	 * @return String with the web page containing form for upload files to Brackit
-	 *         database
+	 * @return String with the web page containing form for upload files to
+	 *         Brackit database
 	 * @throws SessionException
 	 * @throws TxException
 	 * @throws XQueryException
@@ -188,7 +193,8 @@ public class ProcedureServlet extends UIServlet {
 	}
 
 	/**
-	 * getProceduresCount: Returns the number of procedures under Brackit database.
+	 * getProceduresCount: Returns the number of procedures under Brackit
+	 * database.
 	 * 
 	 * @return integer
 	 */

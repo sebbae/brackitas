@@ -44,7 +44,7 @@ import org.brackit.xquery.xdm.Sequence;
  * 
  */
 public class GetSessionAtt extends AbstractFunction {
-	
+
 	public GetSessionAtt(QNm name, Signature signature) {
 		super(name, signature, true);
 	}
@@ -57,5 +57,5 @@ public class GetSessionAtt extends AbstractFunction {
 		String vAttName = ((Item) args[0]).atomize().stringValue();
 		return (Item) httpSession.getAttribute(vAttName);
 	}
-	
+
 }

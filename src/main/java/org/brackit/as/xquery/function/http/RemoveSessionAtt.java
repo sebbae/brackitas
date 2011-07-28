@@ -42,24 +42,22 @@ import org.brackit.xquery.xdm.Sequence;
 /**
  * 
  * @author Henrique Valer
- *
+ * 
  */
-public class RemoveSessionAtt extends AbstractFunction
-{
+public class RemoveSessionAtt extends AbstractFunction {
 
-	public RemoveSessionAtt(QNm name, Signature signature)
-	{
+	public RemoveSessionAtt(QNm name, Signature signature) {
 		super(name, signature, true);
 	}
 
 	@Override
 	public Sequence execute(QueryContext ctx, Sequence[] args)
-			throws QueryException
-	{
-		HttpSession httpSession = ((HttpSessionQueryContext) ctx).getHttpSession();
+			throws QueryException {
+		HttpSession httpSession = ((HttpSessionQueryContext) ctx)
+				.getHttpSession();
 		String vAttName = ((Item) args[0]).atomize().stringValue();
 		httpSession.removeAttribute(vAttName);
 		return Bool.TRUE;
 	}
-	
+
 }

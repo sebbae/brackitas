@@ -63,34 +63,33 @@ public class DBServlet extends RPCServlet {
 			Session session) throws Exception {
 		String docName = req.getRequestURI();
 		docName = docName.substring(HttpConnector.GET_PREFIX.length() - 1);
-		DBItem<?> dbitem =  metaDataMgr.getItem(session.getTX(), docName);
+		DBItem<?> dbitem = metaDataMgr.getItem(session.getTX(), docName);
 
-		
-		//Collection<?> collection = metaDataMgr.getItem(session.getTX(), docName); // .lookup(session.getTX(), docName);
-		//Stream<? extends Node<?>> docs = collection.getDocuments();
-//		Node<?> document;
-//		String vReturn = "null";
-//		try {
-//			document = (Node<?>) docs.next();
-//
-//			if (document == null) {
-//					vReturn = "Error acessing the document " + docName;
-//			} else {
-//					vReturn = document.getSubtree().toString();
-//			}
-//		}
-//		catch (Exception E) {
-//			
-//		}
-		
-		
+		// Collection<?> collection = metaDataMgr.getItem(session.getTX(),
+		// docName); // .lookup(session.getTX(), docName);
+		// Stream<? extends Node<?>> docs = collection.getDocuments();
+		// Node<?> document;
+		// String vReturn = "null";
+		// try {
+		// document = (Node<?>) docs.next();
+		//
+		// if (document == null) {
+		// vReturn = "Error acessing the document " + docName;
+		// } else {
+		// vReturn = document.getSubtree().toString();
+		// }
+		// }
+		// catch (Exception E) {
+		//			
+		// }
+
 		resp.setContentType(getMimeType(docName));
 		Path<String> path = Path.parse(docName);
 		String tail = path.tail();
 		resp.setHeader("Content-disposition", String.format(
 				"inline; filename=%s", tail));
-		//resp.getOutputStream().print(vReturn);
-		
+		// resp.getOutputStream().print(vReturn);
+
 		dbitem.serialize(resp.getOutputStream());
 	}
 

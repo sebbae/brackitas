@@ -29,6 +29,11 @@ package org.brackit.as.http.ui;
 
 import org.brackit.as.http.AbstractServlet;
 
+/**
+ * 
+ * @author Henrique Valer
+ * 
+ */
 public class Helper extends AbstractServlet {
 
 	/**
@@ -44,8 +49,6 @@ public class Helper extends AbstractServlet {
 	};
 
 	public String LN = "\n";
-	
-	
 
 	public String FORM_RESULT_AREA = "<textarea cols=\"100\" name=\"result\" rows=\"6\"/>";
 	public String FORM_QUERY_AREA = "<textarea cols=\"100\" name=\"query\" rows=\"6\"/>";

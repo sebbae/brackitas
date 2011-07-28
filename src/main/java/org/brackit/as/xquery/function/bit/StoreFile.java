@@ -47,7 +47,7 @@ import org.brackit.xquery.xdm.Sequence;
  * 
  */
 public class StoreFile extends AbstractFunction {
-	
+
 	private FunctionUtils fUtils = new FunctionUtils();
 
 	public StoreFile(QNm name, Signature signature) {

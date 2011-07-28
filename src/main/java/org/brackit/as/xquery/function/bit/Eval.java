@@ -44,7 +44,7 @@ import org.brackit.xquery.xdm.Sequence;
 /**
  * 
  * @author Henrique Valer
- *
+ * 
  */
 public class Eval extends AbstractFunction {
 	private FunctionUtils fUtils = new FunctionUtils();

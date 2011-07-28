@@ -62,6 +62,7 @@ import org.brackit.xquery.sequence.type.SequenceType;
 
 /**
  * @author Sebastian Baechle
+ * @author Henrique Valer
  * 
  */
 public class ASXQuery extends XQuery {

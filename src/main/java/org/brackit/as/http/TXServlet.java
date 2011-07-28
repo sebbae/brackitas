@@ -53,13 +53,15 @@ import org.brackit.server.tx.Tx;
  * 
  */
 public abstract class TXServlet extends AbstractServlet {
-	
+
 	protected static final Logger log = Logger.getLogger(TXServlet.class);
 
 	protected String query(Session session, String query) throws Exception {
 		ByteArrayOutputStream buf = new ByteArrayOutputStream();
-		new ASXQuery(query, metaDataMgr).serialize(new TXQueryContext(session.getTX(),
-				metaDataMgr), new PrintStream(buf));
+		ASXQuery x = new ASXQuery(query, metaDataMgr);
+		x.setPrettyPrint(true);
+		x.serialize(new TXQueryContext(session.getTX(), metaDataMgr),
+				new PrintStream(buf));
 		return buf.toString("UTF-8");
 	}
 
@@ -108,5 +110,5 @@ public abstract class TXServlet extends AbstractServlet {
 		} catch (SessionException e) {
 			throw new ServletException(e);
 		}
-	}	
+	}
 }

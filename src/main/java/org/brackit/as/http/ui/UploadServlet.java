@@ -49,6 +49,11 @@ import org.brackit.server.tx.TxException;
 import org.brackit.xquery.node.parser.DocumentParser;
 import org.brackit.xquery.xdm.DocumentException;
 
+/**
+ * 
+ * @author Henrique Valer
+ * 
+ */
 public class UploadServlet extends UIServlet {
 	/**
 	 * Simply executes a query on the database to select the upload form and

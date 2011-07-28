@@ -38,6 +38,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.brackit.as.http.AbstractServlet;
 import org.brackit.server.session.SessionException;
 
+/**
+ * 
+ * @author Henrique Valer
+ * 
+ */
 public class FrontController extends AbstractServlet {
 	/**
 	 * Both get and post request are processed equally. The login is made and

@@ -40,6 +40,11 @@ import org.brackit.xquery.xdm.Collection;
 import org.brackit.xquery.xdm.Node;
 import org.brackit.xquery.xdm.Stream;
 
+/**
+ * 
+ * @author Henrique Valer
+ * 
+ */
 public class FormDownloadServlet extends UIServlet {
 	/**
 	 * Executes a query to select all files in the database, returning a html
@@ -51,8 +56,8 @@ public class FormDownloadServlet extends UIServlet {
 	 *            HTTP request
 	 * @param resp
 	 *            HTTP response
-	 * @return String with the web page containing form for upload files to Brackit
-	 *         database
+	 * @return String with the web page containing form for upload files to
+	 *         Brackit database
 	 * @throws SessionException
 	 * @throws TxException
 	 * @throws XQueryException
@@ -62,23 +67,20 @@ public class FormDownloadServlet extends UIServlet {
 			Session session) throws Exception {
 		String vReturn = null;
 
-		String XQuery_DB_FILES = "let $master := doc(\"_master.xml\")/bit//dir[@name=\"%s\"] return <ul>"
+		String XQuery_DB_FILES = "let $master := doc(\"_master.xml\")/xtc//dir[@name=\"%s\"] return <ul>"
 				+ "{for $i in $master/doc "
 				+ "let $preText := \"http://localhost:8080/ui/?payload=file_download&amp;file_name=\" "
-				+ "return <li><a href=\"{concat(data($preText),data($i/@name))}\">File:{data($i/@name)}</a></li>} "
+				+ "return <li><a href=\"{concat(data($preText),data($i/@name))}\">File: {data($i/@name)}</a></li>} "
 				+ "{for $i in $master/blob "
 				+ "let $preText := \"http://localhost:8080/ui/?payload=file_download&amp;file_name=\" "
-				+ "return <li><a href=\"{concat(data($preText),data($i/@name))}\">File:{data($i/@name)}</a></li>} "
+				+ "return <li><a href=\"{concat(data($preText),data($i/@name))}\">File: {data($i/@name)}</a></li>} "
 				+ "</ul>";
 
 		vReturn = query(session, "fn:doc('download.html')");
 		String strListFile = query(session, String.format(XQuery_DB_FILES, "/"));
-		strListFile = strListFile.replaceAll("&", "&amp;").replaceAll(
-				"file_name=/", "file_name=");
+		strListFile = strListFile.replaceAll("file_name=/", "file_name=");
 		vReturn = vReturn.replaceAll(
-				"<input type=\"hidden\" name=\"result\" />", strListFile);
-
-		// result output
+				"<input type=\"hidden\" name=\"result\"/>", strListFile);
 		new PrintStream(resp.getOutputStream()).append(vReturn);
 		resp.setStatus(HttpServletResponse.SC_OK);
 	}
