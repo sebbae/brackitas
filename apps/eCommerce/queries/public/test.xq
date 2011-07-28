@@ -1,5 +1,4 @@
-declare variable $extTest as xs:string external;
 let 
-    $content := fn:concat($extTest, ' is an external variable!')
+    $a := bit:ftIndexStore($name, $doc)
 return 
-	util:template($content)
+	$a

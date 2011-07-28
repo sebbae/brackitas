@@ -33,6 +33,7 @@ import org.brackit.as.util.FunctionUtils;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
+import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.function.Signature;
@@ -43,14 +44,16 @@ import org.brackit.xquery.xdm.Node;
 import org.brackit.xquery.xdm.Sequence;
 
 /**
+ * 
  * @author Henrique Valer
+ * @author Roxana Zapata
  * 
  */
-public class StoreFile extends AbstractFunction {
+public class FtIndexStore extends AbstractFunction {
 
 	private FunctionUtils fUtils = new FunctionUtils();
 
-	public StoreFile(QNm name, Signature signature) {
+	public FtIndexStore(QNm name, Signature signature) {
 		super(name, signature, true);
 	}
 
@@ -69,6 +72,11 @@ public class StoreFile extends AbstractFunction {
 
 		Collection<?> collection = ctx.getStore().create(vName,
 				new DocumentParser(vContent));
-		return collection.getDocument();
+
+		Object o = collection.getDocument();
+		if (o != null) {
+			return Bool.TRUE;
+		} else
+			return Bool.FALSE;
 	}
 }

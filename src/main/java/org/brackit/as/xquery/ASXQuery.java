@@ -34,6 +34,7 @@ import java.io.IOException;
 
 import org.brackit.as.xquery.function.bit.DeleteFile;
 import org.brackit.as.xquery.function.bit.Eval;
+import org.brackit.as.xquery.function.bit.FtIndexStore;
 import org.brackit.as.xquery.function.bit.LoadFile;
 import org.brackit.as.xquery.function.bit.MakeDirectory;
 import org.brackit.as.xquery.function.bit.Render;
@@ -98,6 +99,13 @@ public class ASXQuery extends XQuery {
 				new SequenceType(AtomicType.STR, Cardinality.One), // doc name
 				new SequenceType(AnyItemType.ANY, Cardinality.One))));
 
+		Functions.predefine(new FtIndexStore(new QNm(Namespaces.BIT_NSURI,
+				Namespaces.BIT_PREFIX, "ftIndexStore"), new Signature(
+				new SequenceType(AtomicType.BOOL, Cardinality.One),
+				new SequenceType(AtomicType.STR, Cardinality.One), // docName
+				new SequenceType(AnyItemType.ANY, Cardinality.One) // document
+				)));
+		
 		// HTTP
 		Functions.predefine(new SetSessionAtt(new QNm(Namespaces.BIT_NSURI,
 				Namespaces.HTTP_PREFIX, "setSessionAtt"), new Signature(
@@ -110,15 +118,13 @@ public class ASXQuery extends XQuery {
 				Namespaces.HTTP_PREFIX, "getSessionAtt"), new Signature(
 				// output: true OK or exception
 				new SequenceType(AnyItemType.ANY, Cardinality.One),
-				new SequenceType(AtomicType.STR, Cardinality.One)))); // att
-		// name
+				new SequenceType(AtomicType.STR, Cardinality.One)))); // attName
 
 		Functions.predefine(new RemoveSessionAtt(new QNm(Namespaces.BIT_NSURI,
 				Namespaces.HTTP_PREFIX, "removeSessionAtt"), new Signature(
 				// output: true OK or exception
 				new SequenceType(AnyItemType.ANY, Cardinality.One),
-				new SequenceType(AtomicType.STR, Cardinality.One)))); // att
-		// name
+				new SequenceType(AtomicType.STR, Cardinality.One)))); // attName
 
 		// Util
 		Functions.predefine(new Template(new QNm(Namespaces.BIT_NSURI,
