@@ -57,5 +57,4 @@ public class GetSessionAtt extends AbstractFunction {
 		String vAttName = ((Item) args[0]).atomize().stringValue();
 		return (Item) httpSession.getAttribute(vAttName);
 	}
-
 }

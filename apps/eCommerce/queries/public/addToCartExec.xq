@@ -18,7 +18,7 @@ let
         <p> 
             <h5> Shopping Cart </h5>
             {
-            if (fn:string-length(http:getSessionAtt('cart')) > 0) then
+            if (fn:string-length(session:getAtt('cart')) > 0) then
                 (: already something on the cart session :)
                 if 
                 (
@@ -27,7 +27,7 @@ let
                         <cart>
                         {  
                             let 
-                                $cart := http:getSessionAtt('cart')
+                                $cart := session:getAtt('cart')
                             return
                                 (
                                     for $itemN in $cart//item 
@@ -39,16 +39,16 @@ let
                         }
                         </cart> 
                     return
-                        http:setSessionAtt('cart',$newCart)
+                        session:setAtt('cart',$newCart)
                 ) then
-                    http:getSessionAtt('cart')
+                    session:getAtt('cart')
                 else
                     ''
             else
                 (: first item to the cart :)
                 let 
                     (: TODO: improve searching mechanism with better xpath :)
-                    $docItem := fn:doc('_master.xml')/bit//doc[(xs:string(@name))=fn:concat('/',http:getSessionAtt('appName'),'/items/',$itemName,'.xml')] 
+                    $docItem := fn:doc('_master.xml')/bit//doc[(xs:string(@name))=fn:concat('/',session:getAtt('appName'),'/items/',$itemName,'.xml')] 
                 return 
                     let 
                         $item := fn:doc($docItem/@name) 
@@ -58,9 +58,9 @@ let
                             let 
                                 $newCart := <cart>{local:cartItem($item//name,$itemQuant)}</cart>
                             return 
-                                http:setSessionAtt('cart',$newCart)
+                                session:setAtt('cart',$newCart)
                         ) then
-                            http:getSessionAtt('cart')
+                            session:getAtt('cart')
                         else
                             ''
             }

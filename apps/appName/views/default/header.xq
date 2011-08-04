@@ -1,5 +1,5 @@
-declare variable $login := http:getSessionAtt('login');
-declare variable $pass := http:getSessionAtt('pass');
+declare variable $login := session:getAtt('login');
+declare variable $pass := session:getAtt('pass');
 <table>
     <tr>
         <td>

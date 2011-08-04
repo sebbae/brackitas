@@ -1,7 +1,7 @@
 let 
     $content := 
     let
-        $cart := http:getSessionAtt('cart')
+        $cart := session:getAtt('cart')
     return
         <form action="../buyCartForm/">
             <table>

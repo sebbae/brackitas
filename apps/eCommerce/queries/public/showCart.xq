@@ -1,5 +1,5 @@
 let
-    $cart := http:getSessionAtt('cart')
+    $cart := session:getAtt('cart')
 return
         <table>
             <tr>
@@ -20,7 +20,7 @@ return
                     $cart//item
                 return 
                     let 
-                        $docN := fn:doc(fn:concat(http:getSessionAtt('appName'),'/items/',$i/data(name),'.xml'))
+                        $docN := fn:doc(fn:concat(session:getAtt('appName'),'/items/',$i/data(name),'.xml'))
                     return 
                     <tr>
                         <td>

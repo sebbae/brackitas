@@ -1,7 +1,7 @@
 declare variable $itemName as xs:string external;
 
 let 
-	$a := fn:doc(fn:concat('/',http:getSessionAtt('appName'),'/items/',$itemName,'.xml'))
+	$a := fn:doc(fn:concat('/',session:getAtt('appName'),'/items/',$itemName,'.xml'))
 return
 	let 
 	    $content :=

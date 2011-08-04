@@ -106,22 +106,22 @@ public class ASXQuery extends XQuery {
 				new SequenceType(AnyItemType.ANY, Cardinality.One) // document
 				)));
 		
-		// HTTP
+		// SESSION
 		Functions.predefine(new SetSessionAtt(new QNm(Namespaces.BIT_NSURI,
-				Namespaces.HTTP_PREFIX, "setSessionAtt"), new Signature(
+				Namespaces.SESSION_PREFIX, "setAtt"), new Signature(
 				// output: true OK or exception
 				new SequenceType(AtomicType.BOOL, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One), // att name
 				new SequenceType(AnyItemType.ANY, Cardinality.One))));// attribute
 
 		Functions.predefine(new GetSessionAtt(new QNm(Namespaces.BIT_NSURI,
-				Namespaces.HTTP_PREFIX, "getSessionAtt"), new Signature(
+				Namespaces.SESSION_PREFIX, "getAtt"), new Signature(
 				// output: true OK or exception
 				new SequenceType(AnyItemType.ANY, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One)))); // attName
 
 		Functions.predefine(new RemoveSessionAtt(new QNm(Namespaces.BIT_NSURI,
-				Namespaces.HTTP_PREFIX, "removeSessionAtt"), new Signature(
+				Namespaces.SESSION_PREFIX, "remAtt"), new Signature(
 				// output: true OK or exception
 				new SequenceType(AnyItemType.ANY, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One)))); // attName

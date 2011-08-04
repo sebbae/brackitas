@@ -1,5 +1,5 @@
 let $content := 
-    if ((http:removeSessionAtt('login')) and (http:removeSessionAtt('pass'))) then
+    if ((session:remAtt('login')) and (session:remAtt('pass'))) then
         <p> Loged out sucessfully </p>
     else
         <p> Not loged out. Logout problems. </p>

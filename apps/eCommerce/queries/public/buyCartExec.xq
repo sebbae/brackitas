@@ -16,7 +16,7 @@ declare function local:cart($name as xs:string,
                     <cliAddress>
                         {$address}
                     </cliAddress>
-                    {http:getSessionAtt('cart')}
+                    {session:getAtt('cart')}
                 </order>
         return
             $vReturn
@@ -25,10 +25,10 @@ declare function local:cart($name as xs:string,
 
 let $content := 
     let 
-        $a := bit:storeFile(concat(http:getSessionAtt('appName'),'/carts/',fn:concat($cliName,$cliAddress)),
+        $a := bit:storeFile(concat(session:getAtt('appName'),'/carts/',fn:concat($cliName,$cliAddress)),
                             local:cart($cliName,$cliAddress))
     return
-        if (http:removeSessionAtt('cart')) then
+        if (session:remAtt('cart')) then
             <p> Buy order for the given cart added sucessfully. </p>
         else
             <p> Problems with buying order. </p>
