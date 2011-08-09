@@ -37,9 +37,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.brackit.as.http.TXServlet;
 import org.brackit.as.xquery.ASXQuery;
-import org.brackit.xquery.HttpSessionQueryContext;
+import org.brackit.as.xquery.HttpSessionTXQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.XQuery;
 import org.brackit.xquery.atomic.Atomic;
@@ -81,7 +80,8 @@ public class AppDispatcher extends AppServlet {
 				.stringValue();
 
 		// was HttpSessionQueryContext
-		QueryContext ctx = new HttpSessionQueryContext(req.getSession());
+		QueryContext ctx = new HttpSessionTXQueryContext(session.getTX(),
+				metaDataMgr, req.getSession());
 		try {
 			// Dinamic binding of parameters: name = variable name
 			File fBase = getQueryFile(appName, pageName);

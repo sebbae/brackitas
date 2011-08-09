@@ -25,49 +25,30 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.http.app;
+package org.brackit.as.xquery;
 
-import org.brackit.as.xquery.ASXQuery;
-import org.brackit.as.xquery.HttpSessionTXQueryContext;
-import org.brackit.server.session.Session;
+import javax.servlet.http.HttpSession;
 
-import java.io.IOException;
-import java.io.PrintStream;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.brackit.server.metadata.TXQueryContext;
+import org.brackit.server.metadata.manager.MetaDataMgr;
+import org.brackit.server.tx.Tx;
 
 /**
  * 
  * @author Henrique Valer
  * 
  */
-public class AppError extends AppServlet {
+public class HttpSessionTXQueryContext extends TXQueryContext {
 
-	private void showError(HttpServletRequest req, HttpServletResponse resp,
-			Session session) throws IOException {
-		try {
-			HttpSessionTXQueryContext ctx = new HttpSessionTXQueryContext(
-					session.getTX(), metaDataMgr, req.getSession());
-			ASXQuery x = new ASXQuery("util:template("
-					+ (String) req.getAttribute("errorMsg") + ")", metaDataMgr);
-			x.serialize(ctx, new PrintStream(resp.getOutputStream()));
-			resp.setStatus(HttpServletResponse.SC_OK);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	private HttpSession httpSession;
+
+	public HttpSessionTXQueryContext(Tx tx, MetaDataMgr mdm,
+			HttpSession httpSession) {
+		super(tx, mdm);
+		this.httpSession = httpSession;
 	}
 
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp,
-			Session session) throws IOException {
-		this.showError(req, resp, session);
+	public HttpSession getHttpSession() {
+		return this.httpSession;
 	}
-
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp,
-			Session session) throws IOException {
-		this.showError(req, resp, session);
-	}
-
 }

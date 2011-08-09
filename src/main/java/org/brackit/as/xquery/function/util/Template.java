@@ -36,7 +36,7 @@ import javax.servlet.http.HttpSession;
 
 import org.brackit.as.util.FunctionUtils;
 import org.brackit.as.xquery.ASXQuery;
-import org.brackit.xquery.HttpSessionQueryContext;
+import org.brackit.as.xquery.HttpSessionTXQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.XQuery;
@@ -90,7 +90,7 @@ public class Template extends AbstractFunction {
 
 		String arg = null;
 		String toBeEval = null;
-		HttpSession httpSession = ((HttpSessionQueryContext) ctx)
+		HttpSession httpSession = ((HttpSessionTXQueryContext) ctx)
 				.getHttpSession();
 		String appName = ((Atomic) httpSession.getAttribute("appName"))
 				.stringValue();

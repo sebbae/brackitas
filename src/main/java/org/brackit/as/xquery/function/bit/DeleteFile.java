@@ -29,8 +29,8 @@ package org.brackit.as.xquery.function.bit;
 
 import javax.servlet.http.HttpSession;
 
+import org.brackit.as.xquery.HttpSessionTXQueryContext;
 import org.brackit.server.metadata.TXQueryContext;
-import org.brackit.xquery.HttpSessionQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -55,7 +55,7 @@ public class DeleteFile extends AbstractFunction {
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
 		try {
-			HttpSession httpSession = ((HttpSessionQueryContext) ctx)
+			HttpSession httpSession = ((HttpSessionTXQueryContext) ctx)
 					.getHttpSession();
 			String vAppName = ((Atomic) httpSession.getAttribute("appName"))
 					.stringValue();

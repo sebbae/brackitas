@@ -29,7 +29,7 @@ package org.brackit.as.xquery.function.http;
 
 import javax.servlet.http.HttpSession;
 
-import org.brackit.xquery.HttpSessionQueryContext;
+import org.brackit.as.xquery.HttpSessionTXQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -53,7 +53,7 @@ public class SetSessionAtt extends AbstractFunction {
 	@Override
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
-		HttpSession httpSession = ((HttpSessionQueryContext) ctx)
+		HttpSession httpSession = ((HttpSessionTXQueryContext) ctx)
 				.getHttpSession();
 		String vAttName = ((Atomic) args[0]).stringValue();
 		httpSession.setAttribute(vAttName, args[1]);
