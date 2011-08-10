@@ -39,9 +39,10 @@ import org.brackit.as.xquery.function.bit.LoadFile;
 import org.brackit.as.xquery.function.bit.MakeDirectory;
 import org.brackit.as.xquery.function.bit.Render;
 import org.brackit.as.xquery.function.bit.StoreFile;
-import org.brackit.as.xquery.function.http.GetSessionAtt;
-import org.brackit.as.xquery.function.http.RemoveSessionAtt;
-import org.brackit.as.xquery.function.http.SetSessionAtt;
+import org.brackit.as.xquery.function.session.Clear;
+import org.brackit.as.xquery.function.session.GetSessionAtt;
+import org.brackit.as.xquery.function.session.RemoveSessionAtt;
+import org.brackit.as.xquery.function.session.SetSessionAtt;
 import org.brackit.as.xquery.function.util.Template;
 import org.brackit.server.metadata.manager.MetaDataMgr;
 import org.brackit.server.xquery.compiler.DBCompiler;
@@ -125,6 +126,16 @@ public class ASXQuery extends XQuery {
 				// output: true OK or exception
 				new SequenceType(AnyItemType.ANY, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One)))); // attName
+		
+		Functions.predefine(new Clear(
+				new QNm(Namespaces.BIT_NSURI, Namespaces.SESSION_PREFIX, "clear")
+				, 
+				new Signature(
+						new SequenceType(AtomicType.BOOL, Cardinality.One)
+					)
+				)
+			);
+		
 
 		// Util
 		Functions.predefine(new Template(new QNm(Namespaces.BIT_NSURI,
@@ -167,6 +178,10 @@ public class ASXQuery extends XQuery {
 	public ASXQuery(File pFile) throws QueryException {
 		super(pFile, new ANTLRParser(), new DefaultOptimizer(),
 				new DBCompiler());
+	}
+
+	public ASXQuery(String s) throws QueryException {
+		super(s);
 	}
 
 }

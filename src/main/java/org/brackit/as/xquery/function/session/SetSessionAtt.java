@@ -25,17 +25,18 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.xquery.function.http;
+package org.brackit.as.xquery.function.session;
 
 import javax.servlet.http.HttpSession;
 
 import org.brackit.as.xquery.HttpSessionTXQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
+import org.brackit.xquery.atomic.Atomic;
+import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.function.Signature;
-import org.brackit.xquery.xdm.Item;
 import org.brackit.xquery.xdm.Sequence;
 
 /**
@@ -43,9 +44,9 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
-public class GetSessionAtt extends AbstractFunction {
+public class SetSessionAtt extends AbstractFunction {
 
-	public GetSessionAtt(QNm name, Signature signature) {
+	public SetSessionAtt(QNm name, Signature signature) {
 		super(name, signature, true);
 	}
 
@@ -54,7 +55,8 @@ public class GetSessionAtt extends AbstractFunction {
 			throws QueryException {
 		HttpSession httpSession = ((HttpSessionTXQueryContext) ctx)
 				.getHttpSession();
-		String vAttName = ((Item) args[0]).atomize().stringValue();
-		return (Item) httpSession.getAttribute(vAttName);
+		String vAttName = ((Atomic) args[0]).stringValue();
+		httpSession.setAttribute(vAttName, args[1]);
+		return Bool.TRUE;
 	}
 }

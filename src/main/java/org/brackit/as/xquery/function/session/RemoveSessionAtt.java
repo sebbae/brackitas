@@ -25,7 +25,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.xquery.function.http;
+package org.brackit.as.xquery.function.session;
 
 import javax.servlet.http.HttpSession;
 
@@ -59,5 +59,4 @@ public class RemoveSessionAtt extends AbstractFunction {
 		httpSession.removeAttribute(vAttName);
 		return Bool.TRUE;
 	}
-
 }

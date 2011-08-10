@@ -1,6 +1,18 @@
 (  ) Expand session functionalities to XQuery.
 	(OK) Rename the namespace to session
 	(OK) List possible functions
+		(OK) getCreationTime
+		(OK) getLastAccessedTime
+		(OK) setMaxInactiveInterval
+		(OK) getMaxInactiveInterval
+		(OK) getAttribute (getAtt)
+		(OK) getAttributeNames
+		(OK) setAttribute (setAtt)
+		(OK) removeAttribute (remAtt)
+		(OK) invalidate
+		(OK) clear
+	(OK) Implement these functions 
+	(  ) create signatures
 		(  ) getCreationTime
 		(  ) getLastAccessedTime
 		(  ) setMaxInactiveInterval
@@ -10,18 +22,7 @@
 		(OK) setAttribute (setAtt)
 		(OK) removeAttribute (remAtt)
 		(  ) invalidate
-		(  ) clear
-	(  ) Implement these functions
-		(  ) getCreationTime
-		(  ) getLastAccessedTime
-		(  ) setMaxInactiveInterval
-		(  ) getMaxInactiveInterval
-		(OK) getAttribute (getAtt)
-		(  ) getAttributeNames
-		(OK) setAttribute (setAtt)
-		(OK) removeAttribute (remAtt)
-		(  ) invalidate
-		(  ) clear
+		(OK) clear
 	(  ) Unit Test these functions
 		(  ) getCreationTime
 		(  ) getLastAccessedTime
