@@ -52,8 +52,14 @@ public class GetMaxInactiveInterval extends AbstractFunction {
 	@Override
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
-		HttpSession httpSession = ((HttpSessionTXQueryContext) ctx)
-				.getHttpSession();
-		return new Int(httpSession.getMaxInactiveInterval());
+		try {
+			HttpSession httpSession = ((HttpSessionTXQueryContext) ctx)
+					.getHttpSession();
+			return new Int(httpSession.getMaxInactiveInterval());
+		} catch (Exception e) {
+			// TODO: Remove it
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

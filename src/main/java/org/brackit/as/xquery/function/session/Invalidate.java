@@ -58,6 +58,8 @@ public class Invalidate extends AbstractFunction {
 			httSession.invalidate();
 			return Bool.TRUE;
 		} catch (Exception e) {
+			// TODO: Remove it
+			e.printStackTrace();
 			return Bool.FALSE;
 		}
 	}

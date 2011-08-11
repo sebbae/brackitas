@@ -53,10 +53,16 @@ public class RemoveSessionAtt extends AbstractFunction {
 	@Override
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
-		HttpSession httpSession = ((HttpSessionTXQueryContext) ctx)
-				.getHttpSession();
-		String vAttName = ((Item) args[0]).atomize().stringValue();
-		httpSession.removeAttribute(vAttName);
-		return Bool.TRUE;
+		try {
+			HttpSession httpSession = ((HttpSessionTXQueryContext) ctx)
+					.getHttpSession();
+			String vAttName = ((Item) args[0]).atomize().stringValue();
+			httpSession.removeAttribute(vAttName);
+			return Bool.TRUE;
+		} catch (Exception e) {
+			// TODO: Remove it
+			e.printStackTrace();
+			return Bool.FALSE;
+		}
 	}
 }

@@ -35,7 +35,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.brackit.as.http.AbstractServlet;
-import org.brackit.server.session.Session;
 
 /**
  * 
@@ -53,7 +52,6 @@ public class DispatcherServlet extends AbstractServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		ServletContext context = getServletContext();
-		Session session = (Session) context.getAttribute("session");
 
 		try {
 			String strPayload = req.getParameter("payload"); // Choose witch

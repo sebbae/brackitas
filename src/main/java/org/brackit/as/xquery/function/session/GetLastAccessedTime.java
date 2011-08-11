@@ -52,8 +52,14 @@ public class GetLastAccessedTime extends AbstractFunction {
 	@Override
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
-		HttpSession httpSession = ((HttpSessionTXQueryContext) ctx)
-				.getHttpSession();
-		return new Int(httpSession.getLastAccessedTime());
+		try {
+			HttpSession httpSession = ((HttpSessionTXQueryContext) ctx)
+					.getHttpSession();
+			return new Int(httpSession.getLastAccessedTime());
+		} catch (Exception e) {
+			// TODO: Remove it
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

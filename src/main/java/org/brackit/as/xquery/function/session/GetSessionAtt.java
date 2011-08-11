@@ -52,9 +52,15 @@ public class GetSessionAtt extends AbstractFunction {
 	@Override
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
-		HttpSession httpSession = ((HttpSessionTXQueryContext) ctx)
-				.getHttpSession();
-		String vAttName = ((Item) args[0]).atomize().stringValue();
-		return (Item) httpSession.getAttribute(vAttName);
+		try {
+			HttpSession httpSession = ((HttpSessionTXQueryContext) ctx)
+					.getHttpSession();
+			String vAttName = ((Item) args[0]).atomize().stringValue();
+			return (Item) httpSession.getAttribute(vAttName);
+		} catch (Exception e) {
+			// TODO: Remove it
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

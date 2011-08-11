@@ -62,6 +62,8 @@ public class SetMaxInactiveInterval extends AbstractFunction {
 			httpSession.setMaxInactiveInterval(maxInactiveInterval.intValue());
 			return Bool.TRUE;
 		} catch (Exception e) {
+			// TODO: Remove it
+			e.printStackTrace();
 			return Bool.FALSE;
 		}
 	}

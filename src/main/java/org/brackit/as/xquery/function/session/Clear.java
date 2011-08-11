@@ -63,6 +63,8 @@ public class Clear extends AbstractFunction {
 			}
 			return Bool.TRUE;
 		} catch (Exception e) {
+			// TODO: Remove it 
+			e.printStackTrace();
 			return Bool.FALSE;
 		}
 	}

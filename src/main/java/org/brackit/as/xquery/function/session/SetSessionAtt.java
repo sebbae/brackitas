@@ -53,10 +53,16 @@ public class SetSessionAtt extends AbstractFunction {
 	@Override
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
-		HttpSession httpSession = ((HttpSessionTXQueryContext) ctx)
-				.getHttpSession();
-		String vAttName = ((Atomic) args[0]).stringValue();
-		httpSession.setAttribute(vAttName, args[1]);
-		return Bool.TRUE;
+		try {
+			HttpSession httpSession = ((HttpSessionTXQueryContext) ctx)
+					.getHttpSession();
+			String vAttName = ((Atomic) args[0]).stringValue();
+			httpSession.setAttribute(vAttName, args[1]);
+			return Bool.TRUE;
+		} catch (Exception e) {
+			// TODO: Remove it
+			e.printStackTrace();
+			return Bool.FALSE;
+		}
 	}
 }

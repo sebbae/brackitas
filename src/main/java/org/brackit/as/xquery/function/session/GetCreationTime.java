@@ -52,8 +52,14 @@ public class GetCreationTime extends AbstractFunction {
 	@Override
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
-		HttpSession httpSession = ((HttpSessionTXQueryContext) ctx)
-				.getHttpSession();
-		return new Int(httpSession.getCreationTime());
+		try {
+			HttpSession httpSession = ((HttpSessionTXQueryContext) ctx)
+					.getHttpSession();
+			return new Int(httpSession.getCreationTime());
+		} catch (Exception e) {
+			// TODO: Remove it
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

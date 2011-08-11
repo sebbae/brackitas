@@ -65,14 +65,16 @@ public class QueryServlet extends UIServlet {
 		String vReturn = null;
 		String queryParameter = req.getParameter("query"); // query parameter
 		String strResultEdited = null;
-		String vFile = query(session, "fn:doc('form.html')");
+		String vFile = httpQuery(session, "fn:doc('form.html')", req
+				.getSession());
 		long procTime;
 
 		if (queryParameter != null) {
 			try {
 				// executes, calculating times
 				procTime = System.currentTimeMillis();
-				String result = query(session, queryParameter);
+				String result = httpQuery(session, queryParameter, req
+						.getSession());
 
 				procTime = System.currentTimeMillis() - procTime;
 				// retrieves results

@@ -70,8 +70,8 @@ public class UploadServlet extends UIServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp,
 			Session session) throws Exception {
-		ServletContext context = getServletContext();
-		String vReturn = query(session, "fn:doc('upload.html')");
+		String vReturn = httpQuery(session, "fn:doc('upload.html')", req
+				.getSession());
 
 		// result output
 		new PrintStream(resp.getOutputStream()).append(vReturn);
@@ -106,7 +106,8 @@ public class UploadServlet extends UIServlet {
 			String docName = store(req, resp, session);
 
 			// load upload form
-			String strResult = query(session, "fn:doc('upload.html')");
+			String strResult = httpQuery(session, "fn:doc('upload.html')", req
+					.getSession());
 			// Replace successful upload message
 			strResult = strResult.replaceAll(
 					"<input type=\"hidden\" name=\"result\"/>",

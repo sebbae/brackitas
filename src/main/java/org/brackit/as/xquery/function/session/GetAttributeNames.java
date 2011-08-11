@@ -58,16 +58,20 @@ public class GetAttributeNames extends AbstractFunction {
 	@Override
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
-		HttpSession httpSession = ((HttpSessionTXQueryContext) ctx)
-				.getHttpSession();
-
-		List<Str> attNames = new ArrayList<Str>();
-		Enumeration<String> e = httpSession.getAttributeNames();
-
-		for (int i = 0; e.hasMoreElements(); i++) {
-			attNames.add(new Str(e.nextElement()));
+		try {
+			HttpSession httpSession = ((HttpSessionTXQueryContext) ctx)
+					.getHttpSession();
+			List<Str> attNames = new ArrayList<Str>();
+			Enumeration<String> e = httpSession.getAttributeNames();
+			for (int i = 0; e.hasMoreElements(); i++) {
+				attNames.add(new Str(e.nextElement()));
+			}
+			Item[] result = attNames.toArray(new Item[0]);
+			return new ItemSequence(result);
+		} catch (Exception e) {
+			// TODO: Remove it
+			e.printStackTrace();
+			return null;
 		}
-		Item[] result = attNames.toArray(new Item[0]);
-		return new ItemSequence(result);
 	}
 }

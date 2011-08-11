@@ -70,7 +70,8 @@ public class ProcedureServlet extends UIServlet {
 		String strProceduresDivLis = getProceduresDivList();
 
 		// Add list of procedures and procedure div to the page
-		vReturn = query(session, "fn:doc('procedure.html')");
+		vReturn = httpQuery(session, "fn:doc('procedure.html')", req
+				.getSession());
 		vReturn = vReturn.replaceAll(helper.FORM_PROCEDURE_SELECT,
 				strProceduresSelectList);
 		vReturn = vReturn.replaceAll(helper.FORM_PROCEDURE_DIV_LIST,

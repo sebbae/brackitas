@@ -72,7 +72,6 @@ import org.brackit.xquery.sequence.type.SequenceType;
 public class ASXQuery extends XQuery {
 
 	static {
-
 		// Bit
 		Functions.predefine(new DeleteFile(new QNm(Namespaces.BIT_NSURI,
 				Namespaces.BIT_PREFIX, "deleteFile"), new Signature(
@@ -188,13 +187,6 @@ public class ASXQuery extends XQuery {
 		super(query, new ANTLRParser(), new DBOptimizer(mdm), new DBCompiler());
 	}
 
-	/**
-	 * Constructor receiving file directly, instead of pure XQuery as text.
-	 * 
-	 * @param pFile
-	 * @throws QueryException
-	 * @throws IOException
-	 */
 	public ASXQuery(File pFile, MetaDataMgr mdm) throws QueryException {
 		super(pFile, new ANTLRParser(), new DBOptimizer(mdm), new DBCompiler());
 	}

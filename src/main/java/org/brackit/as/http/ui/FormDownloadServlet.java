@@ -76,7 +76,8 @@ public class FormDownloadServlet extends UIServlet {
 				+ "return <li><a href=\"{concat(data($preText),data($i/@name))}\">File: {data($i/@name)}</a></li>} "
 				+ "</ul>";
 
-		vReturn = query(session, "fn:doc('download.html')");
+		vReturn = httpQuery(session, "fn:doc('download.html')", req
+				.getSession());
 		String strListFile = query(session, String.format(XQuery_DB_FILES, "/"));
 		strListFile = strListFile.replaceAll("file_name=/", "file_name=");
 		vReturn = vReturn.replaceAll(
