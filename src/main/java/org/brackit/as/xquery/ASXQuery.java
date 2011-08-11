@@ -27,9 +27,7 @@
  */
 package org.brackit.as.xquery;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 import org.brackit.as.xquery.function.bit.DeleteFile;
@@ -40,20 +38,24 @@ import org.brackit.as.xquery.function.bit.MakeDirectory;
 import org.brackit.as.xquery.function.bit.Render;
 import org.brackit.as.xquery.function.bit.StoreFile;
 import org.brackit.as.xquery.function.session.Clear;
+import org.brackit.as.xquery.function.session.GetAttributeNames;
+import org.brackit.as.xquery.function.session.GetCreationTime;
+import org.brackit.as.xquery.function.session.GetLastAccessedTime;
+import org.brackit.as.xquery.function.session.GetMaxInactiveInterval;
 import org.brackit.as.xquery.function.session.GetSessionAtt;
+import org.brackit.as.xquery.function.session.Invalidate;
 import org.brackit.as.xquery.function.session.RemoveSessionAtt;
+import org.brackit.as.xquery.function.session.SetMaxInactiveInterval;
 import org.brackit.as.xquery.function.session.SetSessionAtt;
 import org.brackit.as.xquery.function.util.Template;
 import org.brackit.server.metadata.manager.MetaDataMgr;
 import org.brackit.server.xquery.compiler.DBCompiler;
 import org.brackit.server.xquery.optimizer.DBOptimizer;
-import org.brackit.xquery.ErrorCode;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.XQuery;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.compiler.optimizer.DefaultOptimizer;
 import org.brackit.xquery.compiler.parser.ANTLRParser;
-import org.brackit.xquery.compiler.translator.PipelineCompiler;
 import org.brackit.xquery.function.Signature;
 import org.brackit.xquery.module.Functions;
 import org.brackit.xquery.module.Namespaces;
@@ -106,14 +108,29 @@ public class ASXQuery extends XQuery {
 				new SequenceType(AtomicType.STR, Cardinality.One), // docName
 				new SequenceType(AnyItemType.ANY, Cardinality.One) // document
 				)));
-		
+
 		// SESSION
-		Functions.predefine(new SetSessionAtt(new QNm(Namespaces.BIT_NSURI,
-				Namespaces.SESSION_PREFIX, "setAtt"), new Signature(
-				// output: true OK or exception
-				new SequenceType(AtomicType.BOOL, Cardinality.One),
-				new SequenceType(AtomicType.STR, Cardinality.One), // att name
-				new SequenceType(AnyItemType.ANY, Cardinality.One))));// attribute
+		Functions.predefine(new Clear(new QNm(Namespaces.BIT_NSURI,
+				Namespaces.SESSION_PREFIX, "clear"), new Signature(
+				new SequenceType(AtomicType.BOOL, Cardinality.One))));
+
+		Functions.predefine(new GetAttributeNames(new QNm(Namespaces.BIT_NSURI,
+				Namespaces.SESSION_PREFIX, "getAttributeNames"), new Signature(
+				new SequenceType(AnyItemType.ANY, Cardinality.ZeroOrMany))));
+
+		Functions.predefine(new GetCreationTime(new QNm(Namespaces.BIT_NSURI,
+				Namespaces.SESSION_PREFIX, "getCreationTime"), new Signature(
+				new SequenceType(AtomicType.DATE, Cardinality.ZeroOrOne))));
+
+		Functions.predefine(new GetLastAccessedTime(new QNm(
+				Namespaces.BIT_NSURI, Namespaces.SESSION_PREFIX,
+				"getLastAccessedTime"), new Signature(new SequenceType(
+				AtomicType.DATE, Cardinality.ZeroOrOne))));
+
+		Functions.predefine(new GetMaxInactiveInterval(new QNm(
+				Namespaces.BIT_NSURI, Namespaces.SESSION_PREFIX,
+				"getMaxInactiveInterval"), new Signature(new SequenceType(
+				AtomicType.INT, Cardinality.ZeroOrOne))));
 
 		Functions.predefine(new GetSessionAtt(new QNm(Namespaces.BIT_NSURI,
 				Namespaces.SESSION_PREFIX, "getAtt"), new Signature(
@@ -121,21 +138,28 @@ public class ASXQuery extends XQuery {
 				new SequenceType(AnyItemType.ANY, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One)))); // attName
 
+		Functions.predefine(new Invalidate(new QNm(Namespaces.BIT_NSURI,
+				Namespaces.SESSION_PREFIX, "invalidate"), new Signature(
+				new SequenceType(AtomicType.BOOL, Cardinality.One))));
+
 		Functions.predefine(new RemoveSessionAtt(new QNm(Namespaces.BIT_NSURI,
 				Namespaces.SESSION_PREFIX, "remAtt"), new Signature(
 				// output: true OK or exception
 				new SequenceType(AnyItemType.ANY, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One)))); // attName
-		
-		Functions.predefine(new Clear(
-				new QNm(Namespaces.BIT_NSURI, Namespaces.SESSION_PREFIX, "clear")
-				, 
-				new Signature(
-						new SequenceType(AtomicType.BOOL, Cardinality.One)
-					)
-				)
-			);
-		
+
+		Functions.predefine(new SetMaxInactiveInterval(new QNm(
+				Namespaces.BIT_NSURI, Namespaces.SESSION_PREFIX,
+				"setMaxInactiveInterval"), new Signature(new SequenceType(
+				AtomicType.BOOL, Cardinality.One), new SequenceType(
+				AtomicType.INT, Cardinality.One))));
+
+		Functions.predefine(new SetSessionAtt(new QNm(Namespaces.BIT_NSURI,
+				Namespaces.SESSION_PREFIX, "setAtt"), new Signature(
+				// output: true OK or exception
+				new SequenceType(AtomicType.BOOL, Cardinality.One),
+				new SequenceType(AtomicType.STR, Cardinality.One), // att name
+				new SequenceType(AnyItemType.ANY, Cardinality.One))));// attribute
 
 		// Util
 		Functions.predefine(new Template(new QNm(Namespaces.BIT_NSURI,

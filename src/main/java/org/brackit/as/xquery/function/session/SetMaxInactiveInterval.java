@@ -32,6 +32,7 @@ import javax.servlet.http.HttpSession;
 import org.brackit.as.xquery.HttpSessionTXQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
+import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.Int;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
@@ -53,11 +54,15 @@ public class SetMaxInactiveInterval extends AbstractFunction {
 	@Override
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
-		HttpSession httpSession = ((HttpSessionTXQueryContext) ctx)
-				.getHttpSession();
-		Int maxInactiveInterval = new Int(((Item) args[0]).atomize()
-				.stringValue());
-		httpSession.setMaxInactiveInterval(maxInactiveInterval.intValue());
-		return null;
+		try {
+			HttpSession httpSession = ((HttpSessionTXQueryContext) ctx)
+					.getHttpSession();
+			Int maxInactiveInterval = new Int(((Item) args[0]).atomize()
+					.stringValue());
+			httpSession.setMaxInactiveInterval(maxInactiveInterval.intValue());
+			return Bool.TRUE;
+		} catch (Exception e) {
+			return Bool.FALSE;
+		}
 	}
 }

@@ -12,17 +12,7 @@
 		(OK) invalidate
 		(OK) clear
 	(OK) Implement these functions 
-	(  ) create signatures
-		(  ) getCreationTime
-		(  ) getLastAccessedTime
-		(  ) setMaxInactiveInterval
-		(  ) getMaxInactiveInterval
-		(OK) getAttribute (getAtt)
-		(  ) getAttributeNames
-		(OK) setAttribute (setAtt)
-		(OK) removeAttribute (remAtt)
-		(  ) invalidate
-		(OK) clear
+	(OK) create signatures
 	(  ) Unit Test these functions
 		(  ) getCreationTime
 		(  ) getLastAccessedTime
@@ -34,7 +24,9 @@
 		(  ) removeAttribute (remAtt)
 		(  ) invalidate
 		(  ) clear
-(  ) Define Applications skeleton (with and without MVC)
+(OK) Define Applications skeleton (with and without MVC)
+	(  ) Support applications without MVC new skeleton
+	(  ) SUpport applications with new MVC Skeleton
 (  ) Create application for creation of applications
 	Simple for skeleton creation
 (  ) Create application for applications checking
@@ -50,5 +42,6 @@
 	(  )Waiting for import modules implementation 
 (OK) HttpSessionQueryContext should extend TXQueryContext
 	To match and solve Roxana's problems.
-(  ) Automatically store all files for all applications (AppServlet)
-	(  ) Problems with locking mechanism. Test it more and explain to Sebastian.
+(OK) Automatically store all files for all applications (AppServlet)
+	(OK) Problems with locking mechanism. Test it more and explain to Sebastian.
+	(  ) Use such blob files directly from disk. Better for performance.
