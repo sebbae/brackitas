@@ -13,18 +13,9 @@
 		(OK) clear
 	(OK) Implement these functions 
 	(OK) create signatures
-	(  ) Unit Test these functions
+	(OK) Unit Test these functions
 		(OK) Create structure for these testings
-		(  ) getCreationTime
-		(  ) getLastAccessedTime
-		(  ) setMaxInactiveInterval
-		(  ) getMaxInactiveInterval
-		(  ) getAttribute (getAtt)
-		(  ) getAttributeNames
-		(  ) setAttribute (setAtt)
-		(  ) removeAttribute (remAtt)
-		(  ) invalidate
-		(  ) clear
+		(  ) Better test the functions. Do more elaborated tests.
 (OK) Define Applications skeleton (with and without MVC)
 	(  ) Support applications without MVC new skeleton
 	(  ) SUpport applications with new MVC Skeleton

@@ -27,44 +27,24 @@
  */
 package org.brackit.as.xquery.function.session;
 
-import java.net.URL;
-
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpSession;
-
 import org.brackit.as.xquery.ASXQuery;
 import org.brackit.as.xquery.HttpSessionTXQueryContext;
 import org.brackit.server.BrackitDB;
 import org.brackit.server.ServerException;
-import org.brackit.server.io.manager.impl.SlimBufferMgr;
 import org.brackit.server.metadata.manager.MetaDataMgr;
-import org.brackit.server.metadata.manager.impl.MetaDataMgrImpl;
-import org.brackit.server.tx.DummyTX;
-import org.brackit.server.tx.impl.TX;
-import org.brackit.server.tx.impl.TaMgrImpl;
-import org.brackit.server.tx.log.Log;
-import org.brackit.server.tx.log.impl.DefaultLog;
 import org.brackit.xquery.QueryContext;
-import org.brackit.xquery.node.SimpleStore;
-import org.brackit.xquery.xdm.Store;
 import org.junit.Test;
 
 /**
  * 
  * @author Henrique Valer
- *
+ * 
  */
 public class Session {
 
 	private static QueryContext ctx;
 
-	private static Store store;
-
 	private static MetaDataMgr metaDataMgr;
-
-	private static Log transactionLog;
 
 	private static BrackitDB db;
 
@@ -81,7 +61,42 @@ public class Session {
 	}
 
 	@Test
-	public void testGetAtt() throws Exception {
+	public void clear() throws Exception {
+		ASXQuery x = new ASXQuery("session:clear()");
+		x.setPrettyPrint(true);
+		x.serialize(ctx, System.out);
+	}
+
+	@Test
+	public void getAttributeNames() throws Exception {
+		ASXQuery x = new ASXQuery("session:getAttributeNames()");
+		x.setPrettyPrint(true);
+		x.serialize(ctx, System.out);
+	}
+
+	@Test
+	public void getCreationTime() throws Exception {
+		ASXQuery x = new ASXQuery("session:getCreationTime()");
+		x.setPrettyPrint(true);
+		x.serialize(ctx, System.out);
+	}
+
+	@Test
+	public void getLastAccessedTime() throws Exception {
+		ASXQuery x = new ASXQuery("session:getlastAccessedTime()");
+		x.setPrettyPrint(true);
+		x.serialize(ctx, System.out);
+	}
+
+	@Test
+	public void getMaxInactiveInterval() throws Exception {
+		ASXQuery x = new ASXQuery("session:getMaxInactiveInterval()");
+		x.setPrettyPrint(true);
+		x.serialize(ctx, System.out);
+	}
+
+	@Test
+	public void getSessionAtt() throws Exception {
 		ASXQuery x = new ASXQuery("let "
 				+ "  $a := session:setAtt('teste',<p>Test Attribute</p>) "
 				+ "return " + "  session:getAtt('teste')");
@@ -89,22 +104,26 @@ public class Session {
 		x.serialize(ctx, System.out);
 	}
 
-	// @Test
-	// public void testClear() throws Exception {
-	//		
-	// ASXQuery x = new ASXQuery(""
-	// );
-	// if (ASXQuery.DEBUG){
-	//			
-	// }
-	// x.setPrettyPrint(true);
-	// x.serialize(ctx, System.out);
-	// assertEquals(expected, actual);
-	// Functions.predefine(new Eval(new QNm(Namespaces.BIT_NSURI,
-	// Namespaces.BIT_PREFIX, "eval"), new Signature(new SequenceType(
-	// AtomicType.STR, Cardinality.ZeroOrOne), // result
-	// new SequenceType(AtomicType.STR, Cardinality.One))));
-	//		
-	// }
+	@Test
+	public void invalidate() throws Exception {
+		ASXQuery x = new ASXQuery("session:invalidate()");
+		x.setPrettyPrint(true);
+		x.serialize(ctx, System.out);
+	}
 
+	@Test
+	public void removeSessionAtt() throws Exception {
+		ASXQuery x = new ASXQuery("let "
+				+ "  $a := session:setAtt('teste',<p>Test Attribute</p>) "
+				+ "return " + "  session:removeAtt('teste')");
+		x.setPrettyPrint(true);
+		x.serialize(ctx, System.out);
+	}
+
+	@Test
+	public void setMaxInactiveInterval() throws Exception {
+		ASXQuery x = new ASXQuery("session:setMaxInactiveInterval(50)");
+		x.setPrettyPrint(true);
+		x.serialize(ctx, System.out);
+	}
 }
