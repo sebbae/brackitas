@@ -25,28 +25,19 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.xquery;
+package org.brackit.as.xquery.compiler;
 
 import org.brackit.server.metadata.manager.MetaDataMgr;
-import org.brackit.server.xquery.compiler.DBCompiler;
-import org.brackit.server.xquery.optimizer.DBOptimizer;
-import org.brackit.xquery.QueryException;
-import org.brackit.xquery.XQuery;
-import org.brackit.xquery.compiler.parser.ANTLRParser;
+import org.brackit.server.tx.Tx;
+import org.brackit.server.xquery.DBCompileChain;
 
 /**
  * @author Sebastian Baechle
  *
  */
-public class ASXQuery extends XQuery {
+public class ASCompileChain extends DBCompileChain {
 	
-	static {
-		// TODO register db-specific functions
-		// Example:
-		// Functions.predefine(new GetSession());
-	}
-
-	public ASXQuery(String query, MetaDataMgr mdm) throws QueryException {
-		super(query, new ANTLRParser(), new DBOptimizer(mdm), new DBCompiler());
+	public ASCompileChain(MetaDataMgr mdm, Tx tx) {
+		super(mdm, tx);
 	}
 }

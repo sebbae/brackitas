@@ -33,15 +33,20 @@ import java.io.PrintStream;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
 
 import org.apache.log4j.Logger;
-import org.brackit.as.xquery.ASXQuery;
+import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.server.ServerException;
 import org.brackit.server.metadata.TXQueryContext;
 import org.brackit.server.session.Session;
 import org.brackit.server.session.SessionException;
 import org.brackit.server.tx.IsolationLevel;
 import org.brackit.server.tx.Tx;
+import org.brackit.xquery.XQuery;
+import org.brackit.xquery.compiler.CompileChain;
 
 /**
  * 
@@ -51,9 +56,31 @@ import org.brackit.server.tx.Tx;
 public abstract class TXServlet extends AbstractServlet {
 	protected static final Logger log = Logger.getLogger(TXServlet.class);
 
+	private static final String SESSION = "_session";
+
+	@Override
+	public final void init() throws ServletException {
+		getServletContext().addListener(new HttpSessionListener() {
+
+			@Override
+			public void sessionDestroyed(HttpSessionEvent event) {
+				HttpSession httpSession = (HttpSession) event.getSession();
+				Session session = (Session) httpSession.getAttribute(SESSION);
+				if (session != null) {
+					sessionMgr.logout(session.getSessionID());
+				}
+			}
+
+			@Override
+			public void sessionCreated(HttpSessionEvent arg0) {
+			}
+		});
+	}
+
 	protected String query(Session session, String query) throws Exception {
 		ByteArrayOutputStream buf = new ByteArrayOutputStream();
-		new ASXQuery(query, metaDataMgr).serialize(new TXQueryContext(session.getTX(),
+		CompileChain chain = new ASCompileChain(metaDataMgr, session.getTX());
+		new XQuery(chain, query).serialize(new TXQueryContext(session.getTX(),
 				metaDataMgr), new PrintStream(buf));
 		return buf.toString("UTF-8");
 	}
@@ -88,7 +115,6 @@ public abstract class TXServlet extends AbstractServlet {
 			if (tx == null) {
 				session.commit();
 			}
-			sessionMgr.logout(session.getSessionID());
 		} catch (ServerException e1) {
 			log.error(e1);
 		}
@@ -97,8 +123,13 @@ public abstract class TXServlet extends AbstractServlet {
 	protected Session getSession(HttpServletRequest req)
 			throws ServletException {
 		try {
-			Session session = sessionMgr.getSession(sessionMgr.login());
-			session.setIsolationLevel(IsolationLevel.NONE);
+			HttpSession httpSession = (HttpSession) req.getSession();
+			Session session = (Session) httpSession.getAttribute(SESSION);
+			if (session == null) {
+				session = sessionMgr.getSession(sessionMgr.login());
+				session.setIsolationLevel(IsolationLevel.NONE);
+				httpSession.setAttribute(SESSION, session);
+			}
 			return session;
 		} catch (SessionException e) {
 			throw new ServletException(e);

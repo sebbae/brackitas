@@ -29,8 +29,8 @@ package org.brackit.as.http;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import javax.activation.MimetypesFileTypeMap;
@@ -77,7 +77,7 @@ public abstract class AbstractServlet extends HttpServlet {
 		mimeMap = new MimetypesFileTypeMap();
 
 		try {
-			FileInputStream fs = new FileInputStream("html/mime.types");
+			InputStream fs = getClass().getClassLoader().getResourceAsStream("mime.types");
 			DataInputStream in = new DataInputStream(fs);
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
 			String strLine = null;
@@ -87,7 +87,7 @@ public abstract class AbstractServlet extends HttpServlet {
 				mimeMap.addMimeTypes(strLine);
 			}
 			in.close();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			log.error("Could not load mime types", e);
 		}
 	}

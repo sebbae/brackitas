@@ -2,9 +2,10 @@
 <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <title>XTC Online</title>
-    <link rel="stylesheet" type="text/css" href="http://localhost:24280/rpc/db/XTCcss.css" />
+    <link rel="stylesheet" type="text/css" href="/rpc/db/XTCcss.css" />
 </head>
-<body>
+<body onload="HideMultipleIdFields('proc_',fieldsCountNumber);">
+  <script type="text/javascript" src="/rpc/db/XTCjs.js"></script>
   <div class="page_margins">
     <div id="border-top">
       <div id="edge-tl"></div>
@@ -12,7 +13,7 @@
     </div>
     <div class="page">
       <div id="header" align="center">
-        <img style="width:200px; padding: 10px;" align="middle" src="http://localhost:24280/rpc/db/xtc.png" />
+        <img style="width:200px; padding: 10px;" align="middle" src="/rpc/db/xtc.png" />
       </div>
       <div id="main">
         <div id="col1">
@@ -20,10 +21,10 @@
             <a id="navigation" name="navigation"></a>
             <div class="vlist">
               <ul>
-                <li class="active">XTC Query</li>
-                <li><a href="http://localhost:24280/ui/?payload=form_procedure">XTC Procedures</a></li>
-                <li><a href="http://localhost:24280/ui/?payload=form_upload">Upload Files</a></li>
-                <li><a href="http://localhost:24280/ui/?payload=form_download">Download Files</a></li>
+                <li><a href="/ui/?payload=form_query">XTC Query</a></li>
+                <li class="active">XTC Procedures</li>
+                <li><a href="/ui/?payload=form_upload">Upload Files</a></li>
+                <li><a href="/ui/?payload=form_download">Download Files</a></li>
               </ul>
             </div>
           </div>         
@@ -34,19 +35,26 @@
                 <table style="width: 100%; background-color: #E0E0F0;">
                     <tr>
                         <td>
-                          <h5>Query</h5>
-                          <textarea cols="100" name="query" rows="6"></textarea>
+                          <h5>Select procedure</h5>
+                          <select id="select_procedure" name="select_procedure">
+                          </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                          <div id="selected_procedure_parameters">
+                          </div>
                         </td>
                     </tr>                 
                     <tr>
                         <td>
-                          <input type="hidden" name="payload" value="form_query"/>
+                          <input type="hidden" name="payload" value="form_procedure"/>
                           <input align="middle" type="submit" name="subButton" value="Submit" />                            
                         </td>
                     </tr>
                     <tr>
                         <td>
-                          <h5>Result</h5>
+                		  <h5>Result</h5>
                           <textarea cols="100" name="result" rows="6"></textarea>
                         </td>
                     </tr>

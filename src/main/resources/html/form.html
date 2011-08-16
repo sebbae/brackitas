@@ -2,8 +2,7 @@
 <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <title>XTC Online</title>
-    <!-- add your meta tags here -->
-    <link href="http://localhost:24280/rpc/db/XTCcss.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="/rpc/db/XTCcss.css" />
 </head>
 <body>
   <div class="page_margins">
@@ -13,49 +12,62 @@
     </div>
     <div class="page">
       <div id="header" align="center">
-        <img style="width:200px; padding: 10px;" align="middle" src="http://localhost:24280/rpc/db/xtc.png" />
+        <img style="width:200px; padding: 10px;" align="middle" src="/rpc/db/xtc.png" />
       </div>
       <div id="main">
         <div id="col1">
           <div id="nav">
-            <!-- skiplink anchor: navigation -->
             <a id="navigation" name="navigation"></a>
             <div class="vlist">
-              <!-- main navigation: horizontal list -->
               <ul>
-                <li><a href="http://localhost:24280/ui/?payload=form_query">XTC Query</a></li>
-                <li><a href="http://localhost:24280/ui/?payload=form_procedure">XTC Procedures</a></li>
-                <li><a href="http://localhost:24280/ui/?payload=form_upload">Upload Files</a></li>
-                <li class="active">Download Files</li>
+                <li class="active">XTC Query</li>
+                <li><a href="/ui/?payload=form_procedure">XTC Procedures</a></li>
+                <li><a href="/ui/?payload=form_upload">Upload Files</a></li>
+                <li><a href="/ui/?payload=form_download">Download Files</a></li>
               </ul>
             </div>
           </div>         
         </div>
         <div id="col3">
           <div id="col3_content" class="clearfix">
+            <form action="/ui/">
                 <table style="width: 100%; background-color: #E0E0F0;">
                     <tr>
                         <td>
-                        	<h5>File list:</h5>
+                          <h5>Query</h5>
+                          <textarea cols="100" name="query" rows="6"></textarea>
                         </td>
-                    </tr>                
+                    </tr>                 
                     <tr>
                         <td>
-                          <input type="hidden" name="result" />
+                          <input type="hidden" name="payload" value="form_query"/>
+                          <input align="middle" type="submit" name="subButton" value="Submit" />                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                          <h5>Result</h5>
+                          <textarea cols="100" name="result" rows="6"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">
+                          <input type="hidden" value="In ... seconds" />
                         </td>
                     </tr>
                 </table>
+            </form>
           </div>
-          <div id="ie_clearing"> &#160; </div>
+          <div id="ie_clearing">
+          </div>
         </div>
       </div>
-      <!-- begin: #footer -->
       <div id="footer">
         <a href="http://xtc-project.de">The XTC Project: Native XML Data Management</a>
       </div>
 	  <div id="footer">
 	  	<a href="http://www.yaml.de">CSS Layout: YAML</a>
-	  </div>      
+	  </div>
     </div>
     <div id="border-bottom">
       <div id="edge-bl"></div>
