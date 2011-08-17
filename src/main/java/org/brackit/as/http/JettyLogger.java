@@ -27,102 +27,97 @@
  */
 package org.brackit.as.http;
 
-import org.apache.log4j.Level;
+import org.brackit.xquery.util.log.Logger.Level;
 import org.eclipse.jetty.util.log.Logger;
 
 /**
- * Simple l4j wrapper to encapsulate jetty internal logging.
+ * Simple wrapper to encapsulate jetty internal logging.
  * 
  * @author Sebastian Baechle
  * 
  */
-public class Log4jLogger implements Logger {
-	private final org.apache.log4j.Logger l4j;
+public class JettyLogger implements Logger {
+	private final org.brackit.xquery.util.log.Logger log;
 
-	Log4jLogger() {
-		l4j = org.apache.log4j.Logger.getRootLogger();
-		// System.out.println(String.format("Creating %s(%s)",
-		// Log4jLogger.class.getSimpleName(), l4j.getName()));
+	public JettyLogger() {
+		this.log = org.brackit.xquery.util.log.Logger.getRootLogger();
 	}
-
-	private Log4jLogger(org.apache.log4j.Logger l4j) {
-		super();
-		this.l4j = l4j;
-		// System.out.println(String.format("Creating %s(%s)",
-		// Log4jLogger.class.getSimpleName(), l4j.getName()));
+	
+	private JettyLogger(org.brackit.xquery.util.log.Logger log) {
+		this.log = log;
 	}
 
 	@Override
 	public void debug(String s, Throwable throwable) {
-		l4j.debug(s, throwable);
+		log.debug(s, throwable);
 	}
 
 	@Override
 	public Logger getLogger(String s) {
-		return new Log4jLogger(org.apache.log4j.Logger.getLogger(s));
+		return new JettyLogger(org.brackit.xquery.util.log.Logger.getLogger(s));
 	}
 
 	@Override
 	public String getName() {
-		return l4j.getName();
+		return null;
 	}
 
 	@Override
 	public boolean isDebugEnabled() {
-		return l4j.isDebugEnabled();
+		return log.isDebugEnabled();
 	}
 
 	@Override
 	public void setDebugEnabled(boolean flag) {
 		if (flag) {
-			l4j.setLevel(Level.DEBUG);
+			log.setLevel(Level.DEBUG);
 		} else {
-			l4j.setLevel(Level.INFO);
+			log.setLevel(Level.INFO);
 		}
 	}
 
 	@Override
 	public void warn(String s, Throwable throwable) {
-		l4j.warn(s, throwable);
+		log.warn(s, throwable);
 	}
 
 	@Override
 	public void debug(Throwable arg0) {
-		l4j.debug(null, arg0);
+		log.debug(null, arg0);
 	}
 
 	@Override
 	public void debug(String arg0, Object... arg1) {
-		l4j.debug(String.format(arg0, arg1));
+		log.debug(String.format(arg0, arg1));
 	}
 
 	@Override
 	public void ignore(Throwable arg0) {
-		l4j.debug(null, arg0);
+		log.debug(null, arg0);
 	}
 
 	@Override
 	public void info(Throwable arg0) {
-		l4j.info(null, arg0);
+		log.info(null, arg0);
 	}
 
 	@Override
 	public void info(String arg0, Object... arg1) {
-		l4j.info(String.format(arg0, arg1));
+		log.info(String.format(arg0, arg1));
 	}
 
 	@Override
 	public void info(String arg0, Throwable arg1) {
-		l4j.info(arg0, arg1);
+		log.info(arg0, arg1);
 	}
 
 	@Override
 	public void warn(Throwable arg0) {
-		l4j.debug(null, arg0);
+		log.debug(null, arg0);
 	}
 
 	@Override
 	public void warn(String arg0, Object... arg1) {
-		l4j.warn(String.format(arg0, arg1));
+		log.warn(String.format(arg0, arg1));
 	}
 }

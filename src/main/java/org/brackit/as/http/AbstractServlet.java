@@ -41,7 +41,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.brackit.xquery.util.log.Logger;
 import org.brackit.server.metadata.manager.MetaDataMgr;
 import org.brackit.server.session.SessionMgr;
 

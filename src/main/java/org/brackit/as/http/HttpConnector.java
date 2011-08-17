@@ -34,7 +34,7 @@ import javax.servlet.DispatcherType;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
-import org.apache.log4j.Logger;
+import org.brackit.xquery.util.log.Logger;
 import org.brackit.as.http.rpc.DBServlet;
 import org.brackit.as.http.rpc.ProcedureServlet;
 import org.brackit.as.http.rpc.XQueryServlet;
@@ -85,7 +85,7 @@ public class HttpConnector {
 	public HttpConnector(final MetaDataMgr metaDataMgr,
 			final SessionMgr sessionMgr, final int port) {
 		// encapsulate jetty logging to our log4j
-		Log.setLog(new Log4jLogger());
+		Log.setLog(new JettyLogger());
 		this.server = new Server(port);
 		// hard init to speed up startup time
 		server.setSessionIdManager(new HashSessionIdManager(new Random()));

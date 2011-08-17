@@ -37,7 +37,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
-import org.apache.log4j.Logger;
+import org.brackit.xquery.util.log.Logger;
 import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.server.ServerException;
 import org.brackit.server.metadata.TXQueryContext;
