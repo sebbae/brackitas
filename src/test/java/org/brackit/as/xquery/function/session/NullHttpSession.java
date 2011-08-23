@@ -38,158 +38,196 @@ import javax.servlet.http.HttpSessionContext;
 /**
  * 
  * @author Henrique Valer
- *
+ * 
  */
+@SuppressWarnings("deprecation")
 public class NullHttpSession implements HttpSession {
 
 	private ArrayList<String> attributeNames;
 	private Object attribute;
 	private Long creationTime;
 	private String Id;
-	private Long accessedTime; 
+	private Long accessedTime;
 	private int maxInactiveInterval;
 	private boolean active;
-	
-	public NullHttpSession (){
+
+	public NullHttpSession() {
 		this.active = true;
-	}
-	
-	public Long getAccessedTime() {
-		return accessedTime;
+		this.attributeNames = new ArrayList<String>();
+		this.creationTime = System.currentTimeMillis();
+		this.accessedTime = this.creationTime;
+		this.maxInactiveInterval = 50;
+		this.attribute = new Object();
 	}
 
-	public void setAccessedTime(Long accessedTime) {
-		this.accessedTime = accessedTime;
+	public Long getAccessedTime() {
+		if (active) {
+			Long a = this.accessedTime;
+			setAccessedTime();
+			return a;
+		} else {
+			return null;
+		}
+	}
+
+	public void setAccessedTime() {
+		this.accessedTime = System.currentTimeMillis();
 	}
 
 	public Object getAttribute() {
-		return attribute;
+		if (active) {
+			setAccessedTime();
+			return this.attribute;
+		} else {
+			return null;
+		}
 	}
 
 	public void setAttribute(Object attribute) {
-		this.attribute = attribute;
-	}
-
-	public void setAttributeNames(ArrayList<String> attributeNames) {
-		this.attributeNames = attributeNames;
+		if (active) {
+			setAccessedTime();
+			this.attribute = attribute;
+		}
 	}
 
 	public void setCreationTime(Long creationTime) {
-		this.creationTime = creationTime;
+		if (active) {
+			setAccessedTime();
+			this.creationTime = creationTime;
+		}
 	}
 
-	public ArrayList<String> GetAttributes(){
-		return this.attributeNames;
+	public ArrayList<Object> GetAttributes() {
+		if (active) {
+			setAccessedTime();
+			ArrayList<Object> a = new ArrayList<Object>();
+			a.add(this.attribute);
+			return a;
+		} else {
+			return null;
+		}
+
 	}
-	
+
 	@Override
 	public Object getAttribute(String name) {
-		return this.attribute; 
+		if (active) {
+			return getAttribute();
+		} else {
+			return null;
+		}
 	}
 
 	@Override
 	public Enumeration<String> getAttributeNames() {
-		// TODO Auto-generated method stub
-		try {
-			return Collections.enumeration(GetAttributes());
-		}catch (Exception e) {
-			//TODO: Erase and use log4j
-			e.printStackTrace();
+		if (active) {
+			return Collections.enumeration(this.attributeNames);
+		} else {
 			return null;
 		}
 	}
 
 	@Override
 	public long getCreationTime() {
-		// TODO Auto-generated method stub
-		try {
+		if (active) {
 			return this.creationTime;
-		}catch (Exception e) {
-			//TODO: Erase and use log4j
-			e.printStackTrace();
+		} else {
 			return 0;
 		}
 	}
 
 	@Override
 	public String getId() {
-		return this.Id;
+		if (active) {
+			return this.Id;
+		} else {
+			return null;
+		}
 	}
-	
+
 	public void setId(String Id) {
-		this.Id = Id;
-	}	
+		if (active) {
+			this.Id = Id;
+		}
+	}
 
 	@Override
 	public long getLastAccessedTime() {
-		// TODO Auto-generated method stub
-		return getAccessedTime();
+		if (active) {
+			return getAccessedTime();
+		} else {
+			return 0;
+		}
 	}
 
 	@Override
 	public int getMaxInactiveInterval() {
-		// TODO Auto-generated method stub
-		return this.maxInactiveInterval;
+		if (active) {
+			return this.maxInactiveInterval;
+		} else {
+			return 0;
+		}
 	}
 
 	@Override
 	public void invalidate() {
-		// TODO Auto-generated method stub
-		this.active = false;
+		if (active) {
+			this.active = false;
+		}
 	}
 
 	@Override
 	public void removeAttribute(String name) {
-		this.attribute = null;
+		if (active) {
+			this.attribute = null;
+		}
 	}
 
 	@Override
 	public void setAttribute(String name, Object value) {
-		this.attribute = value;
+		if (active) {
+			attributeNames.add(name);
+			setAttribute(value);
+		}
 	}
 
 	@Override
 	public void setMaxInactiveInterval(int interval) {
-		this.maxInactiveInterval = interval;
+		if (active) {
+			this.maxInactiveInterval = interval;
+		}
 	}
-	
+
 	@Override
 	public void removeValue(String name) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void putValue(String name, Object value) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public boolean isNew() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public ServletContext getServletContext() {
-		// TODO Auto-generated method stub
 		return null;
-	}	
+	}
 
 	@Override
 	public Object getValue(String name) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String[] getValueNames() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public HttpSessionContext getSessionContext() {
-		// TODO Auto-generated method stub
 		return null;
-	}	
+	}
 }

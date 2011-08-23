@@ -28,7 +28,7 @@ let $content :=
         $a := bit:storeFile(concat(session:getAtt('appName'),'/carts/',fn:concat($cliName,$cliAddress)),
                             local:cart($cliName,$cliAddress))
     return
-        if (session:remAtt('cart')) then
+        if (session:rmAtt('cart')) then
             <p> Buy order for the given cart added sucessfully. </p>
         else
             <p> Problems with buying order. </p>

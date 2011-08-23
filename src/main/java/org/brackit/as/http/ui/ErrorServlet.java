@@ -55,6 +55,7 @@ public class ErrorServlet extends UIServlet {
 	private void process(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
 		String errorMsg = (String) req.getAttribute("errorMsg");
+
 		String vReturn = "";
 		String str;
 

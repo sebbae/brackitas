@@ -49,7 +49,6 @@ public class Helper extends AbstractServlet {
 	};
 
 	public String LN = "\n";
-
 	public String FORM_RESULT_AREA = "<textarea cols=\"100\" name=\"result\" rows=\"6\"/>";
 	public String FORM_QUERY_AREA = "<textarea cols=\"100\" name=\"query\" rows=\"6\"/>";
 	public String FORM_SECONDS_AREA = "<input type=\"hidden\" value=\"In ... seconds\"/>";

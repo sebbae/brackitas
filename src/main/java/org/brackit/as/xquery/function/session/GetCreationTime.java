@@ -27,12 +27,14 @@
  */
 package org.brackit.as.xquery.function.session;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.servlet.http.HttpSession;
 
 import org.brackit.as.xquery.HttpSessionTXQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
-import org.brackit.xquery.atomic.Int;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.function.Signature;
@@ -55,10 +57,10 @@ public class GetCreationTime extends AbstractFunction {
 		try {
 			HttpSession httpSession = ((HttpSessionTXQueryContext) ctx)
 					.getHttpSession();
-			return new Int(httpSession.getCreationTime());
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH:mm");
+			Date resultdate = new Date(httpSession.getCreationTime());
+			return new org.brackit.xquery.atomic.Date(sdf.format(resultdate));
 		} catch (Exception e) {
-			// TODO: Remove it
-			e.printStackTrace();
 			return null;
 		}
 	}

@@ -60,8 +60,6 @@ public class RemoveSessionAtt extends AbstractFunction {
 			httpSession.removeAttribute(vAttName);
 			return Bool.TRUE;
 		} catch (Exception e) {
-			// TODO: Remove it
-			e.printStackTrace();
 			return Bool.FALSE;
 		}
 	}

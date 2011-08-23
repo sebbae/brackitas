@@ -69,8 +69,6 @@ public class GetAttributeNames extends AbstractFunction {
 			Item[] result = attNames.toArray(new Item[0]);
 			return new ItemSequence(result);
 		} catch (Exception e) {
-			// TODO: Remove it
-			e.printStackTrace();
 			return null;
 		}
 	}

@@ -27,6 +27,15 @@
  */
 package org.brackit.as.xquery.function.session;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.brackit.as.xquery.ASXQuery;
 import org.brackit.as.xquery.HttpSessionTXQueryContext;
 import org.brackit.server.BrackitDB;
@@ -42,88 +51,104 @@ import org.junit.Test;
  */
 public class Session {
 
+	protected static PrintStream createBuffer() {
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		return new PrintStream(out) {
+			final OutputStream baos = out;
+
+			public String toString() {
+				return baos.toString();
+			}
+		};
+	}
+
 	private static QueryContext ctx;
 
 	private static MetaDataMgr metaDataMgr;
 
 	private static BrackitDB db;
 
+	private static PrintStream buffer;
+
 	static {
 		try {
+			buffer = createBuffer();
 			db = new BrackitDB(true);
 			metaDataMgr = db.getMetadataMgr();
 			ctx = new HttpSessionTXQueryContext(db.getTaMgr().begin(),
 					metaDataMgr, new NullHttpSession());
 		} catch (ServerException e) {
-			// TODO Remove it
 			e.printStackTrace();
 		}
 	}
 
 	@Test
 	public void clear() throws Exception {
-		ASXQuery x = new ASXQuery("session:clear()");
+		ASXQuery x = new ASXQuery(
+				"let $a := session:setAtt('test',<a/>) return if (session:clear()) then session:getAtt('test') else <info> Session clear problems </info>");
 		x.setPrettyPrint(true);
-		x.serialize(ctx, System.out);
+		x.serialize(ctx, buffer);
+		assertEquals("", buffer.toString());
 	}
 
 	@Test
 	public void getAttributeNames() throws Exception {
-		ASXQuery x = new ASXQuery("session:getAttributeNames()");
+		ASXQuery x = new ASXQuery(
+				"if (session:setAtt('test',<p/>) and session:setAtt('test2',<p/>)) then session:getAttributeNames() else <info/>");
 		x.setPrettyPrint(true);
-		x.serialize(ctx, System.out);
+		x.serialize(ctx, buffer);
+		assertEquals("test test2", buffer.toString());
 	}
 
 	@Test
 	public void getCreationTime() throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH:mm");
+		Date resultdate = new Date(System.currentTimeMillis());
+		new org.brackit.xquery.atomic.Date(sdf.format(resultdate));
 		ASXQuery x = new ASXQuery("session:getCreationTime()");
 		x.setPrettyPrint(true);
-		x.serialize(ctx, System.out);
+		x.serialize(ctx, buffer);
+		assertEquals(sdf.format(resultdate), buffer.toString());
 	}
 
 	@Test
 	public void getLastAccessedTime() throws Exception {
-		ASXQuery x = new ASXQuery("session:getlastAccessedTime()");
-		x.setPrettyPrint(true);
-		x.serialize(ctx, System.out);
+		ASXQuery x = new ASXQuery(
+				"if (session:getCreationTime() eq session:getLastAccessedTime()) then <true/> else <false/>");
+		x.serialize(ctx, buffer);
+		assertEquals("<true/>", buffer.toString());
 	}
 
 	@Test
-	public void getMaxInactiveInterval() throws Exception {
-		ASXQuery x = new ASXQuery("session:getMaxInactiveInterval()");
-		x.setPrettyPrint(true);
-		x.serialize(ctx, System.out);
+	public void getAndSetMaxInactiveInterval() throws Exception {
+		ASXQuery x = new ASXQuery(
+				"let $a := 50 return if (session:setMaxInactiveInterval($a)) then if (session:getMaxInactiveInterval() eq $a) then <true/> else <false/> else <info> Problem with setMaxInactiveInterval() </info>");
+		x.serialize(ctx, buffer);
+		assertEquals("<true/>", buffer.toString());
 	}
 
 	@Test
 	public void getSessionAtt() throws Exception {
-		ASXQuery x = new ASXQuery("let "
-				+ "  $a := session:setAtt('teste',<p>Test Attribute</p>) "
-				+ "return " + "  session:getAtt('teste')");
-		x.setPrettyPrint(true);
-		x.serialize(ctx, System.out);
+		ASXQuery x = new ASXQuery(
+				"let $a := session:setAtt('teste',<p>Test Attribute</p>) return session:getAtt('teste')");
+		x.serialize(ctx, buffer);
+		assertEquals("<p>Test Attribute</p>", buffer.toString());
 	}
 
 	@Test
 	public void invalidate() throws Exception {
-		ASXQuery x = new ASXQuery("session:invalidate()");
-		x.setPrettyPrint(true);
-		x.serialize(ctx, System.out);
+		ASXQuery x = new ASXQuery(
+				"let $a := session:setAtt('test',<info/>) return let $b := session:invalidate() return session:getAtt('teste')");
+		x.serialize(ctx, buffer);
+		assertEquals("", buffer.toString());
 	}
 
 	@Test
 	public void removeSessionAtt() throws Exception {
-		ASXQuery x = new ASXQuery("let "
-				+ "  $a := session:setAtt('teste',<p>Test Attribute</p>) "
-				+ "return " + "  session:removeAtt('teste')");
+		ASXQuery x = new ASXQuery(
+				"let $a := session:setAtt('test',<p>Test Attribute</p>) return session:rmAtt('test')");
 		x.setPrettyPrint(true);
-		x.serialize(ctx, System.out);
-	}
-
-	@Test
-	public void setMaxInactiveInterval() throws Exception {
-		ASXQuery x = new ASXQuery("session:setMaxInactiveInterval(50)");
-		x.setPrettyPrint(true);
-		x.serialize(ctx, System.out);
+		x.serialize(ctx, buffer);
+		assertTrue(new Boolean(buffer.toString()));
 	}
 }

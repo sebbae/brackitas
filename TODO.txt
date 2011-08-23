@@ -8,7 +8,7 @@
 		(OK) getAttribute (getAtt)
 		(OK) getAttributeNames
 		(OK) setAttribute (setAtt)
-		(OK) removeAttribute (remAtt)
+		(OK) removeAttribute (rmAtt)
 		(OK) invalidate
 		(OK) clear
 	(OK) Implement these functions 

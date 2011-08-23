@@ -60,8 +60,6 @@ public class SetSessionAtt extends AbstractFunction {
 			httpSession.setAttribute(vAttName, args[1]);
 			return Bool.TRUE;
 		} catch (Exception e) {
-			// TODO: Remove it
-			e.printStackTrace();
 			return Bool.FALSE;
 		}
 	}

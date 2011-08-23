@@ -57,8 +57,6 @@ public class GetMaxInactiveInterval extends AbstractFunction {
 					.getHttpSession();
 			return new Int(httpSession.getMaxInactiveInterval());
 		} catch (Exception e) {
-			// TODO: Remove it
-			e.printStackTrace();
 			return null;
 		}
 	}

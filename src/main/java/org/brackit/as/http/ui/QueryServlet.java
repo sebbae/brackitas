@@ -28,7 +28,6 @@
 package org.brackit.as.http.ui;
 
 import java.io.PrintStream;
-import java.util.regex.Matcher;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -70,37 +69,26 @@ public class QueryServlet extends UIServlet {
 		long procTime;
 
 		if (queryParameter != null) {
-			try {
-				// executes, calculating times
-				procTime = System.currentTimeMillis();
-				String result = httpQuery(session, queryParameter, req
-						.getSession());
+			// executes, calculating times
+			procTime = System.currentTimeMillis();
+			String result = httpQuery(session, queryParameter, req.getSession());
 
-				procTime = System.currentTimeMillis() - procTime;
-				// retrieves results
-				strResultEdited = result.replaceAll("<", "&lt;").replaceAll(
-						">", "&gt;");
+			procTime = System.currentTimeMillis() - procTime;
+			// retrieves results
+			strResultEdited = result.replaceAll("<", "&lt;").replaceAll(">",
+					"&gt;");
 
-				// replace results
-				vReturn = vFile.replaceAll(helper.FORM_RESULT_AREA,
-						"<textarea cols=\"100\" name=\"result\" rows=\"6\">"
-								+ strResultEdited + "</textarea>");
-				queryParameter = queryParameter.replaceAll("\\$", "\\\\\\$")
-						.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-				vReturn = vReturn.replaceAll(helper.FORM_QUERY_AREA,
-						"<textarea cols=\"100\" name=\"query\" rows=\"6\">"
-								+ queryParameter + "</textarea>");
-				vReturn = vReturn.replaceAll(helper.FORM_SECONDS_AREA, "In "
-						+ procTime + " milliseconds.");
-			} catch (Exception e) {
-				String strExcMessage = Matcher.quoteReplacement(e.getMessage());
-				vReturn = vFile.replaceAll(helper.FORM_RESULT_AREA,
-						"<textarea cols=\"100\" name=\"result\" rows=\"6\">"
-								+ strExcMessage + "</textarea>");
-				vReturn = vReturn.replaceAll(helper.FORM_QUERY_AREA,
-						"<textarea cols=\"100\" name=\"query\" rows=\"6\">"
-								+ queryParameter + "</textarea>");
-			}
+			// replace results
+			vReturn = vFile.replaceAll(helper.FORM_RESULT_AREA,
+					"<textarea cols=\"100\" name=\"result\" rows=\"6\">"
+							+ strResultEdited + "</textarea>");
+			queryParameter = queryParameter.replaceAll("\\$", "\\\\\\$")
+					.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+			vReturn = vReturn.replaceAll(helper.FORM_QUERY_AREA,
+					"<textarea cols=\"100\" name=\"query\" rows=\"6\">"
+							+ queryParameter + "</textarea>");
+			vReturn = vReturn.replaceAll(helper.FORM_SECONDS_AREA, "In "
+					+ procTime + " milliseconds.");
 		} else {
 			vReturn = vFile.replaceAll(helper.FORM_SECONDS_AREA, "");
 		}

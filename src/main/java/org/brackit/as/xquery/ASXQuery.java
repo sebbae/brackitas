@@ -145,7 +145,7 @@ public class ASXQuery extends XQuery {
 				new SequenceType(AtomicType.BOOL, Cardinality.One))));
 
 		Functions.predefine(new RemoveSessionAtt(new QNm(Namespaces.BIT_NSURI,
-				Namespaces.SESSION_PREFIX, "remAtt"), new Signature(
+				Namespaces.SESSION_PREFIX, "rmAtt"), new Signature(
 				// output: true OK or exception
 				new SequenceType(AnyItemType.ANY, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One)))); // attName
@@ -186,24 +186,11 @@ public class ASXQuery extends XQuery {
 				new SequenceType(AtomicType.STR, Cardinality.One)))); // input
 	}
 
-//	public ASXQuery(String query, MetaDataMgr mdm) throws QueryException {
-//		super(query, new ANTLRParser(), new DBOptimizer(mdm), new DBCompiler());
-//	}
-//
-//	public ASXQuery(File pFile, MetaDataMgr mdm) throws QueryException {
-//		super(pFile, new ANTLRParser(), new DBOptimizer(mdm), new DBCompiler());
-//	}
-//
-//	public ASXQuery(File pFile) throws QueryException {
-//		super(pFile, new ANTLRParser(), new DefaultOptimizer(),
-//				new DBCompiler());
-//	}
-	
 	public ASXQuery(File f) throws QueryException {
 		super(getStringFromFile(f));
-	} 
-	
-	private static String getStringFromFile (File pFile) throws QueryException {
+	}
+
+	private static String getStringFromFile(File pFile) throws QueryException {
 		byte[] buffer = new byte[(int) pFile.length()];
 		BufferedInputStream in = null;
 		try {
@@ -219,8 +206,8 @@ public class ASXQuery extends XQuery {
 				} catch (IOException ignored) {
 				}
 		}
-		return new String(buffer);		
-	}	
+		return new String(buffer);
+	}
 
 	public ASXQuery(String s) throws QueryException {
 		super(s);
