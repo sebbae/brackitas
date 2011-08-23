@@ -34,7 +34,6 @@ import javax.servlet.DispatcherType;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
-import org.apache.log4j.Logger;
 import org.brackit.as.http.app.AppController;
 import org.brackit.as.http.app.AppDispatcher;
 import org.brackit.as.http.app.AppError;
@@ -53,11 +52,12 @@ import org.brackit.as.http.ui.UploadServlet;
 import org.brackit.server.metadata.manager.MetaDataMgr;
 import org.brackit.server.session.Session;
 import org.brackit.server.session.SessionMgr;
+import org.brackit.xquery.util.log.Logger;
+import org.brackit.xquery.util.log.UtilLogFactory;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.session.HashSessionIdManager;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.util.log.Log;
 
 /**
  * 
@@ -65,7 +65,7 @@ import org.eclipse.jetty.util.log.Log;
  * 
  */
 public class HttpConnector {
-	private static final Logger log = Logger.getLogger(HttpConnector.class);
+	private static final Logger log = new UtilLogFactory().getRootLogger();
 
 	public static final String LOGIN_PREFIX = "/rpc/login";
 	public static final String GET_PREFIX = "/rpc/db/*";
@@ -93,8 +93,6 @@ public class HttpConnector {
 
 	public HttpConnector(final MetaDataMgr metaDataMgr,
 			final SessionMgr sessionMgr, final int port) {
-		// encapsulate jetty logging to our log4j
-		Log.setLog(new Log4jLogger());
 		this.server = new Server(port);
 		// hard init to speed up startup time
 		server.setSessionIdManager(new HashSessionIdManager(new Random()));
@@ -134,10 +132,9 @@ public class HttpConnector {
 		servletContextHandler.addServlet(AppController.class,
 				APP_CONTROLLER_PREFIX);
 		servletContextHandler.addServlet(AppError.class, APP_ERROR_PREFIX);
-		
+
 		/*
-		 * Application testing servlets
-		 * TODO: Erase them after testing
+		 * Application testing servlets TODO: Erase them after testing
 		 */
 		servletContextHandler.addServlet(AppView.class, APP_VIEW_PREFIX);
 

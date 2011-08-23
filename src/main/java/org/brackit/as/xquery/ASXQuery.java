@@ -27,7 +27,9 @@
  */
 package org.brackit.as.xquery;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import org.brackit.as.xquery.function.bit.DeleteFile;
@@ -51,6 +53,7 @@ import org.brackit.as.xquery.function.util.Template;
 import org.brackit.server.metadata.manager.MetaDataMgr;
 import org.brackit.server.xquery.compiler.DBCompiler;
 import org.brackit.server.xquery.optimizer.DBOptimizer;
+import org.brackit.xquery.ErrorCode;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.XQuery;
 import org.brackit.xquery.atomic.QNm;
@@ -183,18 +186,41 @@ public class ASXQuery extends XQuery {
 				new SequenceType(AtomicType.STR, Cardinality.One)))); // input
 	}
 
-	public ASXQuery(String query, MetaDataMgr mdm) throws QueryException {
-		super(query, new ANTLRParser(), new DBOptimizer(mdm), new DBCompiler());
-	}
-
-	public ASXQuery(File pFile, MetaDataMgr mdm) throws QueryException {
-		super(pFile, new ANTLRParser(), new DBOptimizer(mdm), new DBCompiler());
-	}
-
-	public ASXQuery(File pFile) throws QueryException {
-		super(pFile, new ANTLRParser(), new DefaultOptimizer(),
-				new DBCompiler());
-	}
+//	public ASXQuery(String query, MetaDataMgr mdm) throws QueryException {
+//		super(query, new ANTLRParser(), new DBOptimizer(mdm), new DBCompiler());
+//	}
+//
+//	public ASXQuery(File pFile, MetaDataMgr mdm) throws QueryException {
+//		super(pFile, new ANTLRParser(), new DBOptimizer(mdm), new DBCompiler());
+//	}
+//
+//	public ASXQuery(File pFile) throws QueryException {
+//		super(pFile, new ANTLRParser(), new DefaultOptimizer(),
+//				new DBCompiler());
+//	}
+	
+	public ASXQuery(File f) throws QueryException {
+		super(getStringFromFile(f));
+	} 
+	
+	private static String getStringFromFile (File pFile) throws QueryException {
+		byte[] buffer = new byte[(int) pFile.length()];
+		BufferedInputStream in = null;
+		try {
+			in = new BufferedInputStream(new FileInputStream(pFile));
+			in.read(buffer);
+		} catch (IOException e) {
+			throw new QueryException(e, ErrorCode.ERR_PARSING_ERROR, e
+					.getMessage());
+		} finally {
+			if (in != null)
+				try {
+					in.close();
+				} catch (IOException ignored) {
+				}
+		}
+		return new String(buffer);		
+	}	
 
 	public ASXQuery(String s) throws QueryException {
 		super(s);

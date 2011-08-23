@@ -28,18 +28,13 @@
 package org.brackit.as.http;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.PrintStream;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
 import org.brackit.as.xquery.ASXQuery;
 import org.brackit.as.xquery.HttpSessionTXQueryContext;
 import org.brackit.server.ServerException;
@@ -48,6 +43,7 @@ import org.brackit.server.session.Session;
 import org.brackit.server.session.SessionException;
 import org.brackit.server.tx.IsolationLevel;
 import org.brackit.server.tx.Tx;
+import org.brackit.xquery.util.log.Logger;
 
 /**
  * 
@@ -60,18 +56,20 @@ public abstract class TXServlet extends AbstractServlet {
 
 	protected String query(Session session, String query) throws Exception {
 		ByteArrayOutputStream buf = new ByteArrayOutputStream();
-		ASXQuery x = new ASXQuery(query, metaDataMgr);
+		ASXQuery x = new ASXQuery(query);
 		x.setPrettyPrint(true);
 		x.serialize(new TXQueryContext(session.getTX(), metaDataMgr),
 				new PrintStream(buf));
 		return buf.toString("UTF-8");
 	}
-	
-	protected String httpQuery(Session session, String query, HttpSession httpSession) throws Exception {
+
+	protected String httpQuery(Session session, String query,
+			HttpSession httpSession) throws Exception {
 		ByteArrayOutputStream buf = new ByteArrayOutputStream();
-		ASXQuery x = new ASXQuery(query, metaDataMgr);
+		ASXQuery x = new ASXQuery(query);
 		x.setPrettyPrint(true);
-		x.serialize(new HttpSessionTXQueryContext(session.getTX(), metaDataMgr, httpSession), new PrintStream(buf));
+		x.serialize(new HttpSessionTXQueryContext(session.getTX(), metaDataMgr,
+				httpSession), new PrintStream(buf));
 		return buf.toString("UTF-8");
 	}
 

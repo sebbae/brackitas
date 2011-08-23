@@ -41,9 +41,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
 import org.brackit.server.metadata.manager.MetaDataMgr;
 import org.brackit.server.session.SessionMgr;
+import org.brackit.xquery.util.log.Logger;
 
 /**
  * 
@@ -51,7 +51,7 @@ import org.brackit.server.session.SessionMgr;
  * 
  */
 public abstract class AbstractServlet extends HttpServlet {
-	
+
 	protected static final Logger log = Logger.getLogger(AbstractServlet.class);
 
 	public static MimetypesFileTypeMap mimeMap;

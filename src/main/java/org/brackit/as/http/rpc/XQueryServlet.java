@@ -87,7 +87,7 @@ public class XQueryServlet extends RPCServlet {
 
 		resp.setContentType("text/xml; charset=UTF-8");
 		resp.setHeader("Content-disposition", "inline;");
-		XQuery xq = new ASXQuery(query, metaDataMgr);
+		XQuery xq = new ASXQuery(query);
 		xq.setPrettyPrint(false);
 		PrintStream out = new PrintStream(new BufferedOutputStream(resp
 				.getOutputStream()));

@@ -33,10 +33,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
 import org.brackit.as.http.AbstractServlet;
 import org.brackit.server.ServerException;
 import org.brackit.server.session.Session;
+import org.brackit.xquery.util.log.Logger;
 
 /**
  * 

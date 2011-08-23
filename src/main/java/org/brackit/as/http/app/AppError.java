@@ -50,7 +50,7 @@ public class AppError extends AppServlet {
 			HttpSessionTXQueryContext ctx = new HttpSessionTXQueryContext(
 					session.getTX(), metaDataMgr, req.getSession());
 			ASXQuery x = new ASXQuery("util:template("
-					+ (String) req.getAttribute("errorMsg") + ")", metaDataMgr);
+					+ (String) req.getAttribute("errorMsg") + ")");
 			x.serialize(ctx, new PrintStream(resp.getOutputStream()));
 			resp.setStatus(HttpServletResponse.SC_OK);
 		} catch (Exception e) {

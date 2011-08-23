@@ -67,7 +67,7 @@ public class AppView extends AppServlet {
 			ctx.getHttpSession().setAttribute("viewTree", tree);
 			File f = new File("apps/helloWorld/views/template/index.xq");
 			ASXQuery x = new ASXQuery(f);
-			Functions fs = x.getMainModule().getFunctions();
+			Functions fs = x.getModule().getFunctions();
 			// fs.
 			// e = Collections.enumeration(x.getMainModule().getFunctions());
 

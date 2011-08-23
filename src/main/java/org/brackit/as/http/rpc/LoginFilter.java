@@ -40,9 +40,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
 import org.brackit.server.session.Session;
 import org.brackit.server.session.SessionMgr;
+import org.brackit.xquery.util.log.Logger;
 
 /**
  * 

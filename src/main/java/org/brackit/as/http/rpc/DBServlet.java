@@ -40,15 +40,8 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.brackit.as.http.HttpConnector;
 import org.brackit.server.metadata.DBItem;
 import org.brackit.server.session.Session;
-import org.brackit.xquery.ErrorCode;
-import org.brackit.xquery.QueryException;
-import org.brackit.xquery.atomic.Bool;
-import org.brackit.xquery.compiler.parser.XQueryParser.catchClause_return;
 import org.brackit.xquery.node.parser.DocumentParser;
 import org.brackit.xquery.util.path.Path;
-import org.brackit.xquery.xdm.Collection;
-import org.brackit.xquery.xdm.Node;
-import org.brackit.xquery.xdm.Stream;
 
 /**
  * 
