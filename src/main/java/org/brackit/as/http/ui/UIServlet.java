@@ -102,23 +102,23 @@ public abstract class UIServlet extends TXServlet {
 	private void createDefaultDocuments(Tx tx) throws ServerException,
 			IOException, DocumentException {
 		// store files for http access
-		String docPath = "src/main/html/";
-		metaDataMgr.create(tx, "form.html", new DocumentParser(new File(docPath
-				+ "form.html")));
-		metaDataMgr.create(tx, "upload.html", new DocumentParser(new File(
-				docPath + "upload.html")));
-		metaDataMgr.create(tx, "download.html", new DocumentParser(new File(
-				docPath + "download.html")));
-		metaDataMgr.create(tx, "procedure.html", new DocumentParser(new File(
-				docPath + "procedure.html")));
-		metaDataMgr.create(tx, "error.html", new DocumentParser(new File(
-				docPath + "error.html")));
-		InputStream in = new FileInputStream(docPath + "css/brackit.css");
-		metaDataMgr.putBlob(tx, in, "/brackit.css", -1);
-		in = new FileInputStream(docPath + "js/brackit.js");
-		metaDataMgr.putBlob(tx, in, "/brackit.js", -1);
-		in = new FileInputStream(docPath + "images/brackit.png");
-		metaDataMgr.putBlob(tx, in, "/brackit.png", -1);
+		ClassLoader cl = getClass().getClassLoader();
+		metaDataMgr.create(tx, "form.html", new DocumentParser(cl
+				.getResourceAsStream("html/form.html")));
+		metaDataMgr.create(tx, "upload.html", new DocumentParser(cl
+				.getResourceAsStream("html/upload.html")));
+		metaDataMgr.create(tx, "download.html", new DocumentParser(cl
+				.getResourceAsStream("html/download.html")));
+		metaDataMgr.create(tx, "procedure.html", new DocumentParser(cl
+				.getResourceAsStream("html/procedure.html")));
+		metaDataMgr.create(tx, "error.html", new DocumentParser(cl
+				.getResourceAsStream("html/error.html")));
+		InputStream in = cl.getResourceAsStream("html/css/XTCcss.css");
+		metaDataMgr.putBlob(tx, in, "/XTCcss.css", -1);
+		in = cl.getResourceAsStream("html/js/XTCjs.js");
+		metaDataMgr.putBlob(tx, in, "/XTCjs.js", -1);
+		in = cl.getResourceAsStream("html/images/xtc.png");
+		metaDataMgr.putBlob(tx, in, "/xtc.png", -1);
 	}
 
 	@Override

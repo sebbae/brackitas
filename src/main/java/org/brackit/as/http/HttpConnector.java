@@ -38,6 +38,7 @@ import org.brackit.as.http.app.AppController;
 import org.brackit.as.http.app.AppDispatcher;
 import org.brackit.as.http.app.AppError;
 import org.brackit.as.http.app.AppView;
+import org.brackit.xquery.util.log.Logger;
 import org.brackit.as.http.rpc.DBServlet;
 import org.brackit.as.http.rpc.ProcedureServlet;
 import org.brackit.as.http.rpc.XQueryServlet;
@@ -52,12 +53,11 @@ import org.brackit.as.http.ui.UploadServlet;
 import org.brackit.server.metadata.manager.MetaDataMgr;
 import org.brackit.server.session.Session;
 import org.brackit.server.session.SessionMgr;
-import org.brackit.xquery.util.log.Logger;
-import org.brackit.xquery.util.log.UtilLogFactory;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.session.HashSessionIdManager;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.util.log.Log;
 
 /**
  * 
@@ -65,7 +65,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
  * 
  */
 public class HttpConnector {
-	private static final Logger log = new UtilLogFactory().getRootLogger();
+	private static final Logger log = Logger.getLogger(HttpConnector.class);
 
 	public static final String LOGIN_PREFIX = "/rpc/login";
 	public static final String GET_PREFIX = "/rpc/db/*";
@@ -93,6 +93,8 @@ public class HttpConnector {
 
 	public HttpConnector(final MetaDataMgr metaDataMgr,
 			final SessionMgr sessionMgr, final int port) {
+		// encapsulate jetty logging to our log4j
+		Log.setLog(new JettyLogger());
 		this.server = new Server(port);
 		// hard init to speed up startup time
 		server.setSessionIdManager(new HashSessionIdManager(new Random()));

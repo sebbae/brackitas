@@ -25,43 +25,19 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.http.ui;
+package org.brackit.as.xquery.compiler;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.brackit.xquery.util.log.Logger;
-import org.brackit.as.http.AbstractServlet;
-import org.brackit.server.ServerException;
-import org.brackit.server.session.Session;
+import org.brackit.server.metadata.manager.MetaDataMgr;
+import org.brackit.server.tx.Tx;
+import org.brackit.server.xquery.DBCompileChain;
 
 /**
- * 
  * @author Sebastian Baechle
- * 
+ *
  */
-public class LoginServlet extends AbstractServlet {
-	private static final Logger log = Logger.getLogger(LoginServlet.class);
-
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		try {
-			String username = req.getParameter("username");
-			String password = req.getParameter("password");
-			Session session = sessionMgr.getSession(sessionMgr.login());
-			log
-					.info(String.format("User %s logged in http session.",
-							username));
-			req.getSession().setAttribute(Session.class.getName(), session);
-			resp.setStatus(HttpServletResponse.SC_OK);
-		} catch (ServerException e) {
-			log.error("Error during login", e);
-			resp.sendError(500, String.format("Login failed: %s", e
-					.getMessage()));
-		}
+public class ASCompileChain extends DBCompileChain {
+	
+	public ASCompileChain(MetaDataMgr mdm, Tx tx) {
+		super(mdm, tx);
 	}
 }

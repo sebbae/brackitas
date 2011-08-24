@@ -35,7 +35,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.brackit.as.xquery.ASXQuery;
+import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.server.session.Session;
 import org.brackit.server.session.SessionException;
 import org.brackit.xquery.QueryContext;
@@ -87,7 +87,8 @@ public class XQueryServlet extends RPCServlet {
 
 		resp.setContentType("text/xml; charset=UTF-8");
 		resp.setHeader("Content-disposition", "inline;");
-		XQuery xq = new ASXQuery(query);
+		ASCompileChain chain = new ASCompileChain(metaDataMgr, session.getTX());
+		XQuery xq = new XQuery(chain, query);
 		xq.setPrettyPrint(false);
 		PrintStream out = new PrintStream(new BufferedOutputStream(resp
 				.getOutputStream()));
