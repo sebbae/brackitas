@@ -57,26 +57,7 @@ import org.brackit.xquery.compiler.CompileChain;
 public abstract class TXServlet extends AbstractServlet {
 	protected static final Logger log = Logger.getLogger(TXServlet.class);
 
-	private static final String SESSION = "_session";
-
-	@Override
-	public final void init() throws ServletException {
-		getServletContext().addListener(new HttpSessionListener() {
-
-			@Override
-			public void sessionDestroyed(HttpSessionEvent event) {
-				HttpSession httpSession = (HttpSession) event.getSession();
-				Session session = (Session) httpSession.getAttribute(SESSION);
-				if (session != null) {
-					sessionMgr.logout(session.getSessionID());
-				}
-			}
-
-			@Override
-			public void sessionCreated(HttpSessionEvent arg0) {
-			}
-		});
-	}
+	public static final String SESSION = "_session";
 
 	protected String query(Session session, String query) throws Exception {
 		ByteArrayOutputStream buf = new ByteArrayOutputStream();
@@ -124,9 +105,10 @@ public abstract class TXServlet extends AbstractServlet {
 
 	protected void cleanup(Session session, Tx tx) {
 		try {
-			if (tx == null) {
+			if (tx == null)
 				session.commit();
-			}
+			else
+				session.rollback();
 		} catch (ServerException e1) {
 			log.error(e1);
 		}

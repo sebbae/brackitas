@@ -82,7 +82,6 @@ public class DBServlet extends RPCServlet {
 		resp.setHeader("Content-disposition", String.format(
 				"inline; filename=%s", tail));
 		// resp.getOutputStream().print(vReturn);
-
 		dbitem.serialize(resp.getOutputStream());
 	}
 

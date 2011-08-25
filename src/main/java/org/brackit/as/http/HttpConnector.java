@@ -31,6 +31,7 @@ import java.util.EnumSet;
 import java.util.Random;
 
 import javax.servlet.DispatcherType;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
@@ -38,7 +39,6 @@ import org.brackit.as.http.app.AppController;
 import org.brackit.as.http.app.AppDispatcher;
 import org.brackit.as.http.app.AppError;
 import org.brackit.as.http.app.AppView;
-import org.brackit.xquery.util.log.Logger;
 import org.brackit.as.http.rpc.DBServlet;
 import org.brackit.as.http.rpc.ProcedureServlet;
 import org.brackit.as.http.rpc.XQueryServlet;
@@ -53,6 +53,7 @@ import org.brackit.as.http.ui.UploadServlet;
 import org.brackit.server.metadata.manager.MetaDataMgr;
 import org.brackit.server.session.Session;
 import org.brackit.server.session.SessionMgr;
+import org.brackit.xquery.util.log.Logger;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.session.HashSessionIdManager;
 import org.eclipse.jetty.servlet.FilterHolder;
@@ -90,6 +91,28 @@ public class HttpConnector {
 	public static final String APP_CONTROLLER_PREFIX = "/app/*";
 
 	private final Server server;
+	
+	private static class SessionEndListener implements HttpSessionListener {
+
+		private final SessionMgr sessionMgr;
+		
+		SessionEndListener(SessionMgr sessionMgr) {
+			this.sessionMgr = sessionMgr;
+		}
+		
+		@Override
+		public void sessionDestroyed(HttpSessionEvent event) {
+			HttpSession httpSession = (HttpSession) event.getSession();
+			Session session = (Session) httpSession.getAttribute(TXServlet.SESSION);
+			if (session != null) {
+				sessionMgr.logout(session.getSessionID());
+			}
+		}
+
+		@Override
+		public void sessionCreated(HttpSessionEvent arg0) {
+		}
+	}
 
 	public HttpConnector(final MetaDataMgr metaDataMgr,
 			final SessionMgr sessionMgr, final int port) {
@@ -104,6 +127,7 @@ public class HttpConnector {
 				metaDataMgr);
 		servletContextHandler.setAttribute(SessionMgr.class.getName(),
 				sessionMgr);
+		servletContextHandler.addEventListener(new SessionEndListener(sessionMgr));
 
 		servletContextHandler.addServlet(LoginServlet.class, LOGIN_PREFIX);
 		servletContextHandler.addServlet(DBServlet.class, GET_PREFIX);

@@ -27,13 +27,9 @@
  */
 package org.brackit.as.http.ui;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -60,8 +56,8 @@ public abstract class UIServlet extends TXServlet {
 	private static boolean initialized;
 
 	@Override
-	public void init(ServletConfig config) throws ServletException {
-		super.init(config);
+	public void init() throws ServletException {
+		super.init();
 		checkDefaultDocuments();
 	}
 
@@ -113,12 +109,12 @@ public abstract class UIServlet extends TXServlet {
 				.getResourceAsStream("html/procedure.html")));
 		metaDataMgr.create(tx, "error.html", new DocumentParser(cl
 				.getResourceAsStream("html/error.html")));
-		InputStream in = cl.getResourceAsStream("html/css/XTCcss.css");
-		metaDataMgr.putBlob(tx, in, "/XTCcss.css", -1);
-		in = cl.getResourceAsStream("html/js/XTCjs.js");
-		metaDataMgr.putBlob(tx, in, "/XTCjs.js", -1);
-		in = cl.getResourceAsStream("html/images/xtc.png");
-		metaDataMgr.putBlob(tx, in, "/xtc.png", -1);
+		InputStream in = cl.getResourceAsStream("html/css/brackit.css");
+		metaDataMgr.putBlob(tx, in, "/brackit.css", -1);
+		in = cl.getResourceAsStream("html/js/brackit.js");
+		metaDataMgr.putBlob(tx, in, "/brackit.js", -1);
+		in = cl.getResourceAsStream("html/images/brackit.png");
+		metaDataMgr.putBlob(tx, in, "/brackit.png", -1);
 	}
 
 	@Override
@@ -220,7 +216,6 @@ public abstract class UIServlet extends TXServlet {
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		ServletContext context = getServletContext();
 		Session session = getSession(req);
 		Tx tx = session.checkTX();
 

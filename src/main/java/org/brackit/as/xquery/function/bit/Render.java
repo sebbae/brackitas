@@ -39,6 +39,7 @@ import org.brackit.as.xquery.ASXQuery;
 import org.brackit.as.xquery.HttpSessionTXQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
+import org.brackit.xquery.XQuery;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.function.Signature;
@@ -67,7 +68,7 @@ public class Render extends AbstractFunction {
 				.getAttribute("viewTree");
 		String rendFile = ((Item) args[0]).atomize().stringValue();
 
-		ASXQuery x = new ASXQuery(searchNodeFile(tree, rendFile, view));
+		XQuery x = new ASXQuery(searchNodeFile(tree, rendFile, view));
 		Sequence seq = x.execute(ctx);
 		return seq;
 	}

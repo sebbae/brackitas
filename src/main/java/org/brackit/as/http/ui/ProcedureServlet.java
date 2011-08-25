@@ -114,6 +114,7 @@ public class ProcedureServlet extends UIServlet {
 		}
 		vReturn = vReturn.replaceAll(helper.FORM_PROCEDURE_ONLOAD, Integer
 				.toString(this.getProceduresCount()));
+		session.commit();
 		// result output
 		new PrintStream(resp.getOutputStream()).append(vReturn);
 		resp.setStatus(HttpServletResponse.SC_OK);

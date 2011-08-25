@@ -30,6 +30,7 @@ package org.brackit.as.http.app;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.io.PrintStream;
 
 import javax.servlet.RequestDispatcher;
@@ -83,8 +84,7 @@ public class AppDispatcher extends AppServlet {
 				metaDataMgr, req.getSession());
 		try {
 			// Dinamic binding of parameters: name = variable name
-			File fBase = getQueryFile(appName, pageName);
-			ASXQuery x = new ASXQuery(fBase);
+			ASXQuery x = new ASXQuery(getQueryFile(appName, pageName));
 			for (ExtVariable var : x.getModule().getVariables()
 					.getDeclaredVariables()) {
 				SequenceType type = var.getType();
@@ -102,6 +102,7 @@ public class AppDispatcher extends AppServlet {
 			}
 			x.setPrettyPrint(true);
 			x.serialize(ctx, new PrintStream(resp.getOutputStream()));
+			session.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			ServletContext context = getServletContext();
@@ -109,6 +110,7 @@ public class AppDispatcher extends AppServlet {
 			RequestDispatcher dispatcher = context
 					.getRequestDispatcher("/app/error/");
 			dispatcher.forward(req, resp);
+			session.rollback();			
 		}
 		resp.setStatus(HttpServletResponse.SC_OK);
 	}
@@ -121,23 +123,30 @@ public class AppDispatcher extends AppServlet {
 	 * @return
 	 * @throws FileNotFoundException
 	 */
-	private File getQueryFile(String appName, String pageName)
+	private InputStream getQueryFile(String appName, String pageName)
 			throws FileNotFoundException {
 		try {
-			FileInputStream in = new FileInputStream(String.format(
+			ClassLoader cl = getClass().getClassLoader();
+			InputStream in = cl.getResourceAsStream(String.format(
 					"apps/%s/queries/private/%s.xq", appName, pageName));
-			return new File(String.format("apps/%s/queries/private/%s.xq",
-					appName, pageName));
-		} catch (FileNotFoundException e) {
-			try {
-				FileInputStream in = new FileInputStream(String.format(
-						"apps/%s/queries/public/%s.xq", appName, pageName));
-				return new File(String.format("apps/%s/queries/public/%s.xq",
-						appName, pageName));
-			} catch (FileNotFoundException e1) {
-				e1.printStackTrace();
-				throw new FileNotFoundException();
-			}
+			return (in != null) ? in : cl.getResourceAsStream(String.format(
+					"apps/%s/queries/public/%s.xq", appName, pageName));
+			// return in;
+			// return new File(String.format("apps/%s/queries/private/%s.xq",
+			// appName, pageName));
+			// } catch (FileNotFoundException e) {
+			// try {
+			// FileInputStream in = new FileInputStream(String.format(
+			// "apps/%s/queries/public/%s.xq", appName, pageName));
+			// return new File(String.format("apps/%s/queries/public/%s.xq",
+			// appName, pageName));
+			// } catch (FileNotFoundException e1) {
+			// e1.printStackTrace();
+			// throw new FileNotFoundException();
+			// }
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
+		throw new FileNotFoundException();
 	}
 }

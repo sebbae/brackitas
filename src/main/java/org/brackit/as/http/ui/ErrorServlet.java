@@ -30,6 +30,8 @@ package org.brackit.as.http.ui;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 
 import javax.servlet.ServletException;
@@ -59,8 +61,10 @@ public class ErrorServlet extends UIServlet {
 		String vReturn = "";
 		String str;
 
-		BufferedReader in = new BufferedReader(new FileReader(
-				"src/main/html/error.html"));
+        BufferedReader in = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("html/error.html")));
+//
+//		BufferedReader in = new BufferedReader(new FileReader(
+//				"src/main/html/error.html"));
 
 		while ((str = in.readLine()) != null) {
 			vReturn = vReturn + str;

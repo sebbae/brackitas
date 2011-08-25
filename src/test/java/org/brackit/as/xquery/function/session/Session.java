@@ -38,10 +38,14 @@ import java.util.Date;
 
 import org.brackit.as.xquery.ASXQuery;
 import org.brackit.as.xquery.HttpSessionTXQueryContext;
+import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.server.BrackitDB;
 import org.brackit.server.ServerException;
 import org.brackit.server.metadata.manager.MetaDataMgr;
+import org.brackit.server.tx.DummyTX;
 import org.brackit.xquery.QueryContext;
+import org.brackit.xquery.XQuery;
+import org.brackit.xquery.compiler.CompileChain;
 import org.junit.Test;
 
 /**
@@ -62,7 +66,7 @@ public class Session {
 		};
 	}
 
-	private static QueryContext ctx;
+	private static HttpSessionTXQueryContext ctx;
 
 	private static MetaDataMgr metaDataMgr;
 
@@ -84,7 +88,8 @@ public class Session {
 
 	@Test
 	public void clear() throws Exception {
-		ASXQuery x = new ASXQuery(
+		XQuery x = new XQuery(
+				new ASCompileChain(metaDataMgr, ctx.getTX()),
 				"let $a := session:setAtt('test',<a/>) return if (session:clear()) then session:getAtt('test') else <info> Session clear problems </info>");
 		x.setPrettyPrint(true);
 		x.serialize(ctx, buffer);
@@ -93,7 +98,8 @@ public class Session {
 
 	@Test
 	public void getAttributeNames() throws Exception {
-		ASXQuery x = new ASXQuery(
+		XQuery x = new XQuery(
+				new ASCompileChain(metaDataMgr, ctx.getTX()),
 				"if (session:setAtt('test',<p/>) and session:setAtt('test2',<p/>)) then session:getAttributeNames() else <info/>");
 		x.setPrettyPrint(true);
 		x.serialize(ctx, buffer);
@@ -105,7 +111,8 @@ public class Session {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH:mm");
 		Date resultdate = new Date(System.currentTimeMillis());
 		new org.brackit.xquery.atomic.Date(sdf.format(resultdate));
-		ASXQuery x = new ASXQuery("session:getCreationTime()");
+		XQuery x = new XQuery(new ASCompileChain(metaDataMgr, ctx.getTX()),
+				"session:getCreationTime()");
 		x.setPrettyPrint(true);
 		x.serialize(ctx, buffer);
 		assertEquals(sdf.format(resultdate), buffer.toString());
@@ -113,7 +120,8 @@ public class Session {
 
 	@Test
 	public void getLastAccessedTime() throws Exception {
-		ASXQuery x = new ASXQuery(
+		XQuery x = new XQuery(
+				new ASCompileChain(metaDataMgr, ctx.getTX()),
 				"if (session:getCreationTime() eq session:getLastAccessedTime()) then <true/> else <false/>");
 		x.serialize(ctx, buffer);
 		assertEquals("<true/>", buffer.toString());
@@ -121,7 +129,8 @@ public class Session {
 
 	@Test
 	public void getAndSetMaxInactiveInterval() throws Exception {
-		ASXQuery x = new ASXQuery(
+		XQuery x = new XQuery(
+				new ASCompileChain(metaDataMgr, ctx.getTX()),
 				"let $a := 50 return if (session:setMaxInactiveInterval($a)) then if (session:getMaxInactiveInterval() eq $a) then <true/> else <false/> else <info> Problem with setMaxInactiveInterval() </info>");
 		x.serialize(ctx, buffer);
 		assertEquals("<true/>", buffer.toString());
@@ -129,7 +138,8 @@ public class Session {
 
 	@Test
 	public void getSessionAtt() throws Exception {
-		ASXQuery x = new ASXQuery(
+		XQuery x = new XQuery(
+				new ASCompileChain(metaDataMgr, ctx.getTX()),
 				"let $a := session:setAtt('teste',<p>Test Attribute</p>) return session:getAtt('teste')");
 		x.serialize(ctx, buffer);
 		assertEquals("<p>Test Attribute</p>", buffer.toString());
@@ -137,7 +147,8 @@ public class Session {
 
 	@Test
 	public void invalidate() throws Exception {
-		ASXQuery x = new ASXQuery(
+		XQuery x = new XQuery(
+				new ASCompileChain(metaDataMgr, ctx.getTX()),
 				"let $a := session:setAtt('test',<info/>) return let $b := session:invalidate() return session:getAtt('teste')");
 		x.serialize(ctx, buffer);
 		assertEquals("", buffer.toString());
@@ -145,7 +156,8 @@ public class Session {
 
 	@Test
 	public void removeSessionAtt() throws Exception {
-		ASXQuery x = new ASXQuery(
+		XQuery x = new XQuery(
+				new ASCompileChain(metaDataMgr, ctx.getTX()),
 				"let $a := session:setAtt('test',<p>Test Attribute</p>) return session:rmAtt('test')");
 		x.setPrettyPrint(true);
 		x.serialize(ctx, buffer);

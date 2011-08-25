@@ -35,6 +35,7 @@ import java.io.InputStreamReader;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -58,7 +59,7 @@ public abstract class AbstractServlet extends HttpServlet {
 	protected SessionMgr sessionMgr;
 
 	protected MetaDataMgr metaDataMgr;
-
+	
 	@Override
 	public void init() throws ServletException {
 		ServletContext servletContext = getServletContext();

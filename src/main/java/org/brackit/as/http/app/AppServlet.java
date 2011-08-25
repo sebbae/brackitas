@@ -28,10 +28,8 @@
 package org.brackit.as.http.app;
 
 import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
@@ -63,7 +61,6 @@ public class AppServlet extends TXServlet {
 		super.init();
 		loadMimeTypes();
 		createDefaultApplicationsBasic();
-
 	};
 
 	/**
@@ -196,16 +193,14 @@ public class AppServlet extends TXServlet {
 
 	private void loadMimeTypes() {
 		try {
-			FileInputStream fs = new FileInputStream("src/main/html/mime.types");
-			DataInputStream in = new DataInputStream(fs);
-			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+					getClass().getClassLoader().getResourceAsStream(
+							"mime.types")));
 			String strLine = null;
-
-			while ((strLine = br.readLine()) != null) // Add mimetypes
-			{
+			while ((strLine = br.readLine()) != null) {
 				mimeMap.addMimeTypes(strLine);
 			}
-			in.close();
+			br.close();
 		} catch (IOException e) {
 			log.error("Could not load mime types", e);
 		}

@@ -82,5 +82,6 @@ public class ProcedureServlet extends RPCServlet {
 		ProcedureUtil.execute(new TXQueryContext(session.getTX(), metaDataMgr),
 				resp.getOutputStream(), procedure, params
 						.toArray(new String[0]));
+		session.commit();
 	}
 }

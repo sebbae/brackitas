@@ -126,8 +126,9 @@ public class Template extends AbstractFunction {
 				ctx.bind(new QNm(getTempField(i)), new Str(toBeEval));
 			}
 		}
-		File f = new File("apps/" + appName + "/views/default/template.xq");
-		XQuery x = new ASXQuery(f);
+		//File f = new File("apps/" + appName + "/views/default/template.xq");
+		
+		XQuery x = new ASXQuery(getClass().getClassLoader().getResourceAsStream("apps/" + appName + "/views/default/template.xq"));
 		x.setPrettyPrint(true);
 		return x.execute(ctx);
 	}
