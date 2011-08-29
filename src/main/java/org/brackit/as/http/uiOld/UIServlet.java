@@ -71,7 +71,7 @@ public abstract class UIServlet extends TXServlet {
 
 		try {
 			session = sessionMgr.getSession(sessionMgr.login());
-			tx = session.getTX();
+			tx = session.checkTX();
 			try {
 				metaDataMgr.lookup(tx, "/form.html");
 			} catch (ItemNotFoundException e) {

@@ -25,63 +25,75 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.http.rpcOld;
+package org.brackit.as.http.app;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.ServletException;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.brackit.as.http.HttpConnectorOld;
-import org.brackit.server.metadata.TXQueryContext;
-import org.brackit.server.procedure.ProcedureUtil;
+import org.brackit.as.http.HttpConnector;
 import org.brackit.server.session.Session;
 
 /**
  * 
- * @author Max Bechtold
+ * @author Henrique Valer
  * 
  */
-public class ProcedureServlet extends RPCServlet {
+public class FrontController extends BaseServlet {
+
+	private static final long serialVersionUID = 4156829801096332265L;
+
+	public static final String APP_SESSION_ATT = "appName";
+
+	public static final String PAGE_SESSION_ATT = "pageName";
+
+	public static final String HTTP_URI_REQ = "httpUriReq";
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp,
 			Session session) throws Exception {
-		process(req, resp, session);
-	}
 
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp,
-			Session session) throws Exception {
-		process(req, resp, session);
-	}
+		ServletContext context = getServletContext();
 
-	private void process(HttpServletRequest req, HttpServletResponse resp,
-			Session session) throws Exception {
-		String procedure = req.getRequestURI();
-		procedure = procedure.substring(HttpConnectorOld.PROC_PREFIX.length() - 1);
+		// TODO:
+		// Resolve Application
+		try {
+			String[] URI = req.getRequestURI().split("/");
+			/*
+			 * http://localhost:24280/app/eCommerce/css/1/a.css for (int i = 0;
+			 * i < URI.length; i++) { System.out.println("i: " + i + " ::: " +
+			 * URI[i]); }
+			 */
+			// TODO: Improve get naming
+			String appName = URI[2];
+			String pageName = URI[3];
 
-		// Parse parameters
-		List<String> params = new ArrayList<String>();
-		String param = req.getParameter("param1");
+			req.setAttribute(APP_SESSION_ATT, appName);
+			req.setAttribute(PAGE_SESSION_ATT, pageName);
+			req.setAttribute(HTTP_URI_REQ, req.getRequestURI());
 
-		int i = 1;
-		while (param != null) {
-			params.add(param);
-			param = req.getParameter("param" + ++i);
+			// Resolve resource
+			String docName = req.getRequestURI();
+			docName = docName.substring(docName.lastIndexOf("/"));
+
+			String a1 = getMimeType("");
+			String a2 = getMimeType(docName);
+			if (a1 != a2) {
+				RequestDispatcher dispatcher = context
+						.getRequestDispatcher(HttpConnector.APP_RESOURCE_DISP_TARGET);
+				dispatcher.forward(req, resp);
+			}
+
+			// Compile query
+
+			// Execute it
+
+		} catch (Exception e) {
+			req.setAttribute(ErrorHandler.ERROR_ATT, e.getMessage());
+			RequestDispatcher dispatcher = context
+					.getRequestDispatcher(HttpConnector.APP_ERROR_DISP_TARGET);
+			dispatcher.forward(req, resp);
 		}
-
-		if (procedure == null || procedure.isEmpty()) {
-			throw new ServletException(
-					"Missing URL appendix containing procedure to be executed!");
-		}
-
-		resp.setContentType("text/xml; charset=UTF-8");
-		resp.setHeader("Content-disposition", "inline;");
-		ProcedureUtil.execute(new TXQueryContext(session.checkTX(), metaDataMgr),
-				resp.getOutputStream(), procedure, params
-						.toArray(new String[0]));
-		session.commit();
 	}
 }

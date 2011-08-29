@@ -27,31 +27,30 @@
  */
 package org.brackit.as.http;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.brackit.xquery.util.log.Logger;
 import org.brackit.server.metadata.manager.MetaDataMgr;
 import org.brackit.server.session.SessionMgr;
+import org.brackit.xquery.util.log.Logger;
 
 /**
  * 
  * @author Sebastian Baechle
+ * @author Henrique Valer
  * 
  */
 public abstract class AbstractServlet extends HttpServlet {
+
+	private static final long serialVersionUID = -5535807586200349215L;
+
 	protected static final Logger log = Logger.getLogger(AbstractServlet.class);
 
 	public static MimetypesFileTypeMap mimeMap;
@@ -67,30 +66,7 @@ public abstract class AbstractServlet extends HttpServlet {
 				.getName());
 		metaDataMgr = (MetaDataMgr) servletContext
 				.getAttribute(MetaDataMgr.class.getName());
-		loadMimeTypes();
-	}
-
-	private void loadMimeTypes() {
-		if (mimeMap != null) {
-			return;
-		}
-
-		mimeMap = new MimetypesFileTypeMap();
-
-		try {
-			InputStream fs = getClass().getClassLoader().getResourceAsStream("mime.types");
-			DataInputStream in = new DataInputStream(fs);
-			BufferedReader br = new BufferedReader(new InputStreamReader(in));
-			String strLine = null;
-
-			while ((strLine = br.readLine()) != null) // Add mimetypes
-			{
-				mimeMap.addMimeTypes(strLine);
-			}
-			in.close();
-		} catch (Exception e) {
-			log.error("Could not load mime types", e);
-		}
+		mimeMap = (MimetypesFileTypeMap) servletContext.getAttribute(HttpConnector.APP_MIME_TYPES);
 	}
 
 	protected String getMimeType(String filename) {
@@ -101,12 +77,6 @@ public abstract class AbstractServlet extends HttpServlet {
 	 * doDispatch receives the servlet to which the request and response should
 	 * be dispatched. Each servlet is then responsible for the dispatched
 	 * request.
-	 * 
-	 * @param req
-	 * @param resp
-	 * @param target
-	 * @throws ServletException
-	 * @throws IOException
 	 */
 	public void doDispatch(HttpServletRequest req, HttpServletResponse resp,
 			String target) throws ServletException, IOException {

@@ -123,6 +123,7 @@ public class HttpConnectorOld {
 		server.setSessionIdManager(new HashSessionIdManager(new Random()));
 		ServletContextHandler servletContextHandler = new ServletContextHandler(
 				server, "/", true, false);
+		
 		servletContextHandler.setAttribute(MetaDataMgr.class.getName(),
 				metaDataMgr);
 		servletContextHandler.setAttribute(SessionMgr.class.getName(),
@@ -164,28 +165,12 @@ public class HttpConnectorOld {
 		 */
 		servletContextHandler.addServlet(AppView.class, APP_VIEW_PREFIX);
 
-		servletContextHandler.addEventListener(new HttpSessionListener() {
-			@Override
-			public void sessionDestroyed(HttpSessionEvent event) {
-				Session session = (Session) event.getSession().getAttribute(
-						"session");
-				if (session != null) {
-					sessionMgr.logout(session.getSessionID());
-				}
-			}
-
-			@Override
-			public void sessionCreated(HttpSessionEvent arg0) {
-			}
-		});
-		
 		server.setHandler(servletContextHandler);
 	}
 
 	public void start() throws Exception {
 		try {
 			server.start();
-			server.join();
 		} catch (Exception e) {
 			log.error(e);
 		}

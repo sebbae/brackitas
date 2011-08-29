@@ -159,10 +159,10 @@ public class UploadServlet extends UIServlet {
 
 		// Storage type
 		if (file_type.toString().equals("XML")) {
-			metaDataMgr.create(session.getTX(), docName, new DocumentParser(
+			metaDataMgr.create(session.checkTX(), docName, new DocumentParser(
 					inFile));
 		} else if (file_type.toString().equals("BLOB")) {
-			metaDataMgr.putBlob(session.getTX(), inFile, docName, -1);
+			metaDataMgr.putBlob(session.checkTX(), inFile, docName, -1);
 		} else {
 			getServletContext().setAttribute("errorMsg",
 					"Storage type is invalid: " + file_type);

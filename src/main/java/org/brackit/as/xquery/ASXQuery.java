@@ -36,6 +36,7 @@ import java.io.InputStream;
 import org.brackit.xquery.ErrorCode;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.XQuery;
+import org.brackit.xquery.compiler.CompileChain;
 
 /**
  * @author Sebastian Baechle
@@ -77,6 +78,10 @@ public class ASXQuery extends XQuery {
 
 	public ASXQuery(File f) throws QueryException {
 		super(getStringFromFile(f));
+	}
+
+	public ASXQuery(CompileChain chain, InputStream in) throws QueryException {
+		super(chain, getStringFromInputStream(in));
 	}
 
 	private static String getStringFromFile(File pFile) throws QueryException {

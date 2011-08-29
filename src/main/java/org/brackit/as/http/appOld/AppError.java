@@ -48,7 +48,7 @@ public class AppError extends AppServlet {
 			Session session) throws IOException {
 		try {
 			HttpSessionTXQueryContext ctx = new HttpSessionTXQueryContext(
-					session.getTX(), metaDataMgr, req.getSession());
+					session.checkTX(), metaDataMgr, req.getSession());
 			ASXQuery x = new ASXQuery("util:template("
 					+ (String) req.getAttribute("errorMsg") + ")");
 			x.serialize(ctx, new PrintStream(resp.getOutputStream()));

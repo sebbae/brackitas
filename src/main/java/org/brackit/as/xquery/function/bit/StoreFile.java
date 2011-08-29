@@ -34,6 +34,7 @@ import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
 import org.brackit.xquery.atomic.QNm;
+import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.function.Signature;
 import org.brackit.xquery.node.SubtreePrinter;
@@ -69,6 +70,6 @@ public class StoreFile extends AbstractFunction {
 
 		Collection<?> collection = ctx.getStore().create(vName,
 				new DocumentParser(vContent));
-		return collection.getDocument();
+		return new Str(collection.getName());
 	}
 }

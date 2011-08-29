@@ -25,63 +25,55 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.http.rpcOld;
+package org.brackit.as.http.app;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.FileNotFoundException;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.brackit.as.http.HttpConnectorOld;
-import org.brackit.server.metadata.TXQueryContext;
-import org.brackit.server.procedure.ProcedureUtil;
 import org.brackit.server.session.Session;
 
 /**
  * 
- * @author Max Bechtold
- * 
+ * @author Henrique Valer
+ *
  */
-public class ProcedureServlet extends RPCServlet {
+public class ResourceHandler extends BaseServlet {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8332338424448843760L;
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp,
 			Session session) throws Exception {
-		process(req, resp, session);
-	}
 
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp,
-			Session session) throws Exception {
-		process(req, resp, session);
-	}
-
-	private void process(HttpServletRequest req, HttpServletResponse resp,
-			Session session) throws Exception {
-		String procedure = req.getRequestURI();
-		procedure = procedure.substring(HttpConnectorOld.PROC_PREFIX.length() - 1);
-
-		// Parse parameters
-		List<String> params = new ArrayList<String>();
-		String param = req.getParameter("param1");
-
-		int i = 1;
-		while (param != null) {
-			params.add(param);
-			param = req.getParameter("param" + ++i);
+		if (req.getAttribute(FrontController.APP_SESSION_ATT) == null) {
+			throw new Exception("Direct access to this URL is not allowed.");
 		}
+				
+		
+		try {
+			String[] URI = ((String) req.getAttribute(FrontController.HTTP_URI_REQ)).split("/");
+			
+			ClassLoader cl = getClass().getClassLoader();
 
-		if (procedure == null || procedure.isEmpty()) {
-			throw new ServletException(
-					"Missing URL appendix containing procedure to be executed!");
+			System.out.println();
+			StringBuffer resource = new StringBuffer();
+			for (int i = 3; i < URI.length; i++) {
+				System.out.println("i: " + i + " ::: " + URI[i]);
+				resource.append("/" + URI[i]);
+			}			 			
+			
+			String s = String.format("apps/%s/resources%s",(String)req.getAttribute(FrontController.APP_SESSION_ATT),resource.toString());
+			cl.getResourceAsStream(s);
+			
+			// TODO: Convert from input stream to output stream
+			
+		} catch (Exception e) {
+			throw new FileNotFoundException("File does not exist under the application resources.");
 		}
-
-		resp.setContentType("text/xml; charset=UTF-8");
-		resp.setHeader("Content-disposition", "inline;");
-		ProcedureUtil.execute(new TXQueryContext(session.checkTX(), metaDataMgr),
-				resp.getOutputStream(), procedure, params
-						.toArray(new String[0]));
-		session.commit();
 	}
 }

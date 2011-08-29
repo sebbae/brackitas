@@ -62,7 +62,7 @@ public class AppView extends AppServlet {
 			DefaultMutableTreeNode tree = getFolderTree("apps/helloWorld/views/template/");
 
 			HttpSessionTXQueryContext ctx = new HttpSessionTXQueryContext(
-					session.getTX(), metaDataMgr, req.getSession());
+					session.checkTX(), metaDataMgr, req.getSession());
 			ctx.getHttpSession().setAttribute("view", viewName);
 			ctx.getHttpSession().setAttribute("viewTree", tree);
 			File f = new File("apps/helloWorld/views/template/index.xq");

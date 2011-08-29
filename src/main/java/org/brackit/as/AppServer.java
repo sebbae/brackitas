@@ -27,6 +27,7 @@
  */
 package org.brackit.as;
 
+import org.brackit.as.http.HttpConnector;
 import org.brackit.as.http.HttpConnectorOld;
 import org.brackit.server.BrackitDB;
 import org.brackit.server.ServerException;
@@ -62,7 +63,8 @@ public class AppServer {
 
 	private BrackitDB db;
 
-	private HttpConnectorOld connector;
+//	private HttpConnectorOld connector;
+	private HttpConnector connector;
 
 	public AppServer(boolean install) throws Exception {
 		startDB(install);
@@ -75,7 +77,7 @@ public class AppServer {
 		System.out.println(port);
 		System.out.print(" ... ");
 		try {
-			connector = new HttpConnectorOld(db.getMetadataMgr(), db
+			connector = new HttpConnector(db.getMetadataMgr(), db
 					.getSessionMgr(), port);
 			connector.start();
 		} catch (Exception e) {

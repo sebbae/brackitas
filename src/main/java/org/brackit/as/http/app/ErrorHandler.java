@@ -25,63 +25,52 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.http.rpcOld;
+package org.brackit.as.http.app;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.brackit.as.http.HttpConnectorOld;
-import org.brackit.server.metadata.TXQueryContext;
-import org.brackit.server.procedure.ProcedureUtil;
 import org.brackit.server.session.Session;
 
 /**
  * 
- * @author Max Bechtold
- * 
+ * @author Henrique Valer
+ *
  */
-public class ProcedureServlet extends RPCServlet {
+public class ErrorHandler extends BaseServlet {
+
+	private static final long serialVersionUID = 8975500227147886755L;
+	
+	public final static String ERROR_ATT = "errorMsg";
+	
+	private void showError(HttpServletRequest req) {
+		System.out.println("ERROR ON APPLICATION:" + (String) req.getAttribute(ErrorHandler.ERROR_ATT));
+	}
+	
+	@Override
+	protected void doDelete(HttpServletRequest req, HttpServletResponse resp,
+			Session session) throws Exception {
+		this.showError(req);
+	}
+	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp,
 			Session session) throws Exception {
-		process(req, resp, session);
-	}
-
+		this.showError(req);	}
+	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp,
 			Session session) throws Exception {
-		process(req, resp, session);
-	}
-
-	private void process(HttpServletRequest req, HttpServletResponse resp,
+		this.showError(req);	}
+	
+	@Override
+	protected void doPut(HttpServletRequest req, HttpServletResponse resp,
 			Session session) throws Exception {
-		String procedure = req.getRequestURI();
-		procedure = procedure.substring(HttpConnectorOld.PROC_PREFIX.length() - 1);
-
-		// Parse parameters
-		List<String> params = new ArrayList<String>();
-		String param = req.getParameter("param1");
-
-		int i = 1;
-		while (param != null) {
-			params.add(param);
-			param = req.getParameter("param" + ++i);
-		}
-
-		if (procedure == null || procedure.isEmpty()) {
-			throw new ServletException(
-					"Missing URL appendix containing procedure to be executed!");
-		}
-
-		resp.setContentType("text/xml; charset=UTF-8");
-		resp.setHeader("Content-disposition", "inline;");
-		ProcedureUtil.execute(new TXQueryContext(session.checkTX(), metaDataMgr),
-				resp.getOutputStream(), procedure, params
-						.toArray(new String[0]));
-		session.commit();
+		this.showError(req);	}
+	
+	@Override
+	protected void service(HttpServletRequest req, HttpServletResponse resp,
+			Session session) throws Exception {
+		this.showError(req);
 	}
 }

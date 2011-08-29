@@ -87,7 +87,7 @@ public class XQueryServlet extends RPCServlet {
 
 		resp.setContentType("text/xml; charset=UTF-8");
 		resp.setHeader("Content-disposition", "inline;");
-		ASCompileChain chain = new ASCompileChain(metaDataMgr, session.getTX());
+		ASCompileChain chain = new ASCompileChain(metaDataMgr, session.checkTX());
 		XQuery xq = new XQuery(chain, query);
 		xq.setPrettyPrint(false);
 		PrintStream out = new PrintStream(new BufferedOutputStream(resp

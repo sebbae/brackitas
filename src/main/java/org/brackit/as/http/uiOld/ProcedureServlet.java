@@ -94,7 +94,7 @@ public class ProcedureServlet extends UIServlet {
 				// executes, calculating times
 				long procTime = System.currentTimeMillis();
 				ByteArrayOutputStream buf = new ByteArrayOutputStream();
-				ProcedureUtil.execute(new TXQueryContext(session.getTX(),
+				ProcedureUtil.execute(new TXQueryContext(session.checkTX(),
 						metaDataMgr), buf, queryProcedure, strParameters);
 				procTime = System.currentTimeMillis() - procTime;
 				// replace results

@@ -57,7 +57,7 @@ public class FileDownloadServlet extends UIServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp,
 			Session session) throws Exception {
 		String filename = req.getParameter("file_name");
-		DBItem<?> dbitem = metaDataMgr.getItem(session.getTX(), filename);
+		DBItem<?> dbitem = metaDataMgr.getItem(session.checkTX(), filename);
 		// set response type and print content
 		resp.setContentType("application/octet-stream");
 		resp.setHeader("Content-Disposition", "attachment; filename=\""

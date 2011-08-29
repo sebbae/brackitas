@@ -36,6 +36,9 @@ import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.activation.MimetypesFileTypeMap;
+import javax.xml.soap.MimeHeader;
+
 import org.brackit.as.xquery.ASXQuery;
 import org.brackit.as.xquery.HttpSessionTXQueryContext;
 import org.brackit.as.xquery.compiler.ASCompileChain;

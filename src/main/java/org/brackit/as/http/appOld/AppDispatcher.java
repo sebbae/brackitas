@@ -40,9 +40,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.brackit.as.xquery.ASXQuery;
 import org.brackit.as.xquery.HttpSessionTXQueryContext;
+import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.atomic.Atomic;
 import org.brackit.xquery.atomic.Una;
+import org.brackit.xquery.compiler.CompileChain;
 import org.brackit.xquery.expr.Cast;
 import org.brackit.xquery.expr.ExtVariable;
 import org.brackit.server.session.Session;
@@ -80,11 +82,12 @@ public class AppDispatcher extends AppServlet {
 				.stringValue();
 
 		// was HttpSessionQueryContext
-		QueryContext ctx = new HttpSessionTXQueryContext(session.getTX(),
+		QueryContext ctx = new HttpSessionTXQueryContext(session.checkTX(),
 				metaDataMgr, req.getSession());
 		try {
 			// Dinamic binding of parameters: name = variable name
-			ASXQuery x = new ASXQuery(getQueryFile(appName, pageName));
+			CompileChain chain = new ASCompileChain(metaDataMgr, session.checkTX());			
+			ASXQuery x = new ASXQuery(chain, getQueryFile(appName, pageName));
 			for (ExtVariable var : x.getModule().getVariables()
 					.getDeclaredVariables()) {
 				SequenceType type = var.getType();
@@ -143,6 +146,7 @@ public class AppDispatcher extends AppServlet {
 			// throw new FileNotFoundException();
 			// }
 		} catch (Exception e) {
+			e.printStackTrace();
 			// TODO: handle exception
 		}
 		throw new FileNotFoundException();

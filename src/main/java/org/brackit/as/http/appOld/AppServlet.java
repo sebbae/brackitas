@@ -55,11 +55,11 @@ import org.brackit.server.tx.Tx;
 public class AppServlet extends TXServlet {
 
 	protected static final String errorServ = "/app/error/";
-
+	protected static Boolean initialized = false;
+	
 	@Override
 	public void init() throws ServletException {
 		super.init();
-		loadMimeTypes();
 		createDefaultApplicationsBasic();
 	};
 
@@ -70,7 +70,7 @@ public class AppServlet extends TXServlet {
 	private void createDefaultApplicationFiles(Session session) {
 		Tx tx = null;
 		try {
-			tx = session.getTX();
+			tx = session.checkTX();
 
 			FunctionUtils fUtils = new FunctionUtils();
 
@@ -79,7 +79,7 @@ public class AppServlet extends TXServlet {
 					.getFoldersFileListing(new File("apps/"));
 			for (File i : folders) {
 				try {
-					tx = session.getTX();
+					tx = session.checkTX();
 					metaDataMgr.mkdir(tx, i.getName());
 					session.commit();
 
@@ -137,15 +137,21 @@ public class AppServlet extends TXServlet {
 	 * Testing how to make multiple access at abstract servlet.
 	 */
 	private void createDefaultApplicationsBasic() {
+		
+		if (initialized){
+			return;
+		}
+		
 		Session session = null;
 		Tx tx = null;
 
 		try {
 			session = sessionMgr.getSession(sessionMgr.login());
-			tx = session.getTX();
+			tx = session.checkTX();
 			metaDataMgr.mkdir(tx, "eCommerce");
 			metaDataMgr.mkdir(tx, "eCommerce/items");
 			session.commit();
+			initialized = true;
 		} catch (Throwable e) {
 			log.error(e);
 			if (tx != null) {
@@ -157,6 +163,7 @@ public class AppServlet extends TXServlet {
 			}
 		} finally {
 			if (session != null) {
+				cleanup(session, tx);
 				sessionMgr.logout(session.getSessionID());
 			}
 		}
@@ -168,7 +175,7 @@ public class AppServlet extends TXServlet {
 
 		try {
 			session = sessionMgr.getSession(sessionMgr.login());
-			tx = session.getTX();
+			tx = session.checkTX();
 			try {
 				metaDataMgr.getItem(tx, "/eCommerce.jpg");
 			} catch (ItemNotFoundException e) {
@@ -189,25 +196,6 @@ public class AppServlet extends TXServlet {
 				sessionMgr.logout(session.getSessionID());
 			}
 		}
-	}
-
-	private void loadMimeTypes() {
-		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					getClass().getClassLoader().getResourceAsStream(
-							"mime.types")));
-			String strLine = null;
-			while ((strLine = br.readLine()) != null) {
-				mimeMap.addMimeTypes(strLine);
-			}
-			br.close();
-		} catch (IOException e) {
-			log.error("Could not load mime types", e);
-		}
-	}
-
-	protected String getMimeType(String filename) {
-		return mimeMap.getContentType(filename);
 	}
 
 	@Override

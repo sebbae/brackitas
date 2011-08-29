@@ -56,7 +56,7 @@ public class DBServlet extends RPCServlet {
 			Session session) throws Exception {
 		String docName = req.getRequestURI();
 		docName = docName.substring(HttpConnectorOld.GET_PREFIX.length() - 1);
-		DBItem<?> dbitem = metaDataMgr.getItem(session.getTX(), docName);
+		DBItem<?> dbitem = metaDataMgr.getItem(session.checkTX(), docName);
 
 		// Collection<?> collection = metaDataMgr.getItem(session.getTX(),
 		// docName); // .lookup(session.getTX(), docName);
@@ -127,7 +127,7 @@ public class DBServlet extends RPCServlet {
 					"Missing parameter 'file' containing stream of document to be stored!");
 		}
 
-		metaDataMgr.create(session.getTX(), document, new DocumentParser(file));
+		metaDataMgr.create(session.checkTX(), document, new DocumentParser(file));
 	}
 
 	@Override
@@ -135,6 +135,6 @@ public class DBServlet extends RPCServlet {
 			Session session) throws Exception {
 		String document = req.getRequestURI();
 		document = document.substring(HttpConnectorOld.DELETE_PREFIX.length() - 1);
-		metaDataMgr.drop(session.getTX(), document);
+		metaDataMgr.drop(session.checkTX(), document);
 	}
 }
