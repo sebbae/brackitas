@@ -34,11 +34,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
 
 import org.brackit.as.xquery.HttpSessionTXQueryContext;
-import org.brackit.xquery.util.log.Logger;
 import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.server.ServerException;
 import org.brackit.server.metadata.TXQueryContext;
@@ -48,6 +45,7 @@ import org.brackit.server.tx.IsolationLevel;
 import org.brackit.server.tx.Tx;
 import org.brackit.xquery.XQuery;
 import org.brackit.xquery.compiler.CompileChain;
+import org.brackit.xquery.util.log.Logger;
 
 /**
  * 

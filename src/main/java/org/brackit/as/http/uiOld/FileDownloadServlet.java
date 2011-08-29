@@ -25,59 +25,44 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.xquery.function.bit;
+package org.brackit.as.http.uiOld;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import org.brackit.xquery.ErrorCode;
-import org.brackit.xquery.QueryContext;
-import org.brackit.xquery.QueryException;
-import org.brackit.xquery.atomic.Atomic;
-import org.brackit.xquery.atomic.QNm;
-import org.brackit.xquery.atomic.Str;
-import org.brackit.xquery.function.AbstractFunction;
-import org.brackit.xquery.function.Signature;
-import org.brackit.xquery.xdm.Item;
-import org.brackit.xquery.xdm.Sequence;
+import org.brackit.server.metadata.DBItem;
+import org.brackit.server.metadata.manager.impl.ItemNotFoundException;
+import org.brackit.server.session.Session;
+import org.brackit.xquery.xdm.DocumentException;
 
 /**
  * 
  * @author Henrique Valer
+ * @author Sebastian Baechle
  * 
  */
-public class LoadFile extends AbstractFunction {
-
-	public LoadFile(QNm name, Signature signature) {
-		super(name, signature, true);
-	}
-
+public class FileDownloadServlet extends UIServlet {
+	/**
+	 * Sends a file to resp output stream, for download.
+	 * 
+	 * @param req
+	 *            The request
+	 * @param resp
+	 *            The response
+	 * @throws XQueryException
+	 * @throws DocumentException
+	 * @throws ItemNotFoundException
+	 */
 	@Override
-	public Sequence execute(QueryContext ctx, Sequence[] args)
-			throws QueryException {
-		String fName = ((Atomic) args[0]).stringValue();
-
-		StringBuffer out = new StringBuffer();
-		byte[] buffer = new byte[4096];
-		InputStream in = null;
-		try {
-			in = new BufferedInputStream(getClass().getClassLoader().getResourceAsStream(fName));
-			for (int n; (n = in.read(buffer)) != -1;) {
-				out.append(new String(buffer, 0, n));
-			}
-		} catch (IOException e) {
-			throw new QueryException(e, ErrorCode.ERR_PARSING_ERROR, e
-					.getMessage());
-		} finally {
-			if (in != null)
-				try {
-					in.close();
-				} catch (IOException ignored) {
-				}
-		}
-		return (Item) new Str(new String(out));
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp,
+			Session session) throws Exception {
+		String filename = req.getParameter("file_name");
+		DBItem<?> dbitem = metaDataMgr.getItem(session.getTX(), filename);
+		// set response type and print content
+		resp.setContentType("application/octet-stream");
+		resp.setHeader("Content-Disposition", "attachment; filename=\""
+				+ filename + "\"");
+		// download of file
+		dbitem.serialize(resp.getOutputStream());
 	}
 }

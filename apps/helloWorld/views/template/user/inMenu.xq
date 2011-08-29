@@ -1,3 +1,0 @@
-<p>
-    Internal Menu
-</p>

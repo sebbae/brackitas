@@ -25,59 +25,62 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.xquery.function.bit;
+package org.brackit.as.http.rpcOld;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
-import org.brackit.xquery.ErrorCode;
-import org.brackit.xquery.QueryContext;
-import org.brackit.xquery.QueryException;
-import org.brackit.xquery.atomic.Atomic;
-import org.brackit.xquery.atomic.QNm;
-import org.brackit.xquery.atomic.Str;
-import org.brackit.xquery.function.AbstractFunction;
-import org.brackit.xquery.function.Signature;
-import org.brackit.xquery.xdm.Item;
-import org.brackit.xquery.xdm.Sequence;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.brackit.xquery.util.log.Logger;
+import org.brackit.server.session.Session;
+import org.brackit.server.session.SessionMgr;
 
 /**
  * 
- * @author Henrique Valer
+ * @author Sebastian Baechle
  * 
  */
-public class LoadFile extends AbstractFunction {
+public class LoginFilter implements Filter {
+	private static final Logger log = Logger.getLogger(Logger.class);
 
-	public LoadFile(QNm name, Signature signature) {
-		super(name, signature, true);
+	private SessionMgr sessionMgr;
+
+	@Override
+	public void doFilter(ServletRequest request, ServletResponse response,
+			FilterChain filter) throws IOException, ServletException {
+		HttpServletRequest httpRequest = (HttpServletRequest) request;
+		HttpServletResponse httpResponse = (HttpServletResponse) response;
+		HttpSession httpSession = httpRequest.getSession();
+		Session session = (Session) httpSession.getAttribute(Session.class
+				.getName());
+
+		if (session == null) {
+			log.error(String.format("Client %s is not logged in.", httpSession
+					.getId()));
+			httpResponse.sendError(500, "Not logged in.");
+			return;
+		}
+
+		filter.doFilter(request, response);
 	}
 
 	@Override
-	public Sequence execute(QueryContext ctx, Sequence[] args)
-			throws QueryException {
-		String fName = ((Atomic) args[0]).stringValue();
+	public void init(FilterConfig config) throws ServletException {
+		ServletContext servletContext = config.getServletContext();
+		sessionMgr = (SessionMgr) servletContext.getAttribute(SessionMgr.class
+				.getName());
+	}
 
-		StringBuffer out = new StringBuffer();
-		byte[] buffer = new byte[4096];
-		InputStream in = null;
-		try {
-			in = new BufferedInputStream(getClass().getClassLoader().getResourceAsStream(fName));
-			for (int n; (n = in.read(buffer)) != -1;) {
-				out.append(new String(buffer, 0, n));
-			}
-		} catch (IOException e) {
-			throw new QueryException(e, ErrorCode.ERR_PARSING_ERROR, e
-					.getMessage());
-		} finally {
-			if (in != null)
-				try {
-					in.close();
-				} catch (IOException ignored) {
-				}
-		}
-		return (Item) new Str(new String(out));
+	@Override
+	public void destroy() {
 	}
 }

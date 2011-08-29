@@ -15,7 +15,7 @@
 	(OK) create signatures
 	(OK) Unit Test these functions
 		(OK) Create structure for these testings
-		(  ) Better test the functions. Do more elaborated tests.
+		(OK) Better test the functions. Do more elaborated tests.
 (OK) Define Applications skeleton (with and without MVC)
 	(  ) Support applications without MVC new skeleton
 	(  ) SUpport applications with new MVC Skeleton
@@ -37,3 +37,7 @@
 (OK) Automatically store all files for all applications (AppServlet)
 	(OK) Problems with locking mechanism. Test it more and explain to Sebastian.
 	(  ) Use such blob files directly from disk. Better for performance.
+(  ) Create new app servlet structure
+(  ) Migrate old applications to new structure
+	(  ) eCommerce (MVC)
+	(  ) query engine (non MVC)
