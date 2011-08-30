@@ -1,5 +1,5 @@
 <ul>
-  <li><a href="../createItemForm/">Create Items</a></li>
-  <li><a href="../listItems/">List Items</a></li>
-  <li><a href="../showCartForm/">Show my Items Cart</a></li>
+  <li><a href="./createItemForm.xq">Create Items</a></li>
+  <li><a href="./listItems.xq">List Items</a></li>
+  <li><a href="./showCartForm.xq">Show my Items Cart</a></li>
 </ul>

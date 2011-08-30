@@ -30,6 +30,7 @@ package org.brackit.as.xquery.function.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.io.PrintStream;
 
 import javax.servlet.http.HttpSession;
@@ -87,13 +88,12 @@ public class Template extends AbstractFunction {
 		 * TODO: Use app name, instead of eCommerce
 		 * 
 		 */
-
+		ClassLoader cl = getClass().getClassLoader();
 		String arg = null;
 		String toBeEval = null;
 		HttpSession httpSession = ((HttpSessionTXQueryContext) ctx)
 				.getHttpSession();
-		String appName = ((Atomic) httpSession.getAttribute("appName"))
-				.stringValue();
+		String app = (String) httpSession.getAttribute("appName");
 
 		for (int i = 0; i < args.length; i++) {
 			if (args[i] instanceof Atomic) {
@@ -104,15 +104,15 @@ public class Template extends AbstractFunction {
 				arg = buf.toString();
 			}
 			if (arg.length() == 0) {
-				toBeEval = "bit:eval(bit:loadFile('apps/" + appName
-						+ "/views/default/" + getTempField(i) + ".xq'))";
+				toBeEval = String.format("bit:eval(bit:loadFile('apps/%s/views/default/%s.xq'))",app,getTempField(i));
 			} else {
 				try {
-					FileInputStream in = new FileInputStream("apps/" + appName
-							+ "/views/" + getTempField(i) + ".xq");
-					toBeEval = "bit:eval(bit:loadFile('apps/" + appName
-							+ "/views/" + getTempField(i) + ".xq'))";
-				} catch (FileNotFoundException e) {
+					String s = String.format("apps/%s/views/%s.xq",app,getTempField(i));
+					InputStream in = cl.getResourceAsStream(s);
+					if (in == null) 
+						throw new Exception();
+					toBeEval = String.format("bit:eval(bit:loadFile('%s'))",s);
+				} catch (Exception e) {
 					toBeEval = arg;
 				}
 			}
@@ -121,14 +121,12 @@ public class Template extends AbstractFunction {
 		// case of call only with content parameter
 		if (args.length == 1) {
 			for (int i = 1; i < this.tempFields.length; i++) {
-				toBeEval = "bit:eval(bit:loadFile('apps/" + appName
-						+ "/views/default/" + getTempField(i) + ".xq'))";
+				toBeEval = String.format("bit:eval(bit:loadFile('apps/%s/views/default/%s.xq'))",app,getTempField(i));
 				ctx.bind(new QNm(getTempField(i)), new Str(toBeEval));
 			}
 		}
 		//File f = new File("apps/" + appName + "/views/default/template.xq");
-		
-		XQuery x = new ASXQuery(getClass().getClassLoader().getResourceAsStream("apps/" + appName + "/views/default/template.xq"));
+		XQuery x = new ASXQuery(cl.getResourceAsStream(String.format("apps/%s/views/default/template.xq",app)));
 		x.setPrettyPrint(true);
 		return x.execute(ctx);
 	}

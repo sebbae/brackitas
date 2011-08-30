@@ -52,22 +52,23 @@ public class ResourceServlet extends BaseServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp,
 			Session session) throws Exception {
 
-		if (req.getAttribute(FrontController.APP_SESSION_ATT) == null) {
-			throw new Exception("Direct access to this URL is not allowed.");
-		}
+//		if (req.getAttribute(FrontController.APP_SESSION_ATT) == null) {
+//			throw new Exception("Direct access to this URL is not allowed.");
+//		}
 
 		try {
-			String[] URI = ((String) req
-					.getAttribute(FrontController.HTTP_URI_REQ)).split("/");
+			String[] URI = ((String) req.getSession().getAttribute(
+					FrontController.HTTP_URI_REQ)).split("/");
 			ClassLoader cl = getClass().getClassLoader();
 			StringBuffer resource = new StringBuffer();
 			for (int i = 3; i < URI.length; i++) {
 				resource.append("/" + URI[i]);
 			}
 
-			String s = String.format("apps/%s/resources%s", (String) req
-					.getAttribute(FrontController.APP_SESSION_ATT), resource
-					.toString());
+			String s = String.format("apps/%s/resources%s",
+					(String) req.getSession().getAttribute(
+							FrontController.APP_SESSION_ATT), resource
+							.toString());
 			InputStream in = cl.getResourceAsStream(s);
 
 			// TODO: Check if there will be problems with big files.
@@ -90,8 +91,8 @@ public class ResourceServlet extends BaseServlet {
 		} catch (Exception e) {
 			throw new FileNotFoundException(String.format(
 					"File %s does not exist under the application resources.",
-					((String) req
-							.getAttribute(FrontController.HTTP_RESOURCE_NAME))));
+					((String) req.getSession().getAttribute(
+							FrontController.HTTP_RESOURCE_NAME))));
 		}
 	}
 }

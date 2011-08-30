@@ -74,6 +74,7 @@ public class FrontController extends BaseServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp,
 			Session session) throws Exception {
 
+		resp.setContentType("application/xhtml+xml; charset=UTF-8");
 		ServletContext context = getServletContext();
 
 		// TODO:
@@ -87,13 +88,12 @@ public class FrontController extends BaseServlet {
 			String page = URIParts[3];
 			String resource = URI.substring(URI.lastIndexOf("/"));
 			
-			req.setAttribute(APP_SESSION_ATT, app);
-			req.setAttribute(PAGE_SESSION_ATT, page);
-			req.setAttribute(HTTP_URI_REQ, URI);
-			req.setAttribute(HTTP_RESOURCE_NAME, resource);
+			// TODO: Improve: Where is the best place for such objects?
+			req.getSession().setAttribute(APP_SESSION_ATT, app);
+			req.getSession().setAttribute(PAGE_SESSION_ATT, page);
+			req.getSession().setAttribute(HTTP_URI_REQ, URI);
+			req.getSession().setAttribute(HTTP_RESOURCE_NAME, resource);
 
-			System.out.println("XQ MIME: " + getMimeType("a.xq"));
-			
 			// Resolve resource
 			if (!UNKNOWN_MIMETYPE.equals(getMimeType(resource))) {
 				RequestDispatcher dispatcher = context
@@ -113,7 +113,7 @@ public class FrontController extends BaseServlet {
 
 					// Dinamic binding of parameters: name = variable name
 					chain = new ASCompileChain(metaDataMgr, session.checkTX());
-					x = new ASXQuery(chain, getQueryFile(((String) req
+					x = new ASXQuery(chain, getQueryFile(((String) req.getSession()
 							.getAttribute(FrontController.HTTP_URI_REQ)),app, page));
 					for (ExtVariable var : x.getModule().getVariables()
 							.getDeclaredVariables()) {
@@ -140,8 +140,10 @@ public class FrontController extends BaseServlet {
 				}
 			}
 			finally {
-				x.setPrettyPrint(true);
-				x.serialize(ctx, new PrintStream(resp.getOutputStream()));					
+				if (x != null) {
+					x.setPrettyPrint(true);
+					x.serialize(ctx, new PrintStream(resp.getOutputStream()));					
+				}
 			}
 
 			/*
