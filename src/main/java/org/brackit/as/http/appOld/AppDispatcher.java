@@ -132,22 +132,8 @@ public class AppDispatcher extends AppServlet {
 					"apps/%s/queries/private/%s.xq", appName, pageName));
 			return (in != null) ? in : cl.getResourceAsStream(String.format(
 					"apps/%s/queries/public/%s.xq", appName, pageName));
-			// return in;
-			// return new File(String.format("apps/%s/queries/private/%s.xq",
-			// appName, pageName));
-			// } catch (FileNotFoundException e) {
-			// try {
-			// FileInputStream in = new FileInputStream(String.format(
-			// "apps/%s/queries/public/%s.xq", appName, pageName));
-			// return new File(String.format("apps/%s/queries/public/%s.xq",
-			// appName, pageName));
-			// } catch (FileNotFoundException e1) {
-			// e1.printStackTrace();
-			// throw new FileNotFoundException();
-			// }
 		} catch (Exception e) {
 			e.printStackTrace();
-			// TODO: handle exception
 		}
 		throw new FileNotFoundException();
 	}

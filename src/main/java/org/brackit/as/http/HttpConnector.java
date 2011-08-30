@@ -28,15 +28,13 @@
 package org.brackit.as.http;
 
 import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Random;
 
 import javax.activation.MimetypesFileTypeMap;
-import javax.servlet.Servlet;
 
+import org.brackit.as.http.app.ErrorServlet;
 import org.brackit.as.http.app.FrontController;
 import org.brackit.as.http.app.ResourceServlet;
 import org.brackit.server.metadata.manager.MetaDataMgr;
@@ -54,9 +52,10 @@ import org.eclipse.jetty.util.log.Log;
  */
 public class HttpConnector {
 
-	public static final String APP_RESOURCE_DISP_TARGET = "/app/resource/";
-	public static final String APP_ERROR_DISP_TARGET = "/app/error/";
 	public static final String APP_MIME_TYPES = "mimeTypes";
+
+	public static final String APP_ERROR_DISP_TARGET = "/app/error/";
+	public static final String APP_RESOURCE_DISP_TARGET = "/app/resource/";
 
 	private static final String APP_ERROR_PREFIX = APP_ERROR_DISP_TARGET + "*";
 	private static final String APP_RESOURCE_PREFIX = APP_RESOURCE_DISP_TARGET
@@ -86,6 +85,7 @@ public class HttpConnector {
 				APP_CONTROLLER_PREFIX);
 		servletContextHandler.addServlet(ResourceServlet.class,
 				APP_RESOURCE_PREFIX);
+		servletContextHandler.addServlet(ErrorServlet.class, APP_ERROR_PREFIX);
 	}
 
 	public void start() throws Exception {
