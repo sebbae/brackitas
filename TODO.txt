@@ -41,3 +41,4 @@
 (  ) Migrate old applications to new structure
 	(  ) eCommerce (MVC)
 	(  ) query engine (non MVC)
+	(  ) Error application (Servlet)

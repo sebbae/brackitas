@@ -38,7 +38,7 @@ import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.Servlet;
 
 import org.brackit.as.http.app.FrontController;
-import org.brackit.as.http.app.ResourceHandler;
+import org.brackit.as.http.app.ResourceServlet;
 import org.brackit.server.metadata.manager.MetaDataMgr;
 import org.brackit.server.session.SessionMgr;
 import org.brackit.xquery.util.log.Logger;
@@ -84,7 +84,7 @@ public class HttpConnector {
 
 		servletContextHandler.addServlet(FrontController.class,
 				APP_CONTROLLER_PREFIX);
-		servletContextHandler.addServlet(ResourceHandler.class,
+		servletContextHandler.addServlet(ResourceServlet.class,
 				APP_RESOURCE_PREFIX);
 	}
 

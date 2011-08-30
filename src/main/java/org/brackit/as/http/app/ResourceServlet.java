@@ -27,6 +27,10 @@
  */
 package org.brackit.as.http.app;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.StreamCorruptedException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -35,42 +39,59 @@ import org.brackit.server.session.Session;
 /**
  * 
  * @author Henrique Valer
- *
+ * 
  */
-public class ErrorHandler extends BaseServlet {
+public class ResourceServlet extends BaseServlet {
 
-	private static final long serialVersionUID = 8975500227147886755L;
-	
-	public final static String ERROR_ATT = "errorMsg";
-	
-	private void showError(HttpServletRequest req) {
-		System.out.println("ERROR ON APPLICATION:" + (String) req.getAttribute(ErrorHandler.ERROR_ATT));
-	}
-	
-	@Override
-	protected void doDelete(HttpServletRequest req, HttpServletResponse resp,
-			Session session) throws Exception {
-		this.showError(req);
-	}
-	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8332338424448843760L;
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp,
 			Session session) throws Exception {
-		this.showError(req);	}
-	
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp,
-			Session session) throws Exception {
-		this.showError(req);	}
-	
-	@Override
-	protected void doPut(HttpServletRequest req, HttpServletResponse resp,
-			Session session) throws Exception {
-		this.showError(req);	}
-	
-	@Override
-	protected void service(HttpServletRequest req, HttpServletResponse resp,
-			Session session) throws Exception {
-		this.showError(req);
+
+		if (req.getAttribute(FrontController.APP_SESSION_ATT) == null) {
+			throw new Exception("Direct access to this URL is not allowed.");
+		}
+
+		try {
+			String[] URI = ((String) req
+					.getAttribute(FrontController.HTTP_URI_REQ)).split("/");
+			ClassLoader cl = getClass().getClassLoader();
+			StringBuffer resource = new StringBuffer();
+			for (int i = 3; i < URI.length; i++) {
+				resource.append("/" + URI[i]);
+			}
+
+			String s = String.format("apps/%s/resources%s", (String) req
+					.getAttribute(FrontController.APP_SESSION_ATT), resource
+					.toString());
+			InputStream in = cl.getResourceAsStream(s);
+
+			// TODO: Check if there will be problems with big files.
+			// resp.setHeader("Content-length", in. );
+			resp.setContentType(getMimeType(URI[URI.length - 1]));
+
+			try {
+				byte[] buffer = new byte[4096];
+				int bytesRead = 0;
+				while ((bytesRead = in.read(buffer)) != -1)
+					resp.getOutputStream().write(buffer, 0, bytesRead);
+			} catch (Exception e) {
+				throw new StreamCorruptedException(String.format(
+						"Error while reading inputStream of resource %s.",
+						URI[URI.length]));
+			} finally {
+				in.close();
+				resp.getOutputStream().flush();
+			}
+		} catch (Exception e) {
+			throw new FileNotFoundException(String.format(
+					"File %s does not exist under the application resources.",
+					((String) req
+							.getAttribute(FrontController.HTTP_RESOURCE_NAME))));
+		}
 	}
 }

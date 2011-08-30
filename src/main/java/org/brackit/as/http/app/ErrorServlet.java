@@ -27,8 +27,6 @@
  */
 package org.brackit.as.http.app;
 
-import java.io.FileNotFoundException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -39,41 +37,40 @@ import org.brackit.server.session.Session;
  * @author Henrique Valer
  *
  */
-public class ResourceHandler extends BaseServlet {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 8332338424448843760L;
+public class ErrorServlet extends BaseServlet {
 
+	private static final long serialVersionUID = 8975500227147886755L;
+	
+	public final static String ERROR_ATT = "errorMsg";
+	
+	private void showError(HttpServletRequest req) {
+		System.out.println("ERROR ON APPLICATION:" + (String) req.getAttribute(ErrorServlet.ERROR_ATT));
+	}
+	
+	@Override
+	protected void doDelete(HttpServletRequest req, HttpServletResponse resp,
+			Session session) throws Exception {
+		this.showError(req);
+	}
+	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp,
 			Session session) throws Exception {
-
-		if (req.getAttribute(FrontController.APP_SESSION_ATT) == null) {
-			throw new Exception("Direct access to this URL is not allowed.");
-		}
-				
-		
-		try {
-			String[] URI = ((String) req.getAttribute(FrontController.HTTP_URI_REQ)).split("/");
-			
-			ClassLoader cl = getClass().getClassLoader();
-
-			System.out.println();
-			StringBuffer resource = new StringBuffer();
-			for (int i = 3; i < URI.length; i++) {
-				System.out.println("i: " + i + " ::: " + URI[i]);
-				resource.append("/" + URI[i]);
-			}			 			
-			
-			String s = String.format("apps/%s/resources%s",(String)req.getAttribute(FrontController.APP_SESSION_ATT),resource.toString());
-			cl.getResourceAsStream(s);
-			
-			// TODO: Convert from input stream to output stream
-			
-		} catch (Exception e) {
-			throw new FileNotFoundException("File does not exist under the application resources.");
-		}
+		this.showError(req);	}
+	
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp,
+			Session session) throws Exception {
+		this.showError(req);	}
+	
+	@Override
+	protected void doPut(HttpServletRequest req, HttpServletResponse resp,
+			Session session) throws Exception {
+		this.showError(req);	}
+	
+	@Override
+	protected void service(HttpServletRequest req, HttpServletResponse resp,
+			Session session) throws Exception {
+		this.showError(req);
 	}
 }

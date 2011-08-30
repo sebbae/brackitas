@@ -49,6 +49,8 @@ public class FrontController extends BaseServlet {
 	public static final String PAGE_SESSION_ATT = "pageName";
 
 	public static final String HTTP_URI_REQ = "httpUriReq";
+	
+	public static final String HTTP_RESOURCE_NAME = "httpResourceName";
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp,
@@ -59,23 +61,24 @@ public class FrontController extends BaseServlet {
 		// TODO:
 		// Resolve Application
 		try {
-			String[] URI = req.getRequestURI().split("/");
+			String URI = req.getRequestURI();
+			String[] URIParts = URI.split("/");
 			/*
 			 * http://localhost:24280/app/eCommerce/css/1/a.css for (int i = 0;
 			 * i < URI.length; i++) { System.out.println("i: " + i + " ::: " +
 			 * URI[i]); }
 			 */
 			// TODO: Improve get naming
-			String appName = URI[2];
-			String pageName = URI[3];
-
+			String appName = URIParts[2];
+			String pageName = URIParts[3];
+			String docName = URI.substring(URI.lastIndexOf("/"));
+			
+			
 			req.setAttribute(APP_SESSION_ATT, appName);
 			req.setAttribute(PAGE_SESSION_ATT, pageName);
-			req.setAttribute(HTTP_URI_REQ, req.getRequestURI());
+			req.setAttribute(HTTP_URI_REQ, URI);
+			req.setAttribute(HTTP_RESOURCE_NAME, docName);
 
-			// Resolve resource
-			String docName = req.getRequestURI();
-			docName = docName.substring(docName.lastIndexOf("/"));
 
 			String a1 = getMimeType("");
 			String a2 = getMimeType(docName);
@@ -90,7 +93,7 @@ public class FrontController extends BaseServlet {
 			// Execute it
 
 		} catch (Exception e) {
-			req.setAttribute(ErrorHandler.ERROR_ATT, e.getMessage());
+			req.setAttribute(ErrorServlet.ERROR_ATT, e.getMessage());
 			RequestDispatcher dispatcher = context
 					.getRequestDispatcher(HttpConnector.APP_ERROR_DISP_TARGET);
 			dispatcher.forward(req, resp);

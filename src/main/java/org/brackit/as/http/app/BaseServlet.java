@@ -53,7 +53,7 @@ public class BaseServlet extends TXServlet {
 		try {
 			doGet(req, resp, session);
 		} catch (Throwable e) {
-			req.setAttribute(ErrorHandler.ERROR_ATT, e.getMessage());
+			req.setAttribute(ErrorServlet.ERROR_ATT, e.getMessage());
 			doDispatch(req, resp, HttpConnector.APP_ERROR_DISP_TARGET);
 		}
 	};
@@ -65,7 +65,7 @@ public class BaseServlet extends TXServlet {
 		try {
 			doPost(req, resp, session);
 		} catch (Throwable e) {
-			req.setAttribute(ErrorHandler.ERROR_ATT, e.getMessage());
+			req.setAttribute(ErrorServlet.ERROR_ATT, e.getMessage());
 			doDispatch(req, resp, HttpConnector.APP_ERROR_DISP_TARGET);
 		}
 	};
@@ -77,7 +77,7 @@ public class BaseServlet extends TXServlet {
 		try {
 			doPut(req, resp, session);
 		} catch (Throwable e) {
-			req.setAttribute(ErrorHandler.ERROR_ATT, e.getMessage());
+			req.setAttribute(ErrorServlet.ERROR_ATT, e.getMessage());
 			doDispatch(req, resp, HttpConnector.APP_ERROR_DISP_TARGET);
 		}
 	};
@@ -89,7 +89,7 @@ public class BaseServlet extends TXServlet {
 		try {
 			doDelete(req, resp, session);
 		} catch (Throwable e) {
-			req.setAttribute(ErrorHandler.ERROR_ATT, e.getMessage());
+			req.setAttribute(ErrorServlet.ERROR_ATT, e.getMessage());
 			doDispatch(req, resp, HttpConnector.APP_ERROR_DISP_TARGET);
 		}
 	};
@@ -101,7 +101,7 @@ public class BaseServlet extends TXServlet {
 		try {
 			service(req, resp, session);
 		} catch (Throwable e) {
-			req.setAttribute(ErrorHandler.ERROR_ATT, e.getMessage());
+			req.setAttribute(ErrorServlet.ERROR_ATT, e.getMessage());
 			doDispatch(req, resp, HttpConnector.APP_ERROR_DISP_TARGET);
 		}
 	}
