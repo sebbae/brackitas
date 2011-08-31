@@ -38,6 +38,10 @@
 	(OK) Problems with locking mechanism. Test it more and explain to Sebastian.
 	(  ) Use such blob files directly from disk. Better for performance.
 (  ) Create new app servlet structure
+	(OK) Create support for resources
+	(OK) Create support for singular query execution
+	(OK) Create support for MVC query execution
+	(  ) Optimize such structure
 (  ) Migrate old applications to new structure
 	(  ) eCommerce (MVC)
 	(  ) query engine (non MVC)

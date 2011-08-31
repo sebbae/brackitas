@@ -43,9 +43,12 @@ import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.server.session.Session;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.atomic.Una;
+import org.brackit.xquery.compiler.BaseResolver;
 import org.brackit.xquery.compiler.CompileChain;
+import org.brackit.xquery.compiler.ModuleResolver;
 import org.brackit.xquery.expr.Cast;
 import org.brackit.xquery.expr.ExtVariable;
+import org.brackit.xquery.module.LibraryModule;
 import org.brackit.xquery.sequence.type.AtomicType;
 import org.brackit.xquery.sequence.type.SequenceType;
 import org.brackit.xquery.xdm.Item;
@@ -65,9 +68,9 @@ public class FrontController extends BaseServlet {
 	public static final String PAGE_SESSION_ATT = "pageName";
 
 	public static final String HTTP_URI_REQ = "httpUriReq";
-	
+
 	public static final String HTTP_RESOURCE_NAME = "httpResourceName";
-	
+
 	public static final String UNKNOWN_MIMETYPE = "application/octet-stream";
 
 	@Override
@@ -87,7 +90,7 @@ public class FrontController extends BaseServlet {
 			String app = URIParts[2];
 			String page = URIParts[3];
 			String resource = URI.substring(URI.lastIndexOf("/"));
-			
+
 			// TODO: Improve: Where is the best place for such objects?
 			req.getSession().setAttribute(APP_SESSION_ATT, app);
 			req.getSession().setAttribute(PAGE_SESSION_ATT, page);
@@ -100,9 +103,9 @@ public class FrontController extends BaseServlet {
 						.getRequestDispatcher(HttpConnector.APP_RESOURCE_DISP_TARGET);
 				dispatcher.forward(req, resp);
 			}
-			
+
 			// Compilation and execution
-			CompileChain chain = null;			
+			CompileChain chain = null;
 			ASXQuery x = null;
 			QueryContext ctx = new HttpSessionTXQueryContext(session.checkTX(),
 					metaDataMgr, req.getSession());
@@ -113,8 +116,9 @@ public class FrontController extends BaseServlet {
 
 					// Dinamic binding of parameters: name = variable name
 					chain = new ASCompileChain(metaDataMgr, session.checkTX());
-					x = new ASXQuery(chain, getQueryFile(((String) req.getSession()
-							.getAttribute(FrontController.HTTP_URI_REQ)),app, page));
+					x = new ASXQuery(chain, getQueryFile(((String) req
+							.getSession().getAttribute(
+									FrontController.HTTP_URI_REQ)), app, page));
 					for (ExtVariable var : x.getModule().getVariables()
 							.getDeclaredVariables()) {
 						SequenceType type = var.getType();
@@ -133,29 +137,39 @@ public class FrontController extends BaseServlet {
 							}
 						}
 					}
-				}
-				else
-				{
+				} else {
 					// Query with MVC
+					// http://localhost:8080/app/helloWorldMVC/test/public/test/
+					final BaseResolver res = new BaseResolver();
+					CompileChain chainMVC = new CompileChain() {
+						private final ModuleResolver resolver = res;
+
+						@Override
+						protected ModuleResolver getModuleResolver() {
+							return resolver;
+						}
+					};
+					ClassLoader cl = getClass().getClassLoader();
+					ASXQuery xq = new ASXQuery(
+							chainMVC,
+							cl
+									.getResourceAsStream("apps/helloWorldMVC/models/testModel.xq"));
+					LibraryModule module = (LibraryModule) xq.getModule();
+					res.register(module.getTargetNS().getUri(), module);
+					x = new ASXQuery(
+							chainMVC,
+							cl
+									.getResourceAsStream("apps/helloWorldMVC/controllers/testController.xq"));
+					// QueryContext ctx = createContext();
+					// Sequence result = xq2.execute(ctx);
 				}
-			}
-			finally {
+			} finally {
+				// Execute it
 				if (x != null) {
 					x.setPrettyPrint(true);
-					x.serialize(ctx, new PrintStream(resp.getOutputStream()));					
+					x.serialize(ctx, new PrintStream(resp.getOutputStream()));
 				}
 			}
-
-			/*
-			 * Compile query
-			 * Check on ServletContext if the applicationContext exists
-			 *   yes? -> Compile query with it
-			 *   no? -> Create application context
-			 */
-			
-			
-
-			// Execute it
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -165,7 +179,7 @@ public class FrontController extends BaseServlet {
 			dispatcher.forward(req, resp);
 		}
 	}
-	
+
 	private InputStream getQueryFile(String reqURI, String app, String page)
 			throws FileNotFoundException {
 		try {
@@ -175,11 +189,10 @@ public class FrontController extends BaseServlet {
 			for (int i = 3; i < URI.length; i++) {
 				resource.append("/" + URI[i]);
 			}
-			String s = String.format("apps/%s%s", app, resource
-					.toString());
+			String s = String.format("apps/%s%s", app, resource.toString());
 			ClassLoader cl = getClass().getClassLoader();
 			InputStream in = cl.getResourceAsStream(s);
-			if (in != null) 
+			if (in != null)
 				return in;
 			else
 				throw new FileNotFoundException();
@@ -187,6 +200,6 @@ public class FrontController extends BaseServlet {
 			e.printStackTrace();
 		}
 		throw new FileNotFoundException();
-	}	
-	
+	}
+
 }

@@ -60,10 +60,10 @@ import org.brackit.xquery.sequence.type.SequenceType;
 /**
  * @author Sebastian Baechle
  * @author Henrique Valer
- *
+ * 
  */
 public class ASCompileChain extends DBCompileChain {
-	
+
 	static {
 		// Bit
 		Functions.predefine(new DeleteFile(new QNm(Namespaces.BIT_NSURI,
@@ -175,11 +175,9 @@ public class ASCompileChain extends DBCompileChain {
 				new SequenceType(AnyItemType.ANY, Cardinality.One), // result
 				new SequenceType(AtomicType.STR, Cardinality.One)))); // input
 	}
-	
+
 	public ASCompileChain(MetaDataMgr mdm, Tx tx) {
 		super(mdm, tx);
 	}
-	
-	
-	
+
 }

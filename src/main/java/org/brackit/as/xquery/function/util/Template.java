@@ -27,9 +27,6 @@
  */
 package org.brackit.as.xquery.function.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.PrintStream;
 
@@ -104,14 +101,18 @@ public class Template extends AbstractFunction {
 				arg = buf.toString();
 			}
 			if (arg.length() == 0) {
-				toBeEval = String.format("bit:eval(bit:loadFile('apps/%s/views/default/%s.xq'))",app,getTempField(i));
+				toBeEval = String
+						.format(
+								"bit:eval(bit:loadFile('apps/%s/views/default/%s.xq'))",
+								app, getTempField(i));
 			} else {
 				try {
-					String s = String.format("apps/%s/views/%s.xq",app,getTempField(i));
+					String s = String.format("apps/%s/views/%s.xq", app,
+							getTempField(i));
 					InputStream in = cl.getResourceAsStream(s);
-					if (in == null) 
+					if (in == null)
 						throw new Exception();
-					toBeEval = String.format("bit:eval(bit:loadFile('%s'))",s);
+					toBeEval = String.format("bit:eval(bit:loadFile('%s'))", s);
 				} catch (Exception e) {
 					toBeEval = arg;
 				}
@@ -121,12 +122,16 @@ public class Template extends AbstractFunction {
 		// case of call only with content parameter
 		if (args.length == 1) {
 			for (int i = 1; i < this.tempFields.length; i++) {
-				toBeEval = String.format("bit:eval(bit:loadFile('apps/%s/views/default/%s.xq'))",app,getTempField(i));
+				toBeEval = String
+						.format(
+								"bit:eval(bit:loadFile('apps/%s/views/default/%s.xq'))",
+								app, getTempField(i));
 				ctx.bind(new QNm(getTempField(i)), new Str(toBeEval));
 			}
 		}
-		//File f = new File("apps/" + appName + "/views/default/template.xq");
-		XQuery x = new ASXQuery(cl.getResourceAsStream(String.format("apps/%s/views/default/template.xq",app)));
+		// File f = new File("apps/" + appName + "/views/default/template.xq");
+		XQuery x = new ASXQuery(cl.getResourceAsStream(String.format(
+				"apps/%s/views/default/template.xq", app)));
 		x.setPrettyPrint(true);
 		return x.execute(ctx);
 	}
