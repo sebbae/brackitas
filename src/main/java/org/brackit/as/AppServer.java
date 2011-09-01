@@ -77,6 +77,7 @@ public class AppServer {
 		System.out.println(port);
 		System.out.print(" ... ");
 		try {
+//			connector = new HttpConnectorOld(db.getMetadataMgr(), db.getSessionMgr(), port);
 			connector = new HttpConnector(db.getMetadataMgr(), db
 					.getSessionMgr(), port);
 			connector.start();

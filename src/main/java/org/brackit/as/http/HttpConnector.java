@@ -91,7 +91,6 @@ public class HttpConnector {
 	public void start() throws Exception {
 		try {
 			server.start();
-			server.join();
 		} catch (Exception e) {
 			log.error(e);
 		}

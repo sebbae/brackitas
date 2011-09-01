@@ -27,34 +27,76 @@
  */
 package org.brackit.as.xquery.function.session;
 
-import javax.servlet.http.HttpSession;
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 
+import org.brackit.as.http.app.FrontController;
+import org.brackit.as.xquery.ASXQuery;
 import org.brackit.as.xquery.HttpSessionTXQueryContext;
-import org.brackit.xquery.QueryContext;
-import org.brackit.xquery.QueryException;
-import org.brackit.xquery.atomic.QNm;
-import org.brackit.xquery.function.AbstractFunction;
-import org.brackit.xquery.function.Signature;
-import org.brackit.xquery.xdm.Item;
-import org.brackit.xquery.xdm.Sequence;
+import org.brackit.as.xquery.compiler.ASCompileChain;
+import org.brackit.server.BrackitDB;
+import org.brackit.server.ServerException;
+import org.brackit.server.metadata.manager.MetaDataMgr;
+import org.junit.Test;
 
 /**
  * 
  * @author Henrique Valer
- * 
+ *
  */
-public class GetSessionAtt extends AbstractFunction {
+public class ECommerce {
 
-	public GetSessionAtt(QNm name, Signature signature) {
-		super(name, signature, true);
+	protected static PrintStream createBuffer() {
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		return new PrintStream(out) {
+			final OutputStream baos = out;
+
+			public String toString() {
+				return baos.toString();
+			}
+		};
 	}
 
-	@Override
-	public Sequence execute(QueryContext ctx, Sequence[] args)
-			throws QueryException {
-		HttpSession httpSession = ((HttpSessionTXQueryContext) ctx)
-				.getHttpSession();
-		String vAttName = ((Item) args[0]).atomize().stringValue();
-		return (Item) httpSession.getAttribute(vAttName);
+	private static HttpSessionTXQueryContext ctx;
+
+	private static MetaDataMgr metaDataMgr;
+
+	private static BrackitDB db;
+
+	private static PrintStream buffer;
+
+	static {
+		try {
+			buffer = createBuffer();
+			db = new BrackitDB(true);
+			metaDataMgr = db.getMetadataMgr();
+			ctx = new HttpSessionTXQueryContext(db.getTaMgr().begin(),
+					metaDataMgr, new NullHttpSession());
+		} catch (ServerException e) {
+			e.printStackTrace();
+		}
 	}
+	
+	@Test
+	public void listItems() throws Exception {
+		try {
+			ctx.getHttpSession().setAttribute(FrontController.APP_SESSION_ATT, "eCommerce");
+			ASXQuery x = new ASXQuery(
+					new ASCompileChain(metaDataMgr, ctx.getTX()),
+					getClass().getClassLoader().getResourceAsStream("apps/eCommerce/queries/listItems.xq"));
+			x.setPrettyPrint(true);
+			x.serialize(ctx, buffer);
+			
+			System.out.println(buffer.toString());
+			x.serialize(ctx, buffer);
+			
+			System.out.println(buffer.toString());			
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			// TODO: handle exception
+		}
+	}	
+	
 }

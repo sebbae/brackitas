@@ -18,7 +18,7 @@ let $content :=
         (string-length($itemDescription) > 0) and 
         (not(contains($itemName,' ')))) then
     	let 
-    		$a := bit:storeFile(concat(session:getAtt('appName'),'/items/',$itemName),
+    		$a := bit:storeFile(concat(session:getAtt('appName'),'/',$itemName),
     		                    local:Item($itemName,$itemDescription))
     	return
     		<p> Item {$a/item/data(name)} created sucessfully </p>
@@ -26,5 +26,3 @@ let $content :=
     	<p> Item {$itemName} not created. Validation problems. </p>
 return 
 	util:template($content)
-
-	

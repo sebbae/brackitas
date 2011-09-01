@@ -5,7 +5,7 @@ let
 return
 	let 
 	    $content :=
-                    <form action="../addToCartExec/">
+                    <form action="./addToCartExec.xq">
     	                <table style="width: 100%; background-color: #E0E0F0;">
     	                    <tr>
     	                        <td>

@@ -27,6 +27,7 @@
  */
 package org.brackit.as.http.app;
 
+import java.io.BufferedOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.StreamCorruptedException;
@@ -35,6 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.brackit.server.session.Session;
+import org.brackit.xquery.atomic.Atomic;
 
 /**
  * 
@@ -52,13 +54,13 @@ public class ResourceServlet extends BaseServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp,
 			Session session) throws Exception {
 
-//		if (req.getAttribute(FrontController.APP_SESSION_ATT) == null) {
-//			throw new Exception("Direct access to this URL is not allowed.");
-//		}
+		// if (req.getAttribute(FrontController.APP_SESSION_ATT) == null) {
+		// throw new Exception("Direct access to this URL is not allowed.");
+		// }
 
 		try {
-			String[] URI = ((String) req.getSession().getAttribute(
-					FrontController.HTTP_URI_REQ)).split("/");
+			String[] URI = ((Atomic) req.getSession().getAttribute(
+					FrontController.HTTP_URI_REQ)).stringValue().split("/");
 			ClassLoader cl = getClass().getClassLoader();
 			StringBuffer resource = new StringBuffer();
 			for (int i = 3; i < URI.length; i++) {
@@ -66,33 +68,39 @@ public class ResourceServlet extends BaseServlet {
 			}
 
 			String s = String.format("apps/%s/resources%s",
-					(String) req.getSession().getAttribute(
-							FrontController.APP_SESSION_ATT), resource
-							.toString());
-			InputStream in = cl.getResourceAsStream(s);
+					((Atomic) req.getSession().getAttribute(
+							FrontController.APP_SESSION_ATT)).stringValue(),
+					resource.toString());
 
 			// TODO: Check if there will be problems with big files.
 			// resp.setHeader("Content-length", in. );
-			resp.setContentType(getMimeType(URI[URI.length - 1]));
+			String contentType = getMimeType(URI[URI.length - 1]);
+			resp.setContentType(contentType);
 
+			InputStream in = cl.getResourceAsStream(s);
+			BufferedOutputStream out = new BufferedOutputStream(resp
+					.getOutputStream());
 			try {
 				byte[] buffer = new byte[4096];
 				int bytesRead = 0;
-				while ((bytesRead = in.read(buffer)) != -1)
-					resp.getOutputStream().write(buffer, 0, bytesRead);
+				while ((bytesRead = in.read(buffer)) != -1) {
+					out.write(buffer, 0, bytesRead);
+					out.flush();
+				}
 			} catch (Exception e) {
 				throw new StreamCorruptedException(String.format(
 						"Error while reading inputStream of resource %s.",
 						URI[URI.length]));
 			} finally {
+				out.close();
 				in.close();
 				resp.getOutputStream().flush();
 			}
 		} catch (Exception e) {
 			throw new FileNotFoundException(String.format(
 					"File %s does not exist under the application resources.",
-					((String) req.getSession().getAttribute(
-							FrontController.HTTP_RESOURCE_NAME))));
+					((Atomic) req.getSession().getAttribute(
+							FrontController.HTTP_RESOURCE_NAME)).stringValue()));
 		}
 	}
 }

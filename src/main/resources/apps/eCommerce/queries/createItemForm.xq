@@ -1,6 +1,6 @@
 let 
     $content :=
-            <form action="../createItemExec/">
+            <form action="./createItemExec.xq">
                 <table style="width: 100%; background-color: #E0E0F0;">
                     <tr>
                         <td>

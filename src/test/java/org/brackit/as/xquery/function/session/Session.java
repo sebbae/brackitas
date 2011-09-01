@@ -36,19 +36,12 @@ import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.activation.MimetypesFileTypeMap;
-import javax.xml.soap.MimeHeader;
-
-import org.brackit.as.xquery.ASXQuery;
 import org.brackit.as.xquery.HttpSessionTXQueryContext;
 import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.server.BrackitDB;
 import org.brackit.server.ServerException;
 import org.brackit.server.metadata.manager.MetaDataMgr;
-import org.brackit.server.tx.DummyTX;
-import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.XQuery;
-import org.brackit.xquery.compiler.CompileChain;
 import org.junit.Test;
 
 /**

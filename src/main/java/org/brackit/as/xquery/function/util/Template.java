@@ -90,7 +90,8 @@ public class Template extends AbstractFunction {
 		String toBeEval = null;
 		HttpSession httpSession = ((HttpSessionTXQueryContext) ctx)
 				.getHttpSession();
-		String app = (String) httpSession.getAttribute("appName");
+		String app = ((Atomic) httpSession.getAttribute("appName"))
+				.stringValue();
 
 		for (int i = 0; i < args.length; i++) {
 			if (args[i] instanceof Atomic) {
@@ -135,5 +136,4 @@ public class Template extends AbstractFunction {
 		x.setPrettyPrint(true);
 		return x.execute(ctx);
 	}
-
 }

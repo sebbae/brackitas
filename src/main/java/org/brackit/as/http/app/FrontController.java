@@ -42,6 +42,8 @@ import org.brackit.as.xquery.HttpSessionTXQueryContext;
 import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.server.session.Session;
 import org.brackit.xquery.QueryContext;
+import org.brackit.xquery.atomic.Atomic;
+import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.atomic.Una;
 import org.brackit.xquery.compiler.BaseResolver;
 import org.brackit.xquery.compiler.CompileChain;
@@ -92,10 +94,14 @@ public class FrontController extends BaseServlet {
 			String resource = URI.substring(URI.lastIndexOf("/"));
 
 			// TODO: Improve: Where is the best place for such objects?
-			req.getSession().setAttribute(APP_SESSION_ATT, app);
-			req.getSession().setAttribute(PAGE_SESSION_ATT, page);
-			req.getSession().setAttribute(HTTP_URI_REQ, URI);
-			req.getSession().setAttribute(HTTP_RESOURCE_NAME, resource);
+			// On the AppCtx object!!!
+			req.getSession().setAttribute(APP_SESSION_ATT,
+					(Atomic) new Str(app));
+			req.getSession().setAttribute(PAGE_SESSION_ATT,
+					(Atomic) new Str(page));
+			req.getSession().setAttribute(HTTP_URI_REQ, (Atomic) new Str(URI));
+			req.getSession().setAttribute(HTTP_RESOURCE_NAME,
+					(Atomic) new Str(resource));
 
 			// Resolve resource
 			if (!UNKNOWN_MIMETYPE.equals(getMimeType(resource))) {
@@ -107,7 +113,7 @@ public class FrontController extends BaseServlet {
 			// Compilation and execution
 			CompileChain chain = null;
 			ASXQuery x = null;
-			QueryContext ctx = new HttpSessionTXQueryContext(session.checkTX(),
+			QueryContext ctx = new HttpSessionTXQueryContext(session.getTX(),
 					metaDataMgr, req.getSession());
 			try {
 				// without MVC
@@ -115,10 +121,11 @@ public class FrontController extends BaseServlet {
 				if (resource.endsWith(".xq")) {
 
 					// Dinamic binding of parameters: name = variable name
-					chain = new ASCompileChain(metaDataMgr, session.checkTX());
-					x = new ASXQuery(chain, getQueryFile(((String) req
+					chain = new ASCompileChain(metaDataMgr, session.getTX());
+					x = new ASXQuery(chain, getQueryFile(((Atomic) req
 							.getSession().getAttribute(
-									FrontController.HTTP_URI_REQ)), app, page));
+									FrontController.HTTP_URI_REQ))
+							.stringValue(), app, page));
 					for (ExtVariable var : x.getModule().getVariables()
 							.getDeclaredVariables()) {
 						SequenceType type = var.getType();
@@ -140,6 +147,14 @@ public class FrontController extends BaseServlet {
 				} else {
 					// Query with MVC
 					// http://localhost:8080/app/helloWorldMVC/test/public/test/
+
+					/*
+					 * TODO: 1. Remove module and import module declaration.
+					 * Make it automatically. 2. Compile model -> compile
+					 * controller -> execute specific controller function ->
+					 * Execute template -> template also calls functions
+					 */
+
 					final BaseResolver res = new BaseResolver();
 					CompileChain chainMVC = new CompileChain() {
 						private final ModuleResolver resolver = res;
@@ -201,5 +216,4 @@ public class FrontController extends BaseServlet {
 		}
 		throw new FileNotFoundException();
 	}
-
 }

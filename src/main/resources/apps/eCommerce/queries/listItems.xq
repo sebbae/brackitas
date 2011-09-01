@@ -1,6 +1,6 @@
 let $content := 
 	let 
-		$master := doc('_master.xml')/bit//dir[xs:string(@name)=fn:concat('/',session:getAtt('appName'),'/items')] 
+		$master := doc('_master.xml')/xtc//dir[xs:string(@name)='/'] 
 	return 
 		<ul>
 			{
@@ -13,7 +13,7 @@ let $content :=
 						$docN := fn:doc($i/@name) 
 					return 
 						<li>
-						    <a href="../showItemForm/?itemName={$docN/item/data(name)}">{$docN/item/data(name)}</a>
+						    <a href="./showItemForm.xq?itemName={$docN/item/data(name)}">{$docN/item/data(name)}</a>
 							{$docN/item/data(description)}
 						</li> 
 			}

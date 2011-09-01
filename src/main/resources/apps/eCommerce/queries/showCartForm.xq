@@ -8,7 +8,7 @@ let
                 <tr>
                     {
                         let 
-                            $a := bit:loadFile('apps/eCommerce/queries/public/showCart.xq') 
+                            $a := bit:loadFile('apps/eCommerce/queries/showCart.xq') 
                         return 
                             bit:eval($a)
                     }

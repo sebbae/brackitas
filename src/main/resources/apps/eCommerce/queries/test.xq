@@ -1,4 +1,4 @@
 let 
-    $a := bit:ftIndexStore($name, $doc)
+    $a := session:getAtt('appName')
 return 
 	$a
