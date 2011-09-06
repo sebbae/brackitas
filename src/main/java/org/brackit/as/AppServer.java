@@ -28,7 +28,6 @@
 package org.brackit.as;
 
 import org.brackit.as.http.HttpConnector;
-import org.brackit.as.http.HttpConnectorOld;
 import org.brackit.server.BrackitDB;
 import org.brackit.server.ServerException;
 

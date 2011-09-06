@@ -33,12 +33,12 @@ import org.brackit.as.util.FunctionUtils;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
+import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.function.Signature;
 import org.brackit.xquery.node.SubtreePrinter;
 import org.brackit.xquery.node.parser.DocumentParser;
-import org.brackit.xquery.xdm.Collection;
 import org.brackit.xquery.xdm.Node;
 import org.brackit.xquery.xdm.Sequence;
 
@@ -46,29 +46,31 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
-public class StoreFile extends AbstractFunction {
+public class StoreDoc extends AbstractFunction {
 
-	private FunctionUtils fUtils = new FunctionUtils();
+	private static FunctionUtils fUtils = new FunctionUtils();
 
-	public StoreFile(QNm name, Signature signature) {
+	public StoreDoc(QNm name, Signature signature) {
 		super(name, signature, true);
 	}
 
 	@Override
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
-		String vName = ((Atomic) args[0]).stringValue() + ".xml";
-		String vContent = null;
-		if (args[1] instanceof Atomic) {
-			vContent = ((Atomic) args[1]).stringValue();
-		} else {
-			PrintStream buf = fUtils.createBuffer();
-			SubtreePrinter.print((Node<?>) args[1], buf);
-			vContent = buf.toString();
+		try {
+			String vName = ((Atomic) args[0]).stringValue();
+			String vContent = null;
+			if (args[1] instanceof Atomic) {
+				vContent = ((Atomic) args[1]).stringValue();
+			} else {
+				PrintStream buf = fUtils.createBuffer();
+				SubtreePrinter.print((Node<?>) args[1], buf);
+				vContent = buf.toString();
+			}
+			ctx.getStore().create(vName, new DocumentParser(vContent));
+			return Bool.TRUE;
+		} catch (Exception e) {
+			return Bool.FALSE;
 		}
-
-		Collection<?> collection = ctx.getStore().create(vName,
-				new DocumentParser(vContent));
-		return collection.getDocument();
 	}
 }

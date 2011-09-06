@@ -33,11 +33,15 @@ import java.io.InputStreamReader;
 import java.util.Random;
 
 import javax.activation.MimetypesFileTypeMap;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
 
 import org.brackit.as.http.app.ErrorServlet;
 import org.brackit.as.http.app.FrontController;
 import org.brackit.as.http.app.ResourceServlet;
 import org.brackit.server.metadata.manager.MetaDataMgr;
+import org.brackit.server.session.Session;
 import org.brackit.server.session.SessionMgr;
 import org.brackit.xquery.util.log.Logger;
 import org.eclipse.jetty.server.Server;
@@ -52,6 +56,28 @@ import org.eclipse.jetty.util.log.Log;
  */
 public class HttpConnector {
 
+	private static class SessionEndListener implements HttpSessionListener {
+
+		private final SessionMgr sessionMgr;
+		
+		SessionEndListener(SessionMgr sessionMgr) {
+			this.sessionMgr = sessionMgr;
+		}
+		
+		@Override
+		public void sessionDestroyed(HttpSessionEvent event) {
+			HttpSession httpSession = (HttpSession) event.getSession();
+			Session session = (Session) httpSession.getAttribute(TXServlet.SESSION);
+			if (session != null) {
+				sessionMgr.logout(session.getSessionID());
+			}
+		}
+
+		@Override
+		public void sessionCreated(HttpSessionEvent arg0) {
+		}
+	}	
+	
 	public static final String APP_MIME_TYPES = "mimeTypes";
 
 	public static final String APP_ERROR_DISP_TARGET = "/app/error/";
@@ -78,6 +104,8 @@ public class HttpConnector {
 				sessionMgr);
 		servletContextHandler
 				.setAttribute(APP_MIME_TYPES, this.loadMimeTypes());
+		servletContextHandler.addEventListener(new SessionEndListener(sessionMgr));
+		
 		// Load applications
 		// Add applications to ServletContext
 

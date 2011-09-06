@@ -1,5 +1,4 @@
-(:
- *
+/*
  * [New BSD License]
  * Copyright (c) 2011, Brackit Project Team <info@brackit.org>  
  * All rights reserved.
@@ -25,63 +24,39 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- **
+ */
+package org.brackit.as.xquery.function.bit;
+
+import org.brackit.xquery.QueryContext;
+import org.brackit.xquery.QueryException;
+import org.brackit.xquery.atomic.Atomic;
+import org.brackit.xquery.atomic.Bool;
+import org.brackit.xquery.atomic.QNm;
+import org.brackit.xquery.function.AbstractFunction;
+import org.brackit.xquery.function.Signature;
+import org.brackit.xquery.xdm.Sequence;
+
+/**
  * 
  * @author Henrique Valer
  * 
- *
-:)
-declare function local:getItemFromCollection ($name as xs:string) as item()+
-{
-    for 
-        $doc 
-    in 
-        fn:collection(session:getAtt('appName'))
-    let 
-        $docName := $doc/item/data(name)
-    where
-        $docName = $name 
-    return 
-        $doc    
-}
-;
+ */
+public class CreateCollection extends AbstractFunction {
 
-let
-    $cart := session:getAtt('cart')
-return
-        <table>
-            <tr>
-                <td>
-                    Name
-                </td>
-                <td>
-                    Description
-                </td>
-                <td>
-                    Quantity
-                </td>
-            </tr>
-            {
-                for 
-                    $cartItem 
-                in 
-                    $cart/item
-                let
-                    $docName := $cartItem/data(name),
-                    $quantity := $cartItem/data(quantity),
-                    $description := local:getItemFromCollection($docName)/item/data(description)
-                return 
-                    <tr>
-                        <td>
-                            <a href="./showItemForm.xq?itemName={$docName}">{$docName}</a>
-                        </td> 
-                        <td>
-                            {$description}
-                        </td>
-                        <td>
-                            {$quantity}
-                        </td>
-                    </tr>
-            }
-        </table>    
+	public CreateCollection(QNm name, Signature signature) {
+		super(name, signature, true);
+	}
+
+	@Override
+	public Sequence execute(QueryContext ctx, Sequence[] args)
+			throws QueryException {
+		try {
+			String collection = ((Atomic) args[0]).stringValue();
+			ctx.getStore().create(collection);
+			return Bool.TRUE;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Bool.FALSE;
+		}
+	}
+}

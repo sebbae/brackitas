@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.brackit.as.xquery.HttpSessionTXQueryContext;
+import org.brackit.as.xquery.HttpSessionQueryContext;
 import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.server.ServerException;
 import org.brackit.server.metadata.TXQueryContext;
@@ -61,6 +61,7 @@ public abstract class TXServlet extends AbstractServlet {
 
 	public static final String SESSION = "_session";
 
+	@Deprecated
 	protected String query(Session session, String query) throws Exception {
 		ByteArrayOutputStream buf = new ByteArrayOutputStream();
 		CompileChain chain = new ASCompileChain(metaDataMgr, session.checkTX());
@@ -69,14 +70,16 @@ public abstract class TXServlet extends AbstractServlet {
 		return buf.toString("UTF-8");
 	}
 
+	@Deprecated
 	protected String httpQuery(Session session, String query,
 			HttpSession httpSession) throws Exception {
 		ByteArrayOutputStream buf = new ByteArrayOutputStream();
 		CompileChain chain = new ASCompileChain(metaDataMgr, session.checkTX());
 		XQuery x = new XQuery(chain, query);
 		x.setPrettyPrint(true);
-		x.serialize(new HttpSessionTXQueryContext(session.checkTX(), metaDataMgr,
-				httpSession), new PrintStream(buf));
+//		x.serialize(new HttpSessionTXQueryContext(session.checkTX(), metaDataMgr,
+//				httpSession), new PrintStream(buf));
+		x.serialize(new HttpSessionQueryContext(httpSession), new PrintStream(buf));
 		return buf.toString("UTF-8");
 	}
 
@@ -105,14 +108,14 @@ public abstract class TXServlet extends AbstractServlet {
 		super.service(req, resp);
 	}
 	
-	@Deprecated
 	protected void cleanup(Session session, Tx tx) {
 		try {
 			if (tx == null)
 				session.commit();
-//			else
-//				session.rollback();
+			else
+				session.rollback();
 		} catch (ServerException e1) {
+			e1.printStackTrace();
 			log.error(e1);
 		}
 	}
@@ -129,8 +132,6 @@ public abstract class TXServlet extends AbstractServlet {
 			}
 			return session;
 		} catch (SessionException e) {
-			// TODO: Erase it
-			e.printStackTrace();
 			throw new ServletException(e);
 		}
 	}
