@@ -62,7 +62,6 @@ public class AppServer {
 
 	private BrackitDB db;
 
-//	private HttpConnectorOld connector;
 	private HttpConnector connector;
 
 	public AppServer(boolean install) throws Exception {
@@ -76,7 +75,6 @@ public class AppServer {
 		System.out.println(port);
 		System.out.print(" ... ");
 		try {
-//			connector = new HttpConnectorOld(db.getMetadataMgr(), db.getSessionMgr(), port);
 			connector = new HttpConnector(db.getMetadataMgr(), db
 					.getSessionMgr(), port);
 			connector.start();
@@ -90,7 +88,6 @@ public class AppServer {
 	private void startDB(boolean install) throws ServerException {
 		if (install) {
 			System.out.print("Install DB ... ");
-
 		} else {
 			System.out.print("Start DB ... ");
 		}

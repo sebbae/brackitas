@@ -33,13 +33,11 @@ import java.io.PrintStream;
 
 import org.brackit.as.http.app.FrontController;
 import org.brackit.as.xquery.ASXQuery;
-import org.brackit.as.xquery.HttpSessionQueryContext;
 import org.brackit.as.xquery.HttpSessionTXQueryContext;
 import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.server.BrackitDB;
-import org.brackit.server.ServerException;
 import org.brackit.server.metadata.manager.MetaDataMgr;
-import org.brackit.xquery.compiler.CompileChain;
+import org.brackit.server.tx.Tx;
 import org.junit.Test;
 
 /**
@@ -60,21 +58,28 @@ public class ECommerce {
 		};
 	}
 
-	private static HttpSessionQueryContext ctx;
+	private static PrintStream buffer;
+
+	private static HttpSessionTXQueryContext ctx;
+
+	private static MetaDataMgr metaDataMgr;
 
 	private static BrackitDB db;
 
-	private static PrintStream buffer;
+	private static Tx tx;
+
 
 	@Test
 	public void listItems() throws Exception {
 		try {
 			buffer = createBuffer();
 			db = new BrackitDB(true);
-			ctx = new HttpSessionQueryContext(new NullHttpSession());
+			metaDataMgr = db.getMetadataMgr();
+			tx = db.getTaMgr().begin();
+			ctx = new HttpSessionTXQueryContext(tx, metaDataMgr, new NullHttpSession());
 			ctx.getHttpSession().setAttribute(FrontController.APP_SESSION_ATT, "eCommerce");
 			ASXQuery x = new ASXQuery(
-					new CompileChain(),
+					new ASCompileChain(metaDataMgr, tx),
 					getClass().getClassLoader().getResourceAsStream("apps/eCommerce/queries/test.xq"));
 			x.setPrettyPrint(true);
 			x.serialize(ctx, buffer);

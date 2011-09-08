@@ -27,35 +27,10 @@
  */
 package org.brackit.as.xquery.compiler;
 
-import org.brackit.as.xquery.function.bit.DropCollection;
-import org.brackit.as.xquery.function.bit.Eval;
-import org.brackit.as.xquery.function.bit.FtIndexStore;
-import org.brackit.as.xquery.function.bit.LoadFile;
-import org.brackit.as.xquery.function.bit.MakeDirectory;
-import org.brackit.as.xquery.function.bit.Render;
-import org.brackit.as.xquery.function.bit.StoreDoc;
-import org.brackit.as.xquery.function.session.Clear;
-import org.brackit.as.xquery.function.session.GetAttributeNames;
-import org.brackit.as.xquery.function.session.GetCreationTime;
-import org.brackit.as.xquery.function.session.GetLastAccessedTime;
-import org.brackit.as.xquery.function.session.GetMaxInactiveInterval;
-import org.brackit.as.xquery.function.session.GetSessionAtt;
-import org.brackit.as.xquery.function.session.Invalidate;
-import org.brackit.as.xquery.function.session.RemoveSessionAtt;
-import org.brackit.as.xquery.function.session.SetMaxInactiveInterval;
-import org.brackit.as.xquery.function.session.SetSessionAtt;
-import org.brackit.as.xquery.function.util.Template;
 import org.brackit.server.metadata.manager.MetaDataMgr;
 import org.brackit.server.tx.Tx;
 import org.brackit.server.xquery.DBCompileChain;
-import org.brackit.xquery.atomic.QNm;
-import org.brackit.xquery.function.Signature;
-import org.brackit.xquery.module.Functions;
-import org.brackit.xquery.module.Namespaces;
-import org.brackit.xquery.sequence.type.AnyItemType;
-import org.brackit.xquery.sequence.type.AtomicType;
-import org.brackit.xquery.sequence.type.Cardinality;
-import org.brackit.xquery.sequence.type.SequenceType;
+import org.brackit.xquery.compiler.BaseResolver;
 
 /**
  * @author Sebastian Baechle
@@ -64,8 +39,19 @@ import org.brackit.xquery.sequence.type.SequenceType;
  */
 public class ASCompileChain extends DBCompileChain {
 
+	private BaseResolver resolver;
+
+	@Override
+	public BaseResolver getModuleResolver() {
+		return resolver;
+	}
+
+	public ASCompileChain(MetaDataMgr mdm, Tx tx, BaseResolver res) {
+		super(mdm, tx);
+		this.resolver = res;
+	}
+
 	public ASCompileChain(MetaDataMgr mdm, Tx tx) {
 		super(mdm, tx);
 	}
-
 }

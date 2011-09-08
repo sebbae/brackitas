@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.brackit.as.xquery.HttpSessionQueryContext;
+import org.brackit.as.xquery.HttpSessionTXQueryContext;
 import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.server.ServerException;
 import org.brackit.server.metadata.TXQueryContext;
@@ -65,8 +65,8 @@ public abstract class TXServlet extends AbstractServlet {
 	protected String query(Session session, String query) throws Exception {
 		ByteArrayOutputStream buf = new ByteArrayOutputStream();
 		CompileChain chain = new ASCompileChain(metaDataMgr, session.checkTX());
-		new XQuery(chain, query).serialize(new TXQueryContext(session.checkTX(),
-				metaDataMgr), new PrintStream(buf));
+		new XQuery(chain, query).serialize(new TXQueryContext(
+				session.checkTX(), metaDataMgr), new PrintStream(buf));
 		return buf.toString("UTF-8");
 	}
 
@@ -74,12 +74,13 @@ public abstract class TXServlet extends AbstractServlet {
 	protected String httpQuery(Session session, String query,
 			HttpSession httpSession) throws Exception {
 		ByteArrayOutputStream buf = new ByteArrayOutputStream();
-		CompileChain chain = new ASCompileChain(metaDataMgr, session.checkTX());
+		Tx tx = session.getTX();
+		CompileChain chain = new ASCompileChain(metaDataMgr, tx);
 		XQuery x = new XQuery(chain, query);
 		x.setPrettyPrint(true);
-//		x.serialize(new HttpSessionTXQueryContext(session.checkTX(), metaDataMgr,
-//				httpSession), new PrintStream(buf));
-		x.serialize(new HttpSessionQueryContext(httpSession), new PrintStream(buf));
+		x.serialize(
+				new HttpSessionTXQueryContext(tx, metaDataMgr, httpSession),
+				new PrintStream(buf));
 		return buf.toString("UTF-8");
 	}
 
@@ -107,7 +108,7 @@ public abstract class TXServlet extends AbstractServlet {
 			Session session) throws Exception {
 		super.service(req, resp);
 	}
-	
+
 	protected void cleanup(Session session, Tx tx) {
 		try {
 			if (tx == null)
@@ -115,7 +116,6 @@ public abstract class TXServlet extends AbstractServlet {
 			else
 				session.rollback();
 		} catch (ServerException e1) {
-			e1.printStackTrace();
 			log.error(e1);
 		}
 	}
