@@ -88,11 +88,11 @@ public class HttpConnector {
 
 	public static final String APP_MIME_TYPES = "mimeTypes";
 
-	public static final String APP_ERROR_DISP_TARGET = "/app/error/";
+	public static final String APP_ERROR_DISP_TARGET = "/apps/error/";
 
 	private static final String APP_ERROR_PREFIX = APP_ERROR_DISP_TARGET + "*";
 
-	private static final String APP_CONTROLLER_PREFIX = "/app/*";
+	private static final String APP_CONTROLLER_PREFIX = "/apps/*";
 
 	private static final Logger log = Logger.getLogger(HttpConnector.class);
 
@@ -171,6 +171,9 @@ public class HttpConnector {
 		} catch (Exception e) {
 			log.equals(e);
 		}
+		
+//		((BaseAppContext) sch.getAttribute("eCommerce")).
+		
 	}
 
 	private void populateAppQueries(File appFolder, BaseAppContext bac)
@@ -182,7 +185,8 @@ public class HttpConnector {
 			} else {
 				if (f[i].getName().endsWith(".xq")) {
 					try {
-						bac.register(resolvePath(f[i].getPath()));
+						String s = f[i].getPath();
+						bac.register(resolvePath(s));
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -192,7 +196,8 @@ public class HttpConnector {
 	}
 
 	private String resolvePath(String p) {
-		return p.substring("src/main/resources/".length());
+		p = p.substring("src/main/resources".length());
+		return p; 
 	}
 
 	private MimetypesFileTypeMap loadMimeTypes() {

@@ -32,6 +32,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 
 import org.brackit.as.xquery.function.bit.AddDocToCollection;
 import org.brackit.as.xquery.function.bit.CreateCollection;
@@ -54,6 +56,7 @@ import org.brackit.as.xquery.function.session.SetMaxInactiveInterval;
 import org.brackit.as.xquery.function.session.SetSessionAtt;
 import org.brackit.as.xquery.function.util.Template;
 import org.brackit.xquery.ErrorCode;
+import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.XQuery;
 import org.brackit.xquery.atomic.QNm;
@@ -61,10 +64,17 @@ import org.brackit.xquery.compiler.CompileChain;
 import org.brackit.xquery.function.Signature;
 import org.brackit.xquery.module.Functions;
 import org.brackit.xquery.module.Namespaces;
+import org.brackit.xquery.node.SubtreePrinter;
 import org.brackit.xquery.sequence.type.AnyItemType;
 import org.brackit.xquery.sequence.type.AtomicType;
 import org.brackit.xquery.sequence.type.Cardinality;
 import org.brackit.xquery.sequence.type.SequenceType;
+import org.brackit.xquery.xdm.DocumentException;
+import org.brackit.xquery.xdm.Item;
+import org.brackit.xquery.xdm.Iter;
+import org.brackit.xquery.xdm.Kind;
+import org.brackit.xquery.xdm.Node;
+import org.brackit.xquery.xdm.Sequence;
 
 /**
  * @author Sebastian Baechle
@@ -255,6 +265,55 @@ public class ASXQuery extends XQuery {
 				}
 		}
 		return new String(buffer);
+	}
+	
+	public void serializeSequence (HttpSessionTXQueryContext ctx, PrintStream ps, Sequence result) throws DocumentException, QueryException {
+
+		PrintWriter out = new PrintWriter(ps);
+		
+		if (result == null) {
+			return;
+		}
+
+		boolean first = true;
+		SubtreePrinter printer = new SubtreePrinter(out);
+		printer.setPrettyPrint(true);
+		printer.setAutoFlush(false);
+		Item item;
+		Iter it = result.iterate();
+		try {
+			while ((item = it.next()) != null) {
+				if (item instanceof Node<?>) {
+					Node<?> node = (Node<?>) item;
+					Kind kind = node.getKind();
+
+					if ((kind == Kind.ATTRIBUTE) || (kind == Kind.NAMESPACE)) {
+						throw new QueryException(
+								ErrorCode.ERR_SERIALIZE_ATTRIBUTE_OR_NAMESPACE_NODE);
+					}
+					if (kind == Kind.DOCUMENT) {
+						node = node.getFirstChild();
+						while (node.getKind() != Kind.ELEMENT) {
+							node = node.getNextSibling();
+						}
+					}
+
+					printer.print(node);
+					first = true;
+				} else {
+					if (!first) {
+						out.write(" ");
+					}
+					out.write(item.toString());
+					first = false;
+				}
+			}
+		} finally {
+			printer.flush();
+			out.flush();
+			it.close();
+		}		
+		
 	}
 
 }

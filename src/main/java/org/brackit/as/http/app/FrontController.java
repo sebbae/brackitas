@@ -32,6 +32,8 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.StreamCorruptedException;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,7 +41,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.xquery.ASXQuery;
 import org.brackit.as.xquery.HttpSessionTXQueryContext;
-import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.server.session.Session;
 import org.brackit.server.tx.Tx;
 import org.brackit.xquery.atomic.Atomic;
@@ -47,9 +48,11 @@ import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.atomic.Una;
 import org.brackit.xquery.expr.Cast;
 import org.brackit.xquery.expr.ExtVariable;
+import org.brackit.xquery.function.Function;
 import org.brackit.xquery.sequence.type.AtomicType;
 import org.brackit.xquery.sequence.type.SequenceType;
 import org.brackit.xquery.xdm.Item;
+import org.brackit.xquery.xdm.Sequence;
 import org.brackit.xquery.xdm.Type;
 
 /**
@@ -83,142 +86,95 @@ public class FrontController extends BaseServlet {
 		// Resolve Application
 		String URI = req.getRequestURI();
 		String[] URIParts = URI.split("/");
-		// TODO: Improve get naming
 		String app = URIParts[2];
-		String page = URIParts[3];
-		String resource = URI.substring(URI.lastIndexOf("/"));
+		String resource = URI.substring(URI.lastIndexOf("/") + 1);
 
 		// TODO: Improve: Where is the best place for such objects?
 		// On the AppCtx object!!!
 		req.getSession().setAttribute(APP_SESSION_ATT, (Atomic) new Str(app));
-		req.getSession().setAttribute(PAGE_SESSION_ATT, (Atomic) new Str(page));
-		req.getSession().setAttribute(HTTP_URI_REQ, (Atomic) new Str(URI));
-		req.getSession().setAttribute(HTTP_RESOURCE_NAME,
-				(Atomic) new Str(resource));
 
 		// Resolve resource
-		if (!UNKNOWN_MIMETYPE.equals(getMimeType(resource))) {
-			processResource(app, URI.split("/"), resp);
+		if (!UNKNOWN_MIMETYPE.equals(getMimeType(URI))) {
+			processResource(app, URI, resp);
 			return;
-			// RequestDispatcher dispatcher = context
-			// .getRequestDispatcher(HttpConnector.APP_RESOURCE_DISP_TARGET);
-			// dispatcher.forward(req, resp);
 		}
 
 		// Compilation and execution
 		Tx tx = session.getTX();
-		ASCompileChain chain = (ASCompileChain) getServletContext()
-				.getAttribute("CompileChain");
 		ASXQuery x = null;
 		HttpSessionTXQueryContext ctx = new HttpSessionTXQueryContext(tx,
 				metaDataMgr, req.getSession());
 
-		try {
-			// without MVC
-			// http://localhost:8080/app/helloWorld/folder/public/default.xq
-			if (resource.endsWith(".xq")) {
+		// without MVC
+		// http://localhost:8080/apps/helloWorld/folder/public/default.xq
+		if (resource.endsWith(".xq")) {
 
-				// Dinamic binding of parameters: name = variable name
-				// chain = new ASCompileChain(metaDataMgr, tx);
-				if (chain == null)
-					chain = new ASCompileChain(metaDataMgr, tx);
-				x = new ASXQuery(chain, getQueryFile(((Atomic) req.getSession()
-						.getAttribute(FrontController.HTTP_URI_REQ))
-						.stringValue(), app, page));
-				for (ExtVariable var : x.getModule().getVariables()
-						.getDeclaredVariables()) {
-					SequenceType type = var.getType();
-					if ((type != null)
-							&& (var.getType().getItemType().isAtomic())) {
-						Type expectedAtomicType = ((AtomicType) var.getType()
-								.getItemType()).type;
-						String param = req.getParameter(var.getName()
-								.getLocalName());
-						if ((param != null)
-								&& (!(param = param.trim()).isEmpty())) {
-							Item item = new Una(param);
-							item = Cast.cast(item, expectedAtomicType, false);
-							ctx.bind(var.getName(), item);
+			Object o = getServletContext().getAttribute(app);
+			BaseAppContext bac;
+			if (o != null) {
+				bac = (BaseAppContext) o;
+				x = bac.get(URI);
+			} else {
+				throw new Exception(String.format(
+						"Application %s does not exist", app));
+			}
+
+			// TODO: Bind also for MVC queries
+			// bind query external variables
+			for (ExtVariable var : x.getModule().getVariables()
+					.getDeclaredVariables()) {
+				SequenceType type = var.getType();
+				if ((type != null) && (var.getType().getItemType().isAtomic())) {
+					Type expectedAtomicType = ((AtomicType) var.getType()
+							.getItemType()).type;
+					String param = req.getParameter(var.getName()
+							.getLocalName());
+					if ((param != null) && (!(param = param.trim()).isEmpty())) {
+						Item item = new Una(param);
+						item = Cast.cast(item, expectedAtomicType, false);
+						ctx.bind(var.getName(), item);
+					}
+				}
+			}
+
+			x.setPrettyPrint(true);
+			x.serialize(ctx, new PrintStream(resp.getOutputStream()));
+
+		} else {
+			// Query with MVC
+			// http://localhost:8080/apps/helloWorldMVC/controllers/testController/echo
+			Object o = getServletContext().getAttribute(app);
+			BaseAppContext bac;
+			if (o != null) {
+				bac = (BaseAppContext) o;
+				String s = String.format("%s.xq", URI.substring(0, URI
+						.lastIndexOf("/")));
+				x = bac.get(s);
+				List<Function[]> l = x.getModule().getFunctions()
+						.getDeclaredFunctions();
+				Iterator<Function[]> i = l.iterator();
+				while (i.hasNext()) {
+					Function[] f = (Function[]) i.next();
+					for (int j = 0; j < f.length; j++) {
+						if (f[j].getName().stringValue().equals(resource)) {
+							x.serializeSequence(ctx, new PrintStream(resp
+									.getOutputStream()), f[j].execute(ctx,
+									new Sequence[] {}));
+							return;
 						}
 					}
 				}
-				getServletContext().setAttribute("CompileChain", chain);
-			}
-			 else {
-				// Query with MVC
-				// http://localhost:8080/app/helloWorldMVC/test/public/test/
-
-				/*
-				 * TODO: 1. Remove module and import module declaration. Make it
-				 * automatically. 2. Compile model -> compile controller ->
-				 * execute specific controller function -> Execute template ->
-				 * template also calls functions
-				 */
-
-				Object o = getServletContext().getAttribute("helloWorldMVC");
-				BaseAppContext bac;
-				if (o != null)
-				{
-					bac = (BaseAppContext) o;
-					x = bac.get("apps/helloWorldMVC/controllers/testController.xq");
-				}
-				 
-//				 
-//				final BaseResolver res = new BaseResolver();
-//				CompileChain chainMVC = new ASCompileChain(metaDataMgr, tx, res);
-//				ClassLoader cl = getClass().getClassLoader();
-//				ASXQuery xq = new ASXQuery(
-//						chainMVC,
-//						cl
-//								.getResourceAsStream("apps/helloWorldMVC/models/testModel.xq"));
-//				LibraryModule module = (LibraryModule) xq.getModule();
-//				System.out.println(module.getTargetNS().getUri());
-//				res.register(module.getTargetNS().getUri(), module);
-//				x = new ASXQuery(
-//						chainMVC,
-//						cl
-//								.getResourceAsStream("apps/helloWorldMVC/controllers/testController.xq"));
-				// QueryContext ctx = createContext();
-				// Sequence result = xq2.execute(ctx);
-			}
-//		} catch (Throwable e) {
-//			e.printStackTrace();
-//			throw new Exception(e);
-		} finally {
-			// Execute it
-			if (x != null) {
-				x.setPrettyPrint(true);
-				x.serialize(ctx, new PrintStream(resp.getOutputStream()));
-				// session.commit();
 			}
 		}
-
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// // req.setAttribute(ErrorServlet.ERROR_ATT, e.getMessage());
-		// // RequestDispatcher dispatcher = context
-		// // .getRequestDispatcher(HttpConnector.APP_ERROR_DISP_TARGET);
-		// // dispatcher.forward(req, resp);
-		// }
 	}
 
-	private void processResource(String app, String[] URI,
+	private void processResource(String app, String resource,
 			HttpServletResponse resp) throws StreamCorruptedException,
 			FileNotFoundException {
 		try {
-			ClassLoader cl = getClass().getClassLoader();
-			StringBuffer resource = new StringBuffer();
-			for (int i = 3; i < URI.length; i++) {
-				resource.append("/" + URI[i]);
-			}
-
-			String s = String.format("apps/%s/resources%s", app, resource
-					.toString());
-
-			String contentType = getMimeType(URI[URI.length - 1]);
+			String contentType = getMimeType(resource);
 			resp.setContentType(contentType);
-
-			InputStream in = cl.getResourceAsStream(s);
+			InputStream in = getClass().getResourceAsStream(resource);
 			BufferedOutputStream out = new BufferedOutputStream(resp
 					.getOutputStream());
 			try {
@@ -235,35 +191,13 @@ public class FrontController extends BaseServlet {
 				resp.setStatus(HttpServletResponse.SC_OK);
 			}
 		} catch (StreamCorruptedException e) {
-			throw new StreamCorruptedException(String.format(
-					"Error while reading inputStream of resource %s.",
-					URI[URI.length - 1]));
+			throw new StreamCorruptedException(String
+					.format("Error while reading inputStream of resource %s.",
+							resource));
 		} catch (Exception e) {
 			throw new FileNotFoundException(String.format(
 					"File %s does not exist under the application resources.",
-					URI[URI.length - 1]));
+					resource));
 		}
-	}
-
-	private InputStream getQueryFile(String reqURI, String app, String page)
-			throws FileNotFoundException {
-		try {
-			// http://localhost:8080/app/helloWorld/folder/public/default.xq
-			String[] URI = reqURI.split("/");
-			StringBuffer resource = new StringBuffer();
-			for (int i = 3; i < URI.length; i++) {
-				resource.append("/" + URI[i]);
-			}
-			String s = String.format("apps/%s%s", app, resource.toString());
-			ClassLoader cl = getClass().getClassLoader();
-			InputStream in = cl.getResourceAsStream(s);
-			if (in != null)
-				return in;
-			else
-				throw new FileNotFoundException();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		throw new FileNotFoundException();
 	}
 }

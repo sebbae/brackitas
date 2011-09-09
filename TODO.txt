@@ -28,20 +28,22 @@
 	Clicking information?
 (  ) Create documentation application
 (  ) Create mechanism for hot-deployment of applications
+	(  ) Necessary to recompile all queries
 (  ) Create authentication screen for private content
-(  ) Create mapping between model->view->controller
+(OK) Create mapping between model->view->controller
 	(OK)One model to one controller to many views. 
-	(  )Waiting for import modules implementation 
+	(OK)Waiting for import modules implementation 
 (OK) HttpSessionQueryContext should extend TXQueryContext
 	To match and solve Roxana's problems.
 (OK) Automatically store all files for all applications (AppServlet)
 	(OK) Problems with locking mechanism. Test it more and explain to Sebastian.
-	(  ) Use such blob files directly from disk. Better for performance.
-(  ) Create new app servlet structure
+	(OK) Use such blob files directly from disk. Better for performance.
+(OK) Create new app servlet structure
 	(OK) Create support for resources
 	(OK) Create support for singular query execution
 	(OK) Create support for MVC query execution
-	(  ) Optimize such structure
+	(OK) Optimize such structure
+	(  ) Refactor code
 (  ) Migrate old applications to new structure
 	(  ) eCommerce (MVC)
 	(OK) eCommerce (non-MVC)

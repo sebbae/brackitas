@@ -62,8 +62,7 @@ public class BaseAppContext {
 		}
 		target = queries.get(path);
 		if (target == null) {
-			target = new ASXQuery(chain, getClass().getClassLoader()
-					.getResourceAsStream(path));
+			target = new ASXQuery(chain, getClass().getResourceAsStream(path));
 			Module module = target.getModule();
 			if (module instanceof LibraryModule)
 				((BaseResolver) chain.getModuleResolver()).register(

@@ -3,7 +3,7 @@ declare variable $pass := session:getAtt('pass');
 <table>
     <tr>
         <td>
-            <img style="width:200px; height:75px; padding: 10px;" align="middle" src="http://localhost:8080/app/eCommerce/images/ecommerce.jpg" />
+            <img style="width:200px; height:75px; padding: 10px;" align="middle" src="http://localhost:8080/apps/eCommerce/resources/images/ecommerce.jpg" />
         </td>
         <td>
             {
