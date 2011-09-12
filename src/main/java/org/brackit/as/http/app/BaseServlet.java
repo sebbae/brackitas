@@ -28,9 +28,6 @@
 package org.brackit.as.http.app;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -39,13 +36,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.brackit.as.http.HttpConnector;
 import org.brackit.as.http.TXServlet;
 import org.brackit.server.ServerException;
-import org.brackit.server.metadata.TXQueryContext;
 import org.brackit.server.session.Session;
-import org.brackit.server.session.SessionException;
 import org.brackit.server.tx.Tx;
-import org.brackit.server.xquery.DBCompileChain;
-import org.brackit.xquery.XQuery;
-import org.brackit.xquery.node.parser.DocumentParser;
 
 /**
  * 
@@ -54,48 +46,7 @@ import org.brackit.xquery.node.parser.DocumentParser;
  */
 public class BaseServlet extends TXServlet {
 
-	private Boolean initialized = false;
-
 	private static final long serialVersionUID = 1L;
-
-	@Override
-	public void init() throws ServletException {
-		super.init();
-		if (!initialized)
-			createDefaultApplicationsBasic();
-	};
-
-	/**
-	 * Testing how to make multiple access at abstract servlet.
-	 * @throws SessionException 
-	 */
-	private void createDefaultApplicationsBasic() {
-
-		Session session = null;
-		Tx tx = null;
-		
-		try {
-			session = sessionMgr.getSession(sessionMgr.login());
-			tx = session.getTX();
-			metaDataMgr.create(tx, "eCommerce");
-			session.commit();
-			//			metaDataMgr.mkdir(tx, "/eCommerce2");
-			// metaDataMgr.mkdir(tx, "eCommerce/items");
-		} catch (Throwable e) {
-			log.error(e);
-			try {
-				if (tx == null) {
-					session.rollback();
-				}
-			} catch (ServerException e1) {
-				e1.printStackTrace();
-				log.error(e1);
-			}
-		} finally {
-			if (session != null)
-				cleanup(session, tx);
-		}
-	}
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -108,7 +59,6 @@ public class BaseServlet extends TXServlet {
 			doGet(req, resp, session);
 			session.commit();
 		} catch (Throwable e) {
-//			if (session.checkTX() == null)
 			try {
 				if (tx == null) {
 					session.rollback();
@@ -117,10 +67,6 @@ public class BaseServlet extends TXServlet {
 				e1.printStackTrace();
 				log.error(e1);
 			}
-			// TODO: Erase it
-			e.printStackTrace();
-//			req.setAttribute(ErrorServlet.ERROR_ATT, e.getMessage());
-//			doDispatch(req, resp, HttpConnector.APP_ERROR_DISP_TARGET);
 		} finally {
 			if (session != null)
 				cleanup(session, tx);

@@ -46,7 +46,7 @@ declare function local:getItemFromCollection ($name as xs:string) as item()*
     where
         $docName = $name 
     return 
-        $doc    
+        $doc
 }
 ;
 
@@ -65,13 +65,21 @@ declare function local:Item($name as xs:string,
 let $content := 
     if ((string-length($itemName) > 0) and 
         (string-length($itemDescription) > 0) and 
-        (not(contains($itemName,' '))) and
-        (not(exists(local:getItemFromCollection($itemName))))) 
+        (not(contains($itemName,' '))))
     then
-        if (bit:addDocToCollection(session:getAtt('appName'),local:Item($itemName,$itemDescription))) then
-           <p> Item {$itemName} created sucessfully </p>
+        if (bit:existCollection(session:getAtt('appName'))) then
+            if (not(exists(local:getItemFromCollection($itemName)))) then
+                if (bit:addDocToCollection(session:getAtt('appName'),local:Item($itemName,$itemDescription))) then
+                   <p> Item {$itemName} created sucessfully </p>
+                else
+            	   <p> Problems storing item problems. </p>
+            else
+                <p> Item {$itemName} already exists </p>                
         else
-    	   <p> Problems storing item problems. </p>
+            if (bit:addDocToCollection(session:getAtt('appName'),local:Item($itemName,$itemDescription))) then
+               <p> Item {$itemName} created sucessfully </p>
+            else
+               <p> Problems storing item problems. </p>
     else
         <p> Item {$itemName} not created. Validation problems. </p>
 return 

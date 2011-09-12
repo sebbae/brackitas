@@ -43,7 +43,7 @@
 	(OK) Create support for singular query execution
 	(OK) Create support for MVC query execution
 	(OK) Optimize such structure
-	(  ) Refactor code
+	(OK) Refactor code
 (  ) Migrate old applications to new structure
 	(  ) eCommerce (MVC)
 	(OK) eCommerce (non-MVC)

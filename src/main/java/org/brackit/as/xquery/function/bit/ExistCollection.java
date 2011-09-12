@@ -1,5 +1,4 @@
-(:
- *
+/*
  * [New BSD License]
  * Copyright (c) 2011, Brackit Project Team <info@brackit.org>  
  * All rights reserved.
@@ -25,20 +24,38 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- **
+ */
+package org.brackit.as.xquery.function.bit;
+
+import org.brackit.xquery.QueryContext;
+import org.brackit.xquery.QueryException;
+import org.brackit.xquery.atomic.Atomic;
+import org.brackit.xquery.atomic.Bool;
+import org.brackit.xquery.atomic.QNm;
+import org.brackit.xquery.function.AbstractFunction;
+import org.brackit.xquery.function.Signature;
+import org.brackit.xquery.xdm.Sequence;
+
+/**
  * 
  * @author Henrique Valer
  * 
- *
-:)
-module namespace testController="http://brackit.org/lib/testController";
-import module namespace testModel="http://brackit.org/lib/testModel";
-declare variable $testController:word as xs:string external
-;
+ */
+public class ExistCollection extends AbstractFunction {
 
-declare function echo() as item()* 
-{
-    testModel:echo($testController:word)
+	public ExistCollection(QNm name, Signature signature) {
+		super(name, signature, true);
+	}
+
+	@Override
+	public Sequence execute(QueryContext ctx, Sequence[] args)
+			throws QueryException {
+		try {
+			String collection = ((Atomic) args[0]).stringValue();
+			ctx.getStore().lookup(collection);
+			return Bool.TRUE;
+		} catch (Exception e) {
+			return Bool.FALSE;
+		}
+	}
 }
-;

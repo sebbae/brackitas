@@ -115,7 +115,6 @@ public class HttpConnector {
 		servletContextHandler.addServlet(FrontController.class,
 				APP_CONTROLLER_PREFIX);
 		servletContextHandler.addServlet(ErrorServlet.class, APP_ERROR_PREFIX);
-		// TODO: erase it
 		processDeployment(servletContextHandler, sessionMgr, mdm);
 	}
 
@@ -169,11 +168,8 @@ public class HttpConnector {
 				}
 			}
 		} catch (Exception e) {
-			log.equals(e);
+			log.error(e);
 		}
-		
-//		((BaseAppContext) sch.getAttribute("eCommerce")).
-		
 	}
 
 	private void populateAppQueries(File appFolder, BaseAppContext bac)
@@ -197,7 +193,7 @@ public class HttpConnector {
 
 	private String resolvePath(String p) {
 		p = p.substring("src/main/resources".length());
-		return p; 
+		return p;
 	}
 
 	private MimetypesFileTypeMap loadMimeTypes() {

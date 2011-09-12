@@ -39,6 +39,7 @@ import org.brackit.as.xquery.function.bit.AddDocToCollection;
 import org.brackit.as.xquery.function.bit.CreateCollection;
 import org.brackit.as.xquery.function.bit.DropCollection;
 import org.brackit.as.xquery.function.bit.Eval;
+import org.brackit.as.xquery.function.bit.ExistCollection;
 import org.brackit.as.xquery.function.bit.FtIndexStore;
 import org.brackit.as.xquery.function.bit.LoadFile;
 import org.brackit.as.xquery.function.bit.MakeDirectory;
@@ -56,7 +57,6 @@ import org.brackit.as.xquery.function.session.SetMaxInactiveInterval;
 import org.brackit.as.xquery.function.session.SetSessionAtt;
 import org.brackit.as.xquery.function.util.Template;
 import org.brackit.xquery.ErrorCode;
-import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.XQuery;
 import org.brackit.xquery.atomic.QNm;
@@ -92,41 +92,45 @@ public class ASXQuery extends XQuery {
 
 		Functions.predefine(new Eval(new QNm(Namespaces.BIT_NSURI,
 				Namespaces.BIT_PREFIX, "eval"), new Signature(new SequenceType(
-				AtomicType.STR, Cardinality.ZeroOrOne), // result
-				new SequenceType(AtomicType.STR, Cardinality.One)))); // query
+				AtomicType.STR, Cardinality.ZeroOrOne), new SequenceType(
+				AtomicType.STR, Cardinality.One))));
 
 		Functions.predefine(new LoadFile(new QNm(Namespaces.BIT_NSURI,
 				Namespaces.BIT_PREFIX, "loadFile"), new Signature(
-				// file as string result
 				new SequenceType(AtomicType.STR, Cardinality.ZeroOrOne),
-				new SequenceType(AtomicType.STR, Cardinality.One)))); // pathname
+				new SequenceType(AtomicType.STR, Cardinality.One))));
 
 		Functions.predefine(new MakeDirectory(new QNm(Namespaces.BIT_NSURI,
 				Namespaces.BIT_PREFIX, "makeDirectory"), new Signature(
-				// true: dir created, false otherwise
 				new SequenceType(AtomicType.STR, Cardinality.One),
-				new SequenceType(AtomicType.STR, Cardinality.One)))); // pathname
+				new SequenceType(AtomicType.STR, Cardinality.One))));
 
 		Functions.predefine(new StoreDoc(new QNm(Namespaces.BIT_NSURI,
 				Namespaces.BIT_PREFIX, "storeDoc"), new Signature(
 				new SequenceType(AtomicType.STR, Cardinality.ZeroOrOne),
-				new SequenceType(AtomicType.STR, Cardinality.One), // doc name
+				new SequenceType(AtomicType.STR, Cardinality.One),
 				new SequenceType(AnyItemType.ANY, Cardinality.One))));
 
 		Functions.predefine(new FtIndexStore(new QNm(Namespaces.BIT_NSURI,
 				Namespaces.BIT_PREFIX, "ftIndexStore"), new Signature(
 				new SequenceType(AtomicType.BOOL, Cardinality.One),
-				new SequenceType(AtomicType.STR, Cardinality.One), // docName
-				new SequenceType(AnyItemType.ANY, Cardinality.One) // document
-				)));
+				new SequenceType(AtomicType.STR, Cardinality.One),
+				new SequenceType(AnyItemType.ANY, Cardinality.One))));
+
 		Functions.predefine(new AddDocToCollection(new QNm(
 				Namespaces.BIT_NSURI, Namespaces.BIT_PREFIX,
 				"addDocToCollection"), new Signature(new SequenceType(
 				AtomicType.STR, Cardinality.ZeroOrOne), new SequenceType(
-				AtomicType.STR, Cardinality.One), // doc name
-				new SequenceType(AnyItemType.ANY, Cardinality.One))));
+				AtomicType.STR, Cardinality.One), new SequenceType(
+				AnyItemType.ANY, Cardinality.One))));
+
 		Functions.predefine(new CreateCollection(new QNm(Namespaces.BIT_NSURI,
 				Namespaces.BIT_PREFIX, "createCollection"), new Signature(
+				new SequenceType(AtomicType.BOOL, Cardinality.One),
+				new SequenceType(AtomicType.STR, Cardinality.One))));
+
+		Functions.predefine(new ExistCollection(new QNm(Namespaces.BIT_NSURI,
+				Namespaces.BIT_PREFIX, "existCollection"), new Signature(
 				new SequenceType(AtomicType.BOOL, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
@@ -155,9 +159,8 @@ public class ASXQuery extends XQuery {
 
 		Functions.predefine(new GetSessionAtt(new QNm(Namespaces.BIT_NSURI,
 				Namespaces.SESSION_PREFIX, "getAtt"), new Signature(
-				// output: true OK or exception
 				new SequenceType(AnyItemType.ANY, Cardinality.One),
-				new SequenceType(AtomicType.STR, Cardinality.One)))); // attName
+				new SequenceType(AtomicType.STR, Cardinality.One))));
 
 		Functions.predefine(new Invalidate(new QNm(Namespaces.BIT_NSURI,
 				Namespaces.SESSION_PREFIX, "invalidate"), new Signature(
@@ -165,9 +168,8 @@ public class ASXQuery extends XQuery {
 
 		Functions.predefine(new RemoveSessionAtt(new QNm(Namespaces.BIT_NSURI,
 				Namespaces.SESSION_PREFIX, "rmAtt"), new Signature(
-				// output: true OK or exception
 				new SequenceType(AnyItemType.ANY, Cardinality.One),
-				new SequenceType(AtomicType.STR, Cardinality.One)))); // attName
+				new SequenceType(AtomicType.STR, Cardinality.One))));
 
 		Functions.predefine(new SetMaxInactiveInterval(new QNm(
 				Namespaces.BIT_NSURI, Namespaces.SESSION_PREFIX,
@@ -177,59 +179,34 @@ public class ASXQuery extends XQuery {
 
 		Functions.predefine(new SetSessionAtt(new QNm(Namespaces.BIT_NSURI,
 				Namespaces.SESSION_PREFIX, "setAtt"), new Signature(
-				// output: true OK or exception
 				new SequenceType(AtomicType.BOOL, Cardinality.One),
-				new SequenceType(AtomicType.STR, Cardinality.One), // att name
-				new SequenceType(AnyItemType.ANY, Cardinality.One))));// attribute
+				new SequenceType(AtomicType.STR, Cardinality.One),
+				new SequenceType(AnyItemType.ANY, Cardinality.One))));
 
 		// Util
 		Functions.predefine(new Template(new QNm(Namespaces.BIT_NSURI,
 				Namespaces.UTIL_PREFIX, "template"), new Signature(
-				// Result output template page
 				new SequenceType(AnyItemType.ANY, Cardinality.One),
-				new SequenceType(AnyItemType.ANY, Cardinality.ZeroOrOne), // head
-				new SequenceType(AnyItemType.ANY, Cardinality.ZeroOrOne), // header
-				new SequenceType(AnyItemType.ANY, Cardinality.ZeroOrOne), // menu
-				new SequenceType(AnyItemType.ANY, Cardinality.ZeroOrOne), // content
-				new SequenceType(AnyItemType.ANY, Cardinality.ZeroOrOne)))); // footer
+				new SequenceType(AnyItemType.ANY, Cardinality.ZeroOrOne),
+				new SequenceType(AnyItemType.ANY, Cardinality.ZeroOrOne),
+				new SequenceType(AnyItemType.ANY, Cardinality.ZeroOrOne),
+				new SequenceType(AnyItemType.ANY, Cardinality.ZeroOrOne),
+				new SequenceType(AnyItemType.ANY, Cardinality.ZeroOrOne))));
 
 		Functions.predefine(new Template(new QNm(Namespaces.BIT_NSURI,
 				Namespaces.UTIL_PREFIX, "template"), new Signature(
-				new SequenceType(AnyItemType.ANY, Cardinality.One), // result
-				new SequenceType(AnyItemType.ANY, Cardinality.One)))); // content
+				new SequenceType(AnyItemType.ANY, Cardinality.One),
+				new SequenceType(AnyItemType.ANY, Cardinality.One))));
 
 		// Testing
 		Functions.predefine(new Render(new QNm(Namespaces.BIT_NSURI,
 				Namespaces.BIT_PREFIX, "render"), new Signature(
-				new SequenceType(AnyItemType.ANY, Cardinality.One), // result
-				new SequenceType(AtomicType.STR, Cardinality.One)))); // input
+				new SequenceType(AnyItemType.ANY, Cardinality.One),
+				new SequenceType(AtomicType.STR, Cardinality.One))));
 	}
 
 	public ASXQuery(InputStream in) throws QueryException {
 		super(getStringFromInputStream(in));
-	}
-
-	private static String getStringFromInputStream(InputStream in)
-			throws QueryException {
-
-		StringBuffer out = new StringBuffer();
-		byte[] b = new byte[4096];
-		try {
-			for (int n; (n = in.read(b)) != -1;) {
-				out.append(new String(b, 0, n));
-			}
-		} catch (IOException e) {
-			throw new QueryException(e, ErrorCode.ERR_PARSING_ERROR, e
-					.getMessage());
-		} finally {
-			if (in != null)
-				try {
-					in.close();
-				} catch (IOException ignored) {
-				}
-		}
-
-		return out.toString();
 	}
 
 	public ASXQuery(String s) throws QueryException {
@@ -266,11 +243,36 @@ public class ASXQuery extends XQuery {
 		}
 		return new String(buffer);
 	}
-	
-	public void serializeSequence (HttpSessionTXQueryContext ctx, PrintStream ps, Sequence result) throws DocumentException, QueryException {
+
+	private static String getStringFromInputStream(InputStream in)
+			throws QueryException {
+
+		StringBuffer out = new StringBuffer();
+		byte[] b = new byte[4096];
+		try {
+			for (int n; (n = in.read(b)) != -1;) {
+				out.append(new String(b, 0, n));
+			}
+		} catch (IOException e) {
+			throw new QueryException(e, ErrorCode.ERR_PARSING_ERROR, e
+					.getMessage());
+		} finally {
+			if (in != null)
+				try {
+					in.close();
+				} catch (IOException ignored) {
+				}
+		}
+
+		return out.toString();
+	}
+
+	public void serializeSequence(HttpSessionTXQueryContext ctx,
+			PrintStream ps, Sequence result) throws DocumentException,
+			QueryException {
 
 		PrintWriter out = new PrintWriter(ps);
-		
+
 		if (result == null) {
 			return;
 		}
@@ -312,8 +314,8 @@ public class ASXQuery extends XQuery {
 			printer.flush();
 			out.flush();
 			it.close();
-		}		
-		
+		}
+
 	}
 
 }
