@@ -54,7 +54,6 @@ import org.brackit.xquery.expr.ExtVariable;
 import org.brackit.xquery.function.Function;
 import org.brackit.xquery.sequence.type.AtomicType;
 import org.brackit.xquery.sequence.type.SequenceType;
-import org.brackit.xquery.xdm.DocumentException;
 import org.brackit.xquery.xdm.Item;
 import org.brackit.xquery.xdm.Sequence;
 import org.brackit.xquery.xdm.Type;
@@ -111,8 +110,7 @@ public class FrontController extends BaseServlet {
 	}
 
 	private void processMVCRequest(HttpServletRequest req,
-			HttpServletResponse resp) throws QueryException, DocumentException,
-			IOException {
+			HttpServletResponse resp) throws Exception {
 		Object o = getServletContext().getAttribute(APP);
 		BaseAppContext bac;
 		if (o != null) {
@@ -135,6 +133,9 @@ public class FrontController extends BaseServlet {
 					}
 				}
 			}
+		} else {
+			throw new Exception(String.format("Application %s does not exist",
+					APP));
 		}
 	}
 
@@ -168,6 +169,13 @@ public class FrontController extends BaseServlet {
 					Item item = new Una(param);
 					item = Cast.cast(item, expectedAtomicType, false);
 					ctx.bind(var.getName(), item);
+				}
+				// TODO: Correct external binding for non atomic values
+				else 
+				{
+					Item item = new Una(param);
+					item = Cast.cast(item, expectedAtomicType, false);
+					ctx.bind(var.getName(), null);
 				}
 			}
 		}

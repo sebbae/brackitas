@@ -32,9 +32,9 @@
  * 
  *
 :)
-module namespace model="http://brackit.org/lib/testModel";
+module namespace model="http://brackit.org/lib/testModel2";
     
 declare function echo($s as item()*) as item()* 
 { 
-    $s
+    'Hello World' 
 };    

@@ -33,12 +33,12 @@
  *
 :)
 module namespace testController="http://brackit.org/lib/testController";
-import module namespace testModel="http://brackit.org/lib/testModel";
+import module namespace model="http://brackit.org/lib/testModel2";
 declare variable $testController:word as xs:string external
 ;
 
 declare function echo() as item()* 
 {
-    testModel:echo($testController:word)
+    model:echo($testController:word)
 }
 ;

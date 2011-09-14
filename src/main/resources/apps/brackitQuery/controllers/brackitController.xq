@@ -32,9 +32,32 @@
  * 
  *
 :)
-module namespace model="http://brackit.org/lib/testModel";
-    
-declare function echo($s as item()*) as item()* 
-{ 
-    $s
-};    
+module namespace controller="http://brackit.org/lib/brackitController";
+import module namespace model="http://brackit.org/lib/brackitModel";
+import module namespace view="http://brackit.org/lib/brackitView";
+
+declare variable $controller:file external;
+declare variable $controller:query as xs:string external;
+
+declare function query() as item()* 
+{
+    let
+        $result := bit:eval($controller:query)
+    return
+        util:template(view:showQueryResultTime($controller:query, $result, 10))
+};
+
+declare function procedures() as item()* 
+{
+    "TODO"
+};
+
+declare function uploadForm() as item()*
+{
+    "TODO"    
+};
+
+declare function download() as item()*
+{
+    "TODO"
+};
