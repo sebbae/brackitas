@@ -32,6 +32,7 @@
  * 
  *
 :)
+import module namespace template="http://brackit.org/lib/eCommerce/template";
 declare variable $itemName as xs:string external;
 
 let 
@@ -78,4 +79,4 @@ return
     	                </table>
                     </form>
 	return
-	    util:template($content)
+	    template:default($content)

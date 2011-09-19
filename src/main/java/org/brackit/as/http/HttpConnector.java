@@ -163,6 +163,7 @@ public class HttpConnector {
 							bac = (BaseAppContext) o;
 						}
 						populateAppQueries(apps[i], bac);
+						bac.registerUncompiledQueries();
 						sch.setAttribute(apps[i].getName(), bac);
 					}
 				}
@@ -184,7 +185,7 @@ public class HttpConnector {
 						String s = f[i].getPath();
 						bac.register(resolvePath(s));
 					} catch (Exception e) {
-						e.printStackTrace();
+						log.error(e);
 					}
 				}
 			}

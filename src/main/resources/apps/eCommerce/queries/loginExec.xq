@@ -32,6 +32,7 @@
  * 
  *
 :)
+import module namespace template="http://brackit.org/lib/eCommerce/template";
 declare variable $login as xs:string external;
 declare variable $pass as xs:string external;
 
@@ -41,4 +42,4 @@ let $content :=
     else
         <p> User {$login} not logged. Loggin problems. </p>
 return 
-    util:template($content)
+    template:default($content)

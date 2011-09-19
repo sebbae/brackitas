@@ -32,6 +32,7 @@
  * 
  *
 :)
+import module namespace template="http://brackit.org/lib/eCommerce/template";
 let $content := 
     <ul>
         {
@@ -47,4 +48,4 @@ let $content :=
         }
     </ul>
 return
-    util:template($content)	
+    template:default($content)	

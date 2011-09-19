@@ -32,6 +32,7 @@
  * 
  *
 :)
+import module namespace template="http://brackit.org/lib/eCommerce/template";
 declare variable $itemName as xs:string external;
 declare variable $itemQuant as xs:string external;
 
@@ -93,4 +94,4 @@ if (
 then
     bit:eval(bit:loadFile('apps/eCommerce/queries/showCartForm.xq'))
 else
-    util:template(<p>Error adding item to cart!</p>)
+    template:default(<p>Error adding item to cart!</p>)

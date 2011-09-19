@@ -34,7 +34,6 @@ import org.brackit.as.xquery.ASXQuery;
 import org.brackit.as.xquery.HttpSessionTXQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
-import org.brackit.xquery.XQuery;
 import org.brackit.xquery.atomic.Atomic;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.atomic.Str;
@@ -68,6 +67,7 @@ public class Eval extends AbstractFunction {
 			vQuery = buf.toString();
 		}
 		ASXQuery x = new ASXQuery(vQuery);
-		return new Str((x.serializeWebSequence((HttpSessionTXQueryContext) ctx, x.execute(ctx))));
+		return new Str((x.serializeWebSequence((HttpSessionTXQueryContext) ctx,
+				x.execute(ctx))));
 	}
 }

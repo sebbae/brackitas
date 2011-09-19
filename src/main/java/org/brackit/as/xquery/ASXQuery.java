@@ -35,7 +35,6 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 
-import org.brackit.as.util.FunctionUtils;
 import org.brackit.as.xquery.function.bit.AddDocToCollection;
 import org.brackit.as.xquery.function.bit.CreateCollection;
 import org.brackit.as.xquery.function.bit.DropCollection;
@@ -269,8 +268,8 @@ public class ASXQuery extends XQuery {
 		return out.toString();
 	}
 
-	public String serializeWebSequence(HttpSessionTXQueryContext ctx, Sequence result) throws DocumentException,
-			QueryException {
+	public String serializeWebSequence(HttpSessionTXQueryContext ctx,
+			Sequence result) throws DocumentException, QueryException {
 
 		if (result == null) {
 			return "";
@@ -298,14 +297,14 @@ public class ASXQuery extends XQuery {
 						}
 					}
 					printer.print(node);
-				}	
+				}
 			}
 		} finally {
 			it.close();
 		}
 		return printer.getOut().toString();
 	}
-	
+
 	public void serializeSequence(HttpSessionTXQueryContext ctx,
 			PrintStream ps, Sequence result) throws DocumentException,
 			QueryException {

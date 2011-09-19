@@ -27,7 +27,9 @@
  */
 package org.brackit.as.context;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.brackit.as.xquery.ASXQuery;
@@ -49,27 +51,44 @@ public class BaseAppContext {
 	private ASCompileChain chain;
 
 	private Map<String, ASXQuery> queries;
+	
+	private List<String> uncompiledQueries;
 
 	public BaseAppContext(String app, ASCompileChain chain) {
+		this.queries = new HashMap<String, ASXQuery>();
+		this.uncompiledQueries = new ArrayList<String>();
 		this.app = app;
 		this.chain = chain;
 	}
 
 	public void register(String path) throws QueryException {
 		ASXQuery target = null;
-		if (queries == null) {
-			queries = new HashMap<String, ASXQuery>();
-		}
 		target = queries.get(path);
 		if (target == null) {
-			target = new ASXQuery(chain, getClass().getResourceAsStream(path));
-			Module module = target.getModule();
-			if (module instanceof LibraryModule)
-				((BaseResolver) chain.getModuleResolver()).register(
-						((LibraryModule) module).getTargetNS().getUri(),
-						(LibraryModule) module);
-			queries.put(path, target);
+			try{
+				putQuery(path);
+			} catch (QueryException e) {
+				uncompiledQueries.add(path);
+			}
 		}
+	}
+
+	public void registerUncompiledQueries() throws QueryException {
+		if (!uncompiledQueries.isEmpty()) {
+			for (int i = uncompiledQueries.size(); i > 0; i--) {
+				putQuery(uncompiledQueries.get(i-1));
+			}
+		}
+	}
+	
+	private void putQuery (String path) throws QueryException {
+		ASXQuery target = new ASXQuery(chain, getClass().getResourceAsStream(path));
+		Module module = target.getModule();
+		if (module instanceof LibraryModule)
+			((BaseResolver) chain.getModuleResolver()).register(
+					((LibraryModule) module).getTargetNS().getUri(),
+					(LibraryModule) module);
+		queries.put(path, target);
 	}
 
 	public ASXQuery get(String path) {

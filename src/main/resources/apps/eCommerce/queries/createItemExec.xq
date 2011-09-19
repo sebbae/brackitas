@@ -32,6 +32,7 @@
  * 
  *
 :)
+import module namespace template="http://brackit.org/lib/eCommerce/template";
 declare variable $itemName as xs:string external;
 declare variable $itemDescription as xs:string external;
 
@@ -83,4 +84,4 @@ let $content :=
     else
         <p> Item {$itemName} not created. Validation problems. </p>
 return 
-	util:template($content)
+	template:default($content)

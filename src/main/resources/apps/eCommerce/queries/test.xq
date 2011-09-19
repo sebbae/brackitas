@@ -32,4 +32,6 @@
  * 
  *
 :)
-doc('_master.xml')
+import module namespace template="http://brackit.org/lib/eCommerce/template";
+
+template:default(doc('_master.xml'))

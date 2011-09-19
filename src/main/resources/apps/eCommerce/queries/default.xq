@@ -32,10 +32,12 @@
  * 
  *
 :)
+import module namespace template="http://brackit.org/lib/eCommerce/template";
+
 let 
     $content :=
             <p>
                 Welcome to the Item eCommerce platform.
             </p>
 return
-    util:template($content)
+    template:default($content)    

@@ -32,6 +32,7 @@
  * 
  *
 :)
+import module namespace template="http://brackit.org/lib/eCommerce/template";
 let 
     $content :=
             <form action="./createItemExec.xq">
@@ -56,4 +57,4 @@ let
                 </table>
             </form>
 return
-    util:template($content)
+    template:default($content)

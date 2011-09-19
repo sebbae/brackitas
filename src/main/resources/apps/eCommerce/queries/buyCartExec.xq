@@ -32,6 +32,7 @@
  * 
  *
 :)
+import module namespace template="http://brackit.org/lib/eCommerce/template";
 declare variable $cliName as xs:string external;
 declare variable $cliAddress as xs:string external;
 
@@ -66,4 +67,4 @@ let $content :=
         else
             <p> Problems with buying order. </p>
 return 
-    util:template($content)
+    template:default($content)

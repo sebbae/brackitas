@@ -32,7 +32,10 @@
  * 
  *
 :)
+import module namespace template="http://brackit.org/lib/eCommerce/template";
+
 declare variable $itemName as xs:string external;
+
 
 declare function local:getItemFromCollection ($name as xs:string) as item()
 {
@@ -77,4 +80,4 @@ return
             </table>
         </form>
     return 
-        util:template($content)
+        template:default($content)

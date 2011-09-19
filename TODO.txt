@@ -59,3 +59,4 @@
 			(  ) CreateCollection
 			(  ) DropCollection
 			(  ) StoreDoc
+(  ) Improve ASXQuery serializtation methods
