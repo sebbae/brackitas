@@ -35,6 +35,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 
+import org.brackit.as.util.FunctionUtils;
 import org.brackit.as.xquery.function.bit.AddDocToCollection;
 import org.brackit.as.xquery.function.bit.CreateCollection;
 import org.brackit.as.xquery.function.bit.DropCollection;
@@ -56,6 +57,7 @@ import org.brackit.as.xquery.function.session.RemoveSessionAtt;
 import org.brackit.as.xquery.function.session.SetMaxInactiveInterval;
 import org.brackit.as.xquery.function.session.SetSessionAtt;
 import org.brackit.as.xquery.function.util.Template;
+import org.brackit.as.xquery.node.WebSubtreePrinter;
 import org.brackit.xquery.ErrorCode;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.XQuery;
@@ -267,6 +269,43 @@ public class ASXQuery extends XQuery {
 		return out.toString();
 	}
 
+	public String serializeWebSequence(HttpSessionTXQueryContext ctx, Sequence result) throws DocumentException,
+			QueryException {
+
+		if (result == null) {
+			return "";
+		}
+
+		WebSubtreePrinter printer = new WebSubtreePrinter();
+		printer.setPrettyPrint(true);
+		printer.setAutoFlush(false);
+		Item item;
+		Iter it = result.iterate();
+		try {
+			while ((item = it.next()) != null) {
+				if (item instanceof Node<?>) {
+					Node<?> node = (Node<?>) item;
+					Kind kind = node.getKind();
+
+					if ((kind == Kind.ATTRIBUTE) || (kind == Kind.NAMESPACE)) {
+						throw new QueryException(
+								ErrorCode.ERR_SERIALIZE_ATTRIBUTE_OR_NAMESPACE_NODE);
+					}
+					if (kind == Kind.DOCUMENT) {
+						node = node.getFirstChild();
+						while (node.getKind() != Kind.ELEMENT) {
+							node = node.getNextSibling();
+						}
+					}
+					printer.print(node);
+				}	
+			}
+		} finally {
+			it.close();
+		}
+		return printer.getOut().toString();
+	}
+	
 	public void serializeSequence(HttpSessionTXQueryContext ctx,
 			PrintStream ps, Sequence result) throws DocumentException,
 			QueryException {
@@ -315,7 +354,6 @@ public class ASXQuery extends XQuery {
 			out.flush();
 			it.close();
 		}
-
 	}
 
 }

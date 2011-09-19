@@ -30,11 +30,14 @@ package org.brackit.as.xquery.function.bit;
 import java.io.PrintStream;
 
 import org.brackit.as.util.FunctionUtils;
+import org.brackit.as.xquery.ASXQuery;
+import org.brackit.as.xquery.HttpSessionTXQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.XQuery;
 import org.brackit.xquery.atomic.Atomic;
 import org.brackit.xquery.atomic.QNm;
+import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.function.Signature;
 import org.brackit.xquery.node.SubtreePrinter;
@@ -64,8 +67,7 @@ public class Eval extends AbstractFunction {
 			SubtreePrinter.print((Node<?>) args[0], buf);
 			vQuery = buf.toString();
 		}
-		XQuery x = new XQuery(vQuery);
-		Sequence seq = x.execute(ctx);
-		return seq;
+		ASXQuery x = new ASXQuery(vQuery);
+		return new Str((x.serializeWebSequence((HttpSessionTXQueryContext) ctx, x.execute(ctx))));
 	}
 }

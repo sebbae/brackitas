@@ -126,6 +126,7 @@ public class FrontController extends BaseServlet {
 				Function[] f = (Function[]) i.next();
 				for (int j = 0; j < f.length; j++) {
 					if (f[j].getName().stringValue().equals(RESOURCE)) {
+						x.setPrettyPrint(true);
 						x.serializeSequence(ctx, new PrintStream(resp
 								.getOutputStream()), f[j].execute(ctx,
 								new Sequence[] {}));
