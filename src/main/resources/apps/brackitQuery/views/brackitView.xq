@@ -32,43 +32,48 @@
  * 
  *
 :)
-module namespace view="http://brackit.org/lib/brackitView";
+module namespace view="http://brackit.org/lib/brackitQuery/brackitView";
+import module namespace template="http://brackit.org/lib/brackitQuery/template";
 
 declare function showQueryResultTime($query as item()*, $result as item()*, $time as item()*) as item()* 
-{ 
-    <form action="./echo">
-        <table style="width: 100%; background-color: #E0E0F0;">
-            <tr>
-                <td>
-                    <h5>Query</h5>
-                    <textarea cols="100" name="query" rows="6">
-                        {$query}
-                    </textarea>
-                </td>
-            </tr>                 
-            <tr>
-                <td>
-                    <input type="hidden" name="payload" value="form_query"/>
-                    <input align="middle" type="submit" name="subButton" value="Submit" />                            
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <h5>Result</h5>
-                    <textarea cols="100" name="result" rows="6">
-                        ...
-                        {$result}
-                        ...
-                    </textarea>
-                </td>
-            </tr>
-            <tr>
-                <td align="right">
-                    <input type="text" value="In {$time} seconds" />
-                </td>
-            </tr>
-        </table>
-    </form>
+{
+    let
+        $content :=   
+            <form action="./echo">
+                <table style="width: 100%; background-color: #E0E0F0;">
+                    <tr>
+                        <td>
+                            <h5>Query</h5>
+                            <textarea cols="100" name="query" rows="6">
+                                {$query}
+                            </textarea>
+                        </td>
+                    </tr>                 
+                    <tr>
+                        <td>
+                            <input type="hidden" name="payload" value="form_query"/>
+                            <input align="middle" type="submit" name="subButton" value="Submit" />                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <h5>Result</h5>
+                            <textarea cols="100" name="result" rows="6">
+                                ...
+                                {$result}
+                                ...
+                            </textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">
+                            <input type="text" value="In {$time} seconds" />
+                        </td>
+                    </tr>
+                </table>
+            </form>
+    return
+        template:default($content)
 };
 
 declare function showUpload() as item()*

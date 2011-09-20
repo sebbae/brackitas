@@ -52,12 +52,7 @@ let
             </tr>
             <tr>
                 <td colspan="2">
-                {
-                    let 
-                        $a := bit:loadFile('apps/eCommerce/queries/showCart.xq') 
-                    return 
-                        bit:eval($a)
-                }
+                {template:showCart();}
                 </td>
             </tr>
             <tr>

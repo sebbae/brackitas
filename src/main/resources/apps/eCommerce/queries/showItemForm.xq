@@ -46,7 +46,7 @@ let
         where
             $itemName = $docName 
         return 
-            $doc	
+            $doc
 return
 	let 
 	    $content :=

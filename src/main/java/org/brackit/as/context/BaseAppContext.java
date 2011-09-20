@@ -51,7 +51,7 @@ public class BaseAppContext {
 	private ASCompileChain chain;
 
 	private Map<String, ASXQuery> queries;
-	
+
 	private List<String> uncompiledQueries;
 
 	public BaseAppContext(String app, ASCompileChain chain) {
@@ -61,11 +61,11 @@ public class BaseAppContext {
 		this.chain = chain;
 	}
 
-	public void register(String path) throws QueryException {
+	public void register(String path) {
 		ASXQuery target = null;
 		target = queries.get(path);
 		if (target == null) {
-			try{
+			try {
 				putQuery(path);
 			} catch (QueryException e) {
 				uncompiledQueries.add(path);
@@ -75,14 +75,21 @@ public class BaseAppContext {
 
 	public void registerUncompiledQueries() throws QueryException {
 		if (!uncompiledQueries.isEmpty()) {
-			for (int i = uncompiledQueries.size(); i > 0; i--) {
-				putQuery(uncompiledQueries.get(i-1));
+			for (int i = 0; i < uncompiledQueries.size(); i++) {
+				try {
+					putQuery(uncompiledQueries.get(i));
+				} catch (QueryException e) {
+					System.out.println(String.format(
+							"Problems while compiling %s. %s",
+							uncompiledQueries.get(i), e.getMessage()));
+				}
 			}
 		}
 	}
-	
-	private void putQuery (String path) throws QueryException {
-		ASXQuery target = new ASXQuery(chain, getClass().getResourceAsStream(path));
+
+	private void putQuery(String path) throws QueryException {
+		ASXQuery target = new ASXQuery(chain, getClass().getResourceAsStream(
+				path));
 		Module module = target.getModule();
 		if (module instanceof LibraryModule)
 			((BaseResolver) chain.getModuleResolver()).register(

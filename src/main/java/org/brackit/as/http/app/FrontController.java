@@ -162,6 +162,7 @@ public class FrontController extends BaseServlet {
 		for (ExtVariable var : x.getModule().getVariables()
 				.getDeclaredVariables()) {
 			SequenceType type = var.getType();
+			// TODO: Correct external binding for non atomic values
 			if ((type != null) && (var.getType().getItemType().isAtomic())) {
 				Type expectedAtomicType = ((AtomicType) var.getType()
 						.getItemType()).type;
@@ -170,13 +171,10 @@ public class FrontController extends BaseServlet {
 					Item item = new Una(param);
 					item = Cast.cast(item, expectedAtomicType, false);
 					ctx.bind(var.getName(), item);
-				}
-				// TODO: Correct external binding for non atomic values
-				else 
-				{
-					Item item = new Una(param);
+				} else {
+					Item item = new Una("");
 					item = Cast.cast(item, expectedAtomicType, false);
-					ctx.bind(var.getName(), null);
+					ctx.bind(var.getName(), item);
 				}
 			}
 		}

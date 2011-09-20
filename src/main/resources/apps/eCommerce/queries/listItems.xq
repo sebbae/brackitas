@@ -33,19 +33,22 @@
  *
 :)
 import module namespace template="http://brackit.org/lib/eCommerce/template";
-let $content := 
-    <ul>
-        {
-            for 
-                $doc 
-            in 
-                fn:collection(session:getAtt('appName'))
-            return 
-                <li>
-                    <a href="./showItemForm.xq?itemName={$doc/item/data(name)}">{$doc/item/data(name)}</a>
-                    {$doc/item/data(description)}
-                </li> 
-        }
-    </ul>
-return
-    template:default($content)	
+if (bit:existCollection(session:getAtt('appName'))) then
+    let $content := 
+        <ul>
+            {
+                for 
+                    $doc 
+                in 
+                    fn:collection(session:getAtt('appName'))
+                return 
+                    <li>
+                        <a href="./showItemForm.xq?itemName={$doc/item/data(name)}">{$doc/item/data(name)}</a>
+                        {$doc/item/data(description)}
+                    </li> 
+            }
+        </ul>
+    return
+        template:default($content)    
+else
+    template:default('No items to be sold yet!')

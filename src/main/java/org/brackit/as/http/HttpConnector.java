@@ -142,7 +142,7 @@ public class HttpConnector {
 
 	private void processDeployment(ServletContextHandler sch,
 			SessionMgr sessionMgr, MetaDataMgr mdm) {
-		System.out.print("Deploy applications ... ");
+		System.out.println("Deploy applications ... ");
 		File f = new File(APPS_PATH);
 
 		try {
@@ -185,6 +185,7 @@ public class HttpConnector {
 						String s = f[i].getPath();
 						bac.register(resolvePath(s));
 					} catch (Exception e) {
+						e.printStackTrace();
 						log.error(e);
 					}
 				}

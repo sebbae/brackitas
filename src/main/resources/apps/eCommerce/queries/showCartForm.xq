@@ -42,12 +42,7 @@ let
         <form action="./buyCartForm.xq">
             <table>
                 <tr>
-                    {
-                        let 
-                            $a := bit:loadFile('apps/eCommerce/queries/showCart.xq') 
-                        return 
-                            bit:eval($a)
-                    }
+                    {template:showCart();}
                 </tr>
                 <tr>
                     <td>

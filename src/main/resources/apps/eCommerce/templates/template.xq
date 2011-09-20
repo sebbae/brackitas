@@ -151,3 +151,60 @@ declare function default($content as item()+) as item()*
     </body>
     </html>
 };
+
+declare function getItemFromCollection ($name as xs:string) as item()+
+{
+    for 
+        $doc 
+    in 
+        fn:collection(session:getAtt('appName'))
+    let 
+        $docName := $doc/item/fn:data(name)
+    where
+        $docName = $name 
+    return 
+        $doc    
+}
+;
+
+declare function showCart() as item()* 
+{
+let
+    $cart := session:getAtt('cart')
+return
+    <table>
+        <tr>
+            <td>
+                Name
+            </td>
+            <td>
+                Description
+            </td>
+            <td>
+                Quantity
+            </td>
+        </tr>
+        {
+            for 
+                $cartItem 
+            in 
+                $cart/item
+            let
+                $docName := $cartItem/fn:data(name),
+                $quantity := $cartItem/fn:data(quantity),
+                $description := getItemFromCollection($docName)/item/fn:data(description)
+            return 
+                <tr>
+                    <td>
+                        <a href="./showItemForm.xq?itemName={$docName}">{$docName}</a>
+                    </td> 
+                    <td>
+                        {$description}
+                    </td>
+                    <td>
+                        {$quantity}
+                    </td>
+                </tr>
+        }
+    </table>
+};

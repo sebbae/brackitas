@@ -39,7 +39,7 @@ import org.brackit.xquery.xdm.Node;
 /**
  * 
  * @author Henrique Valer
- *
+ * 
  */
 public class WebSubtreePrinter extends SubtreePrinter {
 

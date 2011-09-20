@@ -36,21 +36,6 @@ import module namespace template="http://brackit.org/lib/eCommerce/template";
 declare variable $itemName as xs:string external;
 declare variable $itemQuant as xs:string external;
 
-declare function local:getItemFromCollection ($name as xs:string) as item()
-{
-    for 
-        $doc 
-    in 
-        fn:collection(session:getAtt('appName'))
-    let 
-        $docName := $doc/item/data(name)
-    where
-        $docName = $name 
-    return 
-        $doc    
-}
-;
-
 declare function local:cartItem($name as xs:string, 
                                 $quantity as xs:string) as item()
 {
@@ -84,7 +69,7 @@ if (
     else
         (: first item to the cart :)
         let 
-            $item := local:getItemFromCollection($itemName) 
+            $item := template:getItemFromCollection($itemName) 
         return 
             let
                 $newCart := <cart>{local:cartItem($item/item/data(name),$itemQuant)}</cart>

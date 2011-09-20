@@ -36,21 +36,6 @@ import module namespace template="http://brackit.org/lib/eCommerce/template";
 declare variable $itemName as xs:string external;
 declare variable $itemDescription as xs:string external;
 
-declare function local:getItemFromCollection ($name as xs:string) as item()*
-{
-    for 
-        $doc 
-    in 
-        fn:collection(session:getAtt('appName'))
-    let 
-        $docName := $doc/item/data(name)
-    where
-        $docName = $name 
-    return 
-        $doc
-}
-;
-
 declare function local:Item($name as xs:string, 
                             $description as xs:string) as item()+
     {
@@ -69,7 +54,7 @@ let $content :=
         (not(contains($itemName,' '))))
     then
         if (bit:existCollection(session:getAtt('appName'))) then
-            if (not(exists(local:getItemFromCollection($itemName)))) then
+            if (not(exists(template:getItemFromCollection($itemName)))) then
                 if (bit:addDocToCollection(session:getAtt('appName'),local:Item($itemName,$itemDescription))) then
                    <p> Item {$itemName} created sucessfully </p>
                 else

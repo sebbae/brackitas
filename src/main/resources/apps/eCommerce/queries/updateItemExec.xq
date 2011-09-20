@@ -32,24 +32,11 @@
  * 
  *
 :)
+import module namespace template="http://brackit.org/lib/eCommerce/template";
 declare variable $itemName as xs:string external;
 declare variable $itemDescription as xs:string external;
 
-declare function local:getItemFromCollection ($name as xs:string) as item()
-{
-    for 
-        $doc 
-    in 
-        fn:collection(session:getAtt('appName'))
-    let 
-        $docName := $doc/item/data(name)
-    where
-        $docName = $name 
-    return 
-        $doc    
-}
-;
 replace value of node 
-    local:getItemFromCollection($itemName)/item/description 
+    template:getItemFromCollection($itemName)/item/description 
 with 
     $itemDescription

@@ -59,6 +59,8 @@ public class BaseServlet extends TXServlet {
 			doGet(req, resp, session);
 			session.commit();
 		} catch (Throwable e) {
+			// TODO: Erase it
+			e.printStackTrace();
 			try {
 				if (tx == null) {
 					session.rollback();

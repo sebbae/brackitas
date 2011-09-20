@@ -32,7 +32,7 @@
  * 
  *
 :)
-module namespace model="http://brackit.org/lib/brackitModel";
+module namespace model="http://brackit.org/lib/brackitQuery/brackitModel";
     
 declare function echo($s as item()*) as item()* 
 {

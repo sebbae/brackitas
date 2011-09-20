@@ -33,5 +33,4 @@
  *
 :)
 import module namespace template="http://brackit.org/lib/eCommerce/template";
-
-template:default(doc('_master.xml'))
+count(collection(session:getAtt('appName')))

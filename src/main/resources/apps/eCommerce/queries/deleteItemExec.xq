@@ -32,22 +32,8 @@
  * 
  *
 :)
+import module namespace template="http://brackit.org/lib/eCommerce/template";
 declare variable $itemName as xs:string external;
 
-declare function local:getItemFromCollection ($name as xs:string) as item()
-{
-    for 
-        $doc 
-    in 
-        fn:collection(session:getAtt('appName'))
-    let 
-        $docName := $doc/item/data(name)
-    where
-        $docName = $name 
-    return 
-        $doc    
-}
-;
-
 delete node 
-    local:getItemFromCollection($itemName) 	
+    template:getItemFromCollection($itemName) 	

@@ -32,19 +32,21 @@
  * 
  *
 :)
-module namespace controller="http://brackit.org/lib/brackitController";
-import module namespace model="http://brackit.org/lib/brackitModel";
-import module namespace view="http://brackit.org/lib/brackitView";
+module namespace controller="http://brackit.org/lib/brackitQuery/brackitController";
+import module namespace model="http://brackit.org/lib/brackitQuery/brackitModel";
+import module namespace view="http://brackit.org/lib/brackitQuery/brackitView";
 
-declare variable $controller:file external;
 declare variable $controller:query as xs:string external;
 
 declare function query() as item()* 
 {
-    let
-        $result := bit:eval($controller:query)
-    return
-        util:template(view:showQueryResultTime($controller:query, $result, 10))
+    if (fn:string-length($controller:query) = 0) then
+        view:showQueryResultTime("","",10)
+    else
+        let
+            $result := bit:eval($controller:query)
+        return
+            view:showQueryResultTime($controller:query, $result, 10)
 };
 
 declare function procedures() as item()* 

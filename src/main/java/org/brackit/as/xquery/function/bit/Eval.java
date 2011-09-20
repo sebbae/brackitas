@@ -67,7 +67,8 @@ public class Eval extends AbstractFunction {
 			vQuery = buf.toString();
 		}
 		ASXQuery x = new ASXQuery(vQuery);
-		return new Str((x.serializeWebSequence((HttpSessionTXQueryContext) ctx,
-				x.execute(ctx))));
+		return x.execute(ctx);
+//		return new Str((x.serializeWebSequence((HttpSessionTXQueryContext) ctx,
+//				x.execute(ctx))));
 	}
 }
