@@ -35,11 +35,11 @@
 module namespace view="http://brackit.org/lib/brackitQuery/brackitView";
 import module namespace template="http://brackit.org/lib/brackitQuery/template";
 
-declare function showQueryResultTime($query as item()*, $result as item()*, $time as item()*) as item()* 
+declare function showQueryResultTime($query as item()*, $result as item()*, $time) as item()* 
 {
     let
         $content :=   
-            <form action="./echo">
+            <form action="./query">
                 <table style="width: 100%; background-color: #E0E0F0;">
                     <tr>
                         <td>
@@ -51,18 +51,13 @@ declare function showQueryResultTime($query as item()*, $result as item()*, $tim
                     </tr>                 
                     <tr>
                         <td>
-                            <input type="hidden" name="payload" value="form_query"/>
                             <input align="middle" type="submit" name="subButton" value="Submit" />                            
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <h5>Result</h5>
-                            <textarea cols="100" name="result" rows="6">
-                                ...
-                                {$result}
-                                ...
-                            </textarea>
+                            <textarea cols="100" name="result" rows="6">{util:plainPrint($result)}</textarea>
                         </td>
                     </tr>
                     <tr>

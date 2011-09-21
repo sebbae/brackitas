@@ -33,4 +33,4 @@
  *
 :)
 import module namespace template="http://brackit.org/lib/eCommerce/template";
-count(collection(session:getAtt('appName')))
+let $a := "a" return "Hello World!23"

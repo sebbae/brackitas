@@ -55,8 +55,8 @@ import org.brackit.as.xquery.function.session.Invalidate;
 import org.brackit.as.xquery.function.session.RemoveSessionAtt;
 import org.brackit.as.xquery.function.session.SetMaxInactiveInterval;
 import org.brackit.as.xquery.function.session.SetSessionAtt;
+import org.brackit.as.xquery.function.util.PlainPrint;
 import org.brackit.as.xquery.function.util.Template;
-import org.brackit.as.xquery.node.WebSubtreePrinter;
 import org.brackit.xquery.ErrorCode;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.XQuery;
@@ -94,7 +94,7 @@ public class ASXQuery extends XQuery {
 		Functions.predefine(new Eval(new QNm(Namespaces.BIT_NSURI,
 				Namespaces.BIT_PREFIX, "eval"), new Signature(new SequenceType(
 				AtomicType.STR, Cardinality.ZeroOrOne), new SequenceType(
-				AtomicType.STR, Cardinality.One))));
+				AnyItemType.ANY, Cardinality.One))));
 
 		Functions.predefine(new LoadFile(new QNm(Namespaces.BIT_NSURI,
 				Namespaces.BIT_PREFIX, "loadFile"), new Signature(
@@ -199,11 +199,26 @@ public class ASXQuery extends XQuery {
 				new SequenceType(AnyItemType.ANY, Cardinality.One),
 				new SequenceType(AnyItemType.ANY, Cardinality.One))));
 
+		Functions.predefine(new PlainPrint(new QNm(Namespaces.BIT_NSURI,
+				Namespaces.UTIL_PREFIX, "plainPrint"), new Signature(
+				new SequenceType(AtomicType.STR, Cardinality.ZeroOrOne),
+				new SequenceType(AnyItemType.ANY, Cardinality.One))));
+
 		// Testing
 		Functions.predefine(new Render(new QNm(Namespaces.BIT_NSURI,
 				Namespaces.BIT_PREFIX, "render"), new Signature(
 				new SequenceType(AnyItemType.ANY, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
+	}
+
+	private long LastModified;
+	
+	public long getLastModified() {
+		return LastModified;
+	}
+
+	public void setLastModified(long lastModified) {
+		LastModified = lastModified;
 	}
 
 	public ASXQuery(InputStream in) throws QueryException {
@@ -266,43 +281,6 @@ public class ASXQuery extends XQuery {
 		}
 
 		return out.toString();
-	}
-
-	public String serializeWebSequence(HttpSessionTXQueryContext ctx,
-			Sequence result) throws DocumentException, QueryException {
-
-		if (result == null) {
-			return "";
-		}
-
-		WebSubtreePrinter printer = new WebSubtreePrinter();
-		printer.setPrettyPrint(true);
-		printer.setAutoFlush(false);
-		Item item;
-		Iter it = result.iterate();
-		try {
-			while ((item = it.next()) != null) {
-				if (item instanceof Node<?>) {
-					Node<?> node = (Node<?>) item;
-					Kind kind = node.getKind();
-
-					if ((kind == Kind.ATTRIBUTE) || (kind == Kind.NAMESPACE)) {
-						throw new QueryException(
-								ErrorCode.ERR_SERIALIZE_ATTRIBUTE_OR_NAMESPACE_NODE);
-					}
-					if (kind == Kind.DOCUMENT) {
-						node = node.getFirstChild();
-						while (node.getKind() != Kind.ELEMENT) {
-							node = node.getNextSibling();
-						}
-					}
-					printer.print(node);
-				}
-			}
-		} finally {
-			it.close();
-		}
-		return printer.getOut().toString();
 	}
 
 	public void serializeSequence(HttpSessionTXQueryContext ctx,

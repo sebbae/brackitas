@@ -183,9 +183,8 @@ public class HttpConnector {
 				if (f[i].getName().endsWith(".xq")) {
 					try {
 						String s = f[i].getPath();
-						bac.register(resolvePath(s));
+						bac.register(resolvePath(s), f[i].lastModified());
 					} catch (Exception e) {
-						e.printStackTrace();
 						log.error(e);
 					}
 				}

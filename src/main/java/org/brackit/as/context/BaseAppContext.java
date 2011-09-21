@@ -27,8 +27,10 @@
  */
 package org.brackit.as.context;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -46,48 +48,67 @@ import org.brackit.xquery.module.Module;
  */
 public class BaseAppContext {
 
+	private static class UncompiledQuery {
+
+		private String path;
+
+		private long lastModified;
+
+		public UncompiledQuery(String p, long l) {
+			this.path = p;
+			this.lastModified = l;
+		}
+
+		public String getPath() {
+			return path;
+		}
+
+		public long getLastModified() {
+			return lastModified;
+		}
+	}
+
 	private String app;
 
 	private ASCompileChain chain;
 
 	private Map<String, ASXQuery> queries;
 
-	private List<String> uncompiledQueries;
+	private List<UncompiledQuery> uncompiledQueries;
 
 	public BaseAppContext(String app, ASCompileChain chain) {
 		this.queries = new HashMap<String, ASXQuery>();
-		this.uncompiledQueries = new ArrayList<String>();
+		this.uncompiledQueries = new ArrayList<UncompiledQuery>();
 		this.app = app;
 		this.chain = chain;
 	}
 
-	public void register(String path) {
-		ASXQuery target = null;
-		target = queries.get(path);
-		if (target == null) {
-			try {
-				putQuery(path);
-			} catch (QueryException e) {
-				uncompiledQueries.add(path);
-			}
+	public void register(String path, long lastModified) {
+		try {
+			putQuery(path, lastModified);
+		} catch (QueryException e) {
+			uncompiledQueries.add(new UncompiledQuery(path, lastModified));
 		}
 	}
 
 	public void registerUncompiledQueries() throws QueryException {
 		if (!uncompiledQueries.isEmpty()) {
-			for (int i = 0; i < uncompiledQueries.size(); i++) {
+			Iterator<UncompiledQuery> i = uncompiledQueries.iterator();
+			while (i.hasNext()) {
+				UncompiledQuery uq = i.next();
 				try {
-					putQuery(uncompiledQueries.get(i));
+					putQuery(uq.getPath(), uq.getLastModified());
+					i.remove();
 				} catch (QueryException e) {
 					System.out.println(String.format(
-							"Problems while compiling %s. %s",
-							uncompiledQueries.get(i), e.getMessage()));
+							"Problems while compiling %s. %s", uq.getPath(), e
+									.getMessage()));
 				}
 			}
 		}
 	}
 
-	private void putQuery(String path) throws QueryException {
+	private void putQuery(String path, long lastModified) throws QueryException {
 		ASXQuery target = new ASXQuery(chain, getClass().getResourceAsStream(
 				path));
 		Module module = target.getModule();
@@ -95,10 +116,19 @@ public class BaseAppContext {
 			((BaseResolver) chain.getModuleResolver()).register(
 					((LibraryModule) module).getTargetNS().getUri(),
 					(LibraryModule) module);
+		target.setLastModified(lastModified);
 		queries.put(path, target);
 	}
 
 	public ASXQuery get(String path) {
+		// Check if query need to be recompiled
+		File f = new File("src/main/resources" + path);
+		ASXQuery x = queries.get(path);
+		if (f.lastModified() != x.getLastModified()) {
+			// recompile
+			register(path, f.lastModified());
+			// TODO: Might have to recompile import modules
+		}
 		return queries.get(path);
 	}
 

@@ -38,15 +38,24 @@ import module namespace view="http://brackit.org/lib/brackitQuery/brackitView";
 
 declare variable $controller:query as xs:string external;
 
+declare function getSecondsFromDayTimeDuration($d as xs:dayTimeDuration) as xs:integer
+{
+    fn:days-from-duration($d) * 24 * 60 * 60 +
+    fn:hours-from-duration($d) * 60 * 60 +
+    fn:minutes-from-duration($d) * 60 +
+    fn:seconds-from-duration($d)
+};
+
 declare function query() as item()* 
 {
     if (fn:string-length($controller:query) = 0) then
-        view:showQueryResultTime("","",10)
+        view:showQueryResultTime("","",0)
     else
         let
+            $oldTime := fn:current-time(),
             $result := bit:eval($controller:query)
         return
-            view:showQueryResultTime($controller:query, $result, 10)
+            view:showQueryResultTime($controller:query, $result, getSecondsFromDayTimeDuration(fn:current-time() - $oldTime))
 };
 
 declare function procedures() as item()* 

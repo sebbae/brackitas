@@ -31,7 +31,6 @@ import java.io.PrintStream;
 
 import org.brackit.as.util.FunctionUtils;
 import org.brackit.as.xquery.ASXQuery;
-import org.brackit.as.xquery.HttpSessionTXQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -66,9 +65,12 @@ public class Eval extends AbstractFunction {
 			SubtreePrinter.print((Node<?>) args[0], buf);
 			vQuery = buf.toString();
 		}
-		ASXQuery x = new ASXQuery(vQuery);
-		return x.execute(ctx);
-//		return new Str((x.serializeWebSequence((HttpSessionTXQueryContext) ctx,
-//				x.execute(ctx))));
+		try {
+			ASXQuery x = new ASXQuery(vQuery);
+			return x.execute(ctx);
+		}
+		catch (Exception e) {
+			return new Str(e.getMessage());
+		}
 	}
 }
