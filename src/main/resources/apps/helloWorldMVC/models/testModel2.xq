@@ -33,6 +33,7 @@
  *
 :)
 module namespace model="http://brackit.org/lib/testModel2";
+import module namespace testController="http://brackit.org/lib/testController";
     
 declare function echo($s as item()*) as item()* 
 { 

@@ -33,4 +33,4 @@
  *
 :)
 import module namespace template="http://brackit.org/lib/eCommerce/template";
-let $a := "a" return "Hello World!23"
+let $a := "a" return template:default("Hello World!3")

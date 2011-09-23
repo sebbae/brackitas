@@ -44,6 +44,7 @@ import org.brackit.as.http.app.FrontController;
 import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.server.metadata.manager.MetaDataMgr;
 import org.brackit.server.session.Session;
+import org.brackit.server.session.SessionException;
 import org.brackit.server.session.SessionMgr;
 import org.brackit.server.tx.IsolationLevel;
 import org.brackit.xquery.QueryException;
@@ -98,6 +99,8 @@ public class HttpConnector {
 
 	private final Server server;
 
+	private static ServletContextHandler sch;
+
 	public HttpConnector(final MetaDataMgr mdm, final SessionMgr sessionMgr,
 			final int port) {
 		Log.setLog(new JettyLogger());
@@ -112,9 +115,11 @@ public class HttpConnector {
 				.setAttribute(APP_MIME_TYPES, this.loadMimeTypes());
 		servletContextHandler.addEventListener(new SessionEndListener(
 				sessionMgr));
+		// servletContextHandler.addEventListener(new );
 		servletContextHandler.addServlet(FrontController.class,
 				APP_CONTROLLER_PREFIX);
 		servletContextHandler.addServlet(ErrorServlet.class, APP_ERROR_PREFIX);
+		this.sch = servletContextHandler;
 		processDeployment(servletContextHandler, sessionMgr, mdm);
 	}
 
@@ -152,19 +157,7 @@ public class HttpConnector {
 				File[] apps = f.listFiles();
 				for (int i = 0; i < apps.length; i++) {
 					if (apps[i].isDirectory()) {
-						Object o = sch.getAttribute(apps[i].getName());
-						BaseAppContext bac;
-						if (o == null) {
-							bac = new BaseAppContext(apps[i].getName(),
-									new ASCompileChain(mdm, sessionMgr
-											.getSession(sessionMgr.login())
-											.getTX(), new BaseResolver()));
-						} else {
-							bac = (BaseAppContext) o;
-						}
-						populateAppQueries(apps[i], bac);
-						bac.registerUncompiledQueries();
-						sch.setAttribute(apps[i].getName(), bac);
+						compileApplication(apps[i]);
 					}
 				}
 			}
@@ -173,7 +166,21 @@ public class HttpConnector {
 		}
 	}
 
-	private void populateAppQueries(File appFolder, BaseAppContext bac)
+	public static void compileApplication(File app) throws SessionException,
+			QueryException {
+		SessionMgr sessionMgr = ((SessionMgr) sch.getAttribute(SessionMgr.class
+				.getName()));
+		BaseAppContext bac = new BaseAppContext(app.getName(),
+				new ASCompileChain((MetaDataMgr) sch
+						.getAttribute(MetaDataMgr.class.getName()), sessionMgr
+						.getSession(sessionMgr.login()).getTX(),
+						new BaseResolver()));
+		populateAppQueries(app, bac);
+		bac.registerUncompiledQueries();
+		sch.setAttribute(app.getName(), bac);
+	}
+
+	private static void populateAppQueries(File appFolder, BaseAppContext bac)
 			throws QueryException {
 		File[] f = appFolder.listFiles();
 		for (int i = 0; i < f.length; i++) {
@@ -192,7 +199,7 @@ public class HttpConnector {
 		}
 	}
 
-	private String resolvePath(String p) {
+	private static String resolvePath(String p) {
 		p = p.substring("src/main/resources".length());
 		return p;
 	}

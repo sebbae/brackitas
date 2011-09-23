@@ -36,6 +36,7 @@ import java.util.Map;
 
 import org.brackit.as.xquery.ASXQuery;
 import org.brackit.as.xquery.compiler.ASCompileChain;
+import org.brackit.server.session.SessionException;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.compiler.BaseResolver;
 import org.brackit.xquery.module.LibraryModule;
@@ -72,11 +73,14 @@ public class BaseAppContext {
 
 	private ASCompileChain chain;
 
+	private Map<String, String> libraries;
+
 	private Map<String, ASXQuery> queries;
 
 	private List<UncompiledQuery> uncompiledQueries;
 
 	public BaseAppContext(String app, ASCompileChain chain) {
+		this.libraries = new HashMap<String, String>();
 		this.queries = new HashMap<String, ASXQuery>();
 		this.uncompiledQueries = new ArrayList<UncompiledQuery>();
 		this.app = app;
@@ -99,6 +103,7 @@ public class BaseAppContext {
 				try {
 					putQuery(uq.getPath(), uq.getLastModified());
 					i.remove();
+					// chain.getModuleResolver().resolve(uri, locUris)
 				} catch (QueryException e) {
 					System.out.println(String.format(
 							"Problems while compiling %s. %s", uq.getPath(), e
@@ -109,25 +114,38 @@ public class BaseAppContext {
 	}
 
 	private void putQuery(String path, long lastModified) throws QueryException {
+
 		ASXQuery target = new ASXQuery(chain, getClass().getResourceAsStream(
 				path));
-		Module module = target.getModule();
-		if (module instanceof LibraryModule)
-			((BaseResolver) chain.getModuleResolver()).register(
-					((LibraryModule) module).getTargetNS().getUri(),
-					(LibraryModule) module);
 		target.setLastModified(lastModified);
+		Module module = target.getModule();
+		if (module instanceof LibraryModule) {
+			String uri = ((LibraryModule) module).getTargetNS().getUri();
+			((BaseResolver) chain.getModuleResolver()).register(uri,
+					(LibraryModule) module);
+			libraries.put(uri, path);
+		}
 		queries.put(path, target);
 	}
 
-	public ASXQuery get(String path) {
+	public ASXQuery get(String path) throws SessionException, QueryException {
 		// Check if query need to be recompiled
-		File f = new File("src/main/resources" + path);
+		String base = "src/main/resources";
+		File f = new File(base + path);
 		ASXQuery x = queries.get(path);
 		if (f.lastModified() != x.getLastModified()) {
-			// recompile
 			register(path, f.lastModified());
-			// TODO: Might have to recompile import modules
+		}
+		// Check if imported modules need to be recompiled
+		Iterator<Module> i = x.getModule().getImportedModules().iterator();
+		while (i.hasNext()) {
+			Module m = i.next();
+			String mPath = libraries.get(m.getTargetNS().getUri());
+			File fm = new File(base + mPath);
+			ASXQuery qm = queries.get(mPath);
+			if (fm.lastModified() != qm.getLastModified()) {
+				register(mPath, fm.lastModified());
+			}
 		}
 		return queries.get(path);
 	}
