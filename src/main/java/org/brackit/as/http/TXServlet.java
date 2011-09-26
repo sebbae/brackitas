@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.brackit.as.xquery.HttpSessionTXQueryContext;
+import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.server.ServerException;
 import org.brackit.server.metadata.TXQueryContext;
@@ -79,7 +79,7 @@ public abstract class TXServlet extends AbstractServlet {
 		XQuery x = new XQuery(chain, query);
 		x.setPrettyPrint(true);
 		x.serialize(
-				new HttpSessionTXQueryContext(tx, metaDataMgr, httpSession),
+				new ASQueryContext(tx, metaDataMgr, httpSession),
 				new PrintStream(buf));
 		return buf.toString("UTF-8");
 	}

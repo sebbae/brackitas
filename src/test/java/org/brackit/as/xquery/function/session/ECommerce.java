@@ -33,7 +33,7 @@ import java.io.PrintStream;
 
 import org.brackit.as.http.app.FrontController;
 import org.brackit.as.xquery.ASXQuery;
-import org.brackit.as.xquery.HttpSessionTXQueryContext;
+import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.server.BrackitDB;
 import org.brackit.server.metadata.manager.MetaDataMgr;
@@ -60,7 +60,7 @@ public class ECommerce {
 
 	private static PrintStream buffer;
 
-	private static HttpSessionTXQueryContext ctx;
+	private static ASQueryContext ctx;
 
 	private static MetaDataMgr metaDataMgr;
 
@@ -76,7 +76,7 @@ public class ECommerce {
 			db = new BrackitDB(true);
 			metaDataMgr = db.getMetadataMgr();
 			tx = db.getTaMgr().begin();
-			ctx = new HttpSessionTXQueryContext(tx, metaDataMgr, new NullHttpSession());
+			ctx = new ASQueryContext(tx, metaDataMgr, new NullHttpSession());
 			ctx.getHttpSession().setAttribute(FrontController.APP_SESSION_ATT, "eCommerce");
 			ASXQuery x = new ASXQuery(
 					new ASCompileChain(metaDataMgr, tx),

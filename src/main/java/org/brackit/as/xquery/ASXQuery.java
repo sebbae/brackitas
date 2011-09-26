@@ -46,15 +46,15 @@ import org.brackit.as.xquery.function.bit.MakeDirectory;
 import org.brackit.as.xquery.function.bit.Render;
 import org.brackit.as.xquery.function.bit.StoreDoc;
 import org.brackit.as.xquery.function.session.Clear;
+import org.brackit.as.xquery.function.session.GetAttribute;
 import org.brackit.as.xquery.function.session.GetAttributeNames;
 import org.brackit.as.xquery.function.session.GetCreationTime;
 import org.brackit.as.xquery.function.session.GetLastAccessedTime;
 import org.brackit.as.xquery.function.session.GetMaxInactiveInterval;
-import org.brackit.as.xquery.function.session.GetSessionAtt;
 import org.brackit.as.xquery.function.session.Invalidate;
 import org.brackit.as.xquery.function.session.RemoveSessionAtt;
+import org.brackit.as.xquery.function.session.SetAttribute;
 import org.brackit.as.xquery.function.session.SetMaxInactiveInterval;
-import org.brackit.as.xquery.function.session.SetSessionAtt;
 import org.brackit.as.xquery.function.util.PlainPrint;
 import org.brackit.as.xquery.function.util.Template;
 import org.brackit.xquery.ErrorCode;
@@ -158,8 +158,8 @@ public class ASXQuery extends XQuery {
 				"getMaxInactiveInterval"), new Signature(new SequenceType(
 				AtomicType.INT, Cardinality.ZeroOrOne))));
 
-		Functions.predefine(new GetSessionAtt(new QNm(Namespaces.BIT_NSURI,
-				Namespaces.SESSION_PREFIX, "getAtt"), new Signature(
+		Functions.predefine(new GetAttribute(new QNm(Namespaces.BIT_NSURI,
+				Namespaces.SESSION_PREFIX, "getAttribute"), new Signature(
 				new SequenceType(AnyItemType.ANY, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
@@ -168,7 +168,7 @@ public class ASXQuery extends XQuery {
 				new SequenceType(AtomicType.BOOL, Cardinality.One))));
 
 		Functions.predefine(new RemoveSessionAtt(new QNm(Namespaces.BIT_NSURI,
-				Namespaces.SESSION_PREFIX, "rmAtt"), new Signature(
+				Namespaces.SESSION_PREFIX, "removeAttribute"), new Signature(
 				new SequenceType(AnyItemType.ANY, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
@@ -178,8 +178,8 @@ public class ASXQuery extends XQuery {
 				AtomicType.BOOL, Cardinality.One), new SequenceType(
 				AtomicType.INT, Cardinality.One))));
 
-		Functions.predefine(new SetSessionAtt(new QNm(Namespaces.BIT_NSURI,
-				Namespaces.SESSION_PREFIX, "setAtt"), new Signature(
+		Functions.predefine(new SetAttribute(new QNm(Namespaces.BIT_NSURI,
+				Namespaces.SESSION_PREFIX, "setAttribute"), new Signature(
 				new SequenceType(AtomicType.BOOL, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One),
 				new SequenceType(AnyItemType.ANY, Cardinality.One))));
@@ -283,7 +283,7 @@ public class ASXQuery extends XQuery {
 		return out.toString();
 	}
 
-	public void serializeSequence(HttpSessionTXQueryContext ctx,
+	public void serializeSequence(ASQueryContext ctx,
 			PrintStream ps, Sequence result) throws DocumentException,
 			QueryException {
 

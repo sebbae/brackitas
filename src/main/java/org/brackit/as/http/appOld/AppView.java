@@ -38,7 +38,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.brackit.as.util.TemplateTreeNode;
 import org.brackit.as.xquery.ASXQuery;
-import org.brackit.as.xquery.HttpSessionTXQueryContext;
+import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.module.Functions;
 
 /**
@@ -61,8 +61,8 @@ public class AppView extends AppServlet {
 			// Create tree with folder template structure
 			DefaultMutableTreeNode tree = getFolderTree("apps/helloWorld/views/template/");
 
-			HttpSessionTXQueryContext ctx = new HttpSessionTXQueryContext(
-					session.checkTX(), metaDataMgr, req.getSession());
+			ASQueryContext ctx = new ASQueryContext(
+					session.checkTX(), metaDataMgr, req.getSession(),req);
 			ctx.getHttpSession().setAttribute("view", viewName);
 			ctx.getHttpSession().setAttribute("viewTree", tree);
 			File f = new File("apps/helloWorld/views/template/index.xq");

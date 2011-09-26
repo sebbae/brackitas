@@ -51,7 +51,7 @@ declare function local:cart($name as xs:string,
                     <cliAddress>
                         {$address}
                     </cliAddress>
-                    {session:getAtt('cart')}
+                    {session:getAttribute('cart')}
                 </order>
         return
             $vReturn
@@ -62,7 +62,7 @@ let $content :=
     let 
         $a := bit:addDocToCollection('orders',local:cart($cliName,$cliAddress))
     return
-        if (session:rmAtt('cart')) then
+        if (session:removeAttribute('cart')) then
             <p> Buy order for the given cart added sucessfully. </p>
         else
             <p> Problems with buying order. </p>

@@ -103,7 +103,6 @@ public class BaseAppContext {
 				try {
 					putQuery(uq.getPath(), uq.getLastModified());
 					i.remove();
-					// chain.getModuleResolver().resolve(uri, locUris)
 				} catch (QueryException e) {
 					System.out.println(String.format(
 							"Problems while compiling %s. %s", uq.getPath(), e
@@ -144,7 +143,11 @@ public class BaseAppContext {
 			File fm = new File(base + mPath);
 			ASXQuery qm = queries.get(mPath);
 			if (fm.lastModified() != qm.getLastModified()) {
+				((BaseResolver) chain.getModuleResolver())
+						.unregister(((LibraryModule) qm.getModule())
+								.getTargetNS().getUri());
 				register(mPath, fm.lastModified());
+				register(path, f.lastModified());
 			}
 		}
 		return queries.get(path);

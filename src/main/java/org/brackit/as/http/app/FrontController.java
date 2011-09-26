@@ -41,7 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.xquery.ASXQuery;
-import org.brackit.as.xquery.HttpSessionTXQueryContext;
+import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.server.session.Session;
 import org.brackit.server.session.SessionException;
 import org.brackit.server.tx.Tx;
@@ -87,12 +87,24 @@ public class FrontController extends BaseServlet {
 
 	private ASXQuery x;
 
-	private HttpSessionTXQueryContext ctx;
+	private ASQueryContext ctx;
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp,
+			Session session) throws Exception {
+		process(req, resp, session);
+	};
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp,
 			Session session) throws Exception {
+		process(req, resp, session);
+	}
 
+	private void process(HttpServletRequest req, HttpServletResponse resp,
+			Session session) throws StreamCorruptedException,
+			FileNotFoundException, SessionException, Exception, QueryException,
+			IOException {
 		resolveApplication(req, resp);
 		if (!UNKNOWN_MIMETYPE.equals(getMimeType(URI))) {
 			processResourceRequest(APP, URI, resp);
@@ -184,7 +196,7 @@ public class FrontController extends BaseServlet {
 			throws SessionException {
 		tx = session.getTX();
 		x = null;
-		ctx = new HttpSessionTXQueryContext(tx, metaDataMgr, req.getSession());
+		ctx = new ASQueryContext(tx, metaDataMgr, req.getSession(),req);
 	}
 
 	private void resolveApplication(HttpServletRequest req,

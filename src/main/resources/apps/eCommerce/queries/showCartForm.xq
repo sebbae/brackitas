@@ -37,7 +37,7 @@ import module namespace template="http://brackit.org/lib/eCommerce/template";
 let 
     $content := 
     let
-        $cart := session:getAtt('cart')
+        $cart := session:getAttribute('cart')
     return
         <form action="./buyCartForm.xq">
             <table>

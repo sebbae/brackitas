@@ -25,15 +25,16 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.xquery.function.session;
+package org.brackit.as.xquery.function.request;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
-import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
+import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.function.Signature;
 import org.brackit.xquery.xdm.Item;
@@ -44,23 +45,23 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
-public class RemoveSessionAtt extends AbstractFunction {
+public class GetCookie extends AbstractFunction {
 
-	public RemoveSessionAtt(QNm name, Signature signature) {
+	public GetCookie(QNm name, Signature signature) {
 		super(name, signature, true);
 	}
 
 	@Override
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
-		try {
-			HttpSession httpSession = ((ASQueryContext) ctx)
-					.getHttpSession();
-			String vAttName = ((Item) args[0]).atomize().stringValue();
-			httpSession.removeAttribute(vAttName);
-			return Bool.TRUE;
-		} catch (Exception e) {
-			return Bool.FALSE;
+		HttpServletRequest req = ((ASQueryContext) ctx).getReq();
+		String vAttName = ((Item) args[0]).atomize().stringValue();
+		Cookie[] cookie = req.getCookies();
+		for (int i = 0; i < cookie.length; i++) {
+			if (cookie[i].getName().equals(vAttName)) {
+				return new Str(cookie[i].getValue());
+			}
 		}
+		return new Str("");
 	}
 }

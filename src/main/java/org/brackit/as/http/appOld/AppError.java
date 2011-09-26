@@ -27,8 +27,8 @@
  */
 package org.brackit.as.http.appOld;
 
+import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.as.xquery.ASXQuery;
-import org.brackit.as.xquery.HttpSessionTXQueryContext;
 import org.brackit.server.session.Session;
 
 import java.io.IOException;
@@ -44,11 +44,13 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class AppError extends AppServlet {
 
+	private static final long serialVersionUID = -1933018379547508778L;
+
 	private void showError(HttpServletRequest req, HttpServletResponse resp,
 			Session session) throws IOException {
 		try {
-			HttpSessionTXQueryContext ctx = new HttpSessionTXQueryContext(
-					session.checkTX(), metaDataMgr, req.getSession());
+			ASQueryContext ctx = new ASQueryContext(session.checkTX(),
+					metaDataMgr, req.getSession(),req);
 			ASXQuery x = new ASXQuery("util:template("
 					+ (String) req.getAttribute("errorMsg") + ")");
 			x.serialize(ctx, new PrintStream(resp.getOutputStream()));

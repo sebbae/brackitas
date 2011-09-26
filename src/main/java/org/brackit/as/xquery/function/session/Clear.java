@@ -31,7 +31,7 @@ import java.util.Enumeration;
 
 import javax.servlet.http.HttpSession;
 
-import org.brackit.as.xquery.HttpSessionTXQueryContext;
+import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Bool;
@@ -55,7 +55,7 @@ public class Clear extends AbstractFunction {
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
 		try {
-			HttpSession httpSession = ((HttpSessionTXQueryContext) ctx)
+			HttpSession httpSession = ((ASQueryContext) ctx)
 					.getHttpSession();
 			Enumeration<String> e = httpSession.getAttributeNames();
 			while (e.hasMoreElements()) {

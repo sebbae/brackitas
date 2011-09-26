@@ -73,26 +73,30 @@ declare function showQueryResultTime($query as item()*, $result as item()*, $tim
 
 declare function showUpload() as item()*
 {
-<form action="./upload" enctype="multipart/form-data" method="post">
-    <table style="width: 100%; background-color: #E0E0F0;">
-        <tr>
-            <td>
-                <h5>
-                    Select file <input type="file" name="file" size="30"/>
-                </h5>
-            </td>
-        </tr>                 
-        <tr>
-            <td>
-                <input type="hidden" name="payload" value="form_upload"/>
-                <input align="middle" type="submit" name="subButton" value="Submit" />                            
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <input type="hidden" name="result" />
-            </td>
-        </tr>
-    </table>
-</form>
+let
+    $content := 
+        <form action="./uploadExec" enctype="multipart/form-data" method="post">
+            <table style="width: 100%; background-color: #E0E0F0;">
+                <tr>
+                    <td>
+                        <h5>
+                            Select file <input type="file" name="file" size="30"/>
+                        </h5>
+                    </td>
+                </tr>                 
+                <tr>
+                    <td>
+                        <input type="hidden" name="payload" value="form_upload"/>
+                        <input align="middle" type="submit" name="subButton" value="Submit" />                            
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="hidden" name="result" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+return
+    template:default($content)
 };

@@ -39,7 +39,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.brackit.as.xquery.ASXQuery;
-import org.brackit.as.xquery.HttpSessionTXQueryContext;
+import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.atomic.Atomic;
@@ -82,8 +82,8 @@ public class AppDispatcher extends AppServlet {
 				.stringValue();
 
 		// was HttpSessionQueryContext
-		QueryContext ctx = new HttpSessionTXQueryContext(session.checkTX(),
-				metaDataMgr, req.getSession());
+		QueryContext ctx = new ASQueryContext(session.checkTX(),
+				metaDataMgr, req.getSession(),req);
 		try {
 			// Dinamic binding of parameters: name = variable name
 			CompileChain chain = new ASCompileChain(metaDataMgr, session.checkTX());			

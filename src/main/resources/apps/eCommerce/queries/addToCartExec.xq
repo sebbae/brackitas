@@ -50,14 +50,14 @@ declare function local:cartItem($name as xs:string,
 }
 ;
 if (
-    if (exists(session:getAtt('cart'))) then
+    if (exists(session:getAttribute('cart'))) then
         (: already something on the cart session :)
         let
             $newCart :=
             <cart>
             {
                 (  
-                for $itemN in session:getAtt('cart')/item
+                for $itemN in session:getAttribute('cart')/item
                     return $itemN
                     ,
                     local:cartItem($itemName,$itemQuant)
@@ -65,7 +65,7 @@ if (
             }
             </cart> 
         return
-            session:setAtt('cart',$newCart)
+            session:setAttribute('cart',$newCart)
     else
         (: first item to the cart :)
         let 
@@ -74,7 +74,7 @@ if (
             let
                 $newCart := <cart>{local:cartItem($item/item/data(name),$itemQuant)}</cart>
             return 
-                session:setAtt('cart',$newCart)
+                session:setAttribute('cart',$newCart)
     )
 then
     bit:eval(bit:loadFile('apps/eCommerce/queries/showCartForm.xq'))

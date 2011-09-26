@@ -1,5 +1,5 @@
-declare variable $login := session:getAtt('login');
-declare variable $pass := session:getAtt('pass');
+declare variable $login := session:getAttribute('login');
+declare variable $pass := session:getAttribute('pass');
 <table>
     <tr>
         <td>

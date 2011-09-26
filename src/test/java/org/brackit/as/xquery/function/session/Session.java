@@ -37,7 +37,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.brackit.as.xquery.ASXQuery;
-import org.brackit.as.xquery.HttpSessionTXQueryContext;
+import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.server.BrackitDB;
 import org.brackit.server.metadata.manager.MetaDataMgr;
@@ -53,7 +53,7 @@ public class Session {
 
 	private static PrintStream buffer;
 
-	private static HttpSessionTXQueryContext ctx;
+	private static ASQueryContext ctx;
 
 	private static MetaDataMgr metaDataMgr;
 
@@ -77,12 +77,12 @@ public class Session {
 		db = new BrackitDB(true);
 		metaDataMgr = db.getMetadataMgr();
 		tx = db.getTaMgr().begin();
-		ctx = new HttpSessionTXQueryContext(tx, metaDataMgr,
+		ctx = new ASQueryContext(tx, metaDataMgr,
 				new NullHttpSession());
 		buffer = createBuffer();
 		ASXQuery x = new ASXQuery(
 				new ASCompileChain(metaDataMgr, tx),
-				"let $a := session:setAtt('test',<a/>) return if (session:clear()) then session:getAtt('test') else <info> Session clear problems </info>");
+				"let $a := session:setAttribute('test',<a/>) return if (session:clear()) then session:getAttribute('test') else <info> Session clear problems </info>");
 		x.setPrettyPrint(true);
 		x.serialize(ctx, buffer);
 		assertEquals("", buffer.toString());
@@ -93,12 +93,12 @@ public class Session {
 		db = new BrackitDB(true);
 		metaDataMgr = db.getMetadataMgr();
 		tx = db.getTaMgr().begin();
-		ctx = new HttpSessionTXQueryContext(tx, metaDataMgr,
+		ctx = new ASQueryContext(tx, metaDataMgr,
 				new NullHttpSession());
 		buffer = createBuffer();
 		ASXQuery x = new ASXQuery(
 				new ASCompileChain(metaDataMgr, tx),
-				"if (session:setAtt('test',<p/>) and session:setAtt('test2',<p/>)) then session:getAttributeNames() else <info/>");
+				"if (session:setAttribute('test',<p/>) and session:setAttribute('test2',<p/>)) then session:getAttributeributeNames() else <info/>");
 		x.setPrettyPrint(true);
 		x.serialize(ctx, buffer);
 		assertEquals("test test2", buffer.toString());
@@ -109,7 +109,7 @@ public class Session {
 		db = new BrackitDB(true);
 		metaDataMgr = db.getMetadataMgr();
 		tx = db.getTaMgr().begin();
-		ctx = new HttpSessionTXQueryContext(tx, metaDataMgr,
+		ctx = new ASQueryContext(tx, metaDataMgr,
 				new NullHttpSession());
 		buffer = createBuffer();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH:mm");
@@ -127,7 +127,7 @@ public class Session {
 		db = new BrackitDB(true);
 		metaDataMgr = db.getMetadataMgr();
 		tx = db.getTaMgr().begin();
-		ctx = new HttpSessionTXQueryContext(tx, metaDataMgr,
+		ctx = new ASQueryContext(tx, metaDataMgr,
 				new NullHttpSession());
 		buffer = createBuffer();
 		ASXQuery x = new ASXQuery(
@@ -142,7 +142,7 @@ public class Session {
 		db = new BrackitDB(true);
 		metaDataMgr = db.getMetadataMgr();
 		tx = db.getTaMgr().begin();
-		ctx = new HttpSessionTXQueryContext(tx, metaDataMgr,
+		ctx = new ASQueryContext(tx, metaDataMgr,
 				new NullHttpSession());
 		buffer = createBuffer();
 		ASXQuery x = new ASXQuery(
@@ -157,12 +157,12 @@ public class Session {
 		db = new BrackitDB(true);
 		metaDataMgr = db.getMetadataMgr();
 		tx = db.getTaMgr().begin();
-		ctx = new HttpSessionTXQueryContext(tx, metaDataMgr,
+		ctx = new ASQueryContext(tx, metaDataMgr,
 				new NullHttpSession());
 		buffer = createBuffer();
 		ASXQuery x = new ASXQuery(
 				new ASCompileChain(metaDataMgr, tx),
-				"let $a := session:setAtt('teste',<p>Test Attribute</p>) return session:getAtt('teste')");
+				"let $a := session:setAttribute('teste',<p>Test Attribute</p>) return session:getAttribute('teste')");
 		x.serialize(ctx, buffer);
 		assertEquals("<p>Test Attribute</p>", buffer.toString());
 	}
@@ -172,12 +172,12 @@ public class Session {
 		db = new BrackitDB(true);
 		metaDataMgr = db.getMetadataMgr();
 		tx = db.getTaMgr().begin();
-		ctx = new HttpSessionTXQueryContext(tx, metaDataMgr,
+		ctx = new ASQueryContext(tx, metaDataMgr,
 				new NullHttpSession());
 		buffer = createBuffer();
 		ASXQuery x = new ASXQuery(
 				new ASCompileChain(metaDataMgr, tx),
-				"let $a := session:setAtt('test',<info/>) return let $b := session:invalidate() return session:getAtt('teste')");
+				"let $a := session:setAttribute('test',<info/>) return let $b := session:invalidate() return session:getAttribute('teste')");
 		x.serialize(ctx, buffer);
 		assertEquals("", buffer.toString());
 	}
@@ -187,12 +187,12 @@ public class Session {
 		db = new BrackitDB(true);
 		metaDataMgr = db.getMetadataMgr();
 		tx = db.getTaMgr().begin();
-		ctx = new HttpSessionTXQueryContext(tx, metaDataMgr,
+		ctx = new ASQueryContext(tx, metaDataMgr,
 				new NullHttpSession());
 		buffer = createBuffer();
 		ASXQuery x = new ASXQuery(
 				new ASCompileChain(metaDataMgr, tx),
-				"let $a := session:setAtt('test',<p>Test Attribute</p>) return session:rmAtt('test')");
+				"let $a := session:setAttribute('test',<p>Test Attribute</p>) return session:removeAttribute('test')");
 		x.setPrettyPrint(true);
 		x.serialize(ctx, buffer);
 		assertTrue(new Boolean(buffer.toString()));

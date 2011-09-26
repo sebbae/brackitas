@@ -63,9 +63,9 @@ declare function procedures() as item()*
     "TODO"
 };
 
-declare function uploadForm() as item()*
+declare function upload() as item()*
 {
-    "TODO"    
+    view:showUpload()
 };
 
 declare function download() as item()*

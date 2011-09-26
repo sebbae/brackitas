@@ -25,42 +25,43 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.xquery.function.session;
+package org.brackit.as.xquery;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.brackit.as.xquery.HttpSessionTXQueryContext;
-import org.brackit.xquery.QueryContext;
-import org.brackit.xquery.QueryException;
-import org.brackit.xquery.atomic.Atomic;
-import org.brackit.xquery.atomic.Bool;
-import org.brackit.xquery.atomic.QNm;
-import org.brackit.xquery.function.AbstractFunction;
-import org.brackit.xquery.function.Signature;
-import org.brackit.xquery.xdm.Sequence;
+import org.brackit.server.metadata.TXQueryContext;
+import org.brackit.server.metadata.manager.MetaDataMgr;
+import org.brackit.server.tx.Tx;
 
 /**
  * 
  * @author Henrique Valer
  * 
  */
-public class SetSessionAtt extends AbstractFunction {
+public class ASQueryContext extends TXQueryContext {
 
-	public SetSessionAtt(QNm name, Signature signature) {
-		super(name, signature, true);
+	private HttpSession httpSession;
+
+	private HttpServletRequest req;
+
+	public ASQueryContext(Tx tx, MetaDataMgr mdm, HttpSession httpSession,
+			HttpServletRequest req) {
+		super(tx, mdm);
+		this.httpSession = httpSession;
+		this.req = req;
 	}
 
-	@Override
-	public Sequence execute(QueryContext ctx, Sequence[] args)
-			throws QueryException {
-		try {
-			HttpSession httpSession = ((HttpSessionTXQueryContext) ctx)
-					.getHttpSession();
-			String vAttName = ((Atomic) args[0]).stringValue();
-			httpSession.setAttribute(vAttName, args[1]);
-			return Bool.TRUE;
-		} catch (Exception e) {
-			return Bool.FALSE;
-		}
+	public ASQueryContext(Tx tx, MetaDataMgr mdm, HttpSession httpSession) {
+		super(tx, mdm);
+		this.httpSession = httpSession;
+	}
+
+	public HttpSession getHttpSession() {
+		return this.httpSession;
+	}
+
+	public HttpServletRequest getReq() {
+		return req;
 	}
 }

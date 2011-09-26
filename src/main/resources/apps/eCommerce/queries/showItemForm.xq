@@ -40,7 +40,7 @@ let
         for 
             $doc 
         in 
-            fn:collection(session:getAtt('appName'))
+            fn:collection(session:getAttribute('appName'))
         let 
             $docName := $doc/item/data(name)
         where

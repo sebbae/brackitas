@@ -62,9 +62,9 @@ declare function head() as item()+
 declare function header() as item()+
 {
     let 
-        $login := session:getAtt('login')
+        $login := session:getAttribute('login')
     let 
-        $pass := session:getAtt('pass')
+        $pass := session:getAttribute('pass')
     return
         <table>
             <tr>
@@ -157,7 +157,7 @@ declare function getItemFromCollection ($name as xs:string) as item()+
     for 
         $doc 
     in 
-        fn:collection(session:getAtt('appName'))
+        fn:collection(session:getAttribute('appName'))
     let 
         $docName := $doc/item/fn:data(name)
     where
@@ -170,7 +170,7 @@ declare function getItemFromCollection ($name as xs:string) as item()+
 declare function showCart() as item()* 
 {
 let
-    $cart := session:getAtt('cart')
+    $cart := session:getAttribute('cart')
 return
     <table>
         <tr>

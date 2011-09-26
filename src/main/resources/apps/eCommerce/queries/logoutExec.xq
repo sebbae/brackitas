@@ -35,7 +35,7 @@
 import module namespace template="http://brackit.org/lib/eCommerce/template";
 
 let $content := 
-    if ((session:rmAtt('login')) and (session:rmAtt('pass'))) then
+    if ((session:removeAttribute('login')) and (session:removeAttribute('pass'))) then
         <p> Loged out sucessfully </p>
     else
         <p> Not loged out. Logout problems. </p>

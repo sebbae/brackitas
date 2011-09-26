@@ -36,7 +36,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.brackit.as.util.TemplateTreeNode;
 import org.brackit.as.xquery.ASXQuery;
-import org.brackit.as.xquery.HttpSessionTXQueryContext;
+import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.XQuery;
@@ -61,7 +61,7 @@ public class Render extends AbstractFunction {
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
 
-		HttpSession httpSession = ((HttpSessionTXQueryContext) ctx)
+		HttpSession httpSession = ((ASQueryContext) ctx)
 				.getHttpSession();
 		String view = (String) httpSession.getAttribute("view");
 		DefaultMutableTreeNode tree = (DefaultMutableTreeNode) httpSession
