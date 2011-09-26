@@ -25,23 +25,21 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.xquery.function.session;
+package org.brackit.as.xquery.function;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.brackit.as.xquery.ASXQuery;
 import org.brackit.as.xquery.ASQueryContext;
+import org.brackit.as.xquery.ASXQuery;
 import org.brackit.as.xquery.compiler.ASCompileChain;
-import org.brackit.server.BrackitDB;
-import org.brackit.server.metadata.manager.MetaDataMgr;
-import org.brackit.server.tx.Tx;
+import org.brackit.as.xquery.function.base.BaseASQueryContextTest;
+import org.brackit.as.xquery.function.base.NullHttpSession;
+import org.brackit.server.ServerException;
+import org.brackit.server.tx.TxException;
 import org.junit.Test;
 
 /**
@@ -49,37 +47,17 @@ import org.junit.Test;
  * @author Henrique Valer
  * 
  */
-public class Session {
+public class Session extends BaseASQueryContextTest {
 
-	private static PrintStream buffer;
-
-	private static ASQueryContext ctx;
-
-	private static MetaDataMgr metaDataMgr;
-
-	private static BrackitDB db;
-
-	private static Tx tx;
-
-	protected static PrintStream createBuffer() {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		return new PrintStream(out) {
-			final OutputStream baos = out;
-
-			public String toString() {
-				return baos.toString();
-			}
-		};
-	}
+	@Override
+	protected void initFields() throws ServerException, TxException {
+		super.initFields();
+		ctx = new ASQueryContext(tx, metaDataMgr, new NullHttpSession());
+	};
 
 	@Test
 	public void clear() throws Exception {
-		db = new BrackitDB(true);
-		metaDataMgr = db.getMetadataMgr();
-		tx = db.getTaMgr().begin();
-		ctx = new ASQueryContext(tx, metaDataMgr,
-				new NullHttpSession());
-		buffer = createBuffer();
+		initFields();
 		ASXQuery x = new ASXQuery(
 				new ASCompileChain(metaDataMgr, tx),
 				"let $a := session:setAttribute('test',<a/>) return if (session:clear()) then session:getAttribute('test') else <info> Session clear problems </info>");
@@ -90,15 +68,10 @@ public class Session {
 
 	@Test
 	public void getAttributeNames() throws Exception {
-		db = new BrackitDB(true);
-		metaDataMgr = db.getMetadataMgr();
-		tx = db.getTaMgr().begin();
-		ctx = new ASQueryContext(tx, metaDataMgr,
-				new NullHttpSession());
-		buffer = createBuffer();
+		initFields();
 		ASXQuery x = new ASXQuery(
 				new ASCompileChain(metaDataMgr, tx),
-				"if (session:setAttribute('test',<p/>) and session:setAttribute('test2',<p/>)) then session:getAttributeributeNames() else <info/>");
+				"if (session:setAttribute('test',<p/>) and session:setAttribute('test2',<p/>)) then session:getAttributeNames() else <info/>");
 		x.setPrettyPrint(true);
 		x.serialize(ctx, buffer);
 		assertEquals("test test2", buffer.toString());
@@ -106,12 +79,7 @@ public class Session {
 
 	@Test
 	public void getCreationTime() throws Exception {
-		db = new BrackitDB(true);
-		metaDataMgr = db.getMetadataMgr();
-		tx = db.getTaMgr().begin();
-		ctx = new ASQueryContext(tx, metaDataMgr,
-				new NullHttpSession());
-		buffer = createBuffer();
+		initFields();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH:mm");
 		Date resultdate = new Date(System.currentTimeMillis());
 		new org.brackit.xquery.atomic.Date(sdf.format(resultdate));
@@ -124,12 +92,7 @@ public class Session {
 
 	@Test
 	public void getLastAccessedTime() throws Exception {
-		db = new BrackitDB(true);
-		metaDataMgr = db.getMetadataMgr();
-		tx = db.getTaMgr().begin();
-		ctx = new ASQueryContext(tx, metaDataMgr,
-				new NullHttpSession());
-		buffer = createBuffer();
+		initFields();
 		ASXQuery x = new ASXQuery(
 				new ASCompileChain(metaDataMgr, tx),
 				"if (session:getCreationTime() eq session:getLastAccessedTime()) then <true/> else <false/>");
@@ -139,12 +102,7 @@ public class Session {
 
 	@Test
 	public void getAndSetMaxInactiveInterval() throws Exception {
-		db = new BrackitDB(true);
-		metaDataMgr = db.getMetadataMgr();
-		tx = db.getTaMgr().begin();
-		ctx = new ASQueryContext(tx, metaDataMgr,
-				new NullHttpSession());
-		buffer = createBuffer();
+		initFields();
 		ASXQuery x = new ASXQuery(
 				new ASCompileChain(metaDataMgr, tx),
 				"let $a := 50 return if (session:setMaxInactiveInterval($a)) then if (session:getMaxInactiveInterval() eq $a) then <true/> else <false/> else <info> Problem with setMaxInactiveInterval() </info>");
@@ -154,12 +112,7 @@ public class Session {
 
 	@Test
 	public void getSessionAtt() throws Exception {
-		db = new BrackitDB(true);
-		metaDataMgr = db.getMetadataMgr();
-		tx = db.getTaMgr().begin();
-		ctx = new ASQueryContext(tx, metaDataMgr,
-				new NullHttpSession());
-		buffer = createBuffer();
+		initFields();
 		ASXQuery x = new ASXQuery(
 				new ASCompileChain(metaDataMgr, tx),
 				"let $a := session:setAttribute('teste',<p>Test Attribute</p>) return session:getAttribute('teste')");
@@ -169,12 +122,7 @@ public class Session {
 
 	@Test
 	public void invalidate() throws Exception {
-		db = new BrackitDB(true);
-		metaDataMgr = db.getMetadataMgr();
-		tx = db.getTaMgr().begin();
-		ctx = new ASQueryContext(tx, metaDataMgr,
-				new NullHttpSession());
-		buffer = createBuffer();
+		initFields();
 		ASXQuery x = new ASXQuery(
 				new ASCompileChain(metaDataMgr, tx),
 				"let $a := session:setAttribute('test',<info/>) return let $b := session:invalidate() return session:getAttribute('teste')");
@@ -184,12 +132,7 @@ public class Session {
 
 	@Test
 	public void removeSessionAtt() throws Exception {
-		db = new BrackitDB(true);
-		metaDataMgr = db.getMetadataMgr();
-		tx = db.getTaMgr().begin();
-		ctx = new ASQueryContext(tx, metaDataMgr,
-				new NullHttpSession());
-		buffer = createBuffer();
+		initFields();
 		ASXQuery x = new ASXQuery(
 				new ASCompileChain(metaDataMgr, tx),
 				"let $a := session:setAttribute('test',<p>Test Attribute</p>) return session:removeAttribute('test')");

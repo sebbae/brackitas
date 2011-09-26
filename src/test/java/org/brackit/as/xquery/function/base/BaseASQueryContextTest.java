@@ -25,27 +25,35 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.xquery.function.session;
+package org.brackit.as.xquery.function.base;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
-import org.brackit.as.http.app.FrontController;
-import org.brackit.as.xquery.ASXQuery;
 import org.brackit.as.xquery.ASQueryContext;
-import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.server.BrackitDB;
+import org.brackit.server.ServerException;
 import org.brackit.server.metadata.manager.MetaDataMgr;
 import org.brackit.server.tx.Tx;
-import org.junit.Test;
+import org.brackit.server.tx.TxException;
 
 /**
  * 
  * @author Henrique Valer
- *
+ * 
  */
-public class ECommerce {
+public class BaseASQueryContextTest {
+
+	protected static PrintStream buffer;
+
+	protected static ASQueryContext ctx;
+
+	protected static MetaDataMgr metaDataMgr;
+
+	protected static BrackitDB db;
+
+	protected static Tx tx;
 
 	protected static PrintStream createBuffer() {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -58,41 +66,11 @@ public class ECommerce {
 		};
 	}
 
-	private static PrintStream buffer;
+	protected void initFields() throws ServerException, TxException {
+		db = new BrackitDB(true);
+		metaDataMgr = db.getMetadataMgr();
+		tx = db.getTaMgr().begin();
+		buffer = createBuffer();
+	}
 
-	private static ASQueryContext ctx;
-
-	private static MetaDataMgr metaDataMgr;
-
-	private static BrackitDB db;
-
-	private static Tx tx;
-
-
-	@Test
-	public void listItems() throws Exception {
-		try {
-			buffer = createBuffer();
-			db = new BrackitDB(true);
-			metaDataMgr = db.getMetadataMgr();
-			tx = db.getTaMgr().begin();
-			ctx = new ASQueryContext(tx, metaDataMgr, new NullHttpSession());
-			ctx.getHttpSession().setAttribute(FrontController.APP_SESSION_ATT, "eCommerce");
-			ASXQuery x = new ASXQuery(
-					new ASCompileChain(metaDataMgr, tx),
-					getClass().getClassLoader().getResourceAsStream("apps/eCommerce/queries/test.xq"));
-			x.setPrettyPrint(true);
-			x.serialize(ctx, buffer);
-			
-			System.out.println(buffer.toString());
-			x.serialize(ctx, buffer);
-			
-			System.out.println(buffer.toString());			
-			
-		}catch (Exception e) {
-			e.printStackTrace();
-			// TODO: handle exception
-		}
-	}	
-	
 }

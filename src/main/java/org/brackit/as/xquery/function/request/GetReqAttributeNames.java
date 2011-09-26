@@ -27,16 +27,21 @@
  */
 package org.brackit.as.xquery.function.request;
 
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
-import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
+import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.function.Signature;
+import org.brackit.xquery.sequence.ItemSequence;
+import org.brackit.xquery.xdm.Item;
 import org.brackit.xquery.xdm.Sequence;
 
 /**
@@ -44,9 +49,9 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
-public class IsMultipartContent extends AbstractFunction {
+public class GetReqAttributeNames extends AbstractFunction {
 
-	public IsMultipartContent(QNm name, Signature signature) {
+	public GetReqAttributeNames(QNm name, Signature signature) {
 		super(name, signature, true);
 	}
 
@@ -54,6 +59,12 @@ public class IsMultipartContent extends AbstractFunction {
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
 		HttpServletRequest req = ((ASQueryContext) ctx).getReq();
-		return new Bool(ServletFileUpload.isMultipartContent(req));
+		List<Str> names = new ArrayList<Str>();
+		Enumeration<String> e = req.getAttributeNames();
+		while (e.hasMoreElements()) {
+			names.add(new Str(e.nextElement()));
+		}
+		Item[] result = names.toArray(new Item[0]);
+		return new ItemSequence(result);
 	}
 }

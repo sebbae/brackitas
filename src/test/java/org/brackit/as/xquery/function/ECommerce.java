@@ -25,46 +25,75 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.xquery.function.request;
+package org.brackit.as.xquery.function;
 
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 
-import javax.servlet.http.HttpServletRequest;
-
+import org.brackit.as.http.app.FrontController;
+import org.brackit.as.xquery.ASXQuery;
 import org.brackit.as.xquery.ASQueryContext;
-import org.brackit.xquery.QueryContext;
-import org.brackit.xquery.QueryException;
-import org.brackit.xquery.atomic.QNm;
-import org.brackit.xquery.atomic.Str;
-import org.brackit.xquery.function.AbstractFunction;
-import org.brackit.xquery.function.Signature;
-import org.brackit.xquery.sequence.ItemSequence;
-import org.brackit.xquery.xdm.Item;
-import org.brackit.xquery.xdm.Sequence;
+import org.brackit.as.xquery.compiler.ASCompileChain;
+import org.brackit.as.xquery.function.base.NullHttpSession;
+import org.brackit.server.BrackitDB;
+import org.brackit.server.metadata.manager.MetaDataMgr;
+import org.brackit.server.tx.Tx;
+import org.junit.Test;
 
 /**
  * 
  * @author Henrique Valer
- * 
+ *
  */
-public class GetAttributeNames extends AbstractFunction {
+public class ECommerce {
 
-	public GetAttributeNames(QNm name, Signature signature) {
-		super(name, signature, true);
+	protected static PrintStream createBuffer() {
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		return new PrintStream(out) {
+			final OutputStream baos = out;
+
+			public String toString() {
+				return baos.toString();
+			}
+		};
 	}
 
-	@Override
-	public Sequence execute(QueryContext ctx, Sequence[] args)
-			throws QueryException {
-		HttpServletRequest req = ((ASQueryContext) ctx).getReq();
-		List<Str> names = new ArrayList<Str>();
-		Enumeration<String> e = req.getAttributeNames();
-		while (e.hasMoreElements()) {
-			names.add(new Str(e.nextElement()));
+	private static PrintStream buffer;
+
+	private static ASQueryContext ctx;
+
+	private static MetaDataMgr metaDataMgr;
+
+	private static BrackitDB db;
+
+	private static Tx tx;
+
+
+	@Test
+	public void listItems() throws Exception {
+		try {
+			buffer = createBuffer();
+			db = new BrackitDB(true);
+			metaDataMgr = db.getMetadataMgr();
+			tx = db.getTaMgr().begin();
+			ctx = new ASQueryContext(tx, metaDataMgr, new NullHttpSession());
+			ctx.getHttpSession().setAttribute(FrontController.APP_SESSION_ATT, "eCommerce");
+			ASXQuery x = new ASXQuery(
+					new ASCompileChain(metaDataMgr, tx),
+					getClass().getClassLoader().getResourceAsStream("apps/eCommerce/queries/test.xq"));
+			x.setPrettyPrint(true);
+			x.serialize(ctx, buffer);
+			
+			System.out.println(buffer.toString());
+			x.serialize(ctx, buffer);
+			
+			System.out.println(buffer.toString());			
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			// TODO: handle exception
 		}
-		Item[] result = names.toArray(new Item[0]);
-		return new ItemSequence(result);
-	}
+	}	
+	
 }

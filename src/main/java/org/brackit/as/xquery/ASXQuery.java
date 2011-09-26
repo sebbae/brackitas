@@ -45,6 +45,14 @@ import org.brackit.as.xquery.function.bit.LoadFile;
 import org.brackit.as.xquery.function.bit.MakeDirectory;
 import org.brackit.as.xquery.function.bit.Render;
 import org.brackit.as.xquery.function.bit.StoreDoc;
+import org.brackit.as.xquery.function.request.GetCookie;
+import org.brackit.as.xquery.function.request.GetCookieNames;
+import org.brackit.as.xquery.function.request.GetParameter;
+import org.brackit.as.xquery.function.request.GetParameterNames;
+import org.brackit.as.xquery.function.request.GetPostParameter;
+import org.brackit.as.xquery.function.request.GetReqAttribute;
+import org.brackit.as.xquery.function.request.GetReqAttributeNames;
+import org.brackit.as.xquery.function.request.IsMultipartContent;
 import org.brackit.as.xquery.function.session.Clear;
 import org.brackit.as.xquery.function.session.GetAttribute;
 import org.brackit.as.xquery.function.session.GetAttributeNames;
@@ -136,56 +144,106 @@ public class ASXQuery extends XQuery {
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
 		// SESSION
-		Functions.predefine(new Clear(new QNm(Namespaces.BIT_NSURI,
+		Functions.predefine(new Clear(new QNm(Namespaces.SESSION_NSURI,
 				Namespaces.SESSION_PREFIX, "clear"), new Signature(
 				new SequenceType(AtomicType.BOOL, Cardinality.One))));
 
-		Functions.predefine(new GetAttributeNames(new QNm(Namespaces.BIT_NSURI,
-				Namespaces.SESSION_PREFIX, "getAttributeNames"), new Signature(
-				new SequenceType(AnyItemType.ANY, Cardinality.ZeroOrMany))));
+		Functions.predefine(new GetAttributeNames(new QNm(
+				Namespaces.SESSION_NSURI, Namespaces.SESSION_PREFIX,
+				"getAttributeNames"), new Signature(new SequenceType(
+				AnyItemType.ANY, Cardinality.ZeroOrMany))));
 
-		Functions.predefine(new GetCreationTime(new QNm(Namespaces.BIT_NSURI,
-				Namespaces.SESSION_PREFIX, "getCreationTime"), new Signature(
-				new SequenceType(AtomicType.DATE, Cardinality.ZeroOrOne))));
+		Functions.predefine(new GetCreationTime(new QNm(
+				Namespaces.SESSION_NSURI, Namespaces.SESSION_PREFIX,
+				"getCreationTime"), new Signature(new SequenceType(
+				AtomicType.DATE, Cardinality.ZeroOrOne))));
 
 		Functions.predefine(new GetLastAccessedTime(new QNm(
-				Namespaces.BIT_NSURI, Namespaces.SESSION_PREFIX,
+				Namespaces.SESSION_NSURI, Namespaces.SESSION_PREFIX,
 				"getLastAccessedTime"), new Signature(new SequenceType(
 				AtomicType.DATE, Cardinality.ZeroOrOne))));
 
 		Functions.predefine(new GetMaxInactiveInterval(new QNm(
-				Namespaces.BIT_NSURI, Namespaces.SESSION_PREFIX,
+				Namespaces.SESSION_NSURI, Namespaces.SESSION_PREFIX,
 				"getMaxInactiveInterval"), new Signature(new SequenceType(
 				AtomicType.INT, Cardinality.ZeroOrOne))));
 
-		Functions.predefine(new GetAttribute(new QNm(Namespaces.BIT_NSURI,
+		Functions.predefine(new GetAttribute(new QNm(Namespaces.SESSION_NSURI,
 				Namespaces.SESSION_PREFIX, "getAttribute"), new Signature(
 				new SequenceType(AnyItemType.ANY, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
-		Functions.predefine(new Invalidate(new QNm(Namespaces.BIT_NSURI,
+		Functions.predefine(new Invalidate(new QNm(Namespaces.SESSION_NSURI,
 				Namespaces.SESSION_PREFIX, "invalidate"), new Signature(
 				new SequenceType(AtomicType.BOOL, Cardinality.One))));
 
-		Functions.predefine(new RemoveSessionAtt(new QNm(Namespaces.BIT_NSURI,
-				Namespaces.SESSION_PREFIX, "removeAttribute"), new Signature(
-				new SequenceType(AnyItemType.ANY, Cardinality.One),
-				new SequenceType(AtomicType.STR, Cardinality.One))));
+		Functions.predefine(new RemoveSessionAtt(new QNm(
+				Namespaces.SESSION_NSURI, Namespaces.SESSION_PREFIX,
+				"removeAttribute"), new Signature(new SequenceType(
+				AnyItemType.ANY, Cardinality.One), new SequenceType(
+				AtomicType.STR, Cardinality.One))));
 
 		Functions.predefine(new SetMaxInactiveInterval(new QNm(
-				Namespaces.BIT_NSURI, Namespaces.SESSION_PREFIX,
+				Namespaces.SESSION_NSURI, Namespaces.SESSION_PREFIX,
 				"setMaxInactiveInterval"), new Signature(new SequenceType(
 				AtomicType.BOOL, Cardinality.One), new SequenceType(
 				AtomicType.INT, Cardinality.One))));
 
-		Functions.predefine(new SetAttribute(new QNm(Namespaces.BIT_NSURI,
+		Functions.predefine(new SetAttribute(new QNm(Namespaces.SESSION_NSURI,
 				Namespaces.SESSION_PREFIX, "setAttribute"), new Signature(
 				new SequenceType(AtomicType.BOOL, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One),
 				new SequenceType(AnyItemType.ANY, Cardinality.One))));
 
+		// Request
+		Functions
+				.predefine(new GetReqAttribute(
+						new QNm(Namespaces.REQUEST_NSURI,
+								Namespaces.REQUEST_PREFIX, "getAttribute"),
+						new Signature(new SequenceType(AnyItemType.ANY,
+								Cardinality.One), new SequenceType(
+								AtomicType.STR, Cardinality.One))));
+
+		Functions
+				.predefine(new GetReqAttributeNames(
+						new QNm(Namespaces.REQUEST_NSURI,
+								Namespaces.REQUEST_PREFIX, "getAttributeNames"),
+						new Signature(new SequenceType(AnyItemType.ANY,
+								Cardinality.ZeroOrMany))));
+
+		Functions.predefine(new GetCookie(new QNm(Namespaces.REQUEST_NSURI,
+				Namespaces.REQUEST_PREFIX, "getCookie"), new Signature(
+				new SequenceType(AnyItemType.ANY, Cardinality.One),
+				new SequenceType(AtomicType.STR, Cardinality.One))));
+
+		Functions.predefine(new GetCookieNames(new QNm(
+				Namespaces.REQUEST_NSURI, Namespaces.REQUEST_PREFIX,
+				"getCookieNames"), new Signature(new SequenceType(
+				AnyItemType.ANY, Cardinality.ZeroOrMany))));
+
+		Functions.predefine(new GetParameter(new QNm(Namespaces.REQUEST_NSURI,
+				Namespaces.REQUEST_PREFIX, "getParameter"), new Signature(
+				new SequenceType(AnyItemType.ANY, Cardinality.One),
+				new SequenceType(AtomicType.STR, Cardinality.One))));
+
+		Functions.predefine(new GetParameterNames(new QNm(
+				Namespaces.REQUEST_NSURI, Namespaces.REQUEST_PREFIX,
+				"getParameterNames"), new Signature(new SequenceType(
+				AnyItemType.ANY, Cardinality.ZeroOrMany))));
+
+		Functions.predefine(new GetPostParameter(new QNm(
+				Namespaces.REQUEST_NSURI, Namespaces.REQUEST_PREFIX,
+				"getPostParameter"), new Signature(new SequenceType(
+				AtomicType.STR, Cardinality.One), new SequenceType(
+				AtomicType.STR, Cardinality.One))));
+
+		Functions.predefine(new IsMultipartContent(new QNm(
+				Namespaces.REQUEST_NSURI, Namespaces.REQUEST_PREFIX,
+				"isMultipartContent"), new Signature(new SequenceType(
+				AtomicType.BOOL, Cardinality.One))));
+
 		// Util
-		Functions.predefine(new Template(new QNm(Namespaces.BIT_NSURI,
+		Functions.predefine(new Template(new QNm(Namespaces.UTIL_NSURI,
 				Namespaces.UTIL_PREFIX, "template"), new Signature(
 				new SequenceType(AnyItemType.ANY, Cardinality.One),
 				new SequenceType(AnyItemType.ANY, Cardinality.ZeroOrOne),
@@ -194,12 +252,12 @@ public class ASXQuery extends XQuery {
 				new SequenceType(AnyItemType.ANY, Cardinality.ZeroOrOne),
 				new SequenceType(AnyItemType.ANY, Cardinality.ZeroOrOne))));
 
-		Functions.predefine(new Template(new QNm(Namespaces.BIT_NSURI,
+		Functions.predefine(new Template(new QNm(Namespaces.UTIL_NSURI,
 				Namespaces.UTIL_PREFIX, "template"), new Signature(
 				new SequenceType(AnyItemType.ANY, Cardinality.One),
 				new SequenceType(AnyItemType.ANY, Cardinality.One))));
 
-		Functions.predefine(new PlainPrint(new QNm(Namespaces.BIT_NSURI,
+		Functions.predefine(new PlainPrint(new QNm(Namespaces.UTIL_NSURI,
 				Namespaces.UTIL_PREFIX, "plainPrint"), new Signature(
 				new SequenceType(AtomicType.STR, Cardinality.ZeroOrOne),
 				new SequenceType(AnyItemType.ANY, Cardinality.One))));
@@ -212,7 +270,7 @@ public class ASXQuery extends XQuery {
 	}
 
 	private long LastModified;
-	
+
 	public long getLastModified() {
 		return LastModified;
 	}
@@ -283,9 +341,8 @@ public class ASXQuery extends XQuery {
 		return out.toString();
 	}
 
-	public void serializeSequence(ASQueryContext ctx,
-			PrintStream ps, Sequence result) throws DocumentException,
-			QueryException {
+	public void serializeSequence(ASQueryContext ctx, PrintStream ps,
+			Sequence result) throws DocumentException, QueryException {
 
 		PrintWriter out = new PrintWriter(ps);
 
