@@ -45,13 +45,13 @@
 	(OK) Optimize such structure
 	(OK) Refactor code
 (  ) Migrate old applications to new structure
-	(  ) eCommerce (MVC)
+	(OK) eCommerce (MVC)
 	(OK) eCommerce (non-MVC)
 	(  ) query engine (non MVC)
 		(OK) Replace on result: .replaceAll("<", "&lt;").replaceAll(">", "&gt;")
 		(  ) Make template usage usable
 	(  ) Error application (Servlet)
-	(  ) Create one Collection for each application and use it, instead of the folders!
+	(OK) Create one Collection for each application and use it, instead of the folders!
 		(OK) Adapt store file and delete file functions. Receive collection name, or not
 		(OK) Test adapted functions
 		(  ) Unit test adapted functions
@@ -59,4 +59,6 @@
 			(  ) CreateCollection
 			(  ) DropCollection
 			(  ) StoreDoc
-(  ) Improve ASXQuery serializtation methods
+(OK) Improve ASXQuery serializtation methods
+(  ) Problems with pre-compiled queries: Queries that need global information (like list
+	 applications) have to rely on a file on the database. Create and use such file. 

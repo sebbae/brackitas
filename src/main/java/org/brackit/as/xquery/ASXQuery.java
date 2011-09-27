@@ -35,6 +35,9 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 
+import org.brackit.as.xquery.function.app.Delete;
+import org.brackit.as.xquery.function.app.GetNames;
+import org.brackit.as.xquery.function.app.Terminate;
 import org.brackit.as.xquery.function.bit.AddDocToCollection;
 import org.brackit.as.xquery.function.bit.CreateCollection;
 import org.brackit.as.xquery.function.bit.DropCollection;
@@ -196,20 +199,16 @@ public class ASXQuery extends XQuery {
 				new SequenceType(AnyItemType.ANY, Cardinality.One))));
 
 		// Request
-		Functions
-				.predefine(new GetReqAttribute(
-						new QNm(Namespaces.REQUEST_NSURI,
-								Namespaces.REQUEST_PREFIX, "getAttribute"),
-						new Signature(new SequenceType(AnyItemType.ANY,
-								Cardinality.One), new SequenceType(
-								AtomicType.STR, Cardinality.One))));
+		Functions.predefine(new GetReqAttribute(new QNm(
+				Namespaces.REQUEST_NSURI, Namespaces.REQUEST_PREFIX,
+				"getAttribute"), new Signature(new SequenceType(
+				AnyItemType.ANY, Cardinality.One), new SequenceType(
+				AtomicType.STR, Cardinality.One))));
 
-		Functions
-				.predefine(new GetReqAttributeNames(
-						new QNm(Namespaces.REQUEST_NSURI,
-								Namespaces.REQUEST_PREFIX, "getAttributeNames"),
-						new Signature(new SequenceType(AnyItemType.ANY,
-								Cardinality.ZeroOrMany))));
+		Functions.predefine(new GetReqAttributeNames(new QNm(
+				Namespaces.REQUEST_NSURI, Namespaces.REQUEST_PREFIX,
+				"getAttributeNames"), new Signature(new SequenceType(
+				AnyItemType.ANY, Cardinality.ZeroOrMany))));
 
 		Functions.predefine(new GetCookie(new QNm(Namespaces.REQUEST_NSURI,
 				Namespaces.REQUEST_PREFIX, "getCookie"), new Signature(
@@ -261,6 +260,21 @@ public class ASXQuery extends XQuery {
 				Namespaces.UTIL_PREFIX, "plainPrint"), new Signature(
 				new SequenceType(AtomicType.STR, Cardinality.ZeroOrOne),
 				new SequenceType(AnyItemType.ANY, Cardinality.One))));
+
+		// App
+		Functions.predefine(new GetNames(new QNm(Namespaces.APP_NSURI,
+				Namespaces.APP_PREFIX, "list"), new Signature(new SequenceType(
+				AnyItemType.ANY, Cardinality.One))));
+
+		Functions.predefine(new Delete(new QNm(Namespaces.APP_NSURI,
+				Namespaces.APP_PREFIX, "delete"), new Signature(
+				new SequenceType(AtomicType.BOOL, Cardinality.One),
+				new SequenceType(AtomicType.STR, Cardinality.One))));
+
+		Functions.predefine(new Terminate(new QNm(Namespaces.APP_NSURI,
+				Namespaces.APP_PREFIX, "terminate"), new Signature(
+				new SequenceType(AtomicType.BOOL, Cardinality.One),
+				new SequenceType(AtomicType.STR, Cardinality.One))));
 
 		// Testing
 		Functions.predefine(new Render(new QNm(Namespaces.BIT_NSURI,

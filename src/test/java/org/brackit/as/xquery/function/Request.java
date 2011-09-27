@@ -37,7 +37,6 @@ import org.brackit.as.xquery.function.base.NullHttpServletRequest;
 import org.brackit.as.xquery.function.base.NullHttpSession;
 import org.brackit.server.ServerException;
 import org.brackit.server.tx.TxException;
-import org.brackit.xquery.atomic.Str;
 import org.junit.Test;
 
 /**
@@ -57,18 +56,16 @@ public class Request extends BaseASQueryContextTest {
 	@Test
 	public void getAttribute() throws Exception {
 		initFields();
-		ASXQuery x = new ASXQuery(
-				new ASCompileChain(metaDataMgr, tx),
+		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
 				"req:getAttribute('1')");
 		x.serialize(ctx, buffer);
-		assertEquals("c1",buffer.toString());
+		assertEquals("c1", buffer.toString());
 	}
-	
+
 	@Test
 	public void getAttributeNames() throws Exception {
 		initFields();
-		ASXQuery x = new ASXQuery(
-				new ASCompileChain(metaDataMgr, tx),
+		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
 				"req:getAttributeNames()");
 		x.serialize(ctx, buffer);
 		assertEquals("1 2", buffer.toString());
@@ -77,51 +74,46 @@ public class Request extends BaseASQueryContextTest {
 	@Test
 	public void getCookie() throws Exception {
 		initFields();
-		ASXQuery x = new ASXQuery(
-				new ASCompileChain(metaDataMgr, tx),
+		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
 				"req:getCookie('1')");
 		x.serialize(ctx, buffer);
 		assertEquals("c1", buffer.toString());
 	}
-	
+
 	@Test
 	public void getCookieNames() throws Exception {
 		initFields();
-		ASXQuery x = new ASXQuery(
-				new ASCompileChain(metaDataMgr, tx),
+		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
 				"req:getCookieNames()");
 		x.serialize(ctx, buffer);
 		assertEquals("1 2", buffer.toString());
-	}	
-	
+	}
+
 	@Test
 	public void getParameter() throws Exception {
 		initFields();
-		ASXQuery x = new ASXQuery(
-				new ASCompileChain(metaDataMgr, tx),
+		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
 				"req:getParameter('1')");
 		x.serialize(ctx, buffer);
 		assertEquals("c1", buffer.toString());
 	}
-	
+
 	@Test
 	public void getParameterNames() throws Exception {
 		initFields();
-		ASXQuery x = new ASXQuery(
-				new ASCompileChain(metaDataMgr, tx),
+		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
 				"req:getParameterNames()");
 		x.serialize(ctx, buffer);
 		assertEquals("1 2", buffer.toString());
 	}
-	
+
 	@Test
 	public void isMultipartContent() throws Exception {
 		initFields();
-		ASXQuery x = new ASXQuery(
-				new ASCompileChain(metaDataMgr, tx),
+		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
 				"req:isMultipartContent()");
 		x.serialize(ctx, buffer);
 		assertEquals("false", buffer.toString());
-	}		
-	
+	}
+
 }

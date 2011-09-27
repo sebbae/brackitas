@@ -29,6 +29,7 @@ package org.brackit.as.http;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Random;
@@ -119,7 +120,7 @@ public class HttpConnector {
 		servletContextHandler.addServlet(FrontController.class,
 				APP_CONTROLLER_PREFIX);
 		servletContextHandler.addServlet(ErrorServlet.class, APP_ERROR_PREFIX);
-		this.sch = servletContextHandler;
+		sch = servletContextHandler;
 		processDeployment(servletContextHandler, sessionMgr, mdm);
 	}
 
@@ -166,7 +167,7 @@ public class HttpConnector {
 		}
 	}
 
-	public static void compileApplication(File app) throws SessionException,
+	private static void compileApplication(File app) throws SessionException,
 			QueryException {
 		SessionMgr sessionMgr = ((SessionMgr) sch.getAttribute(SessionMgr.class
 				.getName()));
@@ -197,6 +198,24 @@ public class HttpConnector {
 				}
 			}
 		}
+	}
+
+	public static void deleteApplication(String app) {
+		try {
+			File f = new File(String.format("%s/%s", APPS_PATH, app));
+			deleteDirectory(f);
+		} catch (Exception e) {
+			log.error(e);
+		}
+	}
+
+	private static void deleteDirectory(File f) throws IOException {
+		if (f.isDirectory()) {
+			for (File c : f.listFiles())
+				deleteDirectory(c);
+		}
+		if (!f.delete())
+			throw new FileNotFoundException("Failed to delete file: " + f);
 	}
 
 	private static String resolvePath(String p) {
