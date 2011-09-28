@@ -32,9 +32,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Enumeration;
 import java.util.Random;
 
 import javax.activation.MimetypesFileTypeMap;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
@@ -42,6 +44,7 @@ import javax.servlet.http.HttpSessionListener;
 import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.http.app.ErrorServlet;
 import org.brackit.as.http.app.FrontController;
+import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.server.metadata.manager.MetaDataMgr;
 import org.brackit.server.session.Session;
@@ -167,7 +170,7 @@ public class HttpConnector {
 		}
 	}
 
-	private static void compileApplication(File app) throws SessionException,
+	public static void compileApplication(File app) throws SessionException,
 			QueryException {
 		SessionMgr sessionMgr = ((SessionMgr) sch.getAttribute(SessionMgr.class
 				.getName()));
@@ -202,11 +205,18 @@ public class HttpConnector {
 
 	public static void deleteApplication(String app) {
 		try {
-			File f = new File(String.format("%s/%s", APPS_PATH, app));
-			deleteDirectory(f);
+			terminateApplication(app);
+			// TODO: Erase it
+			// File f = new File(String.format("%s/%s", APPS_PATH, app));
+			// deleteDirectory(f);
 		} catch (Exception e) {
 			log.error(e);
 		}
+	}
+
+	public static void terminateApplication(String app) {
+		BaseAppContext bac = (BaseAppContext) sch.getAttribute(app);
+		bac.terminate();
 	}
 
 	private static void deleteDirectory(File f) throws IOException {

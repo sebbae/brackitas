@@ -1,5 +1,4 @@
-(:
- *
+/*
  * [New BSD License]
  * Copyright (c) 2011, Brackit Project Team <info@brackit.org>  
  * All rights reserved.
@@ -25,53 +24,43 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- **
+ */
+package org.brackit.as.xquery.function.app;
+
+import javax.servlet.ServletContext;
+
+import org.brackit.as.context.BaseAppContext;
+import org.brackit.as.xquery.ASQueryContext;
+import org.brackit.xquery.QueryContext;
+import org.brackit.xquery.QueryException;
+import org.brackit.xquery.atomic.Atomic;
+import org.brackit.xquery.atomic.Bool;
+import org.brackit.xquery.atomic.QNm;
+import org.brackit.xquery.function.AbstractFunction;
+import org.brackit.xquery.function.Signature;
+import org.brackit.xquery.xdm.Sequence;
+
+/**
  * 
  * @author Henrique Valer
  * 
- *
-:)
-module namespace view="http://brackit.org/lib/appServer/appView";
-import module namespace template="http://brackit.org/lib/appServer/template";
+ */
+public class IsRunning extends AbstractFunction {
 
-declare function listApps($apps as item()*) as item()* {
-    let $content := 
-        <table>
-        {
-            for $app 
-            in $apps
-            return
-                <tr>
-                    <td>{$app}</td>
-                    <td><a href="./edit?app={$app}">Edit</a></td>
-                    <td><a href="./statistics?app={$app}">Statistics</a></td>
-                    <td><a href="./terminate?app={$app}">Terminate</a></td>
-                    <td><a href="./delete?app={$app}">Delete</a></td>
-                    <td>Status: {
-                        if (app:isRunning($app)) then
-                            <font color="#008000"> Running </font>
-                        else
-                            <font color="#FF0000"> Terminated </font>
-                        }</td>
-                    <td><a href="./deploy?app={$app}">Deploy</a></td>
-                </tr>
-        }
-        </table>
-    return
-        template:default($content)    
-};
+	public IsRunning(QNm name, Signature signature) {
+		super(name, signature, true);
+	}
 
-declare function delete($result as xs:boolean) as item() {
-    let $content := 
-        if ($result) then
-            <p>Application deleted sucessfully.</p>
-        else
-            <p>Problems while deleting application.</p>
-    return
-        template:default($content)
-};
-
-declare function default($content as item()) as item() {
-    template:default($content)
-};
+	@Override
+	public Sequence execute(QueryContext ctx, Sequence[] args)
+			throws QueryException {
+		try {
+			String name = ((Atomic) args[0]).atomize().stringValue().trim();
+			ServletContext s = ((ASQueryContext) ctx).getReq()
+					.getServletContext();
+			return new Bool(((BaseAppContext) s.getAttribute(name)).isRunning());
+		} catch (Exception e) {
+			return Bool.FALSE;
+		}
+	}
+}

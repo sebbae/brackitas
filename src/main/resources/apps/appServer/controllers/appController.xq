@@ -37,11 +37,20 @@ import module namespace model="http://brackit.org/lib/appServer/appModel";
 import module namespace view="http://brackit.org/lib/appServer/appView";
 
 declare function index() as item() {
-    view:listApps(app:list())
+    view:listApps(app:getNames())
 };
 
 declare function edit() as item() {
     "TODO"
+};
+
+declare function terminate() as item() {
+    let $app := req:getParameter("app")
+    return
+        if (app:terminate($app)) then
+            index()
+        else
+            view:default(fn:concat("Problems terminating application ",$app))
 };
 
 declare function statistics() as item() {
@@ -52,10 +61,12 @@ declare function delete() as item() {
     view:delete(app:delete(req:getParameter("app")))
 };
 
-declare function status() as item() {
-    "TODO"
+declare function deploy() as item() {
+    let $app := req:getParameter("app")
+    return
+        if (app:deploy($app)) then
+            index()
+        else
+            view:default(fn:concat("Problems deploying application ",$app))
 };
 
-declare function deploy() as item() {
-    "TODO"
-};

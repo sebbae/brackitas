@@ -27,7 +27,7 @@
  */
 package org.brackit.as.xquery.function.app;
 
-import org.brackit.as.xquery.ASQueryContext;
+import org.brackit.as.http.HttpConnector;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -52,9 +52,8 @@ public class Terminate extends AbstractFunction {
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
 		try {
-			String name = ((Atomic) args[0]).atomize().stringValue();
-			((ASQueryContext) ctx).getReq().getServletContext()
-					.removeAttribute(name);
+			String name = ((Atomic) args[0]).atomize().stringValue().trim();
+			HttpConnector.terminateApplication(name);
 			return Bool.TRUE;
 		} catch (Exception e) {
 			return Bool.FALSE;

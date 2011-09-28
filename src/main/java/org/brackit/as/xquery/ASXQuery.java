@@ -36,7 +36,9 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 
 import org.brackit.as.xquery.function.app.Delete;
+import org.brackit.as.xquery.function.app.Deploy;
 import org.brackit.as.xquery.function.app.GetNames;
+import org.brackit.as.xquery.function.app.IsRunning;
 import org.brackit.as.xquery.function.app.Terminate;
 import org.brackit.as.xquery.function.bit.AddDocToCollection;
 import org.brackit.as.xquery.function.bit.CreateCollection;
@@ -263,8 +265,8 @@ public class ASXQuery extends XQuery {
 
 		// App
 		Functions.predefine(new GetNames(new QNm(Namespaces.APP_NSURI,
-				Namespaces.APP_PREFIX, "list"), new Signature(new SequenceType(
-				AnyItemType.ANY, Cardinality.One))));
+				Namespaces.APP_PREFIX, "getNames"), new Signature(
+				new SequenceType(AnyItemType.ANY, Cardinality.One))));
 
 		Functions.predefine(new Delete(new QNm(Namespaces.APP_NSURI,
 				Namespaces.APP_PREFIX, "delete"), new Signature(
@@ -276,6 +278,16 @@ public class ASXQuery extends XQuery {
 				new SequenceType(AtomicType.BOOL, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
+		Functions.predefine(new IsRunning(new QNm(Namespaces.APP_NSURI,
+				Namespaces.APP_PREFIX, "isRunning"), new Signature(
+				new SequenceType(AtomicType.BOOL, Cardinality.One),
+				new SequenceType(AtomicType.STR, Cardinality.One))));
+
+		Functions.predefine(new Deploy(new QNm(Namespaces.APP_NSURI,
+				Namespaces.APP_PREFIX, "deploy"), new Signature(
+				new SequenceType(AtomicType.BOOL, Cardinality.One),
+				new SequenceType(AtomicType.STR, Cardinality.One))));
+
 		// Testing
 		Functions.predefine(new Render(new QNm(Namespaces.BIT_NSURI,
 				Namespaces.BIT_PREFIX, "render"), new Signature(
@@ -283,7 +295,17 @@ public class ASXQuery extends XQuery {
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 	}
 
+	private boolean longLive;
+
 	private long LastModified;
+
+	public boolean isLongLive() {
+		return longLive;
+	}
+
+	public void setLongLive(boolean longLive) {
+		this.longLive = longLive;
+	}
 
 	public long getLastModified() {
 		return LastModified;
@@ -295,22 +317,27 @@ public class ASXQuery extends XQuery {
 
 	public ASXQuery(InputStream in) throws QueryException {
 		super(getStringFromInputStream(in));
+		this.longLive = false;
 	}
 
 	public ASXQuery(String s) throws QueryException {
 		super(s);
+		this.longLive = false;
 	}
 
 	public ASXQuery(File f) throws QueryException {
 		super(getStringFromFile(f));
+		this.longLive = false;
 	}
 
 	public ASXQuery(CompileChain chain, InputStream in) throws QueryException {
 		super(chain, getStringFromInputStream(in));
+		this.longLive = false;
 	}
 
 	public ASXQuery(CompileChain chain, String s) throws QueryException {
 		super(chain, s);
+		this.longLive = false;
 	}
 
 	private static String getStringFromFile(File pFile) throws QueryException {

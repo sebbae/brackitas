@@ -28,7 +28,6 @@
 package org.brackit.as.xquery.function.app;
 
 import org.brackit.as.http.HttpConnector;
-import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -53,14 +52,11 @@ public class Delete extends AbstractFunction {
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
 		try {
-			String name = ((Atomic) args[0]).atomize().stringValue();
-			((ASQueryContext) ctx).getReq().getServletContext()
-					.removeAttribute(name.trim());
-//			TODO: let deletion occurs
-//			HttpConnector.deleteApplication(name);
-			System.out.println(String.format("Application %s deleted successfully",name));
+			String name = ((Atomic) args[0]).atomize().stringValue().trim();
+			HttpConnector.deleteApplication(name);
 			return Bool.TRUE;
 		} catch (Exception e) {
+			e.printStackTrace();
 			return Bool.FALSE;
 		}
 	}

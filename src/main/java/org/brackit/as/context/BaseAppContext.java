@@ -78,13 +78,32 @@ public class BaseAppContext {
 	private Map<String, ASXQuery> queries;
 
 	private List<UncompiledQuery> uncompiledQueries;
+	
+	private boolean running; 
 
+	public ASCompileChain getChain() {
+		return this.chain;
+	}
+
+	public String getApp() {
+		return this.app;
+	}
+	
+	public boolean isRunning () {
+		return this.running;
+	}
+	
+	public void terminate() {
+		this.running = false;
+	}
+	
 	public BaseAppContext(String app, ASCompileChain chain) {
 		this.libraries = new HashMap<String, String>();
 		this.queries = new HashMap<String, ASXQuery>();
 		this.uncompiledQueries = new ArrayList<UncompiledQuery>();
 		this.app = app;
 		this.chain = chain;
+		this.running = true;
 	}
 
 	public void register(String path, long lastModified) {
@@ -124,41 +143,37 @@ public class BaseAppContext {
 					(LibraryModule) module);
 			libraries.put(uri, path);
 		}
+		
 		queries.put(path, target);
 	}
 
-	public ASXQuery get(String path) throws SessionException, QueryException {
+	public ASXQuery get(String path) throws Exception {
 		// Check if query need to be recompiled
-		String base = "src/main/resources";
-		File f = new File(base + path);
-		ASXQuery x = queries.get(path);
-		if (f.lastModified() != x.getLastModified()) {
-			register(path, f.lastModified());
-		}
-		// Check if imported modules need to be recompiled
-		Iterator<Module> i = x.getModule().getImportedModules().iterator();
-		while (i.hasNext()) {
-			Module m = i.next();
-			String mPath = libraries.get(m.getTargetNS().getUri());
-			File fm = new File(base + mPath);
-			ASXQuery qm = queries.get(mPath);
-			if (fm.lastModified() != qm.getLastModified()) {
-				((BaseResolver) chain.getModuleResolver())
-						.unregister(((LibraryModule) qm.getModule())
-								.getTargetNS().getUri());
-				register(mPath, fm.lastModified());
+		if (isRunning()) {
+			String base = "src/main/resources";
+			File f = new File(base + path);
+			ASXQuery x = queries.get(path);
+			if (f.lastModified() != x.getLastModified()) {
 				register(path, f.lastModified());
 			}
+			// Check if imported modules need to be recompiled
+			Iterator<Module> i = x.getModule().getImportedModules().iterator();
+			while (i.hasNext()) {
+				Module m = i.next();
+				String mPath = libraries.get(m.getTargetNS().getUri());
+				File fm = new File(base + mPath);
+				ASXQuery qm = queries.get(mPath);
+				if (fm.lastModified() != qm.getLastModified()) {
+					((BaseResolver) chain.getModuleResolver())
+							.unregister(((LibraryModule) qm.getModule())
+									.getTargetNS().getUri());
+					register(mPath, fm.lastModified());
+					register(path, f.lastModified());
+				}
+			}
+			return queries.get(path);
 		}
-		return queries.get(path);
+		else
+			throw new Exception("Application terminated");
 	}
-
-	public ASCompileChain getChain() {
-		return this.chain;
-	}
-
-	public String getApp() {
-		return this.app;
-	}
-
 }
