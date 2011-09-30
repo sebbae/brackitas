@@ -37,7 +37,9 @@ import java.io.PrintWriter;
 
 import org.brackit.as.xquery.function.app.Delete;
 import org.brackit.as.xquery.function.app.Deploy;
+import org.brackit.as.xquery.function.app.Generate;
 import org.brackit.as.xquery.function.app.GetNames;
+import org.brackit.as.xquery.function.app.GetStructure;
 import org.brackit.as.xquery.function.app.IsRunning;
 import org.brackit.as.xquery.function.app.Terminate;
 import org.brackit.as.xquery.function.bit.AddDocToCollection;
@@ -286,6 +288,17 @@ public class ASXQuery extends XQuery {
 		Functions.predefine(new Deploy(new QNm(Namespaces.APP_NSURI,
 				Namespaces.APP_PREFIX, "deploy"), new Signature(
 				new SequenceType(AtomicType.BOOL, Cardinality.One),
+				new SequenceType(AtomicType.STR, Cardinality.One))));
+
+		Functions.predefine(new GetStructure(new QNm(Namespaces.APP_NSURI,
+				Namespaces.APP_PREFIX, "getStructure"), new Signature(
+				new SequenceType(AnyItemType.ANY, Cardinality.ZeroOrOne),
+				new SequenceType(AtomicType.STR, Cardinality.One))));
+
+		Functions.predefine(new Generate(new QNm(Namespaces.APP_NSURI,
+				Namespaces.APP_PREFIX, "generate"), new Signature(
+				new SequenceType(AtomicType.BOOL, Cardinality.One),
+				new SequenceType(AtomicType.STR, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
 		// Testing

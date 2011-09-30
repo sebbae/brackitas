@@ -40,8 +40,31 @@ declare function index() as item() {
     view:listApps(app:getNames())
 };
 
-declare function edit() as item() {
-    "TODO"
+declare function create() as item() {
+    let $butClick := req:getParameter("sub")
+    return
+        if (fn:string-length($butClick) > 0) then
+            let $app := req:getParameter("app"),
+                $model := req:getParameter("model")
+            return
+                if (model:validateApp($app, $model)) then
+                    if (app:generate($app,$model)) then
+                        index()
+                    else
+                        view:createAppForm()
+                else
+                    view:createAppForm()
+        else
+            view:createAppForm()
+};
+
+declare function edit () as item ()* {
+    let $menu := view:createMenu(req:getParameter("app"))
+    return view:menuContent($menu, "Welcome to the development Framework")
+};
+
+declare function test2() as item() {
+    app:getStructure(req:getParameter("app"))
 };
 
 declare function terminate() as item() {
@@ -69,4 +92,3 @@ declare function deploy() as item() {
         else
             view:default(fn:concat("Problems deploying application ",$app))
 };
-

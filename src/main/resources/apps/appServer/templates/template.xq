@@ -39,7 +39,7 @@ declare function head($title as xs:string) as item() {
       <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
       <title>{$title}</title>
       <!-- add your meta tags here -->
-      <link href="http://localhost:8080/apps/appServer/resources/css/my_layout.css" rel="stylesheet" type="text/css" />
+      <link href="http://localhost:8080/apps/appServer/resources/css/layout_vertical_listnav.css" rel="stylesheet" type="text/css" />
       <!--[if lte IE 7]>
       <link href="http://localhost:8080/apps/appServer/resources/css/patches/patch_my_layout.css" rel="stylesheet" type="text/css" />
       <![endif]-->
@@ -79,9 +79,16 @@ declare function footerYAML() as item() {
     </div>          
 };
 
-declare function default($content as item()) as item() {
+declare function base($head as item(),
+                      $header as item(),
+                      $teaser as item(),
+                      $menu as item(),
+                      $content as item(),
+                      $footerBrackit as item(),
+                      $footerYAML as item()) {
+
     <html xmlns="http://www.w3.org/1999/xhtml" lang="en" lang="en">
-    {head("Brackit Application Server");}
+    {$head}
     <body>
       <div class="page_margins">
         <div class="page">
@@ -91,7 +98,7 @@ declare function default($content as item()) as item() {
             <a class="skip" title="skip link" href="#content">Skip to the content</a><span class="hideme">.</span>
             <!-- end: skip link navigation --><a href="#">Login</a> | <a href="#">Contact</a> | <a href="#">Imprint</a>
           </div>
-            {header();}
+            {$header}
           <div id="nav">
             <!-- skiplink anchor: navigation -->
             <a id="navigation" name="navigation"></a>
@@ -106,25 +113,26 @@ declare function default($content as item()) as item() {
               </ul>
             </div>
           </div>
-            {teaser();}
+            {$teaser}
           <div id="main">
-            <div id="col1">
-              {menu();}
+            <div id="col1" role="complementary">
+              {$menu}
             </div>
             <div id="col3">
               <div id="col3_content" class="clearfix">
-                {$content;}
+                {$content}
               </div>
               <!-- IE Column Clearing -->
               <div id="ie_clearing"> &#160; </div>
             </div>
           </div>
           <!-- begin: #footer -->
-            {footerBrackit();}
-            {footerYAML();}
+            {$footerBrackit}
+            {$footerYAML}
           <!-- begin: #footer -->
         </div>
       </div>
     </body>
     </html>
+
 };

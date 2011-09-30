@@ -35,9 +35,30 @@
 module namespace view="http://brackit.org/lib/appServer/appView";
 import module namespace template="http://brackit.org/lib/appServer/template";
 
+declare function default($content as item()) as item() {
+    template:base(template:head("Brackit Application Server"),
+                  template:header(),
+                  template:teaser(),
+                  template:menu(),
+                  $content,
+                  template:footerBrackit(),
+                  template:footerYAML())
+};
+
+declare function menuContent($menu as item(), $content as item()) as item() {
+    template:base(template:head("Brackit Application Server"),
+                  template:header(),
+                  template:teaser(),
+                  $menu,
+                  $content,
+                  template:footerBrackit(),
+                  template:footerYAML())
+};
+
 declare function listApps($apps as item()*) as item()* {
     let $content := 
-        <table>
+        <form action="./create">
+        <table style="width: 100%;">
         {
             for $app 
             in $apps
@@ -58,8 +79,16 @@ declare function listApps($apps as item()*) as item()* {
                 </tr>
         }
         </table>
+        <table style="width: 100%;">
+            <tr >
+                <td width="100%">
+                    <a href="./create"> Create new application </a>                            
+                </td>
+            </tr>
+        </table>
+        </form>
     return
-        template:default($content)    
+        default($content)    
 };
 
 declare function delete($result as xs:boolean) as item() {
@@ -69,9 +98,61 @@ declare function delete($result as xs:boolean) as item() {
         else
             <p>Problems while deleting application.</p>
     return
-        template:default($content)
+        default($content)
 };
 
-declare function default($content as item()) as item() {
-    template:default($content)
+declare function listing($dir as item()*, $base as xs:string) as item()* {
+    <li><a>{fn:data($dir/@name)}</a>
+        <ul> {
+            for $sub
+            in $dir/dir
+            return
+                <li>{listing($sub,fn:concat($base,"/",fn:data($sub/@name)))}</li>
+        }{
+            for $file
+            in $dir/file
+            return
+                <li><a href="./load?name={fn:concat($base,"/",$file/@name)}">{fn:data($file/@name)}</a></li>
+        }            
+        </ul>
+    </li>
 };
+
+declare function createMenu($app as xs:string) as item() {
+    <ul class="vlist">
+        <li><h6 class="vlist">{$app}</h6></li>
+        {
+        for $a
+        in app:getStructure($app)/app/dir
+        return <li>{listing($a,fn:data($a/@name))}</li>
+        }
+    </ul>
+};
+
+declare function createAppForm() as item() {
+    let $content := 
+        <form action="./create">
+            <table style="width: 100%; background-color: rgb(224, 224, 240);">
+                <tr>
+                    <td style="width: 20%;"><h5>Name</h5></td>
+                    <td><input type="text" name="app"/></td>
+                    <td><input type="hidden" name="appMsg"/></td>
+                </tr>
+                <tr>
+                    <td style="width: 20%;"><h5>Application Model</h5></td>
+                    <td>
+                      Create MVC application <input type="radio" name="model" value="MVC" checked="checked"/><br></br>
+                      Create personalized application <input type="radio" name="model" value="REG"/>
+                    </td>
+                    <td><input type="hidden" name="modelMsg"/></td>                    
+                </tr>
+                <tr>
+                    <td colspan="3" align="center">
+                      <input align="center" type="submit" name="sub" value="Create application"/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    return default($content)
+};
+
