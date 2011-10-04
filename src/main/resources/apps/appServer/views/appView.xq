@@ -101,18 +101,18 @@ declare function delete($result as xs:boolean) as item() {
         default($content)
 };
 
-declare function listing($dir as item()*, $base as xs:string) as item()* {
+declare function listing($dir as item()*, $app as xs:string, $base as xs:string) as item()* {
     <li><a>{fn:data($dir/@name)}</a>
         <ul> {
             for $sub
             in $dir/dir
             return
-                <li>{listing($sub,fn:concat($base,"/",fn:data($sub/@name)))}</li>
+                <li>{listing($sub,$app,fn:concat($base,"/",fn:data($sub/@name)))}</li>
         }{
             for $file
             in $dir/file
             return
-                <li><a href="./load?name={fn:concat($base,"/",$file/@name)}">{fn:data($file/@name)}</a></li>
+                <li><a href="./load?app={$app}&amp;name={fn:concat($base,"/",$file/@name)}">{fn:data($file/@name)}</a></li>
         }            
         </ul>
     </li>
@@ -124,7 +124,7 @@ declare function createMenu($app as xs:string) as item() {
         {
         for $a
         in app:getStructure($app)/app/dir
-        return <li>{listing($a,fn:data($a/@name))}</li>
+        return <li>{listing($a,$app,fn:concat($app,"/",fn:data($a/@name)))}</li>
         }
     </ul>
 };

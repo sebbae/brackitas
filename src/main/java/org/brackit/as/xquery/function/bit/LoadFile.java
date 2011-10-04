@@ -56,7 +56,7 @@ public class LoadFile extends AbstractFunction {
 	@Override
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
-		String fName = ((Atomic) args[0]).stringValue();
+		String fName = ((Atomic) args[0]).stringValue().trim();
 
 		StringBuffer out = new StringBuffer();
 		byte[] buffer = new byte[4096];

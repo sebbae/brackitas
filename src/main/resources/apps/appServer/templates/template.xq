@@ -60,10 +60,16 @@ declare function teaser() as item() {
 
 declare function menu() as item() {
     <div id="col1_content" class="clearfix">
-      <ul>
-        <li><a href="../appController/index">Apps</a></li>
-        <li><a href="../docController/index">Docs</a></li>
-      </ul>
+      <table style="width:100%;">
+        <tr>
+          <td>
+            <ul class="vlist">
+              <li><a href="../appController/index"><h6>Apps</h6></a></li>
+              <li><a href="../docController/index"><h6>Docs</h6></a></li>
+            </ul>
+          </td>
+        </tr>
+      </table>
     </div>
 };
 

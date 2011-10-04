@@ -55,6 +55,6 @@ public class GetParameter extends AbstractFunction {
 			throws QueryException {
 		HttpServletRequest req = ((ASQueryContext) ctx).getReq();
 		String vName = ((Item) args[0]).atomize().stringValue();
-		return new Str(req.getParameter(vName));
+		return new Str(req.getParameter(vName).trim());
 	}
 }

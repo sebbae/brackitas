@@ -63,10 +63,6 @@ declare function edit () as item ()* {
     return view:menuContent($menu, "Welcome to the development Framework")
 };
 
-declare function test2() as item() {
-    app:getStructure(req:getParameter("app"))
-};
-
 declare function terminate() as item() {
     let $app := req:getParameter("app")
     return
@@ -91,4 +87,10 @@ declare function deploy() as item() {
             index()
         else
             view:default(fn:concat("Problems deploying application ",$app))
+};
+
+declare function load() as item () {
+    let $resource := req:getParameter("name"),
+        $menu := view:createMenu(req:getParameter("app"))
+    return view:menuContent($menu,util:plainPrint(bit:loadFile(fn:concat("apps/",$resource))))
 };
