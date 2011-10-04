@@ -89,8 +89,50 @@ declare function deploy() as item() {
             view:default(fn:concat("Problems deploying application ",$app))
 };
 
-declare function load() as item () {
-    let $resource := req:getParameter("name"),
-        $menu := view:createMenu(req:getParameter("app"))
-    return view:menuContent($menu,util:plainPrint(bit:loadFile(fn:concat("apps/",$resource))))
+declare function test() as item() {
+    let $menu := view:createMenu(req:getParameter("app")),
+        $resource := req:getParameter("name")
+    return
+        let $content := 
+        <table style="width:100%;">
+          <tr><td>
+              <div id="colleft_intern">
+                <div class="textwrapper">
+                <textarea name="itemDescription" rows="10">
+                    {bit:loadFile(fn:concat("apps/",$resource))}
+                </textarea>
+                </div>
+              </div>
+              <div id="colright_intern">
+                <div class="textwrapper">
+                <textarea name="itemDescription" rows="10">
+                    {bit:loadFile(fn:concat("apps/",$resource))}
+                </textarea>
+                </div>
+              </div>
+          </td></tr>
+          <tr><td>              
+              <div id="colleft_intern">
+                <div class="textwrapper">
+                <textarea name="itemDescription" rows="10">
+                    {bit:loadFile(fn:concat("apps/",$resource))}
+                </textarea>
+                </div>
+              </div>
+              <div id="colright_intern">
+                <div class="textwrapper">
+                <textarea name="itemDescription" rows="10">
+                    {bit:loadFile(fn:concat("apps/",$resource))}
+                </textarea>
+                </div>
+              </div>
+          </td></tr>
+        </table>
+    return view:menuContent($menu,$content)
+};
+
+declare function load($item as xs:string) as item () {
+    let $app := req:getParameter("app"),
+        $resource := req:getParameter("resource")
+    return util:plainPrint(bit:loadFile(fn:concat("apps/",$resource)))
 };

@@ -96,6 +96,7 @@ declare function base($head as item(),
     <html xmlns="http://www.w3.org/1999/xhtml" lang="en" lang="en">
     {$head}
     <body>
+      <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/brackit.js"></script>
       <div class="page_margins">
         <div class="page">
           <div id="topnav">

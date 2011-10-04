@@ -40,12 +40,6 @@ import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.function.Signature;
 import org.brackit.xquery.node.linked.LNodeFactory;
 import org.brackit.xquery.node.parser.DocumentParser;
-import org.brackit.xquery.sequence.ItemSequence;
-import org.brackit.xquery.sequence.LazySequence;
-import org.brackit.xquery.xdm.Item;
-import org.brackit.xquery.xdm.Iter;
-import org.brackit.xquery.xdm.Node;
-import org.brackit.xquery.xdm.NodeFactory;
 import org.brackit.xquery.xdm.Sequence;
 
 /**
@@ -68,7 +62,6 @@ public class GetStructure extends AbstractFunction {
 					app));
 			StringBuffer sb = listStructure(f);
 			return new LNodeFactory().build(new DocumentParser(sb.toString()));
-//			return (Item) new Str(sb.toString());
 		} catch (IOException e) {
 			return new Str(e.getMessage());
 		}
