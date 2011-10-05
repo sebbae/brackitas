@@ -36,10 +36,10 @@ import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
 import org.brackit.xquery.atomic.QNm;
+import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.function.Signature;
-import org.brackit.xquery.node.linked.LNodeFactory;
-import org.brackit.xquery.node.parser.DocumentParser;
+import org.brackit.xquery.xdm.Item;
 import org.brackit.xquery.xdm.Sequence;
 
 /**
@@ -77,6 +77,6 @@ public class LoadFile extends AbstractFunction {
 				} catch (IOException ignored) {
 				}
 		}
-		return new LNodeFactory().text(out.toString());
+		return (Item) new Str(out.toString());
 	}
 }

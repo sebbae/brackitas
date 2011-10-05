@@ -89,50 +89,42 @@ declare function deploy() as item() {
             view:default(fn:concat("Problems deploying application ",$app))
 };
 
-declare function test() as item() {
-    let $menu := view:createMenu(req:getParameter("app")),
-        $resource := req:getParameter("name")
-    return
-        let $content := 
-        <table style="width:100%;">
-          <tr><td>
-              <div id="colleft_intern">
-                <div class="textwrapper">
-                <textarea name="itemDescription" rows="10">
-                    {bit:loadFile(fn:concat("apps/",$resource))}
-                </textarea>
-                </div>
-              </div>
-              <div id="colright_intern">
-                <div class="textwrapper">
-                <textarea name="itemDescription" rows="10">
-                    {bit:loadFile(fn:concat("apps/",$resource))}
-                </textarea>
-                </div>
-              </div>
-          </td></tr>
-          <tr><td>              
-              <div id="colleft_intern">
-                <div class="textwrapper">
-                <textarea name="itemDescription" rows="10">
-                    {bit:loadFile(fn:concat("apps/",$resource))}
-                </textarea>
-                </div>
-              </div>
-              <div id="colright_intern">
-                <div class="textwrapper">
-                <textarea name="itemDescription" rows="10">
-                    {bit:loadFile(fn:concat("apps/",$resource))}
-                </textarea>
-                </div>
-              </div>
-          </td></tr>
-        </table>
-    return view:menuContent($menu,$content)
-};
-
 declare function load($item as xs:string) as item () {
-    let $app := req:getParameter("app"),
-        $resource := req:getParameter("resource")
-    return util:plainPrint(bit:loadFile(fn:concat("apps/",$resource)))
+    (: 3 cases: 1. resources, 2. xquery and 3. MVC query
+    1. appServer/resources/images/brackit.png
+    2. else
+    3. appServer/controllers/docController.xq
+     :)
+    let $app := fn:normalize-space(req:getParameter("app")),
+        $resource := fn:normalize-space(req:getParameter("name")),
+        $menu := view:createMenu($app)
+    return 
+        let $content :=
+            if (fn:contains($resource, "/resources/")) then
+                "Treat resource call"
+            else
+                if (fn:ends-with($resource, ".xq")) then
+                    if (fn:contains($resource, "/controllers/")) then
+                        let $model := fn:replace(fn:replace($resource, "controllers", "models"),"Controller","Model"),
+                            $view := fn:replace(fn:replace($resource, "controllers", "views"),"Controller","View"),
+                            $controller := $resource 
+                        return view:editMVC($model,$view,$controller)
+                    else
+                        if (fn:contains($resource, "/models/")) then
+                            let $model := $resource,
+                                $view := fn:replace(fn:replace($resource, "models", "views"),"Model","View"),
+                                $controller := fn:replace(fn:replace($resource, "models", "controllers"),"Model","Controller") 
+                            return view:editMVC($model,$view,$controller)
+                        else
+                            if (fn:contains($resource, "/views/")) then
+                                let $model := fn:replace(fn:replace($resource, "views", "models"),"View","Model"),
+                                    $view := $resource,
+                                    $controller := fn:replace(fn:replace($resource, "views", "controllers"),"View","Controller") 
+                                return view:editMVC($model,$view,$controller)
+                            else
+                                view:editQuery($resource)
+                else
+                    "Resource not handled"
+        return
+            view:menuContent($menu,$content)
 };

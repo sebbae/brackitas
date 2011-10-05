@@ -114,7 +114,7 @@ public class ASXQuery extends XQuery {
 		Functions.predefine(new LoadFile(new QNm(Namespaces.BIT_NSURI,
 				Namespaces.BIT_PREFIX, "loadFile"), new Signature(
 				new SequenceType(AtomicType.STR, Cardinality.ZeroOrOne),
-				new SequenceType(AnyItemType.ANY, Cardinality.One))));
+				new SequenceType(AtomicType.STR, Cardinality.One))));
 
 		Functions.predefine(new MakeDirectory(new QNm(Namespaces.BIT_NSURI,
 				Namespaces.BIT_PREFIX, "makeDirectory"), new Signature(

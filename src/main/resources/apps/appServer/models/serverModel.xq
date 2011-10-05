@@ -1,4 +1,5 @@
-/*
+(:
+ *
  * [New BSD License]
  * Copyright (c) 2011, Brackit Project Team <info@brackit.org>  
  * All rights reserved.
@@ -24,51 +25,11 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-package org.brackit.as.xquery.function.util;
-
-import java.io.PrintStream;
-
-import org.brackit.as.util.FunctionUtils;
-import org.brackit.xquery.QueryContext;
-import org.brackit.xquery.QueryException;
-import org.brackit.xquery.atomic.Atomic;
-import org.brackit.xquery.atomic.QNm;
-import org.brackit.xquery.atomic.Str;
-import org.brackit.xquery.function.AbstractFunction;
-import org.brackit.xquery.function.Signature;
-import org.brackit.xquery.node.SubtreePrinter;
-import org.brackit.xquery.xdm.Node;
-import org.brackit.xquery.xdm.Sequence;
-
-/**
+ *
+ **
  * 
  * @author Henrique Valer
  * 
- */
-public class PlainPrint extends AbstractFunction {
-
-	private FunctionUtils fUtils = new FunctionUtils();
-
-	public PlainPrint(QNm name, Signature signature) {
-		super(name, signature, true);
-	}
-
-	@Override
-	public Sequence execute(QueryContext ctx, Sequence[] args)
-			throws QueryException {
-		String vQuery = null;
-		if (args[0] instanceof Atomic) {
-			vQuery = ((Atomic) args[0]).stringValue();
-		} else {
-			PrintStream buf = fUtils.createBuffer();
-			SubtreePrinter s = new SubtreePrinter(buf);
-			s.setPrettyPrint(true);
-			s.print((Node<?>) args[0]);
-			vQuery = buf.toString();
-		}
-		vQuery = vQuery.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-		vQuery = vQuery.replaceAll("\n", "<br/>");
-		return new Str(vQuery);
-	}
-}
+ *
+:)
+module namespace model="http://brackit.org/lib/appServer/serverModel";

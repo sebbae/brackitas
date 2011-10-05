@@ -156,3 +156,62 @@ declare function createAppForm() as item() {
     return default($content)
 };
 
+declare function editMVC ($model as xs:string,
+                          $view as xs:string,
+                          $controller as xs:string) as item () {
+    <table style="width:100%;">
+      <tr><td>
+          <div id="colleft_intern">
+            <div class="textwrapper">
+            <textarea name="itemDescription" rows="10">
+                {util:plainPrint(bit:loadFile(fn:concat("apps/",$model)))}
+            </textarea>
+            </div>
+          </div>
+          <div id="colright_intern">
+            <div class="textwrapper">
+            <textarea name="itemDescription" rows="10">
+                {util:plainPrint(bit:loadFile(fn:concat("apps/",$view)))}
+            </textarea>
+            </div>
+          </div>
+      </td></tr>
+      <tr><td>              
+          <div id="colleft_intern">
+            <div class="textwrapper">
+            <textarea name="itemDescription" rows="10">
+                {util:plainPrint(bit:loadFile(fn:concat("apps/",$controller)))}
+            </textarea>
+            </div>
+          </div>
+          <div id="colright_intern">
+            <div class="textwrapper">
+            <textarea name="itemDescription" rows="10">
+                Execute it
+            </textarea>
+            </div>
+          </div>
+      </td></tr>
+    </table>
+};
+
+declare function editQuery($resource as xs:string) as item() {
+    <table style="width:100%;">
+      <tr><td>
+          <div id="colleft_intern">
+            <div class="textwrapper">
+            <textarea name="itemDescription" rows="20">
+                {util:plainPrint(bit:loadFile(fn:concat("apps/",$resource)))}
+            </textarea>
+            </div>
+          </div>
+          <div id="colright_intern">
+            <div class="textwrapper">
+            <textarea name="itemDescription" rows="20">
+                Execute it
+            </textarea>
+            </div>
+          </div>
+      </td></tr>
+    </table>
+};
