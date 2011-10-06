@@ -59,7 +59,7 @@ public class PlainPrint extends AbstractFunction {
 			throws QueryException {
 		String vQuery = null;
 		if (args[0] instanceof Atomic) {
-			vQuery = ((Atomic) args[0]).stringValue();
+			vQuery = ((Atomic) args[0]).stringValue().trim();
 		} else {
 			PrintStream buf = fUtils.createBuffer();
 			SubtreePrinter s = new SubtreePrinter(buf);
@@ -68,7 +68,7 @@ public class PlainPrint extends AbstractFunction {
 			vQuery = buf.toString();
 		}
 		vQuery = vQuery.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-		vQuery = vQuery.replaceAll("\n", "<br/>");
+//		vQuery = vQuery.replaceAll("\n", "<br/>");
 		return new Str(vQuery);
 	}
 }

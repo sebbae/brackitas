@@ -67,6 +67,11 @@
   				     border: 2px solid #426FD9;
   					 float:right;
   					 width: 47%; }
+  #coll_intern { padding: 0 1% 0 1%;
+  				 margin: 0;
+  				 border: 2px solid #426FD9;
+  				 float:left;
+  				 width: 98%; }
 	
   textarea { width:100%; }
   .textwrapper {

@@ -77,6 +77,6 @@ public class LoadFile extends AbstractFunction {
 				} catch (IOException ignored) {
 				}
 		}
-		return (Item) new Str(out.toString());
+		return new Str(out.toString());
 	}
 }
