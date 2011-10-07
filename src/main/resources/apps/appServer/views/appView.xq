@@ -185,7 +185,7 @@ declare function editMVC ($model as xs:string,
         <td>
           <div id="coll_intern">
             <div class="textwrapper">
-              {fn:concat("<textarea name='modelContent' rows='20'>",util:plainPrint(bit:loadFile(fn:concat("apps/",$model))),"</textarea>")}
+              {fn:concat("<textarea id='code' name='modelContent' rows='20'>",util:plainPrint(bit:loadFile(fn:concat("apps/",$model))),"</textarea>")}
             </div>
           </div>
         </td>
@@ -199,7 +199,7 @@ declare function editMVC ($model as xs:string,
         <td>
           <div id="coll_intern">
             <div class="textwrapper">
-              {fn:concat("<textarea name='viewContent' rows='20'>",util:plainPrint(bit:loadFile(fn:concat("apps/",$view))),"</textarea>")}
+              {fn:concat("<textarea id='code2' name='viewContent' rows='20'>",util:plainPrint(bit:loadFile(fn:concat("apps/",$view))),"</textarea>")}
             </div>
           </div>
         </td>
@@ -213,7 +213,7 @@ declare function editMVC ($model as xs:string,
         <td>
           <div id="coll_intern">
             <div class="textwrapper">
-              {fn:concat("<textarea name='controllerContent' rows='20'>",util:plainPrint(bit:loadFile(fn:concat("apps/",$controller))),"</textarea>")}
+              {fn:concat("<textarea id='code3' name='controllerContent' rows='20'>",util:plainPrint(bit:loadFile(fn:concat("apps/",$controller))),"</textarea>")}
             </div>
           </div>
         </td>
@@ -230,10 +230,8 @@ declare function editQuery($resource as xs:string) as item() {
       </tr>
       <tr>
         <td>
-          <div>
-            <div class="textwrapper">
-                {fn:concat("<textarea name='itemDescription' rows='20'>",util:plainPrint(bit:loadFile(fn:concat("apps/",$resource))),"</textarea>")}
-            </div>
+          <div class="textwrapper">
+            {fn:concat("<textarea id='code' rows='50'>",util:plainPrint(bit:loadFile(fn:concat("apps/",$resource))),"</textarea>")}
           </div>
         </td>
       </tr>

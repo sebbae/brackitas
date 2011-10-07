@@ -201,7 +201,7 @@ public class FrontController extends BaseServlet {
 
 	private void resolveApplication(HttpServletRequest req,
 			HttpServletResponse resp) {
-		resp.setContentType("application/xhtml+xml; charset=UTF-8");
+		resp.setContentType("text/html;charset=UTF-8");
 		URI = req.getRequestURI();
 		String[] URIParts = URI.split("/");
 		APP = URIParts[2];

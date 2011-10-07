@@ -36,13 +36,14 @@ module namespace template="http://brackit.org/lib/appServer/template";
 
 declare function head($title as xs:string) as item() {
     <head>
-      <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-      <title>{$title}</title>
+      <script src="http://localhost:8080/apps/appServer/resources/js/codemirror.js" type="text/javascript">""</script>
+      <script src="http://localhost:8080/apps/appServer/resources/js/jquery.min.js">""</script>
       <!-- add your meta tags here -->
       <link href="http://localhost:8080/apps/appServer/resources/css/layout_vertical_listnav.css" rel="stylesheet" type="text/css" />
       <!--[if lte IE 7]>
       <link href="http://localhost:8080/apps/appServer/resources/css/patches/patch_my_layout.css" rel="stylesheet" type="text/css" />
       <![endif]-->
+      <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     </head>
 };
 
@@ -93,10 +94,9 @@ declare function base($head as item(),
                       $footerBrackit as item(),
                       $footerYAML as item()) {
 
-    <html xmlns="http://www.w3.org/1999/xhtml" lang="en" lang="en">
+    <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
     {$head}
     <body>
-      <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/brackit.js"></script>
       <div class="page_margins">
         <div class="page">
           <div id="topnav">
@@ -139,7 +139,7 @@ declare function base($head as item(),
           <!-- begin: #footer -->
         </div>
       </div>
+      <script src="http://localhost:8080/apps/appServer/resources/js/brackit.js">""</script>      
     </body>
     </html>
-
 };

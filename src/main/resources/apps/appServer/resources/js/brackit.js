@@ -1,22 +1,23 @@
-function loadXMLDoc()
-{
-var xmlhttp;
-if (window.XMLHttpRequest)
-  {// code for IE7+, Firefox, Chrome, Opera, Safari
-  xmlhttp=new XMLHttpRequest();
-  }
-else
-  {// code for IE6, IE5
-  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-  }
-xmlhttp.onreadystatechange=function()
-  {
-  if (xmlhttp.readyState==4 && xmlhttp.status==200)
-    {
-    document.getElementById("colleft_intern").innerHTML=xmlhttp.responseText;
-    document.getElementById("colright_intern").innerHTML=xmlhttp.responseText;
-    }
-  }
-xmlhttp.open("GET","index",true);
-xmlhttp.send();
-}
+  var editor = CodeMirror.fromTextArea('code', {
+    parserfile: ["http://localhost:8080/apps/appServer/resources/js/tokenizexquery.js", "http://localhost:8080/apps/appServer/resources/js/parsexquery.js" ],
+    stylesheet: ["http://localhost:8080/apps/appServer/resources/css/xqcolors.css"],
+    path: "http://localhost:8080/apps/appServer/resources/js/",
+    continuousScanning: false, //500,
+    lineNumbers: true
+  });
+  
+  var editor = CodeMirror.fromTextArea('code2', {
+	    parserfile: ["http://localhost:8080/apps/appServer/resources/js/tokenizexquery.js", "http://localhost:8080/apps/appServer/resources/js/parsexquery.js" ],
+	    stylesheet: ["http://localhost:8080/apps/appServer/resources/css/xqcolors.css"],
+	    path: "http://localhost:8080/apps/appServer/resources/js/",
+	    continuousScanning: false, //500,
+	    lineNumbers: true
+	  });
+  
+  var editor = CodeMirror.fromTextArea('code3', {
+	    parserfile: ["http://localhost:8080/apps/appServer/resources/js/tokenizexquery.js", "http://localhost:8080/apps/appServer/resources/js/parsexquery.js" ],
+	    stylesheet: ["http://localhost:8080/apps/appServer/resources/css/xqcolors.css"],
+	    path: "http://localhost:8080/apps/appServer/resources/js/",
+	    continuousScanning: false, //500,
+	    lineNumbers: true
+	  });  

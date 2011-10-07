@@ -32,5 +32,40 @@
  * 
  *
 :)
-import module namespace template="http://brackit.org/lib/eCommerce/template";
-let $a := "a" return template:default("Hello World!3")
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <script src="http://github.com/mbrevoort/CodeMirror/raw/master/js/codemirror.js" type="text/javascript"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <title>CodeMirror: XQuery highlighting demonstration</title>
+    <link rel="stylesheet" type="text/css" href="http://localhost:8080/apps/eCommerce/resources/css/jscolors.css"/>
+  </head>
+
+  <body style="padding: 20px;">
+
+<div style="margin:auto; width:920px; border-width:1px;">
+<h2>XQuery Syntax Support for CodeMirror</h2>
+<p style="text-align: justify;  word-spacing: 3px;">This is a demonstration of the XQuery highlighting module
+for <a href="http://codemirror.net">CodeMirror</a>. The formatting is CSS driven and very easy to customize to your liking.
+There are three sample styles sets below.
+You can edit or paste in any code below to give it a test run. 
+The <a href="http://github.com/mbrevoort/CodeMirror/tree/master/contrib/xquery/">code</a> is at Github in a fork of the CodeMirror repository. A pull request has been made back to the primary.
+</p>
+
+<a href="#" rel="xqcolors.css" class="css-switch">Light 1</a>  <a href="#" rel="xqcolors2.css" class="css-switch">Light 2</a> <a href="#" rel="xqcolors-dark.css" class="css-switch">Dark</a> 
+
+
+<div class="border">
+<code><pre><textarea id="code" cols="120" rows="50"> {util:plainPrint(bit:loadFile("apps/eCommerce/queries/buyCartExec.xq"))} </textarea>
+</pre></code>
+</div>
+<div style="width:100%;text-align:center;padding-top:15px;">
+    Developed by <a href="http://mike.brevoort.com">Mike Brevoort</a> (<a href="http://twitter.com">@mbrevoort</a>) 
+    <br/>
+    <small><a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache License, Version 2.0</a></small></div>
+
+</div>
+<script src="http://localhost:8080/apps/eCommerce/resources/js/test.js" type="text/javascript"></script>
+  </body>
+</html>
+
+
