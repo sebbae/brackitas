@@ -37,6 +37,7 @@ import java.io.PrintWriter;
 
 import org.brackit.as.xquery.function.app.Delete;
 import org.brackit.as.xquery.function.app.Deploy;
+import org.brackit.as.xquery.function.app.Exists;
 import org.brackit.as.xquery.function.app.Generate;
 import org.brackit.as.xquery.function.app.GetNames;
 import org.brackit.as.xquery.function.app.GetStructure;
@@ -301,6 +302,11 @@ public class ASXQuery extends XQuery {
 				new SequenceType(AtomicType.STR, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
+		Functions.predefine(new Exists(new QNm(Namespaces.APP_NSURI,
+				Namespaces.APP_PREFIX, "exist"), new Signature(
+				new SequenceType(AtomicType.BOOL, Cardinality.One),
+				new SequenceType(AtomicType.STR, Cardinality.One))));
+
 		// Testing
 		Functions.predefine(new Render(new QNm(Namespaces.BIT_NSURI,
 				Namespaces.BIT_PREFIX, "render"), new Signature(
@@ -343,6 +349,11 @@ public class ASXQuery extends XQuery {
 		this.longLive = false;
 	}
 
+	public ASXQuery(CompileChain chain, File f) throws QueryException {
+		super(chain, getStringFromFile(f));
+		this.longLive = false;
+	}
+
 	public ASXQuery(CompileChain chain, InputStream in) throws QueryException {
 		super(chain, getStringFromInputStream(in));
 		this.longLive = false;
@@ -353,7 +364,7 @@ public class ASXQuery extends XQuery {
 		this.longLive = false;
 	}
 
-	private static String getStringFromFile(File pFile) throws QueryException {
+	public static String getStringFromFile(File pFile) throws QueryException {
 		byte[] buffer = new byte[(int) pFile.length()];
 		BufferedInputStream in = null;
 		try {

@@ -130,30 +130,43 @@ declare function createMenu($app as xs:string) as item() {
 };
 
 declare function createAppForm() as item() {
-    let $content := 
-        <form action="./create">
-            <table style="width: 100%; background-color: rgb(224, 224, 240);">
-                <tr>
-                    <td style="width: 20%;"><h5>Name</h5></td>
-                    <td><input type="text" name="app"/></td>
-                    <td><input type="hidden" name="appMsg"/></td>
-                </tr>
-                <tr>
-                    <td style="width: 20%;"><h5>Application Model</h5></td>
-                    <td>
-                      Create MVC application <input type="radio" name="model" value="MVC" checked="checked"/><br></br>
-                      Create personalized application <input type="radio" name="model" value="REG"/>
-                    </td>
-                    <td><input type="hidden" name="modelMsg"/></td>                    
-                </tr>
-                <tr>
-                    <td colspan="3" align="center">
-                      <input align="center" type="submit" name="sub" value="Create application"/>
-                    </td>
-                </tr>
-            </table>
-        </form>
-    return default($content)
+    <form action="./create">
+        <table style="width: 100%; background-color: rgb(224, 224, 240);">
+            <tr>
+                <td style="width: 20%;"><h5>Name</h5></td>
+                <td><input type="text" name="app"/></td>
+                <td><input type="hidden" name="appMsg"/></td>
+            </tr>
+            <tr>
+                <td style="width: 20%;"><h5>Application Model</h5></td>
+                <td>
+                  Create MVC application <input type="radio" name="model" value="MVC" checked="checked"/><br></br>
+                  Create personalized application <input type="radio" name="model" value="REG"/>
+                </td>
+                <td><input type="hidden" name="modelMsg"/></td>                    
+            </tr>
+            <tr>
+                <td colspan="3" align="center">
+                  <input align="center" type="submit" name="sub" value="Create application"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+};
+
+declare function createAppFormError($msg as xs:string) as item() {
+    <table>
+      <tr>
+        <td>
+        {createAppForm()}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <font color="#ff0000">{$msg}</font>
+        </td>
+      </tr>        
+    </table>
 };
 
 declare function generateFileOptions($file as xs:string) as item() {
@@ -163,11 +176,15 @@ declare function generateFileOptions($file as xs:string) as item() {
         <strong> File: {$file}  </strong>
       </li>        
       <li>
-        <a href="./delete?file={$file}">Delete</a>
+        <a href="../fileController/save?file={$file}">Save</a>  
       </li>
       <li>
-        <a href="./save?file={$file}">Save</a>  
+        <a href="../fileController/compile?file={$file}">Compile</a>
       </li>
+      <li>
+        <a href="../fileController/delete?file={$file}" onclick="return confirm('Are you sure you want to delete?')">Delete</a>
+      </li>
+      
     </ul>    
   </div>
 };

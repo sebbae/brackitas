@@ -47,20 +47,28 @@ declare function create() as item() {
             let $app := req:getParameter("app"),
                 $model := req:getParameter("model")
             return
-                if (model:validateApp($app, $model)) then
+                if (model:validateAppCreation($app, $model)) then
                     if (app:generate($app,$model)) then
                         index()
                     else
-                        view:createAppForm()
+                        view:default(view:createAppFormError("Impossible to generate the required application"))
                 else
-                    view:createAppForm()
+                    view:default(view:createAppFormError("Parameters name or model type are not valid."))
         else
-            view:createAppForm()
+            view:default(view:createAppForm())
 };
 
 declare function edit () as item ()* {
-    let $menu := view:createMenu(req:getParameter("app"))
-    return view:menuContent($menu, "Welcome to the development Framework")
+    let $app := req:getParameter("app")
+    return
+        if (model:validateApp($app)) then
+            if (session:setAttribute("editApp",$app)) then
+                let $menu := view:createMenu($app)
+                return view:menuContent($menu, "Welcome to the development Framework")
+            else
+                view:default(fn:concat("Problems editing application ",$app))
+        else
+            view:default(fn:concat("Application ",$app," does not exist."))
 };
 
 declare function terminate() as item() {

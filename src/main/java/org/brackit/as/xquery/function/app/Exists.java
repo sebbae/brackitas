@@ -25,18 +25,18 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.xquery.function.request;
+package org.brackit.as.xquery.function.app;
 
-import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 
-import org.brackit.as.xquery.ASQueryContext;
+import org.brackit.as.http.HttpConnector;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
+import org.brackit.xquery.atomic.Atomic;
+import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
-import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.function.Signature;
-import org.brackit.xquery.xdm.Item;
 import org.brackit.xquery.xdm.Sequence;
 
 /**
@@ -44,21 +44,17 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
-public class GetParameter extends AbstractFunction {
+public class Exists extends AbstractFunction {
 
-	public GetParameter(QNm name, Signature signature) {
+	public Exists(QNm name, Signature signature) {
 		super(name, signature, true);
 	}
 
 	@Override
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
-		try {
-			HttpServletRequest req = ((ASQueryContext) ctx).getReq();
-			String vName = ((Item) args[0]).atomize().stringValue();
-			return new Str(req.getParameter(vName).trim());
-		} catch (Exception e) {
-			return new Str("");
-		}
+		String app = ((Atomic) args[0]).atomize().stringValue().trim();
+		String base = String.format("%s/%s", HttpConnector.APPS_PATH, app);
+		return new Bool(new File(base).exists());
 	}
 }

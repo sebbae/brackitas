@@ -32,6 +32,7 @@ import java.io.File;
 import java.io.FileWriter;
 
 import org.brackit.as.http.HttpConnector;
+import org.brackit.server.session.SessionException;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -50,6 +51,8 @@ public class Generate extends AbstractFunction {
 
 	private static String module = "module namespace %s=\"http://brackit.org/lib/%s/%s%s\"; \n";
 	private static String importModule = "import module namespace %s=\"http://brackit.org/lib/%s/%s%s\"; \n";
+	private static String todo = "(: TODO Auto-generated XQuery block :) \n" +
+								 "\"TODO\" \n"; 
 	private static String BSDLicense = "(: \n"
 			+ " * \n"
 			+ " * [New BSD License] \n"
@@ -147,6 +150,7 @@ public class Generate extends AbstractFunction {
 				out.write(BSDLicense);
 				out.write(String.format(importModule, "template", app, app,
 						"Template"));
+				out.write(todo);
 				out.close();
 				new File(String.format("%s/resources", base)).mkdir();
 				new File(String.format("%s/resources/images", base)).mkdir();

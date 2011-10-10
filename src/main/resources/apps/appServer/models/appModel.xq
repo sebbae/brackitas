@@ -34,12 +34,36 @@
 :)
 module namespace model="http://brackit.org/lib/appServer/appModel";
 
-(: Change this to single function for each field after using AJAX :)
-declare function validateApp($app as xs:string, $model as xs:string) as xs:boolean {
-    if ((fn:string-length($app) > 0) and 
-        (fn:string-length($model) > 0) and
-        ((fn:compare($model, "MVC")) or (fn:compare($model, "REG"))) and 
-        (fn:not(fn:contains($app,' '))))
+declare function validateName($name as xs:string) as xs:boolean {
+    if ((fn:string-length($name) > 0) and 
+        (fn:not(fn:contains($name,' ')))) 
+    then
+        fn:true()
+    else
+        fn:false()
+};
+
+declare function validateApp($app as xs:string) as xs:boolean {
+    if ((app:exist($app)) and
+        (validateName($app)))
+    then
+        fn:true()
+    else
+        fn:false()
+};
+
+declare function validateAppModel($model as xs:string) as xs:boolean {
+    if ((fn:string-length($model) > 0) and
+        ((fn:compare($model, "MVC")) or (fn:compare($model, "REG"))))
+    then
+        fn:true()
+    else
+        fn:false()
+};
+
+declare function validateAppCreation($app as xs:string, $model as xs:string) as xs:boolean {
+    if ((validateAppModel($model)) and 
+        (validateName($app)))
     then
         fn:true()
     else

@@ -32,11 +32,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Enumeration;
 import java.util.Random;
 
 import javax.activation.MimetypesFileTypeMap;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
@@ -44,7 +42,6 @@ import javax.servlet.http.HttpSessionListener;
 import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.http.app.ErrorServlet;
 import org.brackit.as.http.app.FrontController;
-import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.server.metadata.manager.MetaDataMgr;
 import org.brackit.server.session.Session;
@@ -196,6 +193,7 @@ public class HttpConnector {
 						String s = f[i].getPath();
 						bac.register(resolvePath(s), f[i].lastModified());
 					} catch (Exception e) {
+						e.printStackTrace();
 						log.error(e);
 					}
 				}

@@ -36,7 +36,6 @@ import java.util.Map;
 
 import org.brackit.as.xquery.ASXQuery;
 import org.brackit.as.xquery.compiler.ASCompileChain;
-import org.brackit.server.session.SessionException;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.compiler.BaseResolver;
 import org.brackit.xquery.module.LibraryModule;
@@ -78,8 +77,8 @@ public class BaseAppContext {
 	private Map<String, ASXQuery> queries;
 
 	private List<UncompiledQuery> uncompiledQueries;
-	
-	private boolean running; 
+
+	private boolean running;
 
 	public ASCompileChain getChain() {
 		return this.chain;
@@ -88,15 +87,15 @@ public class BaseAppContext {
 	public String getApp() {
 		return this.app;
 	}
-	
-	public boolean isRunning () {
+
+	public boolean isRunning() {
 		return this.running;
 	}
-	
+
 	public void terminate() {
 		this.running = false;
 	}
-	
+
 	public BaseAppContext(String app, ASCompileChain chain) {
 		this.libraries = new HashMap<String, String>();
 		this.queries = new HashMap<String, ASXQuery>();
@@ -133,8 +132,8 @@ public class BaseAppContext {
 
 	private void putQuery(String path, long lastModified) throws QueryException {
 
-		ASXQuery target = new ASXQuery(chain, getClass().getResourceAsStream(
-				path));
+		ASXQuery target = new ASXQuery(chain, new File(String.format(
+				"src/main/resources%s", path)));
 		target.setLastModified(lastModified);
 		Module module = target.getModule();
 		if (module instanceof LibraryModule) {
@@ -143,7 +142,7 @@ public class BaseAppContext {
 					(LibraryModule) module);
 			libraries.put(uri, path);
 		}
-		
+
 		queries.put(path, target);
 	}
 
@@ -172,8 +171,7 @@ public class BaseAppContext {
 				}
 			}
 			return queries.get(path);
-		}
-		else
+		} else
 			throw new Exception("Application terminated");
 	}
 }

@@ -27,10 +27,8 @@
  */
 package org.brackit.as.http.app;
 
-import java.io.BufferedOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.StreamCorruptedException;
 import java.util.Iterator;
@@ -40,14 +38,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.brackit.as.context.BaseAppContext;
-import org.brackit.as.xquery.ASXQuery;
 import org.brackit.as.xquery.ASQueryContext;
+import org.brackit.as.xquery.ASXQuery;
 import org.brackit.server.session.Session;
 import org.brackit.server.session.SessionException;
 import org.brackit.server.tx.Tx;
 import org.brackit.xquery.QueryException;
-import org.brackit.xquery.atomic.Atomic;
-import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.atomic.Una;
 import org.brackit.xquery.expr.Cast;
 import org.brackit.xquery.expr.ExtVariable;
@@ -77,12 +73,6 @@ public class FrontController extends BaseServlet {
 
 	public static final String UNKNOWN_MIMETYPE = "application/octet-stream";
 
-	private static String URI;
-
-	private String APP;
-
-	private String RESOURCE;
-
 	private Tx tx;
 
 	private ASXQuery x;
@@ -105,19 +95,13 @@ public class FrontController extends BaseServlet {
 			Session session) throws StreamCorruptedException,
 			FileNotFoundException, SessionException, Exception, QueryException,
 			IOException {
-		resolveApplication(req, resp);
-		if (!UNKNOWN_MIMETYPE.equals(getMimeType(URI))) {
-			processResourceRequest(APP, URI, resp);
+		prepareExecution(req, session);
+		if (RESOURCE.endsWith(".xq")) {
+			processXQueryFileRequest(req, resp);
 			return;
 		} else {
-			prepareExecution(req, session);
-			if (RESOURCE.endsWith(".xq")) {
-				processXQueryFileRequest(req, resp);
-				return;
-			} else {
-				processMVCRequest(req, resp);
-				return;
-			}
+			processMVCRequest(req, resp);
+			return;
 		}
 	}
 
@@ -196,49 +180,6 @@ public class FrontController extends BaseServlet {
 			throws SessionException {
 		tx = session.getTX();
 		x = null;
-		ctx = new ASQueryContext(tx, metaDataMgr, req.getSession(),req);
-	}
-
-	private void resolveApplication(HttpServletRequest req,
-			HttpServletResponse resp) {
-		resp.setContentType("text/html;charset=UTF-8");
-		URI = req.getRequestURI();
-		String[] URIParts = URI.split("/");
-		APP = URIParts[2];
-		RESOURCE = URI.substring(URI.lastIndexOf("/") + 1);
-		req.getSession().setAttribute(APP_SESSION_ATT, (Atomic) new Str(APP));
-	}
-
-	private void processResourceRequest(String app, String resource,
-			HttpServletResponse resp) throws StreamCorruptedException,
-			FileNotFoundException {
-		try {
-			String contentType = getMimeType(resource);
-			resp.setContentType(contentType);
-			InputStream in = getClass().getResourceAsStream(resource);
-			BufferedOutputStream out = new BufferedOutputStream(resp
-					.getOutputStream());
-			try {
-				byte[] buffer = new byte[4096];
-				int bytesRead = 0;
-				while ((bytesRead = in.read(buffer)) != -1)
-					out.write(buffer, 0, bytesRead);
-			} catch (Exception e) {
-				throw new StreamCorruptedException();
-			} finally {
-				out.close();
-				in.close();
-				resp.getOutputStream().flush();
-				resp.setStatus(HttpServletResponse.SC_OK);
-			}
-		} catch (StreamCorruptedException e) {
-			throw new StreamCorruptedException(String
-					.format("Error while reading inputStream of resource %s.",
-							resource));
-		} catch (Exception e) {
-			throw new FileNotFoundException(String.format(
-					"File %s does not exist under the application resources.",
-					resource));
-		}
+		ctx = new ASQueryContext(tx, metaDataMgr, req.getSession(), req);
 	}
 }

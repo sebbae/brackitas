@@ -27,11 +27,9 @@
  */
 package org.brackit.as.xquery.function.bit;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.File;
 
-import org.brackit.xquery.ErrorCode;
+import org.brackit.as.xquery.ASXQuery;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -39,7 +37,6 @@ import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.function.Signature;
-import org.brackit.xquery.xdm.Item;
 import org.brackit.xquery.xdm.Sequence;
 
 /**
@@ -57,26 +54,7 @@ public class LoadFile extends AbstractFunction {
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
 		String fName = ((Atomic) args[0]).stringValue().trim();
-
-		StringBuffer out = new StringBuffer();
-		byte[] buffer = new byte[4096];
-		InputStream in = null;
-		try {
-			in = new BufferedInputStream(getClass().getClassLoader()
-					.getResourceAsStream(fName));
-			for (int n; (n = in.read(buffer)) != -1;) {
-				out.append(new String(buffer, 0, n).trim());
-			}
-		} catch (IOException e) {
-			throw new QueryException(e, ErrorCode.ERR_PARSING_ERROR, e
-					.getMessage());
-		} finally {
-			if (in != null)
-				try {
-					in.close();
-				} catch (IOException ignored) {
-				}
-		}
-		return new Str(out.toString());
+		return new Str(ASXQuery.getStringFromFile(new File(String.format(
+				"src/main/resources/%s", fName))));
 	}
 }
