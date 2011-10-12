@@ -59,8 +59,8 @@ public class BaseServlet extends TXServlet {
 
 	protected String APP;
 
-	protected String RESOURCE;	
-	
+	protected String RESOURCE;
+
 	protected void resolveApplication(HttpServletRequest req,
 			HttpServletResponse resp) {
 		resp.setContentType("text/html;charset=UTF-8");
@@ -68,9 +68,10 @@ public class BaseServlet extends TXServlet {
 		String[] URIParts = URI.split("/");
 		APP = URIParts[2];
 		RESOURCE = URI.substring(URI.lastIndexOf("/") + 1);
-		req.getSession().setAttribute(FrontController.APP_SESSION_ATT, (Atomic) new Str(APP));
-	}	
-	
+		req.getSession().setAttribute(FrontController.APP_SESSION_ATT,
+				(Atomic) new Str(APP));
+	}
+
 	public void processResourceRequest(String app, String resource,
 			HttpServletResponse resp) throws StreamCorruptedException,
 			FileNotFoundException {
@@ -81,19 +82,16 @@ public class BaseServlet extends TXServlet {
 			BufferedOutputStream out = new BufferedOutputStream(resp
 					.getOutputStream());
 			try {
-				byte[] buffer = new byte[1024*16];
+				byte[] buffer = new byte[1024 * 16];
 				int bytesRead = 0;
 				while ((bytesRead = in.read(buffer)) != -1) {
 					out.write(buffer, 0, bytesRead);
-					out.flush();
 				}
-			} catch (Exception e) {
-				throw new StreamCorruptedException();
-			} finally {
 				out.close();
 				in.close();
-				resp.getOutputStream().flush();
 				resp.setStatus(HttpServletResponse.SC_OK);
+			} catch (Exception e) {
+				throw new StreamCorruptedException();
 			}
 		} catch (StreamCorruptedException e) {
 			throw new StreamCorruptedException(String
@@ -105,7 +103,7 @@ public class BaseServlet extends TXServlet {
 					resource));
 		}
 	}
-	
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {

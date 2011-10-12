@@ -134,5 +134,5 @@ declare function load($item as xs:string) as item () {
                 else
                     "Resource not handled"
         return
-            view:menuContent($menu,$content)
+            view:editXQuery($menu,$content)
 };

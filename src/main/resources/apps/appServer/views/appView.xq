@@ -45,6 +45,17 @@ declare function default($content as item()) as item() {
                   template:footerYAML())
 };
 
+declare function editXQuery($menu as item(), $content as item()) as item() {
+    template:baseFooterScript(template:head("Brackit Application Server"),
+                              template:header(),
+                              template:teaser(),
+                              $menu,
+                              $content,
+                              template:footerBrackit(),
+                              template:footerYAML(), 
+                              template:footerScript())
+};
+
 declare function menuContent($menu as item(), $content as item()) as item() {
     template:base(template:head("Brackit Application Server"),
                   template:header(),
@@ -67,8 +78,8 @@ declare function listApps($apps as item()*) as item()* {
                     <td>{$app}</td>
                     <td><a href="./edit?app={$app}">Edit</a></td>
                     <td><a href="./statistics?app={$app}">Statistics</a></td>
-                    <td><a href="./terminate?app={$app}">Terminate</a></td>
-                    <td><a href="./delete?app={$app}">Delete</a></td>
+                    <td><a href="./terminate?app={$app}" onclick="return confirm('Are you sure you want to terminate the application?')">Terminate</a></td>
+                    <td><a href="./delete?app={$app}" onclick="return confirm('Are you sure you want to delete the application?')">Delete</a></td>
                     <td>Status: {
                         if (app:isRunning($app)) then
                             <font color="#008000"> Running </font>
@@ -184,8 +195,10 @@ declare function generateFileOptions($file as xs:string) as item() {
       <li>
         <a href="../fileController/delete?file={$file}" onclick="return confirm('Are you sure you want to delete?')">Delete</a>
       </li>
-      
-    </ul>    
+      <li>
+        <a href="../fileController/run?file={$file}">Try it out!</a>
+      </li>
+    </ul>
   </div>
 };
 

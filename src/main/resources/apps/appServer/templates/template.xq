@@ -86,41 +86,16 @@ declare function footerYAML() as item() {
     </div>          
 };
 
-declare function base($head as item(),
-                      $header as item(),
-                      $teaser as item(),
-                      $menu as item(),
-                      $content as item(),
-                      $footerBrackit as item(),
-                      $footerYAML as item()) {
-
-    <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
-    {$head}
-    <body>
+declare function baseBody($header as item(),
+                          $teaser as item(),
+                          $menu as item(),
+                          $content as item(),
+                          $footerBrackit as item(),
+                          $footerYAML as item()) as item() {
       <div class="page_margins">
         <div class="page">
-          <div id="topnav">
-            <!-- start: skip link navigation -->
-            <a class="skip" title="skip link" href="#navigation">Skip to the navigation</a><span class="hideme">.</span>
-            <a class="skip" title="skip link" href="#content">Skip to the content</a><span class="hideme">.</span>
-            <!-- end: skip link navigation --><a href="#">Login</a> | <a href="#">Contact</a> | <a href="#">Imprint</a>
-          </div>
-            {$header}
-          <div id="nav">
-            <!-- skiplink anchor: navigation -->
-            <a id="navigation" name="navigation"></a>
-            <div class="hlist">
-              <!-- main navigation: horizontal list -->
-              <ul>
-                <li class="active"><strong>Button 1</strong></li>
-                <li><a href="#">Button 2</a></li>
-                <li><a href="#">Button 3</a></li>
-                <li><a href="#">Button 4</a></li>
-                <li><a href="#">Button 5</a></li>
-              </ul>
-            </div>
-          </div>
-            {$teaser}
+          {$header}
+          {$teaser}
           <div id="main">
             <div id="col1" role="complementary">
               {$menu}
@@ -139,7 +114,42 @@ declare function base($head as item(),
           <!-- begin: #footer -->
         </div>
       </div>
-      <script src="http://localhost:8080/apps/appServer/resources/js/brackit.js">""</script>      
+};
+
+declare function base($head as item(),
+                      $header as item(),
+                      $teaser as item(),
+                      $menu as item(),
+                      $content as item(),
+                      $footerBrackit as item(),
+                      $footerYAML as item()) {
+
+    <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+    {$head}
+    <body>
+      {baseBody($header,$teaser,$menu,$content,$footerBrackit,$footerYAML)}
+    </body>
+    </html>
+};
+
+declare function footerScript() as item() {
+    <script src="http://localhost:8080/apps/appServer/resources/js/brackit.js">""</script>
+};
+
+declare function baseFooterScript($head as item(),
+                                  $header as item(),
+                                  $teaser as item(),
+                                  $menu as item(),
+                                  $content as item(),
+                                  $footerBrackit as item(),
+                                  $footerYAML as item(),
+                                  $footerScript as item()) as item() {
+
+    <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+    {$head}
+    <body>
+      {baseBody($header,$teaser,$menu,$content,$footerBrackit,$footerYAML)}
+      {$footerScript}      
     </body>
     </html>
 };

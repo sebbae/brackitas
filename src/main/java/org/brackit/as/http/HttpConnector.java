@@ -204,9 +204,9 @@ public class HttpConnector {
 	public static void deleteApplication(String app) {
 		try {
 			terminateApplication(app);
-			// TODO: Erase it
-			// File f = new File(String.format("%s/%s", APPS_PATH, app));
-			// deleteDirectory(f);
+			sch.removeAttribute(app);
+			File f = new File(String.format("%s/%s", APPS_PATH, app));
+			deleteDirectory(f);
 		} catch (Exception e) {
 			log.error(e);
 		}
