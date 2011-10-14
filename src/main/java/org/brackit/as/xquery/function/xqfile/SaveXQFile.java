@@ -27,8 +27,16 @@
  */
 package org.brackit.as.xquery.function.xqfile;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import org.brackit.as.http.HttpConnector;
+import org.brackit.xquery.ErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
+import org.brackit.xquery.atomic.Atomic;
+import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.function.Signature;
@@ -48,6 +56,18 @@ public class SaveXQFile extends AbstractFunction {
 	@Override
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
-		return null;
+		String fPathName = ((Atomic) args[0]).atomize().stringValue().trim();
+		String fQuery = ((Atomic) args[1]).atomize().stringValue().trim();
+		String base = String
+				.format("%s/%s", HttpConnector.APPS_PATH, fPathName);
+		try {
+			FileWriter f = new FileWriter(base);
+			BufferedWriter out = new BufferedWriter(f);
+			out.write(fQuery);
+			out.close();
+		} catch (IOException e) {
+			throw new QueryException(e, ErrorCode.BIT_DYN_INT_ERROR);
+		}
+		return Bool.TRUE;
 	}
 }

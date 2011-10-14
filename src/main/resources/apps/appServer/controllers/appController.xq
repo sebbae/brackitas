@@ -32,7 +32,7 @@
  * 
  *
 :)
-module namespace controller="http://brackit.org/lib/appServer/appController";
+module namespace appController="http://brackit.org/lib/appServer/appController";
 import module namespace model="http://brackit.org/lib/appServer/appModel";
 import module namespace view="http://brackit.org/lib/appServer/appView";
 
@@ -97,15 +97,20 @@ declare function deploy() as item() {
             view:default(fn:concat("Problems deploying application ",$app))
 };
 
-declare function load($item as xs:string) as item () {
+declare function load($fPathName as xs:string) as item () {
     (: 3 cases: 1. resources, 2. xquery and 3. MVC query
     1. appServer/resources/images/brackit.png
     2. else
     3. appServer/controllers/docController.xq
      :)
-    let $app := fn:normalize-space(req:getParameter("app")),
-        $resource := fn:normalize-space(req:getParameter("name")),
-        $menu := view:createMenu($app)
+    let $app := req:getParameter("app"),
+        $reqName := fn:normalize-space(req:getParameter("name")),
+        $menu := view:createMenu($app),
+        $resource := 
+        	if (fn:string-length($reqName) = 0) then 
+        		$fPathName
+        	else
+	        	$reqName
     return 
         let $content :=
             if (fn:contains($resource, "/resources/")) then

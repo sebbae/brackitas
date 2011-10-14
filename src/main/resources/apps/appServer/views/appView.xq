@@ -187,16 +187,17 @@ declare function generateFileOptions($file as xs:string) as item() {
         <strong> File: {$file}  </strong>
       </li>        
       <li>
-        <a href="../fileController/save?file={$file}">Save</a>  
+      	<input align="middle" type="submit" name="action" value="save"/>
       </li>
       <li>
-        <a href="../fileController/compile?file={$file}">Compile</a>
+        <input align="middle" type="submit" name="action" value="compile"/>
       </li>
       <li>
-        <a href="../fileController/delete?file={$file}" onclick="return confirm('Are you sure you want to delete?')">Delete</a>
+        <input align="middle" type="submit" name="action" value="delete" onclick="return confirm('Are you sure you want to delete?')"/>
       </li>
       <li>
-        <a href="../fileController/run?file={$file}">Try it out!</a>
+        <input align="middle" type="submit" name="action" value="try it"/>
+        <input type="hidden" name="file" value="{$file}"/>
       </li>
     </ul>
   </div>
@@ -205,53 +206,66 @@ declare function generateFileOptions($file as xs:string) as item() {
 declare function editMVC ($model as xs:string,
                           $view as xs:string,
                           $controller as xs:string) as item () {
-    <table style="width:100%;">
-      <tr>
-        <td>
-          {generateFileOptions($model)}
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <div id="coll_intern">
-            <div class="textwrapper">
-              {fn:concat("<textarea id='code' name='modelContent' rows='20'>",util:plainPrint(bit:loadFile(fn:concat("apps/",$model))),"</textarea>")}
-            </div>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          {generateFileOptions($view)}
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <div id="coll_intern">
-            <div class="textwrapper">
-              {fn:concat("<textarea id='code2' name='viewContent' rows='20'>",util:plainPrint(bit:loadFile(fn:concat("apps/",$view))),"</textarea>")}
-            </div>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          {generateFileOptions($controller)}
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <div id="coll_intern">
-            <div class="textwrapper">
-              {fn:concat("<textarea id='code3' name='controllerContent' rows='20'>",util:plainPrint(bit:loadFile(fn:concat("apps/",$controller))),"</textarea>")}
-            </div>
-          </div>
-        </td>
-      </tr>      
-    </table>
+    <div>                
+	  <form action="../fileController/action">
+	    <table style="width:100%;">
+	      <tr>
+	        <td>
+	          {generateFileOptions($model)}
+	        </td>
+	      </tr>
+	      <tr>
+	        <td>
+	          <div id="coll_intern">
+	            <div class="textwrapper">
+	              {fn:concat("<textarea id='code' name='query' rows='20'>",util:plainPrint(bit:loadFile(fn:concat("apps/",$model))),"</textarea>")}
+	            </div>
+	          </div>
+	        </td>
+	      </tr>
+	    </table>
+	  </form>      
+	  <form action="../fileController/action">
+	    <table style="width:100%;">
+	      <tr>
+	        <td>
+	          {generateFileOptions($view)}
+	        </td>
+	      </tr>
+	      <tr>
+	        <td>
+	          <div id="coll_intern">
+	            <div class="textwrapper">
+	              {fn:concat("<textarea id='code2' name='query' rows='20'>",util:plainPrint(bit:loadFile(fn:concat("apps/",$view))),"</textarea>")}
+	            </div>
+	          </div>
+	        </td>
+	      </tr>
+	    </table>
+	  </form>
+	  <form action="../fileController/action">
+	    <table style="width:100%;">      
+	      <tr>
+	        <td>
+	          {generateFileOptions($controller)}
+	        </td>
+	      </tr>
+	      <tr>
+	        <td>
+	          <div id="coll_intern">
+	            <div class="textwrapper">
+	              {fn:concat("<textarea id='code3' name='query' rows='20'>",util:plainPrint(bit:loadFile(fn:concat("apps/",$controller))),"</textarea>")}
+	            </div>
+	          </div>
+	        </td>
+	      </tr>      
+	    </table>
+	  </form>
+	</div>
 };
 
 declare function editQuery($resource as xs:string) as item() {
+  <form action="../fileController/action">
     <table style="width:100%;">
       <tr>
         <td>
@@ -261,9 +275,10 @@ declare function editQuery($resource as xs:string) as item() {
       <tr>
         <td>
           <div class="textwrapper">
-            {fn:concat("<textarea id='code' rows='50'>",util:plainPrint(bit:loadFile(fn:concat("apps/",$resource))),"</textarea>")}
+            {fn:concat("<textarea id='code' rows='50' name='query'>",util:plainPrint(bit:loadFile(fn:concat("apps/",$resource))),"</textarea>")}
           </div>
         </td>
       </tr>
     </table>
+  </form>  
 };

@@ -48,6 +48,42 @@ import org.brackit.xquery.module.Module;
  */
 public class BaseAppContext {
 
+	public static String module = "module namespace %s=\"http://brackit.org/lib/%s/%s%s\"; \n";
+
+	public static String importModule = "import module namespace %s=\"http://brackit.org/lib/%s/%s%s\"; \n";
+
+	public static String todo = "(: TODO Auto-generated XQuery block :) \n"
+			+ "\"TODO\" \n";
+
+	public static String BSDLicense = "(: \n"
+			+ " * \n"
+			+ " * [New BSD License] \n"
+			+ " * Copyright (c) 2011, Brackit Project Team <info@brackit.org> \n"
+			+ " * All rights reserved. \n"
+			+ " * \n"
+			+ " * Redistribution and use in source and binary forms, with or without \n"
+			+ " * modification, are permitted provided that the following conditions are met: \n"
+			+ " *     * Redistributions of source code must retain the above copyright \n"
+			+ " *       notice, this list of conditions and the following disclaimer. \n"
+			+ " *     * Redistributions in binary form must reproduce the above copyright \n"
+			+ " *       notice, this list of conditions and the following disclaimer in the \n"
+			+ " *       documentation and/or other materials provided with the distribution. \n"
+			+ " *     * Neither the name of the <organization> nor the \n"
+			+ " *       names of its contributors may be used to endorse or promote products \n"
+			+ " *       derived from this software without specific prior written permission. \n"
+			+ " *  \n"
+			+ " * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND \n"
+			+ " * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED \n"
+			+ " * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE \n"
+			+ " * DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY \n"
+			+ " * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES \n"
+			+ " * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; \n"
+			+ " * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND \n"
+			+ " * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT \n"
+			+ " * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS \n"
+			+ " * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. \n"
+			+ " * \n" + " :)\n";
+
 	private static class UncompiledQuery {
 
 		private String path;
@@ -113,6 +149,12 @@ public class BaseAppContext {
 		}
 	}
 
+	public void unregister(String path) {
+		if (queries != null) {
+			queries.remove(path);
+		}
+	}
+
 	public void registerUncompiledQueries() throws QueryException {
 		if (!uncompiledQueries.isEmpty()) {
 			Iterator<UncompiledQuery> i = uncompiledQueries.iterator();
@@ -123,8 +165,8 @@ public class BaseAppContext {
 					i.remove();
 				} catch (QueryException e) {
 					System.out.println(String.format(
-							"Problems while compiling %s. %s", uq.getPath(), e
-									.getMessage()));
+							"Problems while compiling %s. %s", uq.getPath(),
+							e.getMessage()));
 				}
 			}
 		}

@@ -73,6 +73,8 @@ import org.brackit.as.xquery.function.session.SetAttribute;
 import org.brackit.as.xquery.function.session.SetMaxInactiveInterval;
 import org.brackit.as.xquery.function.util.PlainPrint;
 import org.brackit.as.xquery.function.util.Template;
+import org.brackit.as.xquery.function.xqfile.CompileXQFile;
+import org.brackit.as.xquery.function.xqfile.CreateXQFile;
 import org.brackit.xquery.ErrorCode;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.XQuery;
@@ -305,6 +307,29 @@ public class ASXQuery extends XQuery {
 		Functions.predefine(new Exists(new QNm(Namespaces.APP_NSURI,
 				Namespaces.APP_PREFIX, "exist"), new Signature(
 				new SequenceType(AtomicType.BOOL, Cardinality.One),
+				new SequenceType(AtomicType.STR, Cardinality.One))));
+
+		// File
+		Functions.predefine(new CompileXQFile(new QNm(Namespaces.XQFILE_NSURI,
+				Namespaces.XQFILE_PREFIX, "compile"), new Signature(
+				new SequenceType(AtomicType.BOOL, Cardinality.One),
+				new SequenceType(AtomicType.STR, Cardinality.One),
+				new SequenceType(AtomicType.STR, Cardinality.One))));
+
+		Functions.predefine(new CreateXQFile(new QNm(Namespaces.XQFILE_NSURI,
+				Namespaces.XQFILE_PREFIX, "create"), new Signature(
+				new SequenceType(AtomicType.BOOL, Cardinality.One),
+				new SequenceType(AtomicType.STR, Cardinality.One))));
+
+		Functions.predefine(new CompileXQFile(new QNm(Namespaces.XQFILE_NSURI,
+				Namespaces.XQFILE_PREFIX, "delete"), new Signature(
+				new SequenceType(AtomicType.BOOL, Cardinality.One),
+				new SequenceType(AtomicType.STR, Cardinality.One))));
+
+		Functions.predefine(new CompileXQFile(new QNm(Namespaces.XQFILE_NSURI,
+				Namespaces.XQFILE_PREFIX, "save"), new Signature(
+				new SequenceType(AtomicType.BOOL, Cardinality.One),
+				new SequenceType(AtomicType.STR, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
 		// Testing

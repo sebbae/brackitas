@@ -27,8 +27,17 @@
  */
 package org.brackit.as.xquery.function.xqfile;
 
+import java.io.File;
+
+import javax.servlet.ServletContext;
+
+import org.brackit.as.context.BaseAppContext;
+import org.brackit.as.http.HttpConnector;
+import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
+import org.brackit.xquery.atomic.Atomic;
+import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.function.Signature;
@@ -48,6 +57,14 @@ public class DeleteXQFile extends AbstractFunction {
 	@Override
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
-		return null;
+		String fPathName = ((Atomic) args[0]).atomize().stringValue().trim();
+		String app = fPathName.split("/")[0];
+		String base = String
+				.format("%s/%s", HttpConnector.APPS_PATH, fPathName);
+		ServletContext sctx = ((ASQueryContext) ctx).getReq()
+				.getServletContext();
+		BaseAppContext bac = (BaseAppContext) sctx.getAttribute(app);
+		bac.unregister(fPathName);
+		return new Bool(new File(base).delete());
 	}
 }

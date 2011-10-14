@@ -35,15 +35,41 @@
 module namespace controller="http://brackit.org/lib/appServer/fileController";
 import module namespace model="http://brackit.org/lib/appServer/fileModel";
 import module namespace view="http://brackit.org/lib/appServer/fileView";
+import module namespace appController="http://brackit.org/lib/appServer/appController";
 
 declare function delete() as item() {
     "TODO"
 };
 
 declare function compile() as item() {
-    "TODO"
+    let $file := req:getParameter("a")
+    return "TODO"
 };
 
 declare function save() as item() {
-    "TODO"
+	let $fPathName := req:getParameter("file"),
+		$query := req:getParameter("query")
+	return
+		if (xqfile:save($fPathName, $query)) then
+			appController:load($fPathName)
+		else	
+    		"TODO"
 }; 
+
+declare function action() as item() {
+	let $action := fn:normalize-space(req:getParameter("action"))
+	return
+		if (fn:compare($action,"save") eq 0) then
+			save()
+		else 
+		    if (fn:compare($action,"compile") eq 0) then
+				"compile it"
+			else
+			    if (fn:compare($action,"delete") eq 0) then
+					"delete it"
+				else
+					if (fn:compare($action,"try it") eq 0) then
+						"try it it"
+					else
+						"ops"
+};

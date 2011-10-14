@@ -27,8 +27,21 @@
  */
 package org.brackit.as.xquery.function.xqfile;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import javax.servlet.ServletContext;
+
+import org.brackit.as.context.BaseAppContext;
+import org.brackit.as.http.HttpConnector;
+import org.brackit.as.xquery.ASQueryContext;
+import org.brackit.xquery.ErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
+import org.brackit.xquery.atomic.Atomic;
+import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.function.Signature;
@@ -48,6 +61,26 @@ public class CreateXQFile extends AbstractFunction {
 	@Override
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
-		return null;
+		String fPathName = ((Atomic) args[0]).atomize().stringValue().trim();
+		String app = fPathName.split("/")[0];
+		String base = String
+				.format("%s/%s", HttpConnector.APPS_PATH, fPathName);
+		ServletContext sctx = ((ASQueryContext) ctx).getReq()
+				.getServletContext();
+
+		// Create file with default content
+		try {
+			FileWriter f = new FileWriter(base);
+			BufferedWriter out = new BufferedWriter(f);
+			out.write(BaseAppContext.BSDLicense);
+			out.write(BaseAppContext.todo);
+			out.close();
+			Long lastUsed = new File(base).lastModified();
+			BaseAppContext bac = (BaseAppContext) sctx.getAttribute(app);
+			bac.register(String.format("/%s/%s", app, base), lastUsed);
+		} catch (IOException e) {
+			throw new QueryException(e, ErrorCode.BIT_DYN_INT_ERROR);
+		}
+		return Bool.TRUE;
 	}
 }
