@@ -193,7 +193,6 @@ public class HttpConnector {
 						String s = f[i].getPath();
 						bac.register(resolvePath(s), f[i].lastModified());
 					} catch (Exception e) {
-						e.printStackTrace();
 						log.error(e);
 					}
 				}

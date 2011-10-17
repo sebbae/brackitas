@@ -97,20 +97,26 @@ declare function deploy() as item() {
             view:default(fn:concat("Problems deploying application ",$app))
 };
 
-declare function load($fPathName as xs:string) as item () {
+(:
+declare function test() as item() {
+    try {
+        fn:true()
+    }
+    catch * {
+        fn:false()
+    }
+};
+:)
+
+declare function load() as item() {
     (: 3 cases: 1. resources, 2. xquery and 3. MVC query
     1. appServer/resources/images/brackit.png
     2. else
     3. appServer/controllers/docController.xq
      :)
     let $app := req:getParameter("app"),
-        $reqName := fn:normalize-space(req:getParameter("name")),
-        $menu := view:createMenu($app),
-        $resource := 
-        	if (fn:string-length($reqName) = 0) then 
-        		$fPathName
-        	else
-	        	$reqName
+        $resource := fn:normalize-space(req:getParameter("name")),
+        $menu := view:createMenu($app)
     return 
         let $content :=
             if (fn:contains($resource, "/resources/")) then
@@ -121,21 +127,21 @@ declare function load($fPathName as xs:string) as item () {
                         let $model := fn:replace(fn:replace($resource, "controllers", "models"),"Controller","Model"),
                             $view := fn:replace(fn:replace($resource, "controllers", "views"),"Controller","View"),
                             $controller := $resource 
-                        return view:editMVC($model,$view,$controller)
+                        return view:editMVC($model,$view,$controller,$app)
                     else
                         if (fn:contains($resource, "/models/")) then
                             let $model := $resource,
                                 $view := fn:replace(fn:replace($resource, "models", "views"),"Model","View"),
                                 $controller := fn:replace(fn:replace($resource, "models", "controllers"),"Model","Controller") 
-                            return view:editMVC($model,$view,$controller)
+                            return view:editMVC($model,$view,$controller,$app)
                         else
                             if (fn:contains($resource, "/views/")) then
                                 let $model := fn:replace(fn:replace($resource, "views", "models"),"View","Model"),
                                     $view := $resource,
                                     $controller := fn:replace(fn:replace($resource, "views", "controllers"),"View","Controller") 
-                                return view:editMVC($model,$view,$controller)
+                                return view:editMVC($model,$view,$controller,$app)
                             else
-                                view:editQuery($resource)
+                                view:editQuery($resource,$app)
                 else
                     "Resource not handled"
         return

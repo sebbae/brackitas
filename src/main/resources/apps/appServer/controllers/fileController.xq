@@ -37,24 +37,53 @@ import module namespace model="http://brackit.org/lib/appServer/fileModel";
 import module namespace view="http://brackit.org/lib/appServer/fileView";
 import module namespace appController="http://brackit.org/lib/appServer/appController";
 
-declare function delete() as item() {
-    "TODO"
-};
-
-declare function compile() as item() {
-    let $file := req:getParameter("a")
-    return "TODO"
-};
-
 declare function save() as item() {
-	let $fPathName := req:getParameter("file"),
+	let $fPathName := req:getParameter("name"),
 		$query := req:getParameter("query")
 	return
-		if (xqfile:save($fPathName, $query)) then
-			appController:load($fPathName)
-		else	
-    		"TODO"
+	    let $msg := 
+    		if (xqfile:save($fPathName, $query)) then
+    		    view:msgSuccess("Saved sucessfully!")
+    		else
+                view:msgFailure("Problems while saving..."),
+            $success := session:setAttribute("msg",$msg)  
+       return
+            if ($success) then
+                appController:load()
+            else
+                appController:load()
 }; 
+
+declare function compile() as item() {
+    let $fPathName := req:getParameter("name"),
+        $query := req:getParameter("query")
+    return
+        let $compilation := xqfile:compile($fPathName, $query),
+            $msg := if (fn:string-length($compilation) eq 0) then
+                        view:msgSuccess("Compiled sucessfully!")
+                    else
+                        view:msgFailure($compilation)   
+       return
+            if (session:setAttribute("msg",$msg)) then
+                appController:load()
+            else
+                appController:load()
+};
+
+declare function delete() as item() {
+    let $fPathName := req:getParameter("name")
+    return
+        let $msg := 
+            if (xqfile:delete($fPathName)) then
+                view:msgSuccess("Deleted sucessfully!")
+            else
+                view:msgFailure("Deletion failed!")   
+       return
+            if (session:setAttribute("msg",$msg)) then
+                appController:load()
+            else
+                appController:load()
+};
 
 declare function action() as item() {
 	let $action := fn:normalize-space(req:getParameter("action"))
@@ -63,13 +92,10 @@ declare function action() as item() {
 			save()
 		else 
 		    if (fn:compare($action,"compile") eq 0) then
-				"compile it"
+				compile()
 			else
 			    if (fn:compare($action,"delete") eq 0) then
-					"delete it"
+					delete()
 				else
-					if (fn:compare($action,"try it") eq 0) then
-						"try it it"
-					else
-						"ops"
+					"ops"
 };

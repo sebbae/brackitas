@@ -38,8 +38,8 @@ import org.brackit.as.xquery.ASXQuery;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
-import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
+import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.function.Signature;
 import org.brackit.xquery.xdm.Sequence;
@@ -58,18 +58,24 @@ public class CompileXQFile extends AbstractFunction {
 	@Override
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
-		String fPathName = ((Atomic) args[0]).atomize().stringValue().trim();
-		String fQuery = ((Atomic) args[1]).atomize().stringValue().trim();
-		String app = fPathName.split("/")[0];
-		String base = String
-				.format("%s/%s", HttpConnector.APPS_PATH, fPathName);
-		ServletContext sctx = ((ASQueryContext) ctx).getReq()
-				.getServletContext();
-		BaseAppContext bac = (BaseAppContext) sctx.getAttribute(app);
-		new ASXQuery(bac.getChain(), fQuery);
-		// if there where compilation errors, they would have already been trown
-		Long lastUsed = new File(base).lastModified();
-		bac.register(String.format("/%s/%s", app, base), lastUsed);
-		return Bool.TRUE;
+		try {
+			String fPathName = ((Atomic) args[0]).atomize().stringValue()
+					.trim();
+			String fQuery = ((Atomic) args[1]).atomize().stringValue().trim();
+			String app = fPathName.split("/")[0];
+			String base = String.format("%s/%s", HttpConnector.APPS_PATH,
+					fPathName);
+			ServletContext sctx = ((ASQueryContext) ctx).getReq()
+					.getServletContext();
+			BaseAppContext bac = (BaseAppContext) sctx.getAttribute(app);
+			new ASXQuery(bac.getChain(), fQuery);
+			// if there where compilation errors, they would have already been
+			// trown
+			Long lastUsed = new File(base).lastModified();
+			bac.register(String.format("/%s/%s", app, base), lastUsed);
+			return new Str("");
+		} catch (Exception e) {
+			return new Str(e.getMessage());
+		}
 	}
 }

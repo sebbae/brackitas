@@ -34,3 +34,11 @@
 :)
 module namespace view="http://brackit.org/lib/appServer/fileView";
 import module namespace template="http://brackit.org/lib/appServer/template";
+
+declare function msgSuccess($msg as xs:string) as item() {
+    <font color="#008000">{$msg}</font>
+};
+
+declare function msgFailure($msg as xs:string) as item() {
+    <font color="#ff0000">{$msg}</font>
+};

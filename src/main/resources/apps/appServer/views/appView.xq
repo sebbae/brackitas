@@ -112,30 +112,51 @@ declare function delete($result as xs:boolean) as item() {
         default($content)
 };
 
+
+
+
 declare function listing($dir as item()*, $app as xs:string, $base as xs:string) as item()* {
-    <li><a>{fn:data($dir/@name)}</a>
-        <ul> {
-            for $sub
-            in $dir/dir
-            return
-                <li>{listing($sub,$app,fn:concat($base,"/",fn:data($sub/@name)))}</li>
-        }{
-            for $file
-            in $dir/file
-            return
-                <li><a href="./load?app={$app}&amp;name={fn:concat($base,"/",$file/@name)}">{fn:data($file/@name)}</a></li>
-        }            
-        </ul>
-    </li>
+    <div>
+        <li><a>{fn:data($dir/@name)}</a></li>
+        <li>
+            {
+                for $sub
+                in $dir/dir
+                return
+                    <ul>{listing($sub,$app,fn:concat($base,"/",fn:data($sub/@name)))}</ul>
+            }
+            {
+                for $content
+                in $dir
+                return 
+                    <ul> {
+                        for $file
+                        in $dir/file
+                        return
+                            <li><a href="../appController/load?app={$app}&amp;name={fn:concat($base,"/",$file/@name)}">{fn:data($file/@name)}</a></li>
+                         }
+                    </ul>
+            }
+        </li>
+    </div>
 };
 
 declare function createMenu($app as xs:string) as item() {
     <ul class="vlist">
         <li><h6 class="vlist">{$app}</h6></li>
         {
-        for $a
-        in app:getStructure($app)/app/dir
-        return <li>{listing($a,$app,fn:concat($app,"/",fn:data($a/@name)))}</li>
+        for 
+            $a
+        in 
+            app:getStructure($app)/app/dir
+        return 
+            <li>
+              <ul>
+                {listing($a,$app,fn:concat($app,
+                                           "/",
+                                           fn:data($a/@name)))}
+              </ul>
+            </li>
         }
     </ul>
 };
@@ -180,11 +201,12 @@ declare function createAppFormError($msg as xs:string) as item() {
     </table>
 };
 
-declare function generateFileOptions($file as xs:string) as item() {
+declare function generateFileOptions($fPathName as xs:string,
+                                     $app as xs:string) as item() {
   <div class="hlist">
     <ul>
       <li>
-        <strong> File: {$file}  </strong>
+        <strong> File: {$fPathName}  </strong>
       </li>        
       <li>
       	<input align="middle" type="submit" name="action" value="save"/>
@@ -196,29 +218,44 @@ declare function generateFileOptions($file as xs:string) as item() {
         <input align="middle" type="submit" name="action" value="delete" onclick="return confirm('Are you sure you want to delete?')"/>
       </li>
       <li>
-        <input align="middle" type="submit" name="action" value="try it"/>
-        <input type="hidden" name="file" value="{$file}"/>
+        <button type="button" onClick="testIt('{fn:substring-before($fPathName, ".xq")}')">test it</button>
+        <input type="hidden" name="name" value="{$fPathName}"/>
+        <input type="hidden" name="app" value="{$app}"/>        
       </li>
     </ul>
   </div>
 };
 
+declare function generateTextArea($fPathName as xs:string, $num as xs:string) as item() {
+    fn:concat("<textarea id='code",
+              $num,
+              "' name='query' rows='20'>",
+              util:plainPrint(
+                  if (fn:compare(req:getParameter("name"),$fPathName) eq 0 and
+                      fn:string-length(req:getParameter("query")) > 0) then
+                      req:getParameter("query")
+                  else
+                      bit:loadFile(fn:concat("apps/",$fPathName))),
+              "</textarea>")
+};
+
 declare function editMVC ($model as xs:string,
                           $view as xs:string,
-                          $controller as xs:string) as item () {
+                          $controller as xs:string,
+                          $app as xs:string) as item() {
     <div>                
 	  <form action="../fileController/action">
 	    <table style="width:100%;">
 	      <tr>
 	        <td>
-	          {generateFileOptions($model)}
+	          {generateFileOptions($model,$app)}
 	        </td>
 	      </tr>
 	      <tr>
 	        <td>
 	          <div id="coll_intern">
 	            <div class="textwrapper">
-	              {fn:concat("<textarea id='code' name='query' rows='20'>",util:plainPrint(bit:loadFile(fn:concat("apps/",$model))),"</textarea>")}
+	              {generateTextArea($model,"")}
 	            </div>
 	          </div>
 	        </td>
@@ -229,14 +266,14 @@ declare function editMVC ($model as xs:string,
 	    <table style="width:100%;">
 	      <tr>
 	        <td>
-	          {generateFileOptions($view)}
+	          {generateFileOptions($view,$app)}
 	        </td>
 	      </tr>
 	      <tr>
 	        <td>
 	          <div id="coll_intern">
 	            <div class="textwrapper">
-	              {fn:concat("<textarea id='code2' name='query' rows='20'>",util:plainPrint(bit:loadFile(fn:concat("apps/",$view))),"</textarea>")}
+	              {generateTextArea($view,"2")}
 	            </div>
 	          </div>
 	        </td>
@@ -247,14 +284,14 @@ declare function editMVC ($model as xs:string,
 	    <table style="width:100%;">      
 	      <tr>
 	        <td>
-	          {generateFileOptions($controller)}
+	          {generateFileOptions($controller,$app)}
 	        </td>
 	      </tr>
 	      <tr>
 	        <td>
 	          <div id="coll_intern">
 	            <div class="textwrapper">
-	              {fn:concat("<textarea id='code3' name='query' rows='20'>",util:plainPrint(bit:loadFile(fn:concat("apps/",$controller))),"</textarea>")}
+	              {generateTextArea($controller,"3")}
 	            </div>
 	          </div>
 	        </td>
@@ -264,18 +301,19 @@ declare function editMVC ($model as xs:string,
 	</div>
 };
 
-declare function editQuery($resource as xs:string) as item() {
+declare function editQuery($resource as xs:string,
+                           $app as xs:string) as item() {
   <form action="../fileController/action">
     <table style="width:100%;">
       <tr>
         <td>
-          {generateFileOptions($resource)}
+          {generateFileOptions($resource,$app)}
         </td>
       </tr>
       <tr>
         <td>
           <div class="textwrapper">
-            {fn:concat("<textarea id='code' rows='50' name='query'>",util:plainPrint(bit:loadFile(fn:concat("apps/",$resource))),"</textarea>")}
+            {generateTextArea($resource,"")}            
           </div>
         </td>
       </tr>

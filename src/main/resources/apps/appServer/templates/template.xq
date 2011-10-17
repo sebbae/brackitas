@@ -36,6 +36,7 @@ module namespace template="http://brackit.org/lib/appServer/template";
 
 declare function head($title as xs:string) as item() {
     <head>
+      <script src="http://localhost:8080/apps/appServer/resources/js/brackitHeader.js" type="text/javascript">""</script>    
       <script src="http://localhost:8080/apps/appServer/resources/js/codemirror.js" type="text/javascript">""</script>
       <script src="http://localhost:8080/apps/appServer/resources/js/jquery.min.js">""</script>
       <!-- add your meta tags here -->
@@ -48,9 +49,35 @@ declare function head($title as xs:string) as item() {
 };
 
 declare function header() as item() {
-    <div id="header" align="center">
-      <img align="center" src="http://localhost:8080/apps/appServer/resources/images/brackit.png" />
-    </div>
+    <table style="width:100%;">
+        <tr>
+            <td>
+                <div id="header" align="center">
+                    <a href="http://localhost:8080/apps/appServer/controllers/appController/index">                  
+                        <img align="center" src="http://localhost:8080/apps/appServer/resources/images/brackit.png" />
+                    </a>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div align="center">
+                    {
+                    if (fn:string-length(session:getAttribute("msg")) gt 0) then
+                        let 
+                            $msg := session:getAttribute("msg")
+                        return
+                            if (session:removeAttribute("msg")) then
+                                $msg
+                            else
+                                ""
+                    else
+                        ""
+                    }
+                </div>
+            </td>
+        </tr>
+    </table>
 };
 
 declare function teaser() as item() {

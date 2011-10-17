@@ -25,48 +25,22 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.xquery.function.xqfile;
-
-import java.io.File;
-
-import javax.servlet.ServletContext;
-
-import org.brackit.as.context.BaseAppContext;
-import org.brackit.as.http.HttpConnector;
-import org.brackit.as.xquery.ASQueryContext;
-import org.brackit.xquery.QueryContext;
-import org.brackit.xquery.QueryException;
-import org.brackit.xquery.atomic.Atomic;
-import org.brackit.xquery.atomic.Bool;
-import org.brackit.xquery.atomic.QNm;
-import org.brackit.xquery.function.AbstractFunction;
-import org.brackit.xquery.function.Signature;
-import org.brackit.xquery.xdm.Sequence;
 
 /**
  * 
  * @author Henrique Valer
  * 
  */
-public class DeleteXQFile extends AbstractFunction {
-
-	public DeleteXQFile(QNm name, Signature signature) {
-		super(name, signature, true);
-	}
-
-	@Override
-	public Sequence execute(QueryContext ctx, Sequence[] args)
-			throws QueryException {
-		String fPathName = ((Atomic) args[0]).atomize().stringValue().trim();
-		String app = fPathName.split("/")[0];
-		String base = String
-				.format("%s/%s", HttpConnector.APPS_PATH, fPathName);
-		ServletContext sctx = ((ASQueryContext) ctx).getReq()
-				.getServletContext();
-		BaseAppContext bac = (BaseAppContext) sctx.getAttribute(app);
-		bac.unregister(fPathName);
-//		TODO: Erase it to actually remove file
-//		return new Bool(new File(base).delete());
-		return Bool.TRUE;
+function testIt(fPathName) {
+	if ((fPathName.indexOf("/controllers/") != -1)
+			|| (fPathName.indexOf("/models/") != -1)
+			|| (fPathName.indexOf("/views/") != -1)) {
+		var func = prompt(
+				"Enter the name of the function you would like to execute:",
+				"for example: index");
+		window.open("http://localhost:8080/apps/" + fPathName.trim() + "/"
+				+ func.trim());
+	} else {
+		window.open("http://localhost:8080/apps/" + fPathName.trim() + ".xq");
 	}
 }
