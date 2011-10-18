@@ -64,3 +64,6 @@
 	 applications) have to rely on a file on the database. Create and use such file.
 (  ) Change all function implementation to thrown errors, as soon as the try-catch block
 	 is functional. 
+(  ) Finish discussion Controller
+(  ) Select decent icons.
+(  ) Finish mkdir and upload.

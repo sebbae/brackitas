@@ -36,6 +36,7 @@ module namespace controller="http://brackit.org/lib/appServer/fileController";
 import module namespace model="http://brackit.org/lib/appServer/fileModel";
 import module namespace view="http://brackit.org/lib/appServer/fileView";
 import module namespace appController="http://brackit.org/lib/appServer/appController";
+import module namespace appView="http://brackit.org/lib/appServer/appView";
 
 declare function save() as item() {
 	let $fPathName := req:getParameter("name"),
@@ -86,7 +87,7 @@ declare function delete() as item() {
 };
 
 declare function action() as item() {
-	let $action := fn:normalize-space(req:getParameter("action"))
+    let $action := fn:normalize-space(req:getParameter("action"))
 	return
 		if (fn:compare($action,"save") eq 0) then
 			save()
@@ -98,4 +99,28 @@ declare function action() as item() {
 					delete()
 				else
 					"ops"
+};
+
+declare function create() as item() {
+    let $butClick := fn:normalize-space(req:getParameter("sub")),
+        $fBasePath := req:getParameter("name"),
+        $app := req:getParameter("app"),
+        $menu := appView:createMenu($app),
+        $fName := req:getParameter("fName"),
+        $fPathName := fn:concat($fBasePath,"/",$fName)
+    return
+        if (fn:string-length($butClick) > 0) then
+            if (model:validateXQFile($fName)) then
+                if (xqfile:create($fPathName)) then
+                    appView:editXQuery($menu,
+                                       appView:editQuery($fPathName,$app))
+                else
+                    ""
+            else
+                if (session:setAttribute("msg",view:msgFailure("File name cannot contain space and must finish with .xq"))) then
+                    appView:menuContent($menu,view:createFileForm($fBasePath,$app))
+                else
+                    appView:menuContent($menu,view:createFileForm($fBasePath,$app))
+        else
+            appView:menuContent($menu,view:createFileForm($fBasePath,$app))
 };

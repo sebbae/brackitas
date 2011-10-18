@@ -42,3 +42,25 @@ declare function msgSuccess($msg as xs:string) as item() {
 declare function msgFailure($msg as xs:string) as item() {
     <font color="#ff0000">{$msg}</font>
 };
+
+declare function createFileForm($fPath as xs:string,
+                                $app as xs:string) as item() {
+    <form action="./create">
+        <table style="width: 100%; background-color: rgb(224, 224, 240);">
+            <tr>
+                <td style="width: 20%;"><h5>Name</h5></td>
+                <td><input type="text" name="fName"/></td>
+            </tr>
+            <tr>
+                <td style="width: 20%;"><h5>Under</h5></td>
+                <td><input type="text" readonly="readonly" name="name" value="{$fPath}"/></td>
+            </tr>            
+            <tr>
+                <td colspan="3" align="center">
+                  <input align="center" type="submit" name="sub" value="Create file"/>
+                  <input type="hidden" name="app" value="{$app}"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+};

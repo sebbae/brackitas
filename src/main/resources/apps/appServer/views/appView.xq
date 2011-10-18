@@ -32,7 +32,7 @@
  * 
  *
 :)
-module namespace view="http://brackit.org/lib/appServer/appView";
+module namespace appView="http://brackit.org/lib/appServer/appView";
 import module namespace template="http://brackit.org/lib/appServer/template";
 
 declare function default($content as item()) as item() {
@@ -117,7 +117,14 @@ declare function delete($result as xs:boolean) as item() {
 
 declare function listing($dir as item()*, $app as xs:string, $base as xs:string) as item()* {
     <div>
-        <li><a>{fn:data($dir/@name)}</a></li>
+        <li>
+          <zu>
+            <a>{fn:data($dir/@name)}</a>
+            <a href="../fileController/create?app={$app}&amp;name={$base}">Create</a>
+            <a href="../fileController/upload?app={$app}&amp;name={$base}">Upload</a>
+            <a href="../fileController/mkDir?app={$app}&amp;name={$base}">MkDir</a>            
+          </zu>
+        </li>
         <li>
             {
                 for $sub
@@ -133,7 +140,7 @@ declare function listing($dir as item()*, $app as xs:string, $base as xs:string)
                         for $file
                         in $dir/file
                         return
-                            <li><a href="../appController/load?app={$app}&amp;name={fn:concat($base,"/",$file/@name)}">{fn:data($file/@name)}</a></li>
+                            <li><zu><a href="../appController/load?app={$app}&amp;name={fn:concat($base,"/",$file/@name)}">{fn:data($file/@name)}</a></zu></li>
                          }
                     </ul>
             }

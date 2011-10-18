@@ -32,40 +32,45 @@
  * 
  *
 :)
-module namespace appModel="http://brackit.org/lib/appServer/appModel";
+module namespace controller="http://brackit.org/lib/appServer/fileController";
+import module namespace model="http://brackit.org/lib/appServer/fileModel";
+import module namespace view="http://brackit.org/lib/appServer/fileView";
+import module namespace appController="http://brackit.org/lib/appServer/appController";
+import module namespace appView="http://brackit.org/lib/appServer/appView";
 
-declare function validateName($name as xs:string) as xs:boolean {
-    if ((fn:string-length($name) > 0) and 
-        (fn:not(fn:contains($name,' ')))) 
-    then
+declare function test() as item() {
+    try {
         fn:true()
-    else
+    }
+    catch * {
         fn:false()
+    }
 };
 
-declare function validateApp($app as xs:string) as xs:boolean {
-    if ((app:exist($app)) and
-        (validateName($app)))
-    then
-        fn:true()
-    else
-        fn:false()
-};
-
-declare function validateAppModel($model as xs:string) as xs:boolean {
-    if ((fn:string-length($model) > 0) and
-        ((fn:compare($model, "MVC")) or (fn:compare($model, "REG"))))
-    then
-        fn:true()
-    else
-        fn:false()
-};
-
-declare function validateAppCreation($app as xs:string, $model as xs:string) as xs:boolean {
-    if ((validateAppModel($model)) and 
-        (validateName($app)))
-    then
-        fn:true()
-    else
-        fn:false()
+declare function create() as item() {
+    let $butClick := fn:normalize-space(req:getParameter("sub")),
+        $fBasePath := req:getParameter("base"),
+        $app := req:getParameter("app"),
+        $menu := appView:createMenu($app)
+    return
+        if (fn:string-length($butClick) > 0) then
+            (
+            let $fName := req:getParameter("fName")
+            return
+                if (model:validateXQFile($fName)) then
+                    let $fPathName := fn:concat($fBasePath,"/",$fName)
+                    return
+                        if (xqfile:create($fPathName)) then
+                            appView:editXQuery($menu,
+                                               appView:editQuery($fPathName,$app))
+                        else
+                            ""
+                else
+                    if (session:setAttribute("msg",view:msgFailure("File name cannot contain space and must finish with .xq"))) then
+                        appView:menuContent($menu,view:createFileForm($fBasePath,$app))
+                    else
+                        appView:menuContent($menu,view:createFileForm($fBasePath,$app))
+            )
+        else
+            appView:menuContent($menu,view:createFileForm($fBasePath,$app))
 };

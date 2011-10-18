@@ -28,7 +28,6 @@
 package org.brackit.as.http.app;
 
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -76,23 +75,18 @@ public class BaseServlet extends TXServlet {
 			HttpServletResponse resp) throws StreamCorruptedException,
 			FileNotFoundException {
 		try {
-			String contentType = getMimeType(resource);
-			resp.setContentType(contentType);
+			resp.setContentType(getMimeType(resource));
 			InputStream in = getClass().getResourceAsStream(resource);
 			BufferedOutputStream out = new BufferedOutputStream(resp
 					.getOutputStream());
-			try {
-				byte[] buffer = new byte[1024 * 16];
-				int bytesRead = 0;
-				while ((bytesRead = in.read(buffer)) != -1) {
-					out.write(buffer, 0, bytesRead);
-				}
-				out.close();
-				in.close();
-				resp.setStatus(HttpServletResponse.SC_OK);
-			} catch (Exception e) {
-				throw new StreamCorruptedException();
+			byte[] buffer = new byte[1024 * 16];
+			int bytesRead = 0;
+			while ((bytesRead = in.read(buffer)) != -1) {
+				out.write(buffer, 0, bytesRead);
 			}
+			out.close();
+			in.close();
+			resp.setStatus(HttpServletResponse.SC_OK);
 		} catch (StreamCorruptedException e) {
 			throw new StreamCorruptedException(String
 					.format("Error while reading inputStream of resource %s.",

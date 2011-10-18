@@ -33,11 +33,11 @@
  *
 :)
 module namespace appController="http://brackit.org/lib/appServer/appController";
-import module namespace model="http://brackit.org/lib/appServer/appModel";
-import module namespace view="http://brackit.org/lib/appServer/appView";
+import module namespace appModel="http://brackit.org/lib/appServer/appModel";
+import module namespace appView="http://brackit.org/lib/appServer/appView";
 
 declare function index() as item() {
-    view:listApps(app:getNames())
+    appView:listApps(app:getNames())
 };
 
 declare function create() as item() {
@@ -47,28 +47,28 @@ declare function create() as item() {
             let $app := req:getParameter("app"),
                 $model := req:getParameter("model")
             return
-                if (model:validateAppCreation($app, $model)) then
+                if (appModel:validateAppCreation($app, $model)) then
                     if (app:generate($app,$model)) then
                         index()
                     else
-                        view:default(view:createAppFormError("Impossible to generate the required application"))
+                        appView:default(appView:createAppFormError("Impossible to generate the required application"))
                 else
-                    view:default(view:createAppFormError("Parameters name or model type are not valid."))
+                    appView:default(appView:createAppFormError("Parameters name or model type are not valid."))
         else
-            view:default(view:createAppForm())
+            appView:default(appView:createAppForm())
 };
 
-declare function edit () as item ()* {
+declare function edit() as item ()* {
     let $app := req:getParameter("app")
     return
-        if (model:validateApp($app)) then
+        if (appModel:validateApp($app)) then
             if (session:setAttribute("editApp",$app)) then
-                let $menu := view:createMenu($app)
-                return view:menuContent($menu, "Welcome to the development Framework")
+                let $menu := appView:createMenu($app)
+                return appView:menuContent($menu, "Welcome to the development Framework")
             else
-                view:default(fn:concat("Problems editing application ",$app))
+                appView:default(fn:concat("Problems editing application ",$app))
         else
-            view:default(fn:concat("Application ",$app," does not exist."))
+            appView:default(fn:concat("Application ",$app," does not exist."))
 };
 
 declare function terminate() as item() {
@@ -77,7 +77,7 @@ declare function terminate() as item() {
         if (app:terminate($app)) then
             index()
         else
-            view:default(fn:concat("Problems terminating application ",$app))
+            appView:default(fn:concat("Problems terminating application ",$app))
 };
 
 declare function statistics() as item() {
@@ -85,7 +85,7 @@ declare function statistics() as item() {
 };
 
 declare function delete() as item() {
-    view:delete(app:delete(req:getParameter("app")))
+    appView:delete(app:delete(req:getParameter("app")))
 };
 
 declare function deploy() as item() {
@@ -94,19 +94,8 @@ declare function deploy() as item() {
         if (app:deploy($app)) then
             index()
         else
-            view:default(fn:concat("Problems deploying application ",$app))
+            appView:default(fn:concat("Problems deploying application ",$app))
 };
-
-(:
-declare function test() as item() {
-    try {
-        fn:true()
-    }
-    catch * {
-        fn:false()
-    }
-};
-:)
 
 declare function load() as item() {
     (: 3 cases: 1. resources, 2. xquery and 3. MVC query
@@ -116,34 +105,31 @@ declare function load() as item() {
      :)
     let $app := req:getParameter("app"),
         $resource := fn:normalize-space(req:getParameter("name")),
-        $menu := view:createMenu($app)
+        $menu := appView:createMenu($app)
     return 
         let $content :=
-            if (fn:contains($resource, "/resources/")) then
-                "Treat resource call"
-            else
-                if (fn:ends-with($resource, ".xq")) then
-                    if (fn:contains($resource, "/controllers/")) then
-                        let $model := fn:replace(fn:replace($resource, "controllers", "models"),"Controller","Model"),
-                            $view := fn:replace(fn:replace($resource, "controllers", "views"),"Controller","View"),
-                            $controller := $resource 
-                        return view:editMVC($model,$view,$controller,$app)
-                    else
-                        if (fn:contains($resource, "/models/")) then
-                            let $model := $resource,
-                                $view := fn:replace(fn:replace($resource, "models", "views"),"Model","View"),
-                                $controller := fn:replace(fn:replace($resource, "models", "controllers"),"Model","Controller") 
-                            return view:editMVC($model,$view,$controller,$app)
-                        else
-                            if (fn:contains($resource, "/views/")) then
-                                let $model := fn:replace(fn:replace($resource, "views", "models"),"View","Model"),
-                                    $view := $resource,
-                                    $controller := fn:replace(fn:replace($resource, "views", "controllers"),"View","Controller") 
-                                return view:editMVC($model,$view,$controller,$app)
-                            else
-                                view:editQuery($resource,$app)
+            if (fn:ends-with($resource, ".xq")) then
+                if (fn:contains($resource, "/controllers/")) then
+                    let $model := fn:replace(fn:replace($resource, "controllers", "models"),"Controller","Model"),
+                        $view := fn:replace(fn:replace($resource, "controllers", "views"),"Controller","View"),
+                        $controller := $resource 
+                    return appView:editMVC($model,$view,$controller,$app)
                 else
-                    "Resource not handled"
+                    if (fn:contains($resource, "/models/")) then
+                        let $model := $resource,
+                            $view := fn:replace(fn:replace($resource, "models", "views"),"Model","View"),
+                            $controller := fn:replace(fn:replace($resource, "models", "controllers"),"Model","Controller") 
+                        return appView:editMVC($model,$view,$controller,$app)
+                    else
+                        if (fn:contains($resource, "/views/")) then
+                            let $model := fn:replace(fn:replace($resource, "views", "models"),"View","Model"),
+                                $view := $resource,
+                                $controller := fn:replace(fn:replace($resource, "views", "controllers"),"View","Controller") 
+                            return appView:editMVC($model,$view,$controller,$app)
+                        else
+                            appView:editQuery($resource,$app)
+            else
+                "Treat resource call"
         return
-            view:editXQuery($menu,$content)
+            appView:editXQuery($menu,$content)
 };
