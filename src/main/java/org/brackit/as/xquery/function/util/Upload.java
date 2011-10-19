@@ -25,24 +25,32 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.xquery.function.request;
+package org.brackit.as.xquery.function.util;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLConnection;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.brackit.as.http.HttpConnector;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
+import org.brackit.xquery.atomic.AnyURI;
+import org.brackit.xquery.atomic.Atomic;
+import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
-import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.function.Signature;
-import org.brackit.xquery.node.parser.DocumentParser;
-import org.brackit.xquery.xdm.Item;
 import org.brackit.xquery.xdm.Sequence;
 
 /**
@@ -50,50 +58,67 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
-public class GetPostParameter extends AbstractFunction {
+public class Upload extends AbstractFunction {
 
-	public GetPostParameter(QNm name, Signature signature) {
+	public Upload(QNm name, Signature signature) {
 		super(name, signature, true);
 	}
 
 	@Override
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
-		HttpServletRequest req = ((ASQueryContext) ctx).getReq();
-		if (ServletFileUpload.isMultipartContent(req)) {
-			try {
-				String name = ((Item) args[0]).atomize().stringValue();
-				ServletFileUpload upload = new ServletFileUpload();
-				FileItemIterator iter = upload.getItemIterator(req);
-				while (iter.hasNext()) {
-					FileItemStream item = iter.next();
-					InputStream in = item.openStream();
-					if (item.getFieldName().equals(name)) {
-						if (in == null) {
-							return new Str("Upload stream empty");
-						}
-						try {
-							new DocumentParser(in);
-							StringBuffer out = new StringBuffer();
-							byte[] b = new byte[4096];
-							try {
-								for (int n; (n = in.read(b)) != -1;) {
-									out.append(new String(b, 0, n));
-								}
-							} finally {
-								if (in != null)
-									in.close();
-							}
-							return new Str(out.toString());
-						} catch (Exception e) {
-							return new Str("Stream is not a valid XML file");
+		URLConnection conn = null;
+		try {
+			String fRelStoragePath = ((Atomic) args[0]).atomize().stringValue();
+			String fPath = ((Atomic) args[1]).atomize().stringValue();
+			String fName = null;
+			String scheme = new URI(fPath).getScheme();
+			InputStream in = null;
+			if (scheme == null) {
+				HttpServletRequest req = ((ASQueryContext) ctx).getReq();
+				if (ServletFileUpload.isMultipartContent(req)) {
+					FileItemIterator iter = new ServletFileUpload()
+							.getItemIterator(req);
+					while (iter.hasNext()) {
+						FileItemStream item = iter.next();
+						if (item.getFieldName().equals(fPath)) {
+							fName = item.getName();
+							in = item.openStream();
 						}
 					}
 				}
-			} catch (Exception e) {
-				return new Str("Error with upload stream");
+			} else if (scheme.equals("http") || scheme.equals("https")
+					|| scheme.equals("ftp") || scheme.equals("jar")) {
+				URL url = new URL(((AnyURI) args[0]).stringValue());
+				conn = url.openConnection();
+				fName = conn.getURL().getPath();
+				in = conn.getInputStream();
+			}
+			File f = new File(String.format("%s/%s/%s",
+					HttpConnector.APPS_PATH, fRelStoragePath, fName));
+			OutputStream out = new FileOutputStream(f);
+
+			byte[] buffer = new byte[1024 * 16];
+			int bytesRead = 0;
+			while ((bytesRead = in.read(buffer)) != -1) {
+				out.write(buffer, 0, bytesRead);
+			}
+			out.close();
+			in.close();
+			return Bool.TRUE;
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return Bool.FALSE;
+		} finally {
+			if (conn != null) {
+				if (conn != null) {
+					if (conn instanceof HttpURLConnection) {
+						((HttpURLConnection) conn).disconnect();
+					}
+					conn = null;
+				}
 			}
 		}
-		return new Str("External error with upload stream");
 	}
 }

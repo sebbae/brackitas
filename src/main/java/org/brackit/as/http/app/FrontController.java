@@ -27,23 +27,38 @@
  */
 package org.brackit.as.http.app;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.StreamCorruptedException;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.fileupload.FileItemIterator;
+import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload.util.Streams;
 import org.brackit.as.context.BaseAppContext;
+import org.brackit.as.http.uiOld.Helper.FILE_TYPE;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.as.xquery.ASXQuery;
+import org.brackit.as.xquery.function.request.IsMultipartContent;
 import org.brackit.server.session.Session;
 import org.brackit.server.session.SessionException;
 import org.brackit.server.tx.Tx;
 import org.brackit.xquery.QueryException;
+import org.brackit.xquery.atomic.Atomic;
+import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.atomic.Una;
 import org.brackit.xquery.expr.Cast;
 import org.brackit.xquery.expr.ExtVariable;
@@ -79,15 +94,50 @@ public class FrontController extends BaseServlet {
 
 	private ASQueryContext ctx;
 
+	private static String URI;
+
+	private String APP;
+
+	private String RESOURCE;
+
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp,
 			Session session) throws Exception {
+		convertPostParameters(req, resp);
 		process(req, resp, session);
 	};
 
+	/**
+	 * Create mechanism to handle multipart parameters. 
+	 * Idea: Attribute on ASQueryContext, that must be cleaned
+	 * after every request process
+	 */
+	
+	private void convertPostParameters(HttpServletRequest req,
+			HttpServletResponse resp) throws FileUploadException, IOException {
+		if (ServletFileUpload.isMultipartContent(req)) {
+			FileItemIterator iter = new ServletFileUpload()
+					.getItemIterator(req);
+			while (iter.hasNext()) {
+				FileItemStream item = iter.next();
+				String pName = item.getFieldName();
+				InputStream in = item.openStream();
+				String s = Streams.asString(in);
+				System.out.println("PARAM1: " + pName + " CONTENT: " + s);
+			}
+		} 
+		
+			Enumeration<String> e = req.getParameterNames();
+			while (e.hasMoreElements()) {
+				String s = e.nextElement();
+				System.out.println("PARAM2: " + s + " CONTENT:" + req.getParameter(s));
+		}
+	}
+	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp,
 			Session session) throws Exception {
+		convertPostParameters(req, resp);		
 		process(req, resp, session);
 	}
 
@@ -95,13 +145,19 @@ public class FrontController extends BaseServlet {
 			Session session) throws StreamCorruptedException,
 			FileNotFoundException, SessionException, Exception, QueryException,
 			IOException {
-		prepareExecution(req, session);
-		if (RESOURCE.endsWith(".xq")) {
-			processXQueryFileRequest(req, resp);
+		resolveApplication(req, resp);
+		if (!UNKNOWN_MIMETYPE.equals(getMimeType(URI))) {
+			processResourceRequest(APP, URI, resp);
 			return;
 		} else {
-			processMVCRequest(req, resp);
-			return;
+			prepareExecution(req, session);
+			if (RESOURCE.endsWith(".xq")) {
+				processXQueryFileRequest(req, resp);
+				return;
+			} else {
+				processMVCRequest(req, resp);
+				return;
+			}
 		}
 	}
 
@@ -173,6 +229,44 @@ public class FrontController extends BaseServlet {
 					ctx.bind(var.getName(), item);
 				}
 			}
+		}
+	}
+
+	private void resolveApplication(HttpServletRequest req,
+			HttpServletResponse resp) {
+		resp.setContentType("text/html;charset=UTF-8");
+		URI = req.getRequestURI();
+		String[] URIParts = URI.split("/");
+		APP = URIParts[2];
+		RESOURCE = URI.substring(URI.lastIndexOf("/") + 1);
+		req.getSession().setAttribute(FrontController.APP_SESSION_ATT,
+				(Atomic) new Str(APP));
+	}
+
+	private void processResourceRequest(String app, String resource,
+			HttpServletResponse resp) throws StreamCorruptedException,
+			FileNotFoundException {
+		try {
+			resp.setContentType(getMimeType(resource));
+			InputStream in = getClass().getResourceAsStream(resource);
+			BufferedOutputStream out = new BufferedOutputStream(resp
+					.getOutputStream());
+			byte[] buffer = new byte[1024 * 16];
+			int bytesRead = 0;
+			while ((bytesRead = in.read(buffer)) != -1) {
+				out.write(buffer, 0, bytesRead);
+			}
+			out.close();
+			in.close();
+			resp.setStatus(HttpServletResponse.SC_OK);
+		} catch (StreamCorruptedException e) {
+			throw new StreamCorruptedException(String
+					.format("Error while reading inputStream of resource %s.",
+							resource));
+		} catch (Exception e) {
+			throw new FileNotFoundException(String.format(
+					"File %s does not exist under the application resources.",
+					resource));
 		}
 	}
 

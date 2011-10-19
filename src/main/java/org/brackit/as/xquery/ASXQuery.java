@@ -57,7 +57,6 @@ import org.brackit.as.xquery.function.request.GetCookie;
 import org.brackit.as.xquery.function.request.GetCookieNames;
 import org.brackit.as.xquery.function.request.GetParameter;
 import org.brackit.as.xquery.function.request.GetParameterNames;
-import org.brackit.as.xquery.function.request.GetPostParameter;
 import org.brackit.as.xquery.function.request.GetReqAttribute;
 import org.brackit.as.xquery.function.request.GetReqAttributeNames;
 import org.brackit.as.xquery.function.request.IsMultipartContent;
@@ -73,6 +72,7 @@ import org.brackit.as.xquery.function.session.SetAttribute;
 import org.brackit.as.xquery.function.session.SetMaxInactiveInterval;
 import org.brackit.as.xquery.function.util.PlainPrint;
 import org.brackit.as.xquery.function.util.Template;
+import org.brackit.as.xquery.function.util.Upload;
 import org.brackit.as.xquery.function.xqfile.CompileXQFile;
 import org.brackit.as.xquery.function.xqfile.CreateXQFile;
 import org.brackit.as.xquery.function.xqfile.DeleteXQFile;
@@ -87,6 +87,7 @@ import org.brackit.xquery.module.Functions;
 import org.brackit.xquery.module.Namespaces;
 import org.brackit.xquery.node.SubtreePrinter;
 import org.brackit.xquery.sequence.type.AnyItemType;
+import org.brackit.xquery.sequence.type.AnyKindType;
 import org.brackit.xquery.sequence.type.AtomicType;
 import org.brackit.xquery.sequence.type.Cardinality;
 import org.brackit.xquery.sequence.type.SequenceType;
@@ -231,19 +232,13 @@ public class ASXQuery extends XQuery {
 
 		Functions.predefine(new GetParameter(new QNm(Namespaces.REQUEST_NSURI,
 				Namespaces.REQUEST_PREFIX, "getParameter"), new Signature(
-				new SequenceType(AnyItemType.ANY, Cardinality.One),
+				new SequenceType(AnyKindType.ANY_NODE, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
 		Functions.predefine(new GetParameterNames(new QNm(
 				Namespaces.REQUEST_NSURI, Namespaces.REQUEST_PREFIX,
 				"getParameterNames"), new Signature(new SequenceType(
 				AnyItemType.ANY, Cardinality.ZeroOrMany))));
-
-		Functions.predefine(new GetPostParameter(new QNm(
-				Namespaces.REQUEST_NSURI, Namespaces.REQUEST_PREFIX,
-				"getPostParameter"), new Signature(new SequenceType(
-				AtomicType.STR, Cardinality.One), new SequenceType(
-				AtomicType.STR, Cardinality.One))));
 
 		Functions.predefine(new IsMultipartContent(new QNm(
 				Namespaces.REQUEST_NSURI, Namespaces.REQUEST_PREFIX,
@@ -269,6 +264,12 @@ public class ASXQuery extends XQuery {
 				Namespaces.UTIL_PREFIX, "plainPrint"), new Signature(
 				new SequenceType(AtomicType.STR, Cardinality.ZeroOrOne),
 				new SequenceType(AnyItemType.ANY, Cardinality.One))));
+		
+		Functions.predefine(new Upload(new QNm(Namespaces.UTIL_NSURI,
+				Namespaces.UTIL_PREFIX, "upload"), new Signature(
+				new SequenceType(AtomicType.BOOL, Cardinality.One),
+				new SequenceType(AtomicType.STR, Cardinality.One),
+				new SequenceType(AtomicType.STR, Cardinality.One))));
 
 		// App
 		Functions.predefine(new GetNames(new QNm(Namespaces.APP_NSURI,

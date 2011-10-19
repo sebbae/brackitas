@@ -64,3 +64,26 @@ declare function createFileForm($fPath as xs:string,
         </table>
     </form>
 };
+
+declare function createUploadForm($fPath as xs:string,
+                                  $app as xs:string) as item() {
+    <form action="./upload" enctype="multipart/form-data" method="post">
+        <table style="width: 100%; background-color: rgb(224, 224, 240);">
+            <tr>
+                <td style="width: 20%;"><h5>Select file</h5></td>
+                <td><input type="file" name="fName"/></td>
+                
+            </tr>
+            <tr>
+                <td style="width: 20%;"><h5>Under</h5></td>
+                <td><input type="text" readonly="readonly" name="name" value="{$fPath}"/></td>
+            </tr>            
+            <tr>
+                <td colspan="3" align="center">
+                  <input align="center" type="submit" name="sub" value="Upload file"/>
+                  <input type="hidden" name="app" value="{$app}"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+};

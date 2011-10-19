@@ -27,11 +27,7 @@
  */
 package org.brackit.as.http.app;
 
-import java.io.BufferedOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.StreamCorruptedException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -42,8 +38,6 @@ import org.brackit.as.http.TXServlet;
 import org.brackit.server.ServerException;
 import org.brackit.server.session.Session;
 import org.brackit.server.tx.Tx;
-import org.brackit.xquery.atomic.Atomic;
-import org.brackit.xquery.atomic.Str;
 
 /**
  * 
@@ -54,66 +48,17 @@ public class BaseServlet extends TXServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	protected static String URI;
-
-	protected String APP;
-
-	protected String RESOURCE;
-
-	protected void resolveApplication(HttpServletRequest req,
-			HttpServletResponse resp) {
-		resp.setContentType("text/html;charset=UTF-8");
-		URI = req.getRequestURI();
-		String[] URIParts = URI.split("/");
-		APP = URIParts[2];
-		RESOURCE = URI.substring(URI.lastIndexOf("/") + 1);
-		req.getSession().setAttribute(FrontController.APP_SESSION_ATT,
-				(Atomic) new Str(APP));
-	}
-
-	public void processResourceRequest(String app, String resource,
-			HttpServletResponse resp) throws StreamCorruptedException,
-			FileNotFoundException {
-		try {
-			resp.setContentType(getMimeType(resource));
-			InputStream in = getClass().getResourceAsStream(resource);
-			BufferedOutputStream out = new BufferedOutputStream(resp
-					.getOutputStream());
-			byte[] buffer = new byte[1024 * 16];
-			int bytesRead = 0;
-			while ((bytesRead = in.read(buffer)) != -1) {
-				out.write(buffer, 0, bytesRead);
-			}
-			out.close();
-			in.close();
-			resp.setStatus(HttpServletResponse.SC_OK);
-		} catch (StreamCorruptedException e) {
-			throw new StreamCorruptedException(String
-					.format("Error while reading inputStream of resource %s.",
-							resource));
-		} catch (Exception e) {
-			throw new FileNotFoundException(String.format(
-					"File %s does not exist under the application resources.",
-					resource));
-		}
-	}
-
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		Session session = null;
 		Tx tx = null;
 		try {
-			resolveApplication(req, resp);
-			if (!FrontController.UNKNOWN_MIMETYPE.equals(getMimeType(URI))) {
-				processResourceRequest(APP, URI, resp);
-				return;
-			} else {
-				session = getSession(req);
-				tx = session.checkTX();
-				doGet(req, resp, session);
-				session.commit();
-			}
+			session = getSession(req);
+			tx = session.checkTX();
+			doGet(req, resp, session);
+			session.commit();
+
 		} catch (Throwable e) {
 			// TODO: Erase it
 			e.printStackTrace();
@@ -134,12 +79,26 @@ public class BaseServlet extends TXServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		Session session = getSession(req);
+		Session session = null;
+		Tx tx = null;
 		try {
+			session = getSession(req);
+			tx = session.checkTX();
 			doPost(req, resp, session);
+			session.commit();
 		} catch (Throwable e) {
-			req.setAttribute(ErrorServlet.ERROR_ATT, e.getMessage());
-			doDispatch(req, resp, HttpConnector.APP_ERROR_DISP_TARGET);
+			e.printStackTrace();
+			try {
+				if (tx == null) {
+					session.rollback();
+				}
+			} catch (ServerException e1) {
+				e1.printStackTrace();
+				log.error(e1);
+			}
+		} finally {
+			if (session != null)
+				cleanup(session, tx);
 		}
 	};
 

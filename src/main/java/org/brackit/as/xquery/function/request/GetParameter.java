@@ -27,8 +27,15 @@
  */
 package org.brackit.as.xquery.function.request;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.fileupload.FileItemIterator;
+import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload.util.Streams;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -53,12 +60,30 @@ public class GetParameter extends AbstractFunction {
 	@Override
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
-		try {
-			HttpServletRequest req = ((ASQueryContext) ctx).getReq();
-			String vName = ((Item) args[0]).atomize().stringValue();
-			return new Str(req.getParameter(vName).trim());
-		} catch (Exception e) {
-			return new Str("");
+		HttpServletRequest req = ((ASQueryContext) ctx).getReq();
+		String vName = ((Item) args[0]).atomize().stringValue().trim();
+		if (ServletFileUpload.isMultipartContent(req)) {
+			FileItemIterator iter;
+			try {
+				iter = new ServletFileUpload().getItemIterator(req);
+				if (iter.hasNext())
+					while (iter.hasNext()) {
+						FileItemStream item = iter.next();
+						if (item.getFieldName().equals(vName)) {
+							String s = Streams.asString(item.openStream());
+							return new Str(s);
+						}
+					}
+				else
+					System.out.println("Empty iterator");
+			} catch (Exception e) {
+				// TODO Generate meaningful XQuery exception
+				e.printStackTrace();
+			}
+			return new Str(null);			
+		} else {
+			String param = req.getParameter(vName);
+			return new Str((param == null) ? "" : param.trim());
 		}
 	}
 }

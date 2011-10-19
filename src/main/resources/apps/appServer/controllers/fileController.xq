@@ -102,7 +102,7 @@ declare function action() as item() {
 };
 
 declare function create() as item() {
-    let $butClick := fn:normalize-space(req:getParameter("sub")),
+    let $butClick := req:getParameter("sub"),
         $fBasePath := req:getParameter("name"),
         $app := req:getParameter("app"),
         $menu := appView:createMenu($app),
@@ -123,4 +123,16 @@ declare function create() as item() {
                     appView:menuContent($menu,view:createFileForm($fBasePath,$app))
         else
             appView:menuContent($menu,view:createFileForm($fBasePath,$app))
+};
+
+declare function upload() as item() {
+    let $butClick := req:getParameter("sub"),
+        $fBasePath := req:getParameter("name"),
+        $app := req:getParameter("app"),
+        $menu := appView:createMenu($app)
+    return
+        if (fn:string-length($butClick) > 0) then
+            util:upload($fBasePath,"fName")
+        else
+            appView:menuContent($menu,view:createUploadForm($fBasePath,$app))
 };
