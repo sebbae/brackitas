@@ -27,9 +27,12 @@
  */
 package org.brackit.as.xquery;
 
+import java.util.HashMap;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.brackit.as.context.InputStreamName;
 import org.brackit.server.metadata.TXQueryContext;
 import org.brackit.server.metadata.manager.MetaDataMgr;
 import org.brackit.server.tx.Tx;
@@ -44,6 +47,8 @@ public class ASQueryContext extends TXQueryContext {
 	private HttpSession httpSession;
 
 	private HttpServletRequest req;
+
+	private HashMap<String, InputStreamName> multiPartParams;
 
 	public ASQueryContext(Tx tx, MetaDataMgr mdm, HttpSession httpSession,
 			HttpServletRequest req) {
@@ -63,5 +68,13 @@ public class ASQueryContext extends TXQueryContext {
 
 	public HttpServletRequest getReq() {
 		return req;
+	}
+
+	public void setMultiPartParams(HashMap<String, InputStreamName> hm) {
+		this.multiPartParams = hm;
+	}
+
+	public InputStreamName getMutliPartParam(String s) {
+		return this.multiPartParams.get(s);
 	}
 }

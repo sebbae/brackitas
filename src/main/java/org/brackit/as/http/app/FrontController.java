@@ -28,31 +28,26 @@
 package org.brackit.as.http.app;
 
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.StreamCorruptedException;
-import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.fileupload.FileItemIterator;
-import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.fileupload.util.Streams;
 import org.brackit.as.context.BaseAppContext;
-import org.brackit.as.http.uiOld.Helper.FILE_TYPE;
+import org.brackit.as.context.InputStreamName;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.as.xquery.ASXQuery;
-import org.brackit.as.xquery.function.request.IsMultipartContent;
 import org.brackit.server.session.Session;
 import org.brackit.server.session.SessionException;
 import org.brackit.server.tx.Tx;
@@ -92,8 +87,6 @@ public class FrontController extends BaseServlet {
 
 	private ASXQuery x;
 
-	private ASQueryContext ctx;
-
 	private static String URI;
 
 	private String APP;
@@ -103,41 +96,12 @@ public class FrontController extends BaseServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp,
 			Session session) throws Exception {
-		convertPostParameters(req, resp);
 		process(req, resp, session);
 	};
 
-	/**
-	 * Create mechanism to handle multipart parameters. 
-	 * Idea: Attribute on ASQueryContext, that must be cleaned
-	 * after every request process
-	 */
-	
-	private void convertPostParameters(HttpServletRequest req,
-			HttpServletResponse resp) throws FileUploadException, IOException {
-		if (ServletFileUpload.isMultipartContent(req)) {
-			FileItemIterator iter = new ServletFileUpload()
-					.getItemIterator(req);
-			while (iter.hasNext()) {
-				FileItemStream item = iter.next();
-				String pName = item.getFieldName();
-				InputStream in = item.openStream();
-				String s = Streams.asString(in);
-				System.out.println("PARAM1: " + pName + " CONTENT: " + s);
-			}
-		} 
-		
-			Enumeration<String> e = req.getParameterNames();
-			while (e.hasMoreElements()) {
-				String s = e.nextElement();
-				System.out.println("PARAM2: " + s + " CONTENT:" + req.getParameter(s));
-		}
-	}
-	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp,
 			Session session) throws Exception {
-		convertPostParameters(req, resp);		
 		process(req, resp, session);
 	}
 
@@ -271,9 +235,24 @@ public class FrontController extends BaseServlet {
 	}
 
 	private void prepareExecution(HttpServletRequest req, Session session)
-			throws SessionException {
+			throws SessionException, FileUploadException, IOException {
 		tx = session.getTX();
 		x = null;
 		ctx = new ASQueryContext(tx, metaDataMgr, req.getSession(), req);
+		if (ServletFileUpload.isMultipartContent(req))
+			ctx.setMultiPartParams(convertMultiPartParams(req));
+	}
+
+	private HashMap<String, InputStreamName> convertMultiPartParams(
+			HttpServletRequest req) throws FileUploadException, IOException {
+		HashMap<String, InputStreamName> result = new HashMap<String, InputStreamName>();
+		Iterator<FileItem> iter = new ServletFileUpload(
+				new DiskFileItemFactory()).parseRequest(req).iterator();
+		while (iter.hasNext()) {
+			FileItem item = (FileItem) iter.next();
+			result.put(item.getFieldName(), new InputStreamName(item
+					.getInputStream(), item.getName()));
+		}
+		return result;
 	}
 }

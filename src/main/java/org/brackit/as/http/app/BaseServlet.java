@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.brackit.as.http.HttpConnector;
 import org.brackit.as.http.TXServlet;
+import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.server.ServerException;
 import org.brackit.server.session.Session;
 import org.brackit.server.tx.Tx;
@@ -47,12 +48,15 @@ import org.brackit.server.tx.Tx;
 public class BaseServlet extends TXServlet {
 
 	private static final long serialVersionUID = 1L;
+	
+	protected ASQueryContext ctx;
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		Session session = null;
 		Tx tx = null;
+		ctx = null;
 		try {
 			session = getSession(req);
 			tx = session.checkTX();
@@ -73,6 +77,8 @@ public class BaseServlet extends TXServlet {
 		} finally {
 			if (session != null)
 				cleanup(session, tx);
+			if (ctx != null)
+				ctx.setMultiPartParams(null);
 		}
 	};
 
@@ -81,6 +87,7 @@ public class BaseServlet extends TXServlet {
 			throws ServletException, IOException {
 		Session session = null;
 		Tx tx = null;
+		ctx = null;		
 		try {
 			session = getSession(req);
 			tx = session.checkTX();
@@ -99,6 +106,8 @@ public class BaseServlet extends TXServlet {
 		} finally {
 			if (session != null)
 				cleanup(session, tx);
+			if (ctx != null)
+				ctx.setMultiPartParams(null);
 		}
 	};
 

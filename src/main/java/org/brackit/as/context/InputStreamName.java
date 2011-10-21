@@ -1,5 +1,4 @@
-(:
- *
+/*
  * [New BSD License]
  * Copyright (c) 2011, Brackit Project Team <info@brackit.org>  
  * All rights reserved.
@@ -25,28 +24,33 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- **
+ */
+package org.brackit.as.context;
+
+import java.io.InputStream;
+
+/**
  * 
  * @author Henrique Valer
  * 
- *
-:)
-module namespace model="http://brackit.org/lib/appServer/fileModel";
-import module namespace appModel="http://brackit.org/lib/appServer/appModel";
+ */
+public class InputStreamName {
 
-declare function validateXQFile($name as xs:string) as xs:boolean {
-    if ((appModel:validateName($name)) and 
-        (fn:ends-with($name, ".xq")))
-    then
-        fn:true()
-    else
-        fn:false()
-};
+	private final String name;
 
-declare function validateDirName($name as xs:string) as xs:boolean {
-    if (appModel:validateName($name)) then
-        fn:true()
-    else
-        fn:false()
-};
+	private final InputStream in;
+
+	public InputStreamName(InputStream in, String name) {
+		this.in = in;
+		this.name = name;
+	}
+
+	public InputStream getInputStream() {
+		return this.in;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+}

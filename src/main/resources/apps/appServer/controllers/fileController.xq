@@ -132,7 +132,32 @@ declare function upload() as item() {
         $menu := appView:createMenu($app)
     return
         if (fn:string-length($butClick) > 0) then
-            util:upload($fBasePath,"fName")
+            if (util:upload($fBasePath,"fName")) then
+                appView:menuContent($menu,view:msgSuccess("File uploaded sucessfully!"))
+            else
+                appView:menuContent($menu,view:msgFailure("Problems uploading file!"))
         else
             appView:menuContent($menu,view:createUploadForm($fBasePath,$app))
+};
+
+declare function mkDir() as item() {
+    let $butClick := req:getParameter("sub"),
+        $fBasePath := req:getParameter("name"),
+        $app := req:getParameter("app"),
+        $dirName := req:getParameter("dir"),
+        $menu := appView:createMenu($app)
+    return
+        if (fn:string-length($butClick) > 0) then
+            if (model:validateDirName($dirName)) then 
+                if (util:mkDir(fn:concat($fBasePath,"/",$dirName))) then
+                    appView:menuContent($menu,view:msgSuccess("Directory created sucessfully!"))
+                else
+                    appView:menuContent($menu,view:msgFailure("Problems creating directory!"))
+            else
+                if (session:setAttribute("msg",view:msgFailure("Directory name cannot be empty or contain space"))) then
+                    appView:menuContent($menu,view:createDirForm($fBasePath,$app))
+                else
+                    appView:menuContent($menu,view:createDirForm($fBasePath,$app))
+        else
+            appView:menuContent($menu,view:createDirForm($fBasePath,$app))
 };

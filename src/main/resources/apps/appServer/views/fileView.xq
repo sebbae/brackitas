@@ -87,3 +87,26 @@ declare function createUploadForm($fPath as xs:string,
         </table>
     </form>
 };
+
+declare function createDirForm($fPath as xs:string,
+                               $app as xs:string) as item() {
+    <form action="./mkDir">
+        <table style="width: 100%; background-color: rgb(224, 224, 240);">
+            <tr>
+                <td style="width: 20%;"><h5>Directory name</h5></td>
+                <td><input type="text" name="dir"/></td>
+                
+            </tr>
+            <tr>
+                <td style="width: 20%;"><h5>Under</h5></td>
+                <td><input type="text" readonly="readonly" name="name" value="{$fPath}"/></td>
+            </tr>            
+            <tr>
+                <td colspan="3" align="center">
+                  <input align="center" type="submit" name="sub" value="Create directory"/>
+                  <input type="hidden" name="app" value="{$app}"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+};
