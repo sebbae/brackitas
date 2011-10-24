@@ -27,4 +27,4 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
  * 
  :)
-module namespace template="http://brackit.org/lib/1/1Template"; 
+module namespace template="http://brackit.org/lib/1/1Template";
