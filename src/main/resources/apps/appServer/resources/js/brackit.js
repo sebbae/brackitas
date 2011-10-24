@@ -11,7 +11,7 @@ var editor = CodeMirror
 					lineNumbers : true
 				});
 
-var editor = CodeMirror
+var editor2 = CodeMirror
 		.fromTextArea(
 				'code2',
 				{
@@ -24,7 +24,7 @@ var editor = CodeMirror
 					lineNumbers : true
 				});
 
-var editor = CodeMirror
+var editor3 = CodeMirror
 		.fromTextArea(
 				'code3',
 				{

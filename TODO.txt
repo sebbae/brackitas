@@ -65,6 +65,6 @@
 (  ) Change all function implementation to thrown errors, as soon as the try-catch block
 	 is functional. 
 (OK) Finish discussion Controller
-(  ) Select decent icons.
+(OK) Select decent icons.
 (OK) Finish mkdir and upload.
-(  ) After directory creation, need to update menus, how?
+(OK) After directory creation, need to update menus, how?
