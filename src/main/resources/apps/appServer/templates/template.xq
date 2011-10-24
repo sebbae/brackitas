@@ -92,8 +92,8 @@ declare function menu() as item() {
         <tr>
           <td>
             <ul class="vlist">
-              <li><a href="../appController/index"><h6>Apps</h6></a></li>
-              <li><a href="../docController/index"><h6>Docs</h6></a></li>
+              <li><zu><a href="../appController/index"><h6>Apps</h6></a></zu></li>
+              <li><zu><a href="../docController/index"><h6>Docs</h6></a></zu></li>
             </ul>
           </td>
         </tr>

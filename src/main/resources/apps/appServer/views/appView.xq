@@ -112,17 +112,20 @@ declare function delete($result as xs:boolean) as item() {
         default($content)
 };
 
-
-
-
 declare function listing($dir as item()*, $app as xs:string, $base as xs:string) as item()* {
     <div>
         <li>
           <zu>
             <a>{fn:data($dir/@name)}</a>
-            <a href="../fileController/create?app={$app}&amp;name={$base}">Create</a>
-            <a href="../fileController/upload?app={$app}&amp;name={$base}">Upload</a>
-            <a href="../fileController/mkDir?app={$app}&amp;name={$base}">MkDir</a>            
+            <a href="../fileController/create?app={$app}&amp;name={$base}">
+                <img width="16" height="16" alt="Create new XQuery file" title="Create new XQuery file" src="http://localhost:8080/apps/appServer/resources/images/01_create.gif"/>
+            </a>
+            <a href="../fileController/upload?app={$app}&amp;name={$base}">
+                <img width="16" height="16" alt="Upload file" title="Upload file" src="http://localhost:8080/apps/appServer/resources/images/02_upload.gif"/>
+            </a>
+            <a href="../fileController/mkDir?app={$app}&amp;name={$base}">
+                <img width="16" height="16" alt="Create a new folder" title="Create a new folder" src="http://localhost:8080/apps/appServer/resources/images/03_folder.gif"/>            
+            </a>            
           </zu>
         </li>
         <li>

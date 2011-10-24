@@ -63,10 +63,7 @@ public class DeleteXQFile extends AbstractFunction {
 				.format("%s/%s", HttpConnector.APPS_PATH, fPathName);
 		ServletContext sctx = ((ASQueryContext) ctx).getReq()
 				.getServletContext();
-		BaseAppContext bac = (BaseAppContext) sctx.getAttribute(app);
-		bac.unregister(fPathName);
-//		TODO: Erase it to actually remove file
-//		return new Bool(new File(base).delete());
-		return Bool.TRUE;
+		((BaseAppContext) sctx.getAttribute(app)).unregister(fPathName);
+		return new Bool(new File(base).delete());
 	}
 }

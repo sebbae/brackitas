@@ -63,8 +63,10 @@ declare function edit() as item ()* {
     return
         if (appModel:validateApp($app)) then
             if (session:setAttribute("editApp",$app)) then
-                let $menu := appView:createMenu($app)
-                return appView:menuContent($menu, "Welcome to the development Framework")
+                let 
+                    $menu := appView:createMenu($app)
+                return 
+                    appView:menuContent($menu, "Welcome to the development Framework")
             else
                 appView:default(fn:concat("Problems editing application ",$app))
         else

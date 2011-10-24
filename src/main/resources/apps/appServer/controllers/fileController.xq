@@ -72,18 +72,17 @@ declare function compile() as item() {
 };
 
 declare function delete() as item() {
-    let $fPathName := req:getParameter("name")
+    let $fPathName := req:getParameter("name"),
+        $app := req:getParameter("app"),
+        $menu := appView:createMenu($app) 
     return
         let $msg := 
             if (xqfile:delete($fPathName)) then
                 view:msgSuccess("Deleted sucessfully!")
             else
-                view:msgFailure("Deletion failed!")   
-       return
-            if (session:setAttribute("msg",$msg)) then
-                appController:load()
-            else
-                appController:load()
+                view:msgSuccess("Deletion failed!")
+        return
+            appView:menuContent($menu,$msg)
 };
 
 declare function action() as item() {
@@ -150,7 +149,7 @@ declare function mkDir() as item() {
         if (fn:string-length($butClick) > 0) then
             if (model:validateDirName($dirName)) then 
                 if (util:mkDir(fn:concat($fBasePath,"/",$dirName))) then
-                    appView:menuContent($menu,view:msgSuccess("Directory created sucessfully!"))
+                    appView:menuContent(appView:createMenu($app),view:msgSuccess("Directory created sucessfully!"))
                 else
                     appView:menuContent($menu,view:msgFailure("Problems creating directory!"))
             else
