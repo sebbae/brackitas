@@ -30,6 +30,7 @@ package org.brackit.as.xquery.function.app;
 import java.io.File;
 
 import org.brackit.as.http.HttpConnector;
+import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -53,8 +54,13 @@ public class Exists extends AbstractFunction {
 	@Override
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
-		String app = ((Atomic) args[0]).atomize().stringValue().trim();
-		String base = String.format("%s/%s", HttpConnector.APPS_PATH, app);
-		return new Bool(new File(base).exists());
+		try {
+			String app = ((Atomic) args[0]).atomize().stringValue().trim();
+			String base = String.format("%s/%s", HttpConnector.APPS_PATH, app);
+			return new Bool(new File(base).exists());
+		} catch (Exception e) {
+			throw new QueryException(e, ASErrorCode.APP_EXISTS_INT_ERROR, e
+					.getMessage());
+		}
 	}
 }

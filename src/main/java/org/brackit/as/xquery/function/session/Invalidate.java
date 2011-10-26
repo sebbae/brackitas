@@ -29,6 +29,7 @@ package org.brackit.as.xquery.function.session;
 
 import javax.servlet.http.HttpSession;
 
+import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -53,12 +54,12 @@ public class Invalidate extends AbstractFunction {
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
 		try {
-			HttpSession httSession = ((ASQueryContext) ctx)
-					.getHttpSession();
+			HttpSession httSession = ((ASQueryContext) ctx).getHttpSession();
 			httSession.invalidate();
 			return Bool.TRUE;
 		} catch (Exception e) {
-			return Bool.FALSE;
+			throw new QueryException(e,
+					ASErrorCode.SESSION_INVALIDATE_INT_ERROR, e.getMessage());
 		}
 	}
 }

@@ -48,10 +48,8 @@ import org.brackit.as.xquery.function.bit.CreateCollection;
 import org.brackit.as.xquery.function.bit.DropCollection;
 import org.brackit.as.xquery.function.bit.Eval;
 import org.brackit.as.xquery.function.bit.ExistCollection;
-import org.brackit.as.xquery.function.bit.FtIndexStore;
 import org.brackit.as.xquery.function.bit.LoadFile;
 import org.brackit.as.xquery.function.bit.MakeDirectory;
-import org.brackit.as.xquery.function.bit.Render;
 import org.brackit.as.xquery.function.bit.StoreDoc;
 import org.brackit.as.xquery.function.request.GetCookie;
 import org.brackit.as.xquery.function.request.GetCookieNames;
@@ -131,12 +129,6 @@ public class ASXQuery extends XQuery {
 		Functions.predefine(new StoreDoc(new QNm(Namespaces.BIT_NSURI,
 				Namespaces.BIT_PREFIX, "storeDoc"), new Signature(
 				new SequenceType(AtomicType.STR, Cardinality.ZeroOrOne),
-				new SequenceType(AtomicType.STR, Cardinality.One),
-				new SequenceType(AnyItemType.ANY, Cardinality.One))));
-
-		Functions.predefine(new FtIndexStore(new QNm(Namespaces.BIT_NSURI,
-				Namespaces.BIT_PREFIX, "ftIndexStore"), new Signature(
-				new SequenceType(AtomicType.BOOL, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One),
 				new SequenceType(AnyItemType.ANY, Cardinality.One))));
 
@@ -321,7 +313,7 @@ public class ASXQuery extends XQuery {
 		// File
 		Functions.predefine(new CompileXQFile(new QNm(Namespaces.XQFILE_NSURI,
 				Namespaces.XQFILE_PREFIX, "compile"), new Signature(
-				new SequenceType(AtomicType.STR, Cardinality.One),
+				new SequenceType(AtomicType.BOOL, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
@@ -341,11 +333,6 @@ public class ASXQuery extends XQuery {
 				new SequenceType(AtomicType.STR, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
-		// Testing
-		Functions.predefine(new Render(new QNm(Namespaces.BIT_NSURI,
-				Namespaces.BIT_PREFIX, "render"), new Signature(
-				new SequenceType(AnyItemType.ANY, Cardinality.One),
-				new SequenceType(AtomicType.STR, Cardinality.One))));
 	}
 
 	private boolean longLive;

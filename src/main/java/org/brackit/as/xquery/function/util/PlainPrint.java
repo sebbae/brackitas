@@ -30,6 +30,7 @@ package org.brackit.as.xquery.function.util;
 import java.io.PrintStream;
 
 import org.brackit.as.util.FunctionUtils;
+import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -57,18 +58,22 @@ public class PlainPrint extends AbstractFunction {
 	@Override
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
-		String vQuery = null;
-		if (args[0] instanceof Atomic) {
-			vQuery = ((Atomic) args[0]).stringValue().trim();
-		} else {
-			PrintStream buf = fUtils.createBuffer();
-			SubtreePrinter s = new SubtreePrinter(buf);
-			s.setPrettyPrint(true);
-			s.print((Node<?>) args[0]);
-			vQuery = buf.toString();
+		try {
+			String vQuery = null;
+			if (args[0] instanceof Atomic) {
+				vQuery = ((Atomic) args[0]).stringValue().trim();
+			} else {
+				PrintStream buf = fUtils.createBuffer();
+				SubtreePrinter s = new SubtreePrinter(buf);
+				s.setPrettyPrint(true);
+				s.print((Node<?>) args[0]);
+				vQuery = buf.toString();
+			}
+			vQuery = vQuery.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+			return new Str(vQuery);
+		} catch (Exception e) {
+			throw new QueryException(e, ASErrorCode.UTIL_PLAINPRINT_INT_ERROR,
+					e.getMessage());
 		}
-		vQuery = vQuery.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-//		vQuery = vQuery.replaceAll("\n", "<br/>");
-		return new Str(vQuery);
 	}
 }

@@ -30,6 +30,7 @@ package org.brackit.as.xquery.function.bit;
 import java.io.PrintStream;
 
 import org.brackit.as.util.FunctionUtils;
+import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -81,7 +82,8 @@ public class AddDocToCollection extends AbstractFunction {
 			coll.add(new DocumentParser(vContent));
 			return Bool.TRUE;
 		} catch (Exception e) {
-			return Bool.FALSE;
+			throw new QueryException(e,
+					ASErrorCode.BIT_ADDTOCOLLECTION_INT_ERROR, e.getMessage());
 		}
 	}
 }

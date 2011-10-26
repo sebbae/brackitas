@@ -27,6 +27,7 @@
  */
 package org.brackit.as.xquery.function.bit;
 
+import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.server.metadata.TXQueryContext;
 import org.brackit.server.tx.Tx;
 import org.brackit.xquery.QueryContext;
@@ -58,7 +59,8 @@ public class MakeDirectory extends AbstractFunction {
 			((TXQueryContext) ctx).getMDM().mkdir(tx, vDirName);
 			return Bool.TRUE;
 		} catch (Exception e) {
-			return Bool.FALSE;
+			throw new QueryException(e,
+					ASErrorCode.BIT_MAKEDIRECTORY_INT_ERROR, e.getMessage());
 		}
 	}
 }

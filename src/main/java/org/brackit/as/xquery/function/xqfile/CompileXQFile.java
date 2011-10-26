@@ -33,13 +33,14 @@ import javax.servlet.ServletContext;
 
 import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.http.HttpConnector;
+import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.as.xquery.ASXQuery;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
+import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
-import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.function.Signature;
 import org.brackit.xquery.xdm.Sequence;
@@ -73,9 +74,10 @@ public class CompileXQFile extends AbstractFunction {
 			// trown
 			Long lastUsed = new File(base).lastModified();
 			bac.register(String.format("/%s/%s", app, base), lastUsed);
-			return new Str("");
+			return Bool.TRUE;
 		} catch (Exception e) {
-			return new Str(e.getMessage());
+			throw new QueryException(e, ASErrorCode.XQFILE_COMPILE_INT_ERROR, e
+					.getMessage());
 		}
 	}
 }

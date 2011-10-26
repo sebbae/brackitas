@@ -27,5 +27,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
  * 
  :)
-(: TODO Auto-generated XQuery block :) 
-"TODO"
+module namespace controller="http://brackit.org/lib/testeLive/testeLiveController";
+import module namespace model="http://brackit.org/lib/testeLive/testeLiveModel";
+import module namespace view="http://brackit.org/lib/testeLive/testeLiveView";
+ 
+ declare function show() as item() {
+   
+   let $text := req:getParameter("fName")
+   return $text
+   
+   
+   
+   };

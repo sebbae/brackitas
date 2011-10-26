@@ -33,6 +33,7 @@ import java.util.List;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -58,13 +59,18 @@ public class GetCookieNames extends AbstractFunction {
 	@Override
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
-		HttpServletRequest req = ((ASQueryContext) ctx).getReq();
-		List<Str> names = new ArrayList<Str>();
-		Cookie[] cookies = req.getCookies();
-		for (int i = 0; i < cookies.length; i++) {
-			names.add(new Str(cookies[i].getName()));
+		try {
+			HttpServletRequest req = ((ASQueryContext) ctx).getReq();
+			List<Str> names = new ArrayList<Str>();
+			Cookie[] cookies = req.getCookies();
+			for (int i = 0; i < cookies.length; i++) {
+				names.add(new Str(cookies[i].getName()));
+			}
+			Item[] result = names.toArray(new Item[0]);
+			return new ItemSequence(result);
+		} catch (Exception e) {
+			throw new QueryException(e,
+					ASErrorCode.REQ_GETCOOKIENAMES_INT_ERROR, e.getMessage());
 		}
-		Item[] result = names.toArray(new Item[0]);
-		return new ItemSequence(result);
 	}
 }

@@ -34,6 +34,7 @@ import javax.servlet.http.HttpSession;
 
 import org.brackit.as.http.app.FrontController;
 import org.brackit.as.util.FunctionUtils;
+import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASXQuery;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
@@ -78,63 +79,70 @@ public class Template extends AbstractFunction {
 
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
-		/**
-		 * If the field is null, the template load a default file for it and
-		 * executes it. If It's a file, it is loaded and executed Otherwise, the
-		 * string is executed
-		 * 
-		 * TODO: Use app name, instead of eCommerce
-		 * 
-		 */
-		ClassLoader cl = getClass().getClassLoader();
-		String arg = null;
-		String toBeEval = null;
-		HttpSession httpSession = ((ASQueryContext) ctx)
-				.getHttpSession();
-		String app = ((Atomic) httpSession.getAttribute(FrontController.APP_SESSION_ATT))
-				.stringValue();
+		try {
+			/**
+			 * If the field is null, the template load a default file for it and
+			 * executes it. If It's a file, it is loaded and executed Otherwise,
+			 * the string is executed
+			 * 
+			 * TODO: Use app name, instead of eCommerce
+			 * 
+			 */
+			ClassLoader cl = getClass().getClassLoader();
+			String arg = null;
+			String toBeEval = null;
+			HttpSession httpSession = ((ASQueryContext) ctx).getHttpSession();
+			String app = ((Atomic) httpSession
+					.getAttribute(FrontController.APP_SESSION_ATT))
+					.stringValue();
 
-		for (int i = 0; i < args.length; i++) {
-			if (args[i] instanceof Atomic) {
-				arg = ((Atomic) args[i]).stringValue();
-			} else {
-				PrintStream buf = fUtils.createBuffer();
-				SubtreePrinter.print((Node<?>) args[i], buf);
-				arg = buf.toString();
-			}
-			if (arg.length() == 0) {
-				toBeEval = String
-						.format(
-								"bit:eval(bit:loadFile('apps/%s/views/default/%s.xq'))",
-								app, getTempField(i));
-			} else {
-				try {
-					String s = String.format("apps/%s/views/%s.xq", app,
-							getTempField(i));
-					InputStream in = cl.getResourceAsStream(s);
-					if (in == null)
-						throw new Exception();
-					toBeEval = String.format("bit:eval(bit:loadFile('%s'))", s);
-				} catch (Exception e) {
-					toBeEval = arg;
+			for (int i = 0; i < args.length; i++) {
+				if (args[i] instanceof Atomic) {
+					arg = ((Atomic) args[i]).stringValue();
+				} else {
+					PrintStream buf = fUtils.createBuffer();
+					SubtreePrinter.print((Node<?>) args[i], buf);
+					arg = buf.toString();
 				}
-			}
-			ctx.bind(new QNm(getTempField(i)), new Str(toBeEval));
-		}
-		// case of call only with content parameter
-		if (args.length == 1) {
-			for (int i = 1; i < this.tempFields.length; i++) {
-				toBeEval = String
-						.format(
-								"bit:eval(bit:loadFile('apps/%s/views/default/%s.xq'))",
-								app, getTempField(i));
+				if (arg.length() == 0) {
+					toBeEval = String
+							.format(
+									"bit:eval(bit:loadFile('apps/%s/views/default/%s.xq'))",
+									app, getTempField(i));
+				} else {
+					try {
+						String s = String.format("apps/%s/views/%s.xq", app,
+								getTempField(i));
+						InputStream in = cl.getResourceAsStream(s);
+						if (in == null)
+							throw new Exception();
+						toBeEval = String.format(
+								"bit:eval(bit:loadFile('%s'))", s);
+					} catch (Exception e) {
+						toBeEval = arg;
+					}
+				}
 				ctx.bind(new QNm(getTempField(i)), new Str(toBeEval));
 			}
+			// case of call only with content parameter
+			if (args.length == 1) {
+				for (int i = 1; i < this.tempFields.length; i++) {
+					toBeEval = String
+							.format(
+									"bit:eval(bit:loadFile('apps/%s/views/default/%s.xq'))",
+									app, getTempField(i));
+					ctx.bind(new QNm(getTempField(i)), new Str(toBeEval));
+				}
+			}
+			// File f = new File("apps/" + appName +
+			// "/views/default/template.xq");
+			XQuery x = new ASXQuery(cl.getResourceAsStream(String.format(
+					"apps/%s/views/default/template.xq", app)));
+			x.setPrettyPrint(true);
+			return x.execute(ctx);
+		} catch (Exception e) {
+			throw new QueryException(e, ASErrorCode.UTIL_TEMPLATE_INT_ERROR, e
+					.getMessage());
 		}
-		// File f = new File("apps/" + appName + "/views/default/template.xq");
-		XQuery x = new ASXQuery(cl.getResourceAsStream(String.format(
-				"apps/%s/views/default/template.xq", app)));
-		x.setPrettyPrint(true);
-		return x.execute(ctx);
 	}
 }

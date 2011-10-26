@@ -55,15 +55,16 @@ declare function save() as item() {
                 appController:load()
 }; 
 
+(: TODO: Wait for try cathc and improve compilation output :)
 declare function compile() as item() {
     let $fPathName := req:getParameter("name"),
         $query := req:getParameter("query")
     return
-        let $compilation := xqfile:compile($fPathName, $query),
-            $msg := if (fn:string-length($compilation) eq 0) then
-                        view:msgSuccess("Compiled sucessfully!")
-                    else
-                        view:msgFailure($compilation)   
+        let $msg := 
+            if (xqfile:compile($fPathName, $query)) then
+                view:msgSuccess("Compiled sucessfully!")
+            else
+                view:msgFailure("Compilation failed ... ")   
        return
             if (session:setAttribute("msg",$msg)) then
                 appController:load()

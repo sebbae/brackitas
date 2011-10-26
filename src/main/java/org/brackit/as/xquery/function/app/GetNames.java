@@ -34,6 +34,7 @@ import java.util.List;
 import javax.servlet.ServletContext;
 
 import org.brackit.as.context.BaseAppContext;
+import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -59,17 +60,22 @@ public class GetNames extends AbstractFunction {
 	@Override
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
-		ServletContext sctx = ((ASQueryContext) ctx).getReq()
-				.getServletContext();
-		Enumeration<String> e = sctx.getAttributeNames();
-		String n;
-		List<Str> names = new ArrayList<Str>();
-		while (e.hasMoreElements()) {
-			n = e.nextElement();
-			if (sctx.getAttribute(n) instanceof BaseAppContext)
-				names.add(new Str(n));
+		try {
+			ServletContext sctx = ((ASQueryContext) ctx).getReq()
+					.getServletContext();
+			Enumeration<String> e = sctx.getAttributeNames();
+			String n;
+			List<Str> names = new ArrayList<Str>();
+			while (e.hasMoreElements()) {
+				n = e.nextElement();
+				if (sctx.getAttribute(n) instanceof BaseAppContext)
+					names.add(new Str(n));
+			}
+			Item[] result = names.toArray(new Item[0]);
+			return new ItemSequence(result);
+		} catch (Exception e) {
+			throw new QueryException(e, ASErrorCode.APP_GETNAMES_INT_ERROR, e
+					.getMessage());
 		}
-		Item[] result = names.toArray(new Item[0]);
-		return new ItemSequence(result);
 	}
 }

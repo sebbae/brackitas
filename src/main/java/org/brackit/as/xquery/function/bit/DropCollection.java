@@ -27,6 +27,7 @@
  */
 package org.brackit.as.xquery.function.bit;
 
+import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -55,8 +56,8 @@ public class DropCollection extends AbstractFunction {
 			ctx.getStore().drop(doc);
 			return Bool.TRUE;
 		} catch (Exception e) {
-			e.printStackTrace();
-			return Bool.FALSE;
+			throw new QueryException(e,
+					ASErrorCode.BIT_DROPCOLLECTION_INT_ERROR, e.getMessage());
 		}
 	}
 }

@@ -30,6 +30,7 @@ package org.brackit.as.xquery.function.app;
 import javax.servlet.ServletContext;
 
 import org.brackit.as.context.BaseAppContext;
+import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -60,7 +61,8 @@ public class IsRunning extends AbstractFunction {
 					.getServletContext();
 			return new Bool(((BaseAppContext) s.getAttribute(name)).isRunning());
 		} catch (Exception e) {
-			return Bool.FALSE;
+			throw new QueryException(e, ASErrorCode.APP_ISRUNNING_INT_ERROR, e
+					.getMessage());
 		}
 	}
 }

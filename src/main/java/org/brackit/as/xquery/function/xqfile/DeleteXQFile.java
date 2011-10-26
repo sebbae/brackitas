@@ -33,6 +33,7 @@ import javax.servlet.ServletContext;
 
 import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.http.HttpConnector;
+import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -57,13 +58,19 @@ public class DeleteXQFile extends AbstractFunction {
 	@Override
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
-		String fPathName = ((Atomic) args[0]).atomize().stringValue().trim();
-		String app = fPathName.split("/")[0];
-		String base = String
-				.format("%s/%s", HttpConnector.APPS_PATH, fPathName);
-		ServletContext sctx = ((ASQueryContext) ctx).getReq()
-				.getServletContext();
-		((BaseAppContext) sctx.getAttribute(app)).unregister(fPathName);
-		return new Bool(new File(base).delete());
+		try {
+			String fPathName = ((Atomic) args[0]).atomize().stringValue()
+					.trim();
+			String app = fPathName.split("/")[0];
+			String base = String.format("%s/%s", HttpConnector.APPS_PATH,
+					fPathName);
+			ServletContext sctx = ((ASQueryContext) ctx).getReq()
+					.getServletContext();
+			((BaseAppContext) sctx.getAttribute(app)).unregister(fPathName);
+			return new Bool(new File(base).delete());
+		} catch (Exception e) {
+			throw new QueryException(e, ASErrorCode.XQFILE_DELETE_INT_ERROR, e
+					.getMessage());
+		}
 	}
 }

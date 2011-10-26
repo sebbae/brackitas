@@ -29,6 +29,7 @@ package org.brackit.as.xquery.function.bit;
 
 import java.io.File;
 
+import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASXQuery;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -53,8 +54,13 @@ public class LoadFile extends AbstractFunction {
 	@Override
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
-		String fName = ((Atomic) args[0]).stringValue().trim();
-		return new Str(ASXQuery.getStringFromFile(new File(String.format(
-				"src/main/resources/%s", fName))));
+		try {
+			String fName = ((Atomic) args[0]).stringValue().trim();
+			return new Str(ASXQuery.getStringFromFile(new File(String.format(
+					"src/main/resources/%s", fName))));
+		} catch (Exception e) {
+			throw new QueryException(e, ASErrorCode.BIT_LOADFILE_INT_ERROR, e
+					.getMessage());
+		}
 	}
 }

@@ -29,6 +29,7 @@ package org.brackit.as.xquery.function.request;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -52,8 +53,13 @@ public class GetReqAttribute extends AbstractFunction {
 	@Override
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
-		HttpServletRequest req = ((ASQueryContext) ctx).getReq();
-		String vAttName = ((Item) args[0]).atomize().stringValue();
-		return (Item) req.getAttribute(vAttName);
+		try {
+			HttpServletRequest req = ((ASQueryContext) ctx).getReq();
+			String vAttName = ((Item) args[0]).atomize().stringValue();
+			return (Item) req.getAttribute(vAttName);
+		} catch (Exception e) {
+			throw new QueryException(e, ASErrorCode.REQ_GETATTRIBUTE_INT_ERROR,
+					e.getMessage());
+		}
 	}
 }

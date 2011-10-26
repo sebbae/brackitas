@@ -41,8 +41,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.brackit.as.context.InputStreamName;
 import org.brackit.as.http.HttpConnector;
+import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
-import org.brackit.xquery.ErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.AnyURI;
@@ -102,8 +102,8 @@ public class Upload extends AbstractFunction {
 			in.close();
 			return Bool.TRUE;
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new QueryException(ErrorCode.ERR_UNIDENTIFIED_ERROR);
+			throw new QueryException(e, ASErrorCode.UTIL_UPLOAD_INT_ERROR, e
+					.getMessage());
 		} finally {
 			if (conn != null) {
 				if (conn != null) {

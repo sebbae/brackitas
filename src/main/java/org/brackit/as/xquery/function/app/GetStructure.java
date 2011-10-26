@@ -31,11 +31,11 @@ import java.io.File;
 import java.io.IOException;
 
 import org.brackit.as.http.HttpConnector;
+import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
 import org.brackit.xquery.atomic.QNm;
-import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.function.Signature;
 import org.brackit.xquery.node.linked.LNodeFactory;
@@ -62,8 +62,9 @@ public class GetStructure extends AbstractFunction {
 					app));
 			StringBuffer sb = listStructure(f);
 			return new LNodeFactory().build(new DocumentParser(sb.toString()));
-		} catch (IOException e) {
-			return new Str(e.getMessage());
+		} catch (Exception e) {
+			throw new QueryException(e, ASErrorCode.APP_GETSTRUCTURE_INT_ERROR,
+					e.getMessage());
 		}
 	}
 

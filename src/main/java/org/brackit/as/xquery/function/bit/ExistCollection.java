@@ -27,6 +27,7 @@
  */
 package org.brackit.as.xquery.function.bit;
 
+import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -55,7 +56,8 @@ public class ExistCollection extends AbstractFunction {
 			ctx.getStore().lookup(collection);
 			return Bool.TRUE;
 		} catch (Exception e) {
-			return Bool.FALSE;
+			throw new QueryException(e,
+					ASErrorCode.BIT_EXISTCOLLECTION_INT_ERROR, e.getMessage());
 		}
 	}
 }

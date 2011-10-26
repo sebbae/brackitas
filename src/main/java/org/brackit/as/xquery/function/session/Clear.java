@@ -31,6 +31,7 @@ import java.util.Enumeration;
 
 import javax.servlet.http.HttpSession;
 
+import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -55,17 +56,15 @@ public class Clear extends AbstractFunction {
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
 		try {
-			HttpSession httpSession = ((ASQueryContext) ctx)
-					.getHttpSession();
+			HttpSession httpSession = ((ASQueryContext) ctx).getHttpSession();
 			Enumeration<String> e = httpSession.getAttributeNames();
 			while (e.hasMoreElements()) {
 				httpSession.removeAttribute(e.nextElement());
 			}
 			return Bool.TRUE;
 		} catch (Exception e) {
-			// TODO: Remove it
-			e.printStackTrace();
-			return Bool.FALSE;
+			throw new QueryException(e, ASErrorCode.SESSION_CLEAR_INT_ERROR, e
+					.getMessage());
 		}
 	}
 }

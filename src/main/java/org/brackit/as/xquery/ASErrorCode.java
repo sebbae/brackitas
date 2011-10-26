@@ -1,0 +1,182 @@
+/*
+ * [New BSD License]
+ * Copyright (c) 2011, Brackit Project Team <info@brackit.org>  
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the <organization> nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+package org.brackit.as.xquery;
+
+import org.brackit.xquery.ErrorCode;
+import org.brackit.xquery.atomic.QNm;
+import org.brackit.xquery.module.Namespaces;
+
+/**
+ * 
+ * @author Henrique Valer
+ * 
+ */
+public class ASErrorCode extends ErrorCode {
+
+	/**
+	 * Errors for the predefined application functions
+	 */
+	public static final QNm APP_DELETE_INT_ERROR = new QNm(
+			Namespaces.APP_NSURI, Namespaces.APP_PREFIX, "APP0001");
+
+	public static final QNm APP_DEPLOY_INT_ERROR = new QNm(
+			Namespaces.APP_NSURI, Namespaces.APP_PREFIX, "APP0002");
+
+	public static final QNm APP_EXISTS_INT_ERROR = new QNm(
+			Namespaces.APP_NSURI, Namespaces.APP_PREFIX, "APP0003");
+
+	public static final QNm APP_GENERATE_INT_ERROR = new QNm(
+			Namespaces.APP_NSURI, Namespaces.APP_PREFIX, "APP0004");
+
+	public static final QNm APP_GETNAMES_INT_ERROR = new QNm(
+			Namespaces.APP_NSURI, Namespaces.APP_PREFIX, "APP0005");
+
+	public static final QNm APP_GETSTRUCTURE_INT_ERROR = new QNm(
+			Namespaces.APP_NSURI, Namespaces.APP_PREFIX, "APP0006");
+
+	public static final QNm APP_ISRUNNING_INT_ERROR = new QNm(
+			Namespaces.APP_NSURI, Namespaces.APP_PREFIX, "APP0007");
+
+	public static final QNm APP_TERMINATE_INT_ERROR = new QNm(
+			Namespaces.APP_NSURI, Namespaces.APP_PREFIX, "APP0008");
+
+	/**
+	 * Errors for the predefined bit functions
+	 */
+	public static final QNm BIT_ADDTOCOLLECTION_INT_ERROR = new QNm(
+			Namespaces.BIT_NSURI, Namespaces.BIT_PREFIX, "BIT0001");
+
+	public static final QNm BIT_CREATECOLLECTION_INT_ERROR = new QNm(
+			Namespaces.BIT_NSURI, Namespaces.BIT_PREFIX, "BIT0002");
+
+	public static final QNm BIT_DROPCOLLECTION_INT_ERROR = new QNm(
+			Namespaces.BIT_NSURI, Namespaces.BIT_PREFIX, "BIT0003");
+
+	public static final QNm BIT_EVAL_INT_ERROR = new QNm(Namespaces.BIT_NSURI,
+			Namespaces.BIT_PREFIX, "BIT0004");
+
+	public static final QNm BIT_EXISTCOLLECTION_INT_ERROR = new QNm(
+			Namespaces.BIT_NSURI, Namespaces.BIT_PREFIX, "BIT0005");
+
+	public static final QNm BIT_LOADFILE_INT_ERROR = new QNm(
+			Namespaces.BIT_NSURI, Namespaces.BIT_PREFIX, "BIT0006");
+
+	public static final QNm BIT_MAKEDIRECTORY_INT_ERROR = new QNm(
+			Namespaces.BIT_NSURI, Namespaces.BIT_PREFIX, "BIT0007");
+
+	public static final QNm BIT_STOREDOC_INT_ERROR = new QNm(
+			Namespaces.BIT_NSURI, Namespaces.BIT_PREFIX, "BIT0008");
+
+	/**
+	 * Errors for the predefined request functions
+	 */
+	public static final QNm REQ_GETCOOKIE_INT_ERROR = new QNm(
+			Namespaces.REQUEST_NSURI, Namespaces.REQUEST_PREFIX, "BIT0001");
+
+	public static final QNm REQ_GETCOOKIENAMES_INT_ERROR = new QNm(
+			Namespaces.REQUEST_NSURI, Namespaces.REQUEST_PREFIX, "BIT0002");
+
+	public static final QNm REQ_GETPARAMETER_INT_ERROR = new QNm(
+			Namespaces.REQUEST_NSURI, Namespaces.REQUEST_PREFIX, "BIT0003");
+
+	public static final QNm REQ_GETPARAMETERNAMES_INT_ERROR = new QNm(
+			Namespaces.REQUEST_NSURI, Namespaces.REQUEST_PREFIX, "BIT0004");
+
+	public static final QNm REQ_GETATTRIBUTE_INT_ERROR = new QNm(
+			Namespaces.REQUEST_NSURI, Namespaces.REQUEST_PREFIX, "BIT0005");
+
+	public static final QNm REQ_GETATTRIBUTENAMES_INT_ERROR = new QNm(
+			Namespaces.REQUEST_NSURI, Namespaces.REQUEST_PREFIX, "BIT0006");
+
+	public static final QNm REQ_ISMULTIPARTCONTENT_INT_ERROR = new QNm(
+			Namespaces.REQUEST_NSURI, Namespaces.REQUEST_PREFIX, "BIT0007");
+
+	/**
+	 * Errors for the predefined session functions
+	 */
+	public static final QNm SESSION_CLEAR_INT_ERROR = new QNm(
+			Namespaces.SESSION_NSURI, Namespaces.SESSION_PREFIX, "SESSION0001");
+
+	public static final QNm SESSION_GETATTRIBUTE_INT_ERROR = new QNm(
+			Namespaces.SESSION_NSURI, Namespaces.SESSION_PREFIX, "SESSION0002");
+
+	public static final QNm SESSION_GETATTRIBUTENAMES_INT_ERROR = new QNm(
+			Namespaces.SESSION_NSURI, Namespaces.SESSION_PREFIX, "SESSION0003");
+
+	public static final QNm SESSION_GETCREATIONTIME_INT_ERROR = new QNm(
+			Namespaces.SESSION_NSURI, Namespaces.SESSION_PREFIX, "SESSION0004");
+
+	public static final QNm SESSION_GETLASTACCESSEDTIME_INT_ERROR = new QNm(
+			Namespaces.SESSION_NSURI, Namespaces.SESSION_PREFIX, "SESSION0005");
+
+	public static final QNm SESSION_GETMAXINACTIVEINTERVAL_INT_ERROR = new QNm(
+			Namespaces.SESSION_NSURI, Namespaces.SESSION_PREFIX, "SESSION0006");
+
+	public static final QNm SESSION_INVALIDATE_INT_ERROR = new QNm(
+			Namespaces.SESSION_NSURI, Namespaces.SESSION_PREFIX, "SESSION0007");
+
+	public static final QNm SESSION_REMOVEATTRIBUTE_INT_ERROR = new QNm(
+			Namespaces.SESSION_NSURI, Namespaces.SESSION_PREFIX, "SESSION0008");
+
+	public static final QNm SESSION_SETATTRIBUTE_INT_ERROR = new QNm(
+			Namespaces.SESSION_NSURI, Namespaces.SESSION_PREFIX, "SESSION0009");
+
+	public static final QNm SESSION_SETMAXINACTIVEINTERVAL_INT_ERROR = new QNm(
+			Namespaces.SESSION_NSURI, Namespaces.SESSION_PREFIX, "SESSION0010");
+
+	/**
+	 * Errors for the predefined util functions
+	 */
+	public static final QNm UTIL_MKDIRECTORY_INT_ERROR = new QNm(
+			Namespaces.UTIL_NSURI, Namespaces.UTIL_PREFIX, "UTIL0001");
+
+	public static final QNm UTIL_PLAINPRINT_INT_ERROR = new QNm(
+			Namespaces.UTIL_NSURI, Namespaces.UTIL_PREFIX, "UTIL0002");
+
+	public static final QNm UTIL_TEMPLATE_INT_ERROR = new QNm(
+			Namespaces.UTIL_NSURI, Namespaces.UTIL_PREFIX, "UTIL0003");
+
+	public static final QNm UTIL_UPLOAD_INT_ERROR = new QNm(
+			Namespaces.UTIL_NSURI, Namespaces.UTIL_PREFIX, "UTIL0004");
+
+	/**
+	 * Errors for the predefined xqfile functions
+	 */
+	public static final QNm XQFILE_COMPILE_INT_ERROR = new QNm(
+			Namespaces.XQFILE_NSURI, Namespaces.XQFILE_PREFIX, "XQFILE0001");
+
+	public static final QNm XQFILE_CREATE_INT_ERROR = new QNm(
+			Namespaces.XQFILE_NSURI, Namespaces.XQFILE_PREFIX, "XQFILE0002");
+
+	public static final QNm XQFILE_DELETE_INT_ERROR = new QNm(
+			Namespaces.XQFILE_NSURI, Namespaces.XQFILE_PREFIX, "XQFILE0003");
+
+	public static final QNm XQFILE_SAVE_INT_ERROR = new QNm(
+			Namespaces.XQFILE_NSURI, Namespaces.XQFILE_PREFIX, "XQFILE0004");
+
+}

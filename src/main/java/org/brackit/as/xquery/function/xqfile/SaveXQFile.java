@@ -32,6 +32,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import org.brackit.as.http.HttpConnector;
+import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.ErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -56,18 +57,24 @@ public class SaveXQFile extends AbstractFunction {
 	@Override
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
-		String fPathName = ((Atomic) args[0]).atomize().stringValue().trim();
-		String fQuery = ((Atomic) args[1]).atomize().stringValue().trim();
-		String base = String
-				.format("%s/%s", HttpConnector.APPS_PATH, fPathName);
 		try {
-			FileWriter f = new FileWriter(base);
-			BufferedWriter out = new BufferedWriter(f);
-			out.write(fQuery);
-			out.close();
-		} catch (IOException e) {
-			throw new QueryException(e, ErrorCode.BIT_DYN_INT_ERROR);
+			String fPathName = ((Atomic) args[0]).atomize().stringValue()
+					.trim();
+			String fQuery = ((Atomic) args[1]).atomize().stringValue().trim();
+			String base = String.format("%s/%s", HttpConnector.APPS_PATH,
+					fPathName);
+			try {
+				FileWriter f = new FileWriter(base);
+				BufferedWriter out = new BufferedWriter(f);
+				out.write(fQuery);
+				out.close();
+			} catch (IOException e) {
+				throw new QueryException(e, ErrorCode.BIT_DYN_INT_ERROR);
+			}
+			return Bool.TRUE;
+		} catch (Exception e) {
+			throw new QueryException(e, ASErrorCode.XQFILE_SAVE_INT_ERROR, e
+					.getMessage());
 		}
-		return Bool.TRUE;
 	}
 }

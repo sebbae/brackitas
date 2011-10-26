@@ -30,12 +30,12 @@ package org.brackit.as.xquery.function.bit;
 import java.io.PrintStream;
 
 import org.brackit.as.util.FunctionUtils;
+import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASXQuery;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
 import org.brackit.xquery.atomic.QNm;
-import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.function.Signature;
 import org.brackit.xquery.node.SubtreePrinter;
@@ -57,20 +57,20 @@ public class Eval extends AbstractFunction {
 	@Override
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
-		String vQuery = null;
-		if (args[0] instanceof Atomic) {
-			vQuery = ((Atomic) args[0]).stringValue();
-		} else {
-			PrintStream buf = fUtils.createBuffer();
-			SubtreePrinter.print((Node<?>) args[0], buf);
-			vQuery = buf.toString();
-		}
 		try {
+			String vQuery = null;
+			if (args[0] instanceof Atomic) {
+				vQuery = ((Atomic) args[0]).stringValue();
+			} else {
+				PrintStream buf = fUtils.createBuffer();
+				SubtreePrinter.print((Node<?>) args[0], buf);
+				vQuery = buf.toString();
+			}
 			ASXQuery x = new ASXQuery(vQuery);
 			return x.execute(ctx);
-		}
-		catch (Exception e) {
-			return new Str(e.getMessage());
+		} catch (Exception e) {
+			throw new QueryException(e, ASErrorCode.BIT_EVAL_INT_ERROR, e
+					.getMessage());
 		}
 	}
 }

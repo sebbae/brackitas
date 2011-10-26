@@ -32,6 +32,7 @@ import java.util.Date;
 
 import javax.servlet.http.HttpSession;
 
+import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -55,13 +56,14 @@ public class GetLastAccessedTime extends AbstractFunction {
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
 		try {
-			HttpSession httpSession = ((ASQueryContext) ctx)
-					.getHttpSession();
+			HttpSession httpSession = ((ASQueryContext) ctx).getHttpSession();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH:mm");
 			Date resultdate = new Date(httpSession.getLastAccessedTime());
 			return new org.brackit.xquery.atomic.Date(sdf.format(resultdate));
 		} catch (Exception e) {
-			return null;
+			throw new QueryException(e,
+					ASErrorCode.SESSION_GETLASTACCESSEDTIME_INT_ERROR, e
+							.getMessage());
 		}
 	}
 }

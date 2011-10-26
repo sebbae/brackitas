@@ -29,6 +29,7 @@ package org.brackit.as.xquery.function.session;
 
 import javax.servlet.http.HttpSession;
 
+import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -53,11 +54,12 @@ public class GetMaxInactiveInterval extends AbstractFunction {
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
 		try {
-			HttpSession httpSession = ((ASQueryContext) ctx)
-					.getHttpSession();
+			HttpSession httpSession = ((ASQueryContext) ctx).getHttpSession();
 			return new Int(httpSession.getMaxInactiveInterval());
 		} catch (Exception e) {
-			return null;
+			throw new QueryException(e,
+					ASErrorCode.SESSION_GETMAXINACTIVEINTERVAL_INT_ERROR, e
+							.getMessage());
 		}
 	}
 }

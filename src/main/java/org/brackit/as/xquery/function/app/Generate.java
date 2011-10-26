@@ -33,6 +33,7 @@ import java.io.FileWriter;
 
 import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.http.HttpConnector;
+import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -136,10 +137,12 @@ public class Generate extends AbstractFunction {
 						"%s/%s", HttpConnector.APPS_PATH, app)));
 				return Bool.TRUE;
 			} else {
-				return Bool.FALSE;
+				throw new QueryException(ASErrorCode.APP_GENERATE_INT_ERROR,
+						"Application type not supported");
 			}
 		} catch (Exception e) {
-			return Bool.FALSE;
+			throw new QueryException(e, ASErrorCode.APP_GENERATE_INT_ERROR, e
+					.getMessage());
 		}
 	}
 }

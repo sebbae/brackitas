@@ -30,6 +30,7 @@ package org.brackit.as.xquery.function.app;
 import java.io.File;
 
 import org.brackit.as.http.HttpConnector;
+import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.server.session.SessionException;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -60,7 +61,8 @@ public class Deploy extends AbstractFunction {
 					HttpConnector.APPS_PATH, name)));
 			return Bool.TRUE;
 		} catch (SessionException e) {
-			return Bool.FALSE;
+			throw new QueryException(e, ASErrorCode.APP_DEPLOY_INT_ERROR, e
+					.getMessage());
 		}
 	}
 }

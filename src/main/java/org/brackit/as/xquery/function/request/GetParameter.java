@@ -27,7 +27,6 @@
  */
 package org.brackit.as.xquery.function.request;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,8 +34,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 import org.brackit.as.context.InputStreamName;
+import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
-import org.brackit.xquery.ErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.QNm;
@@ -60,24 +59,23 @@ public class GetParameter extends AbstractFunction {
 	@Override
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
-		HttpServletRequest req = ((ASQueryContext) ctx).getReq();
-		String vName = ((Item) args[0]).atomize().stringValue().trim();
-		if (ServletFileUpload.isMultipartContent(req)) {
-			InputStream in = null;
-			try {
+		try {
+			HttpServletRequest req = ((ASQueryContext) ctx).getReq();
+			String vName = ((Item) args[0]).atomize().stringValue().trim();
+			if (ServletFileUpload.isMultipartContent(req)) {
+				InputStream in = null;
 				in = ((InputStreamName) ((ASQueryContext) ctx)
 						.getMutliPartParam(vName)).getInputStream();
 				String s = Streams.asString(in);
 				in.close();
 				return new Str((s == null) ? "" : s.trim());
-			} catch (IOException e) {
-				// TODO: erase it
-				e.printStackTrace();
-				throw new QueryException(ErrorCode.ERR_UNIDENTIFIED_ERROR);
+			} else {
+				String param = req.getParameter(vName);
+				return new Str((param == null) ? "" : param.trim());
 			}
-		} else {
-			String param = req.getParameter(vName);
-			return new Str((param == null) ? "" : param.trim());
+		} catch (Exception e) {
+			throw new QueryException(e, ASErrorCode.REQ_GETPARAMETER_INT_ERROR,
+					e.getMessage());
 		}
 	}
 }

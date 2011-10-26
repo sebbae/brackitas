@@ -29,6 +29,7 @@ package org.brackit.as.xquery.function.session;
 
 import javax.servlet.http.HttpSession;
 
+import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -52,9 +53,13 @@ public class GetAttribute extends AbstractFunction {
 	@Override
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
-		HttpSession httpSession = ((ASQueryContext) ctx)
-				.getHttpSession();
-		String vAttName = ((Item) args[0]).atomize().stringValue();
-		return (Item) httpSession.getAttribute(vAttName);
+		try {
+			HttpSession httpSession = ((ASQueryContext) ctx).getHttpSession();
+			String vAttName = ((Item) args[0]).atomize().stringValue();
+			return (Item) httpSession.getAttribute(vAttName);
+		} catch (Exception e) {
+			throw new QueryException(e,
+					ASErrorCode.SESSION_GETATTRIBUTE_INT_ERROR, e.getMessage());
+		}
 	}
 }

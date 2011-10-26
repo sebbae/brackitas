@@ -33,6 +33,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -59,17 +60,18 @@ public class GetAttributeNames extends AbstractFunction {
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
 		try {
-			HttpSession httpSession = ((ASQueryContext) ctx)
-					.getHttpSession();
+			HttpSession httpSession = ((ASQueryContext) ctx).getHttpSession();
 			List<Str> attNames = new ArrayList<Str>();
 			Enumeration<String> e = httpSession.getAttributeNames();
-			while(e.hasMoreElements()) {
+			while (e.hasMoreElements()) {
 				attNames.add(new Str(e.nextElement()));
 			}
 			Item[] result = attNames.toArray(new Item[0]);
 			return new ItemSequence(result);
 		} catch (Exception e) {
-			return null;
+			throw new QueryException(e,
+					ASErrorCode.SESSION_GETATTRIBUTENAMES_INT_ERROR, e
+							.getMessage());
 		}
 	}
 }
