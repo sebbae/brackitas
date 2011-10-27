@@ -25,20 +25,52 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package org.brackit.as.xquery.function.xqfile;
+
+import javax.servlet.ServletContext;
+
+import org.brackit.as.context.BaseAppContext;
+import org.brackit.as.xquery.ASErrorCode;
+import org.brackit.as.xquery.ASQueryContext;
+import org.brackit.xquery.QueryContext;
+import org.brackit.xquery.QueryException;
+import org.brackit.xquery.atomic.Atomic;
+import org.brackit.xquery.atomic.Bool;
+import org.brackit.xquery.atomic.QNm;
+import org.brackit.xquery.function.AbstractFunction;
+import org.brackit.xquery.function.Signature;
+import org.brackit.xquery.module.LibraryModule;
+import org.brackit.xquery.xdm.Sequence;
 
 /**
  * 
  * @author Henrique Valer
  * 
  */
-function testIt(test, fPathName) {
-	if (test == true) {
-		var func = prompt(
-				"Enter the name of the function you would like to execute:",
-				"for example: index");
-		window.open("http://localhost:8080/" + fPathName.trim() + "/"
-				+ func.trim());
-	} else {
-		window.open("http://localhost:8080/" + fPathName.trim() + ".xq");
+public class IsModule extends AbstractFunction {
+
+	public IsModule(QNm name, Signature signature) {
+		super(name, signature, true);
+	}
+
+	@Override
+	public Sequence execute(QueryContext ctx, Sequence[] args)
+			throws QueryException {
+		try {
+			String fPathName = ((Atomic) args[0]).atomize().stringValue()
+					.trim();
+			String app = fPathName.split("/")[1];
+			ServletContext sctx = ((ASQueryContext) ctx).getReq()
+					.getServletContext();
+			BaseAppContext bac = (BaseAppContext) sctx.getAttribute(app);
+			if (bac.get(String.format("/%s.xq", fPathName)).getModule() instanceof LibraryModule) {
+				return Bool.TRUE;
+			} else {
+				return Bool.FALSE;
+			}
+		} catch (Exception e) {
+			throw new QueryException(e, ASErrorCode.XQFILE_ISMODULE_INT_ERROR,
+					e.getMessage());
+		}
 	}
 }

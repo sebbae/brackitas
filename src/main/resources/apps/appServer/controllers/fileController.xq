@@ -112,7 +112,7 @@ declare function create() as item() {
         if (fn:string-length($butClick) > 0) then
             if (model:validateXQFile($fName)) then
                 if (xqfile:create($fPathName)) then
-                    appView:editXQuery($menu,
+                    appView:editXQuery(appView:createMenu($app),
                                        appView:editQuery($fPathName,$app))
                 else
                     ""

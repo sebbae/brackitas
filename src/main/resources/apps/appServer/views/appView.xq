@@ -228,7 +228,16 @@ declare function generateFileOptions($fPathName as xs:string,
         <input align="middle" type="submit" name="action" value="delete" onclick="return confirm('Are you sure you want to delete?')"/>
       </li>
       <li>
-        <button type="button" onClick="testIt('{fn:substring-before($fPathName, ".xq")}')">test it</button>
+        { 
+        let $xqf := fn:concat("apps/",fn:substring-before($fPathName, ".xq")),
+            $button := 
+            if (xqfile:isModule($xqf)) then 
+                 <button type="button" onClick="testIt(new Boolean(1),'{$xqf}')">test it</button> 
+            else 
+                 <button type="button" onClick="testIt(new Boolean(0),'{$xqf}')">test it</button>
+        return
+            $button
+        }
         <input type="hidden" name="name" value="{$fPathName}"/>
         <input type="hidden" name="app" value="{$app}"/>        
       </li>
@@ -247,68 +256,6 @@ declare function generateTextArea($fPathName as xs:string, $num as xs:string) as
                   else
                       bit:loadFile(fn:concat("apps/",$fPathName))),
               "</textarea>")
-};
-
-declare function editMVC ($model as xs:string,
-                          $view as xs:string,
-                          $controller as xs:string,
-                          $app as xs:string) as item() {
-    <div>                
-	  <form action="../fileController/action">
-	    <table style="width:100%;">
-	      <tr>
-	        <td>
-	          {generateFileOptions($model,$app)}
-	        </td>
-	      </tr>
-	      <tr>
-	        <td>
-	          <div id="coll_intern">
-	            <div class="textwrapper">
-	              {generateTextArea($model,"")}
-	            </div>
-	          </div>
-	        </td>
-	      </tr>
-	    </table>
-	  </form>      
-	  <form action="../fileController/action">
-	    <table style="width:100%;">
-	      <tr>
-	        <td>
-	          {generateFileOptions($view,$app)}
-	        </td>
-	      </tr>
-	      <tr>
-	        <td>
-	          <div id="coll_intern">
-	            <div class="textwrapper">
-	              {generateTextArea($view,"2")}
-	            </div>
-	          </div>
-	        </td>
-	      </tr>
-	    </table>
-	  </form>
-	  <form action="../fileController/action">
-	    <table style="width:100%;">      
-	      <tr>
-	        <td>
-	          {generateFileOptions($controller,$app)}
-	        </td>
-	      </tr>
-	      <tr>
-	        <td>
-	          <div id="coll_intern">
-	            <div class="textwrapper">
-	              {generateTextArea($controller,"3")}
-	            </div>
-	          </div>
-	        </td>
-	      </tr>      
-	    </table>
-	  </form>
-	</div>
 };
 
 declare function editQuery($resource as xs:string,

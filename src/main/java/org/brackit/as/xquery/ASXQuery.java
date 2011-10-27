@@ -75,6 +75,7 @@ import org.brackit.as.xquery.function.util.Upload;
 import org.brackit.as.xquery.function.xqfile.CompileXQFile;
 import org.brackit.as.xquery.function.xqfile.CreateXQFile;
 import org.brackit.as.xquery.function.xqfile.DeleteXQFile;
+import org.brackit.as.xquery.function.xqfile.IsModule;
 import org.brackit.as.xquery.function.xqfile.SaveXQFile;
 import org.brackit.xquery.ErrorCode;
 import org.brackit.xquery.QueryException;
@@ -331,6 +332,11 @@ public class ASXQuery extends XQuery {
 				Namespaces.XQFILE_PREFIX, "save"), new Signature(
 				new SequenceType(AtomicType.BOOL, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One),
+				new SequenceType(AtomicType.STR, Cardinality.One))));
+
+		Functions.predefine(new IsModule(new QNm(Namespaces.XQFILE_NSURI,
+				Namespaces.XQFILE_PREFIX, "isModule"), new Signature(
+				new SequenceType(AtomicType.BOOL, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
 	}

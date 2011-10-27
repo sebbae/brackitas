@@ -100,36 +100,13 @@ declare function deploy() as item() {
 };
 
 declare function load() as item() {
-    (: 3 cases: 1. resources, 2. xquery and 3. MVC query
-    1. appServer/resources/images/brackit.png
-    2. else
-    3. appServer/controllers/docController.xq
-     :)
     let $app := req:getParameter("app"),
         $resource := fn:normalize-space(req:getParameter("name")),
         $menu := appView:createMenu($app)
     return 
         let $content :=
             if (fn:ends-with($resource, ".xq")) then
-                if (fn:contains($resource, "/controllers/")) then
-                    let $model := fn:replace(fn:replace($resource, "controllers", "models"),"Controller","Model"),
-                        $view := fn:replace(fn:replace($resource, "controllers", "views"),"Controller","View"),
-                        $controller := $resource 
-                    return appView:editMVC($model,$view,$controller,$app)
-                else
-                    if (fn:contains($resource, "/models/")) then
-                        let $model := $resource,
-                            $view := fn:replace(fn:replace($resource, "models", "views"),"Model","View"),
-                            $controller := fn:replace(fn:replace($resource, "models", "controllers"),"Model","Controller") 
-                        return appView:editMVC($model,$view,$controller,$app)
-                    else
-                        if (fn:contains($resource, "/views/")) then
-                            let $model := fn:replace(fn:replace($resource, "views", "models"),"View","Model"),
-                                $view := $resource,
-                                $controller := fn:replace(fn:replace($resource, "views", "controllers"),"View","Controller") 
-                            return appView:editMVC($model,$view,$controller,$app)
-                        else
-                            appView:editQuery($resource,$app)
+                appView:editQuery($resource,$app)
             else
                 "Treat resource call"
         return

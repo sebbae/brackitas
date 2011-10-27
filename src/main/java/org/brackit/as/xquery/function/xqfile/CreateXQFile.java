@@ -75,7 +75,7 @@ public class CreateXQFile extends AbstractFunction {
 			out.close();
 			Long lastUsed = new File(base).lastModified();
 			BaseAppContext bac = (BaseAppContext) sctx.getAttribute(app);
-			bac.register(String.format("/%s/%s", app, base), lastUsed);
+			bac.register(HttpConnector.resolvePath(base), lastUsed);
 			return Bool.TRUE;
 		} catch (Exception e) {
 			throw new QueryException(e, ASErrorCode.XQFILE_CREATE_INT_ERROR, e

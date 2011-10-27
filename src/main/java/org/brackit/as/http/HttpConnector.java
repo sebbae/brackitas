@@ -225,7 +225,7 @@ public class HttpConnector {
 			throw new FileNotFoundException("Failed to delete file: " + f);
 	}
 
-	private static String resolvePath(String p) {
+	public static String resolvePath(String p) {
 		p = p.substring("src/main/resources".length());
 		return p;
 	}

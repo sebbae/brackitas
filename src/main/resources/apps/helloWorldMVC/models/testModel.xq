@@ -36,5 +36,5 @@ module namespace model="http://brackit.org/lib/testModel";
     
 declare function echo($s as item()*) as item()* 
 { 
-    $s
-};    
+    "Hello World"
+};

@@ -62,9 +62,10 @@
 (OK) Improve ASXQuery serializtation methods
 (  ) Problems with pre-compiled queries: Queries that need global information (like list
 	 applications) have to rely on a file on the database. Create and use such file.
-(  ) Change all function implementation to thrown errors, as soon as the try-catch block
+(OK) Change all function implementation to thrown errors, as soon as the try-catch block
 	 is functional. 
 (OK) Finish discussion Controller
 (OK) Select decent icons.
 (OK) Finish mkdir and upload.
 (OK) After directory creation, need to update menus, how?
+(OK) Change development for only 1 file at a time. 

@@ -179,4 +179,7 @@ public class ASErrorCode extends ErrorCode {
 	public static final QNm XQFILE_SAVE_INT_ERROR = new QNm(
 			Namespaces.XQFILE_NSURI, Namespaces.XQFILE_PREFIX, "XQFILE0004");
 
+	public static final QNm XQFILE_ISMODULE_INT_ERROR = new QNm(
+			Namespaces.XQFILE_NSURI, Namespaces.XQFILE_PREFIX, "XQFILE0005");
+
 }
