@@ -1,4 +1,4 @@
-(  ) Expand session functionalities to XQuery.
+(OK) Expand session functionalities to XQuery.
 	(OK) Rename the namespace to session
 	(OK) List possible functions
 		(OK) getCreationTime
@@ -17,9 +17,9 @@
 		(OK) Create structure for these testings
 		(OK) Better test the functions. Do more elaborated tests.
 (OK) Define Applications skeleton (with and without MVC)
-	(  ) Support applications without MVC new skeleton
-	(  ) SUpport applications with new MVC Skeleton
-(  ) Create application for creation of applications
+	(OK) Support applications without MVC new skeleton
+	(OK) SUpport applications with new MVC Skeleton
+(OK) Create application for creation of applications
 	Simple for skeleton creation
 (  ) Create application for applications checking
 	Queries information
@@ -27,8 +27,9 @@
 	Usage
 	Clicking information?
 (  ) Create documentation application
-(  ) Create mechanism for hot-deployment of applications
-	(  ) Necessary to recompile all queries
+	(  ) Roxana's working on it.
+(OK) Create mechanism for hot-deployment of applications
+	(OK) Necessary to recompile all queries
 (  ) Create authentication screen for private content
 (OK) Create mapping between model->view->controller
 	(OK)One model to one controller to many views. 
@@ -47,9 +48,10 @@
 (  ) Migrate old applications to new structure
 	(OK) eCommerce (MVC)
 	(OK) eCommerce (non-MVC)
-	(  ) query engine (non MVC)
+	(OK) query engine (non MVC)
 		(OK) Replace on result: .replaceAll("<", "&lt;").replaceAll(">", "&gt;")
-		(  ) Make template usage usable
+		(OK) Make template usage usable
+			No more predefined template functionality.
 	(  ) Error application (Servlet)
 	(OK) Create one Collection for each application and use it, instead of the folders!
 		(OK) Adapt store file and delete file functions. Receive collection name, or not
@@ -60,7 +62,7 @@
 			(  ) DropCollection
 			(  ) StoreDoc
 (OK) Improve ASXQuery serializtation methods
-(  ) Problems with pre-compiled queries: Queries that need global information (like list
+(OK) Problems with pre-compiled queries: Queries that need global information (like list
 	 applications) have to rely on a file on the database. Create and use such file.
 (OK) Change all function implementation to thrown errors, as soon as the try-catch block
 	 is functional. 

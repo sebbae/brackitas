@@ -132,7 +132,7 @@ declare function upload() as item() {
         $menu := appView:createMenu($app)
     return
         if (fn:string-length($butClick) > 0) then
-            if (util:upload($fBasePath,"fName")) then
+            if (rsc:upload($fBasePath,"fName")) then
                 appView:menuContent($menu,view:msgSuccess("File uploaded sucessfully!"))
             else
                 appView:menuContent($menu,view:msgFailure("Problems uploading file!"))

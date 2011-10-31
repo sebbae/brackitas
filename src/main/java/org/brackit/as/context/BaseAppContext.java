@@ -178,6 +178,15 @@ public class BaseAppContext {
 					putQuery(uq.getPath(), uq.getLastModified());
 					i.remove();
 				} catch (QueryException e) {
+				}
+			}
+			i = uncompiledQueries.iterator();			
+			while (i.hasNext()) {
+				UncompiledQuery uq = i.next();
+				try {
+					putQuery(uq.getPath(), uq.getLastModified());
+					i.remove();
+				} catch (QueryException e) {
 					System.out.println(String.format(
 							"Problems while compiling %s. %s", uq.getPath(), e
 									.getMessage()));

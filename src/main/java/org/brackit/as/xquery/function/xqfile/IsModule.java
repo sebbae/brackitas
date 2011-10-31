@@ -59,6 +59,8 @@ public class IsModule extends AbstractFunction {
 		try {
 			String fPathName = ((Atomic) args[0]).atomize().stringValue()
 					.trim();
+			fPathName = (fPathName.startsWith("/")) ? fPathName.substring(1)
+					: fPathName;
 			String app = fPathName.split("/")[1];
 			ServletContext sctx = ((ASQueryContext) ctx).getReq()
 					.getServletContext();

@@ -39,7 +39,6 @@ declare function head($title as xs:string) as item() {
       <meta xmlns="" http-equiv="Content-Type" content="text/html; charset=utf-8"/>    
       <script xmlns="" src="http://localhost:8080/apps/appServer/resources/js/brackitHeader.js" type="text/javascript">""</script>    
       <script xmlns="" src="http://localhost:8080/apps/appServer/resources/js/codemirror.js" type="text/javascript">""</script>
-      <script xmlns="" src="http://localhost:8080/apps/appServer/resources/js/jquery.min.js">""</script>
       <!-- add your meta tags here -->
       <link href="http://localhost:8080/apps/appServer/resources/css/layout_vertical_listnav.css" rel="stylesheet" type="text/css" />
       <!--[if lte IE 7]>

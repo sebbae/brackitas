@@ -1,4 +1,5 @@
-/*
+(:
+ *
  * [New BSD License]
  * Copyright (c) 2011, Brackit Project Team <info@brackit.org>  
  * All rights reserved.
@@ -24,59 +25,21 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-package org.brackit.as.xquery.function.xqfile;
-
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-
-import org.brackit.as.http.HttpConnector;
-import org.brackit.as.xquery.ASErrorCode;
-import org.brackit.xquery.ErrorCode;
-import org.brackit.xquery.QueryContext;
-import org.brackit.xquery.QueryException;
-import org.brackit.xquery.atomic.Atomic;
-import org.brackit.xquery.atomic.Bool;
-import org.brackit.xquery.atomic.QNm;
-import org.brackit.xquery.function.AbstractFunction;
-import org.brackit.xquery.function.Signature;
-import org.brackit.xquery.xdm.Sequence;
-
-/**
+ *
+ **
  * 
  * @author Henrique Valer
  * 
- */
-public class SaveXQFile extends AbstractFunction {
+ *
+:)
+module namespace rscModel="http://brackit.org/lib/appServer/rscModel";
+import module namespace appModel="http://brackit.org/lib/appServer/appModel";
 
-	public SaveXQFile(QNm name, Signature signature) {
-		super(name, signature, true);
-	}
-
-	@Override
-	public Sequence execute(QueryContext ctx, Sequence[] args)
-			throws QueryException {
-		try {
-			String fPathName = ((Atomic) args[0]).atomize().stringValue()
-					.trim();
-			fPathName = (fPathName.startsWith("/")) ? fPathName.substring(1)
-					: fPathName;
-			String fQuery = ((Atomic) args[1]).atomize().stringValue().trim();
-			String base = String.format("%s/%s", HttpConnector.APPS_PATH,
-					fPathName);
-			try {
-				FileWriter f = new FileWriter(base);
-				BufferedWriter out = new BufferedWriter(f);
-				out.write(fQuery);
-				out.close();
-			} catch (IOException e) {
-				throw new QueryException(e, ErrorCode.BIT_DYN_INT_ERROR);
-			}
-			return Bool.TRUE;
-		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.XQFILE_SAVE_INT_ERROR, e
-					.getMessage());
-		}
-	}
-}
+declare function validateFileName($name as xs:string) as xs:boolean {
+    if ((appModel:validateName($name)) and 
+        (fn:not(fn:contains($name, "/"))))
+    then
+        fn:true()
+    else
+        fn:false()
+};

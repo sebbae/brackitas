@@ -35,6 +35,7 @@
 module namespace appController="http://brackit.org/lib/appServer/appController";
 import module namespace appModel="http://brackit.org/lib/appServer/appModel";
 import module namespace appView="http://brackit.org/lib/appServer/appView";
+import module namespace rscController="http://brackit.org/lib/appServer/rscController";
 
 declare function index() as item() {
     appView:listApps(app:getNames())
@@ -108,7 +109,7 @@ declare function load() as item() {
             if (fn:ends-with($resource, ".xq")) then
                 appView:editQuery($resource,$app)
             else
-                "Treat resource call"
+                rscController:load()
         return
             appView:editXQuery($menu,$content)
 };

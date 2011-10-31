@@ -58,6 +58,9 @@ import org.brackit.as.xquery.function.request.GetParameterNames;
 import org.brackit.as.xquery.function.request.GetReqAttribute;
 import org.brackit.as.xquery.function.request.GetReqAttributeNames;
 import org.brackit.as.xquery.function.request.IsMultipartContent;
+import org.brackit.as.xquery.function.resource.DeleteResource;
+import org.brackit.as.xquery.function.resource.RenameResource;
+import org.brackit.as.xquery.function.resource.Upload;
 import org.brackit.as.xquery.function.session.Clear;
 import org.brackit.as.xquery.function.session.GetAttribute;
 import org.brackit.as.xquery.function.session.GetAttributeNames;
@@ -71,7 +74,6 @@ import org.brackit.as.xquery.function.session.SetMaxInactiveInterval;
 import org.brackit.as.xquery.function.util.MkDirectory;
 import org.brackit.as.xquery.function.util.PlainPrint;
 import org.brackit.as.xquery.function.util.Template;
-import org.brackit.as.xquery.function.util.Upload;
 import org.brackit.as.xquery.function.xqfile.CompileXQFile;
 import org.brackit.as.xquery.function.xqfile.CreateXQFile;
 import org.brackit.as.xquery.function.xqfile.DeleteXQFile;
@@ -259,12 +261,6 @@ public class ASXQuery extends XQuery {
 				new SequenceType(AtomicType.STR, Cardinality.ZeroOrOne),
 				new SequenceType(AnyItemType.ANY, Cardinality.One))));
 
-		Functions.predefine(new Upload(new QNm(Namespaces.UTIL_NSURI,
-				Namespaces.UTIL_PREFIX, "upload"), new Signature(
-				new SequenceType(AtomicType.BOOL, Cardinality.One),
-				new SequenceType(AtomicType.STR, Cardinality.One),
-				new SequenceType(AtomicType.STR, Cardinality.One))));
-
 		Functions.predefine(new MkDirectory(new QNm(Namespaces.UTIL_NSURI,
 				Namespaces.UTIL_PREFIX, "mkDir"), new Signature(
 				new SequenceType(AtomicType.BOOL, Cardinality.One),
@@ -311,7 +307,7 @@ public class ASXQuery extends XQuery {
 				new SequenceType(AtomicType.BOOL, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
-		// File
+		// XQFile
 		Functions.predefine(new CompileXQFile(new QNm(Namespaces.XQFILE_NSURI,
 				Namespaces.XQFILE_PREFIX, "compile"), new Signature(
 				new SequenceType(AtomicType.BOOL, Cardinality.One),
@@ -338,6 +334,26 @@ public class ASXQuery extends XQuery {
 				Namespaces.XQFILE_PREFIX, "isModule"), new Signature(
 				new SequenceType(AtomicType.BOOL, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
+
+		// Resources handling
+		Functions.predefine(new Upload(new QNm(Namespaces.RESOURCE_NSURI,
+				Namespaces.RESOURCE_PREFIX, "upload"), new Signature(
+				new SequenceType(AtomicType.BOOL, Cardinality.One),
+				new SequenceType(AtomicType.STR, Cardinality.One),
+				new SequenceType(AtomicType.STR, Cardinality.One))));
+
+		Functions.predefine(new DeleteResource(
+				new QNm(Namespaces.RESOURCE_NSURI, Namespaces.RESOURCE_PREFIX,
+						"delete"), new Signature(new SequenceType(
+						AtomicType.BOOL, Cardinality.One), new SequenceType(
+						AtomicType.STR, Cardinality.One))));
+
+		Functions.predefine(new RenameResource(
+				new QNm(Namespaces.RESOURCE_NSURI, Namespaces.RESOURCE_PREFIX,
+						"rename"), new Signature(new SequenceType(
+						AtomicType.BOOL, Cardinality.One), new SequenceType(
+						AtomicType.STR, Cardinality.One), new SequenceType(
+						AtomicType.STR, Cardinality.One))));
 
 	}
 

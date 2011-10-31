@@ -161,9 +161,6 @@ public class ASErrorCode extends ErrorCode {
 	public static final QNm UTIL_TEMPLATE_INT_ERROR = new QNm(
 			Namespaces.UTIL_NSURI, Namespaces.UTIL_PREFIX, "UTIL0003");
 
-	public static final QNm UTIL_UPLOAD_INT_ERROR = new QNm(
-			Namespaces.UTIL_NSURI, Namespaces.UTIL_PREFIX, "UTIL0004");
-
 	/**
 	 * Errors for the predefined xqfile functions
 	 */
@@ -181,5 +178,17 @@ public class ASErrorCode extends ErrorCode {
 
 	public static final QNm XQFILE_ISMODULE_INT_ERROR = new QNm(
 			Namespaces.XQFILE_NSURI, Namespaces.XQFILE_PREFIX, "XQFILE0005");
+
+	/**
+	 * Errors for resource handling functions
+	 */
+	public static final QNm RSC_DELETE_INT_ERROR = new QNm(
+			Namespaces.RESOURCE_NSURI, Namespaces.RESOURCE_PREFIX, "RSC0001");
+
+	public static final QNm RSC_RENAME_INT_ERROR = new QNm(
+			Namespaces.RESOURCE_NSURI, Namespaces.RESOURCE_PREFIX, "RSC0002");
+
+	public static final QNm RSC_UPLOAD_INT_ERROR = new QNm(
+			Namespaces.RESOURCE_NSURI, Namespaces.RESOURCE_PREFIX, "RSC0003");
 
 }

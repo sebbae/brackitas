@@ -25,27 +25,14 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.xquery.function.util;
+package org.brackit.as.xquery.function.resource;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLConnection;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.brackit.as.context.InputStreamName;
 import org.brackit.as.http.HttpConnector;
 import org.brackit.as.xquery.ASErrorCode;
-import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
-import org.brackit.xquery.atomic.AnyURI;
 import org.brackit.xquery.atomic.Atomic;
 import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
@@ -58,61 +45,27 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
-public class Upload extends AbstractFunction {
+public class DeleteResource extends AbstractFunction {
 
-	public Upload(QNm name, Signature signature) {
+	public DeleteResource(QNm name, Signature signature) {
 		super(name, signature, true);
 	}
 
 	@Override
 	public Sequence execute(QueryContext ctx, Sequence[] args)
 			throws QueryException {
-		URLConnection conn = null;
 		try {
-			String fRelStoragePath = ((Atomic) args[0]).atomize().stringValue();
-			String fPath = ((Atomic) args[1]).atomize().stringValue();
-			String fName = null;
-			String scheme = new URI(fPath).getScheme();
-			InputStream in = null;
-			if (scheme == null) {
-				HttpServletRequest req = ((ASQueryContext) ctx).getReq();
-				if (ServletFileUpload.isMultipartContent(req)) {
-					InputStreamName isn = ((InputStreamName) ((ASQueryContext) ctx)
-							.getMutliPartParam(fPath));
-					in = isn.getInputStream();
-					fName = isn.getName();
-				}
-			} else if (scheme.equals("http") || scheme.equals("https")
-					|| scheme.equals("ftp") || scheme.equals("jar")) {
-				URL url = new URL(((AnyURI) args[0]).stringValue());
-				conn = url.openConnection();
-				fName = conn.getURL().getPath();
-				in = conn.getInputStream();
-			}
-			File f = new File(String.format("%s/%s/%s",
-					HttpConnector.APPS_PATH, fRelStoragePath, fName));
-			OutputStream out = new FileOutputStream(f);
-
-			byte[] buffer = new byte[1024 * 16];
-			int bytesRead = 0;
-			while ((bytesRead = in.read(buffer)) != -1) {
-				out.write(buffer, 0, bytesRead);
-			}
-			out.close();
-			in.close();
-			return Bool.TRUE;
+			String fPathName = ((Atomic) args[0]).atomize().stringValue()
+					.trim();
+			fPathName = (fPathName.startsWith("/")) ? fPathName.substring(1)
+					: fPathName;
+			String base = String.format("%s/%s", HttpConnector.APPS_PATH,
+					fPathName);
+			return new Bool(new File(base).delete());
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.UTIL_UPLOAD_INT_ERROR, e
+			throw new QueryException(e, ASErrorCode.RSC_DELETE_INT_ERROR, e
 					.getMessage());
-		} finally {
-			if (conn != null) {
-				if (conn != null) {
-					if (conn instanceof HttpURLConnection) {
-						((HttpURLConnection) conn).disconnect();
-					}
-					conn = null;
-				}
-			}
 		}
 	}
+
 }

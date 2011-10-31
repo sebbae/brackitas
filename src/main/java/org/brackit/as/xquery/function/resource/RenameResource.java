@@ -25,15 +25,12 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.xquery.function.xqfile;
+package org.brackit.as.xquery.function.resource;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.File;
 
 import org.brackit.as.http.HttpConnector;
 import org.brackit.as.xquery.ASErrorCode;
-import org.brackit.xquery.ErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -44,13 +41,14 @@ import org.brackit.xquery.function.Signature;
 import org.brackit.xquery.xdm.Sequence;
 
 /**
+ * #
  * 
  * @author Henrique Valer
  * 
  */
-public class SaveXQFile extends AbstractFunction {
+public class RenameResource extends AbstractFunction {
 
-	public SaveXQFile(QNm name, Signature signature) {
+	public RenameResource(QNm name, Signature signature) {
 		super(name, signature, true);
 	}
 
@@ -62,21 +60,16 @@ public class SaveXQFile extends AbstractFunction {
 					.trim();
 			fPathName = (fPathName.startsWith("/")) ? fPathName.substring(1)
 					: fPathName;
-			String fQuery = ((Atomic) args[1]).atomize().stringValue().trim();
-			String base = String.format("%s/%s", HttpConnector.APPS_PATH,
+			String fNewName = ((Atomic) args[1]).atomize().stringValue().trim();
+			String baseOld = String.format("%s/%s", HttpConnector.APPS_PATH,
 					fPathName);
-			try {
-				FileWriter f = new FileWriter(base);
-				BufferedWriter out = new BufferedWriter(f);
-				out.write(fQuery);
-				out.close();
-			} catch (IOException e) {
-				throw new QueryException(e, ErrorCode.BIT_DYN_INT_ERROR);
-			}
-			return Bool.TRUE;
+			String baseNew = String.format("%s/%s", baseOld.substring(0,
+					baseOld.lastIndexOf("/")), fNewName);
+			return new Bool(new File(baseOld).renameTo(new File(baseNew)));
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.XQFILE_SAVE_INT_ERROR, e
+			throw new QueryException(e, ASErrorCode.RSC_RENAME_INT_ERROR, e
 					.getMessage());
 		}
 	}
+
 }

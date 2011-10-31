@@ -61,6 +61,8 @@ public class DeleteXQFile extends AbstractFunction {
 		try {
 			String fPathName = ((Atomic) args[0]).atomize().stringValue()
 					.trim();
+			fPathName = (fPathName.startsWith("/")) ? fPathName.substring(1)
+					: fPathName;
 			String app = fPathName.split("/")[0];
 			String base = String.format("%s/%s", HttpConnector.APPS_PATH,
 					fPathName);
