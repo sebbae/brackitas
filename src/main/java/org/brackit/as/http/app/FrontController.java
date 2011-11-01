@@ -211,7 +211,8 @@ public class FrontController extends BaseServlet {
 			HttpServletResponse resp) throws StreamCorruptedException,
 			FileNotFoundException {
 		try {
-			resp.setContentType(getMimeType(resource));
+			String s = getMimeType(resource);
+			resp.setContentType(s);
 			InputStream in = getClass().getResourceAsStream(resource);
 			BufferedOutputStream out = new BufferedOutputStream(resp
 					.getOutputStream());

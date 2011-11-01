@@ -27,6 +27,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
  * 
  :)
+module namespace teste="EEE";
 import module namespace template="http://brackit.org/lib/2/2Template"; 
 (: TODO Auto-generated XQuery block :) 
-"TODO"
+declare function teste() as item() {
+  "TODO"
+};

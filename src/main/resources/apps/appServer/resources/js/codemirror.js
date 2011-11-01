@@ -48,7 +48,9 @@ var CodeMirror = (function(){
     minHeight: 100,
     autoMatchParens: false,
     parserConfig: null,
-    tabMode: "indent", // or "spaces", "default", "shift"
+    tabMode: "spaces", // or "spaces", "default", "shift",
+    enterMode: "keep",
+    gutter: false,
     reindentOnLoad: false,
     activeTokens: null,
     cursorActivity: null,

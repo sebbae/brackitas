@@ -180,7 +180,7 @@ public class BaseAppContext {
 				} catch (QueryException e) {
 				}
 			}
-			i = uncompiledQueries.iterator();			
+			i = uncompiledQueries.iterator();
 			while (i.hasNext()) {
 				UncompiledQuery uq = i.next();
 				try {

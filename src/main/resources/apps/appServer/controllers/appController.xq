@@ -113,3 +113,17 @@ declare function load() as item() {
         return
             appView:editXQuery($menu,$content)
 };
+
+declare function loadAfterAction($msg as xs:string) as item() {
+    let $app := req:getParameter("app"),
+        $resource := fn:normalize-space(req:getParameter("name")),
+        $menu := appView:createMenu($app)
+    return 
+        let $content :=
+            if (fn:ends-with($resource, ".xq")) then
+                appView:editQueryAfterAction($resource,$app,$msg)
+            else
+                rscController:load()
+        return
+            appView:editXQuery($menu,$content)
+};

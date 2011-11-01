@@ -277,3 +277,31 @@ declare function editQuery($resource as xs:string,
     </table>
   </form>  
 };
+
+declare function editQueryAfterAction($resource as xs:string,
+                                      $app as xs:string,
+                                      $msg as xs:string) as item() {
+  <form action="../fileController/action">
+    <table style="width:100%;">
+      <tr>
+        <td>
+          {generateFileOptions($resource,$app)}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div align="center">
+            {$msg}
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="textwrapper">
+            {generateTextArea($resource,"")}            
+          </div>
+        </td>
+      </tr>
+    </table>
+  </form>  
+};

@@ -46,16 +46,11 @@ declare function save() as item() {
     		if (xqfile:save($fPathName, $query)) then
     		    view:msgSuccess("Saved sucessfully!")
     		else
-                view:msgFailure("Problems while saving..."),
-            $success := session:setAttribute("msg",$msg)  
-       return
-            if ($success) then
-                appController:load()
-            else
-                appController:load()
+                view:msgFailure("Problems while saving...")
+        return
+            appController:loadAfterAction($msg)
 }; 
 
-(: TODO: Wait for try cathc and improve compilation output :)
 declare function compile() as item() {
     let $fPathName := req:getParameter("name"),
         $query := req:getParameter("query")
@@ -66,10 +61,7 @@ declare function compile() as item() {
             else
                 view:msgFailure("Compilation failed ... ")   
        return
-            if (session:setAttribute("msg",$msg)) then
-                appController:load()
-            else
-                appController:load()
+            appController:loadAfterAction($msg)
 };
 
 declare function delete() as item() {
@@ -115,12 +107,12 @@ declare function create() as item() {
                     appView:editXQuery(appView:createMenu($app),
                                        appView:editQuery($fPathName,$app))
                 else
-                    ""
+                    appView:menuContent($menu,view:msgFailure("Problems creating new file"))
             else
-                if (session:setAttribute("msg",view:msgFailure("File name cannot contain space and must finish with .xq"))) then
-                    appView:menuContent($menu,view:createFileForm($fBasePath,$app))
-                else
-                    appView:menuContent($menu,view:createFileForm($fBasePath,$app))
+                let $msg := 
+                    view:msgFailure("File name cannot contain space and must finish with .xq")
+                return
+                    appView:menuContent($menu,view:createFileFormMsg($fBasePath,$app,$msg))
         else
             appView:menuContent($menu,view:createFileForm($fBasePath,$app))
 };
@@ -133,7 +125,7 @@ declare function upload() as item() {
     return
         if (fn:string-length($butClick) > 0) then
             if (rsc:upload($fBasePath,"fName")) then
-                appView:menuContent($menu,view:msgSuccess("File uploaded sucessfully!"))
+                appView:menuContent(appView:createMenu($app),view:msgSuccess("File uploaded sucessfully!"))
             else
                 appView:menuContent($menu,view:msgFailure("Problems uploading file!"))
         else
@@ -154,10 +146,10 @@ declare function mkDir() as item() {
                 else
                     appView:menuContent($menu,view:msgFailure("Problems creating directory!"))
             else
-                if (session:setAttribute("msg",view:msgFailure("Directory name cannot be empty or contain space"))) then
-                    appView:menuContent($menu,view:createDirForm($fBasePath,$app))
-                else
-                    appView:menuContent($menu,view:createDirForm($fBasePath,$app))
+                let $msg :=
+                    view:msgFailure("Directory name cannot be empty or contain space")
+                return
+                    appView:menuContent($menu,view:createDirFormMsg($fBasePath,$app,$msg))
         else
             appView:menuContent($menu,view:createDirForm($fBasePath,$app))
 };
