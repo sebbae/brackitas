@@ -27,5 +27,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
  * 
  :)
-(: TODO Auto-generated XQuery block :) 
-"TODO" 66
+module namespace view="http://brackit.org/lib/templateMVC/templateMVCView"; 
+import module namespace template="http://brackit.org/lib/templateMVC/templateMVCTemplate";
+ 
+declare function default($content as item()) as item() {
+  template:base(template:head(),
+                template:header(),
+                template:teaser(),
+                template:menu(),
+                $content,
+                template:footerBrackit(),
+                template:footerYAML())
+};

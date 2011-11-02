@@ -32,6 +32,7 @@ import javax.servlet.ServletContext;
 import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
+import org.brackit.as.xquery.ASXQuery;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -65,11 +66,11 @@ public class IsModule extends AbstractFunction {
 			ServletContext sctx = ((ASQueryContext) ctx).getReq()
 					.getServletContext();
 			BaseAppContext bac = (BaseAppContext) sctx.getAttribute(app);
-			if (bac.get(String.format("/%s.xq", fPathName)).getModule() instanceof LibraryModule) {
-				return Bool.TRUE;
-			} else {
+			ASXQuery x = bac.get(String.format("/%s.xq", fPathName));
+			if (x != null)
+				return new Bool(x.getModule() instanceof LibraryModule);
+			else
 				return Bool.FALSE;
-			}
 		} catch (Exception e) {
 			throw new QueryException(e, ASErrorCode.XQFILE_ISMODULE_INT_ERROR,
 					e.getMessage());

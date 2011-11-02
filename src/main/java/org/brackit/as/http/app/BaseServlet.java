@@ -28,12 +28,12 @@
 package org.brackit.as.http.app;
 
 import java.io.IOException;
+import java.io.PrintStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.brackit.as.http.HttpConnector;
 import org.brackit.as.http.TXServlet;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.server.ServerException;
@@ -47,8 +47,8 @@ import org.brackit.server.tx.Tx;
  */
 public class BaseServlet extends TXServlet {
 
-	private static final long serialVersionUID = 1L;
-	
+	private static final long serialVersionUID = 5318557027440254730L;
+
 	protected ASQueryContext ctx;
 
 	@Override
@@ -62,18 +62,16 @@ public class BaseServlet extends TXServlet {
 			tx = session.checkTX();
 			doGet(req, resp, session);
 			session.commit();
-
-		} catch (Throwable e) {
-			// TODO: Erase it
-			e.printStackTrace();
+		} catch (Exception e) {
 			try {
 				if (tx == null) {
 					session.rollback();
 				}
 			} catch (ServerException e1) {
-				e1.printStackTrace();
 				log.error(e1);
 			}
+			log.error(e);
+			e.printStackTrace(new PrintStream(resp.getOutputStream()));
 		} finally {
 			if (session != null)
 				cleanup(session, tx);
@@ -87,22 +85,22 @@ public class BaseServlet extends TXServlet {
 			throws ServletException, IOException {
 		Session session = null;
 		Tx tx = null;
-		ctx = null;		
+		ctx = null;
 		try {
 			session = getSession(req);
 			tx = session.checkTX();
 			doPost(req, resp, session);
 			session.commit();
-		} catch (Throwable e) {
-			e.printStackTrace();
+		} catch (Exception e) {
 			try {
 				if (tx == null) {
 					session.rollback();
 				}
 			} catch (ServerException e1) {
-				e1.printStackTrace();
 				log.error(e1);
 			}
+			log.error(e);
+			e.printStackTrace(new PrintStream(resp.getOutputStream()));
 		} finally {
 			if (session != null)
 				cleanup(session, tx);
@@ -117,9 +115,9 @@ public class BaseServlet extends TXServlet {
 		Session session = getSession(req);
 		try {
 			doPut(req, resp, session);
-		} catch (Throwable e) {
-			req.setAttribute(ErrorServlet.ERROR_ATT, e.getMessage());
-			doDispatch(req, resp, HttpConnector.APP_ERROR_DISP_TARGET);
+		} catch (Exception e) {
+			log.error(e);
+			e.printStackTrace(new PrintStream(resp.getOutputStream()));
 		}
 	};
 
@@ -129,9 +127,9 @@ public class BaseServlet extends TXServlet {
 		Session session = getSession(req);
 		try {
 			doDelete(req, resp, session);
-		} catch (Throwable e) {
-			req.setAttribute(ErrorServlet.ERROR_ATT, e.getMessage());
-			doDispatch(req, resp, HttpConnector.APP_ERROR_DISP_TARGET);
+		} catch (Exception e) {
+			log.error(e);
+			e.printStackTrace(new PrintStream(resp.getOutputStream()));
 		}
 	};
 
@@ -141,9 +139,9 @@ public class BaseServlet extends TXServlet {
 		Session session = getSession(req);
 		try {
 			service(req, resp, session);
-		} catch (Throwable e) {
-			req.setAttribute(ErrorServlet.ERROR_ATT, e.getMessage());
-			doDispatch(req, resp, HttpConnector.APP_ERROR_DISP_TARGET);
+		} catch (Exception e) {
+			log.error(e);
+			e.printStackTrace(new PrintStream(resp.getOutputStream()));
 		}
 	}
 }

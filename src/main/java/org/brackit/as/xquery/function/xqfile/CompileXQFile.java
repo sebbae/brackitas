@@ -27,7 +27,11 @@
  */
 package org.brackit.as.xquery.function.xqfile;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.ServletContext;
 
@@ -35,7 +39,7 @@ import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.http.HttpConnector;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
-import org.brackit.as.xquery.ASXQuery;
+import org.brackit.as.xquery.ASUncompiledQuery;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -62,18 +66,32 @@ public class CompileXQFile extends AbstractFunction {
 		try {
 			String fPathName = ((Atomic) args[0]).atomize().stringValue()
 					.trim();
+			fPathName = (fPathName.startsWith("/")) ? fPathName.substring(1)
+					: fPathName;
 			String fQuery = ((Atomic) args[1]).atomize().stringValue().trim();
 			String app = fPathName.split("/")[0];
 			String base = String.format("%s/%s", HttpConnector.APPS_PATH,
 					fPathName);
+			// saving step
+			FileWriter f = new FileWriter(base);
+			BufferedWriter out = new BufferedWriter(f);
+			out.write(fQuery);
+			out.close();
+			// compilation step
+			HttpConnector.compileApplication(new File(String.format("%s/%s",
+					HttpConnector.APPS_PATH, app)));
 			ServletContext sctx = ((ASQueryContext) ctx).getReq()
 					.getServletContext();
 			BaseAppContext bac = (BaseAppContext) sctx.getAttribute(app);
-			new ASXQuery(bac.getChain(), fQuery);
-			// if there where compilation errors, they would have already been
-			// trown
-			Long lastUsed = new File(base).lastModified();
-			bac.register(String.format("/%s/%s", app, base), lastUsed);
+			List<ASUncompiledQuery> l = bac.getUncompiledQueries();
+			Iterator<ASUncompiledQuery> i = l.iterator();
+			while (i.hasNext()) {
+				ASUncompiledQuery a = i.next();
+				if (a.getPath().contains(fPathName))
+					throw new QueryException(a.getE(),
+							ASErrorCode.XQFILE_COMPILE_INT_ERROR, a.getE()
+									.getMessage());
+			}
 			return Bool.TRUE;
 		} catch (Exception e) {
 			throw new QueryException(e, ASErrorCode.XQFILE_COMPILE_INT_ERROR, e

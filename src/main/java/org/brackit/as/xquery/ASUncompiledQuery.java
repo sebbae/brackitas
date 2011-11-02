@@ -25,52 +25,36 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.http.app;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.brackit.server.session.Session;
+package org.brackit.as.xquery;
 
 /**
  * 
  * @author Henrique Valer
- *
+ * 
  */
-public class ErrorServlet extends BaseServlet {
+public class ASUncompiledQuery {
 
-	private static final long serialVersionUID = 8975500227147886755L;
-	
-	public final static String ERROR_ATT = "errorMsg";
-	
-	private void showError(HttpServletRequest req) {
-		System.out.println("ERROR ON APPLICATION:" + (String) req.getAttribute(ErrorServlet.ERROR_ATT));
+	private String path;
+
+	private long lastModified;
+
+	private Exception e;
+
+	public ASUncompiledQuery(String p, long l, Exception e) {
+		this.path = p;
+		this.lastModified = l;
+		this.e = e;
 	}
-	
-	@Override
-	protected void doDelete(HttpServletRequest req, HttpServletResponse resp,
-			Session session) throws Exception {
-		this.showError(req);
+
+	public String getPath() {
+		return path;
 	}
-	
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp,
-			Session session) throws Exception {
-		this.showError(req);	}
-	
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp,
-			Session session) throws Exception {
-		this.showError(req);	}
-	
-	@Override
-	protected void doPut(HttpServletRequest req, HttpServletResponse resp,
-			Session session) throws Exception {
-		this.showError(req);	}
-	
-	@Override
-	protected void service(HttpServletRequest req, HttpServletResponse resp,
-			Session session) throws Exception {
-		this.showError(req);
+
+	public long getLastModified() {
+		return lastModified;
+	}
+
+	public Exception getE() {
+		return e;
 	}
 }

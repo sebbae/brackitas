@@ -40,7 +40,6 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
 import org.brackit.as.context.BaseAppContext;
-import org.brackit.as.http.app.ErrorServlet;
 import org.brackit.as.http.app.FrontController;
 import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.server.metadata.manager.MetaDataMgr;
@@ -90,10 +89,6 @@ public class HttpConnector {
 
 	public static final String APP_MIME_TYPES = "mimeTypes";
 
-	public static final String APP_ERROR_DISP_TARGET = "/apps/error/";
-
-	private static final String APP_ERROR_PREFIX = APP_ERROR_DISP_TARGET + "*";
-
 	private static final String APP_CONTROLLER_PREFIX = "/apps/*";
 
 	private static final Logger log = Logger.getLogger(HttpConnector.class);
@@ -116,10 +111,8 @@ public class HttpConnector {
 				.setAttribute(APP_MIME_TYPES, this.loadMimeTypes());
 		servletContextHandler.addEventListener(new SessionEndListener(
 				sessionMgr));
-		// servletContextHandler.addEventListener(new );
 		servletContextHandler.addServlet(FrontController.class,
 				APP_CONTROLLER_PREFIX);
-		servletContextHandler.addServlet(ErrorServlet.class, APP_ERROR_PREFIX);
 		sch = servletContextHandler;
 		processDeployment(servletContextHandler, sessionMgr, mdm);
 	}

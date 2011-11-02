@@ -35,7 +35,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.brackit.as.http.TXServlet;
 import org.brackit.server.session.Session;
 import org.brackit.xquery.atomic.Atomic;
 import org.brackit.xquery.atomic.Str;
@@ -46,6 +45,11 @@ import org.brackit.xquery.atomic.Str;
  * 
  */
 public class AppController extends AppServlet {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1979344476146155523L;
 
 	/**
 	 * Both get and post request are processed equally. The login is made and

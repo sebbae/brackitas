@@ -27,5 +27,13 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
  * 
  :)
-(: TODO Auto-generated XQuery block :) 
-"TODO" 66
+module namespace controller="http://brackit.org/lib/templateMVC/templateMVCController"; 
+import module namespace model="http://brackit.org/lib/templateMVC/templateMVCModel"; 
+import module namespace view="http://brackit.org/lib/templateMVC/templateMVCView";
+ 
+declare function index() as item() {
+  let $msg :=
+    "Hello World!"
+  return
+    view:default($msg)
+};

@@ -27,24 +27,16 @@
  */
 package org.brackit.as.http;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.brackit.as.xquery.ASQueryContext;
-import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.server.ServerException;
-import org.brackit.server.metadata.TXQueryContext;
 import org.brackit.server.session.Session;
 import org.brackit.server.session.SessionException;
 import org.brackit.server.tx.IsolationLevel;
 import org.brackit.server.tx.Tx;
-import org.brackit.xquery.XQuery;
-import org.brackit.xquery.compiler.CompileChain;
 import org.brackit.xquery.util.log.Logger;
 
 /**
@@ -60,29 +52,6 @@ public abstract class TXServlet extends AbstractServlet {
 	protected static final Logger log = Logger.getLogger(TXServlet.class);
 
 	public static final String SESSION = "_session";
-
-	@Deprecated
-	protected String query(Session session, String query) throws Exception {
-		ByteArrayOutputStream buf = new ByteArrayOutputStream();
-		CompileChain chain = new ASCompileChain(metaDataMgr, session.checkTX());
-		new XQuery(chain, query).serialize(new TXQueryContext(
-				session.checkTX(), metaDataMgr), new PrintStream(buf));
-		return buf.toString("UTF-8");
-	}
-
-	@Deprecated
-	protected String httpQuery(Session session, String query,
-			HttpSession httpSession) throws Exception {
-		ByteArrayOutputStream buf = new ByteArrayOutputStream();
-		Tx tx = session.getTX();
-		CompileChain chain = new ASCompileChain(metaDataMgr, tx);
-		XQuery x = new XQuery(chain, query);
-		x.setPrettyPrint(true);
-		x.serialize(
-				new ASQueryContext(tx, metaDataMgr, httpSession),
-				new PrintStream(buf));
-		return buf.toString("UTF-8");
-	}
 
 	protected void doDelete(HttpServletRequest req, HttpServletResponse resp,
 			Session session) throws Exception {
@@ -115,8 +84,8 @@ public abstract class TXServlet extends AbstractServlet {
 				session.commit();
 			else
 				session.rollback();
-		} catch (ServerException e1) {
-			log.error(e1);
+		} catch (ServerException e) {
+			log.error(e);
 		}
 	}
 

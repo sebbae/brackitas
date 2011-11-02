@@ -58,7 +58,7 @@ public abstract class AbstractServlet extends HttpServlet {
 	protected SessionMgr sessionMgr;
 
 	protected MetaDataMgr metaDataMgr;
-	
+
 	@Override
 	public void init() throws ServletException {
 		ServletContext servletContext = getServletContext();
@@ -66,7 +66,8 @@ public abstract class AbstractServlet extends HttpServlet {
 				.getName());
 		metaDataMgr = (MetaDataMgr) servletContext
 				.getAttribute(MetaDataMgr.class.getName());
-		mimeMap = (MimetypesFileTypeMap) servletContext.getAttribute(HttpConnector.APP_MIME_TYPES);
+		mimeMap = (MimetypesFileTypeMap) servletContext
+				.getAttribute(HttpConnector.APP_MIME_TYPES);
 	}
 
 	protected String getMimeType(String filename) {

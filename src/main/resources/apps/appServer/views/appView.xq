@@ -260,7 +260,7 @@ declare function generateTextArea($fPathName as xs:string, $num as xs:string) as
 
 declare function editQuery($resource as xs:string,
                            $app as xs:string) as item() {
-  <form action="../fileController/action">
+  <form action="../fileController/action" method="post">
     <table style="width:100%;">
       <tr>
         <td>
@@ -281,7 +281,7 @@ declare function editQuery($resource as xs:string,
 declare function editQueryAfterAction($resource as xs:string,
                                       $app as xs:string,
                                       $msg as xs:string) as item() {
-  <form action="../fileController/action">
+  <form action="../fileController/action" method="post">
     <table style="width:100%;">
       <tr>
         <td>
