@@ -223,28 +223,3 @@
     vertical-align:top;
   }
 }
-
-@media print
-{
- /**
-  * (en) float clearing for subtemplates. Uses display:table to avoid bugs in FF & IE
-  * (de) Float Clearing für Subtemplates. Verwendet display:table, um Darstellungsprobleme im FF & IE zu vermeiden
-  */
-
-  .subcolumns,
-  .subcolumns > div {
-    overflow:visible; 
-    display:table;
-  } 
-
-  /* (en) make .print class visible */
-  /* (de) .print-Klasse sichtbar schalten */
-  .print { 
-    position:static; 
-    left:0;
-  }
-
-  /* (en) generic class to hide elements for print */
-  /* (de) Allgemeine CSS Klasse, um beliebige Elemente in der Druckausgabe auszublenden */
-  .noprint { display:none !important; }
-}

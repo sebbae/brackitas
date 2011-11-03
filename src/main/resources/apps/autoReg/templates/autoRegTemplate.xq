@@ -55,18 +55,12 @@ declare function teaser() as item() {
 };
 
 declare function menu() as item() {
-  <div id="col1_content" class="clearfix">
-    <table style="width:100%;">
-      <tr>
-        <td>
-          <ul class="vlist">
-            <li><zu><a href="./index"><h6>Link 1</h6></a></zu></li>
-            <li><zu><a href="./index"><h6>Link 2</h6></a></zu></li>
-          </ul>
-        </td>
-      </tr>
-    </table>
-  </div>
+  <div id="col1_content" class="divisor">
+    <ul class="vlist">
+      <li><zu><a href="./index"><h6>Link 1</h6></a></zu></li>
+      <li><zu><a href="./index"><h6>Link 2</h6></a></zu></li>
+    </ul>
+  </div>    
 };
 
 declare function footerBrackit() as item() {
@@ -115,7 +109,7 @@ declare function base($head as item(),
                       $content as item(),
                       $footerBrackit as item(),
                       $footerYAML as item()) {
-  <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <html>
     {$head}
     <body>
       {baseBody($header,$teaser,$menu,$content,$footerBrackit,$footerYAML)}

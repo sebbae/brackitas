@@ -28,6 +28,8 @@
 package org.brackit.as.http.app;
 
 import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -112,14 +114,19 @@ public class FrontController extends BaseServlet {
 		resolveApplication(req, resp);
 		if (!UNKNOWN_MIMETYPE.equals(getMimeType(URI))) {
 			processResourceRequest(APP, URI, resp);
+			resp.setStatus(HttpServletResponse.SC_OK);
 			return;
 		} else {
-			prepareExecution(req, session);
+			prepareExecution(req, resp, session);
 			if (RESOURCE.endsWith(".xq")) {
+				resp.getOutputStream().println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
 				processXQueryFileRequest(req, resp);
+				resp.setStatus(HttpServletResponse.SC_OK);
 				return;
 			} else {
+				resp.getOutputStream().println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
 				processMVCRequest(req, resp);
+				resp.setStatus(HttpServletResponse.SC_OK);
 				return;
 			}
 		}
@@ -198,7 +205,6 @@ public class FrontController extends BaseServlet {
 
 	private void resolveApplication(HttpServletRequest req,
 			HttpServletResponse resp) {
-		resp.setContentType("text/html;charset=UTF-8");
 		URI = req.getRequestURI();
 		String[] URIParts = URI.split("/");
 		APP = URIParts[2];
@@ -211,19 +217,23 @@ public class FrontController extends BaseServlet {
 			HttpServletResponse resp) throws StreamCorruptedException,
 			FileNotFoundException {
 		try {
-			String s = getMimeType(resource);
-			resp.setContentType(s);
-			InputStream in = getClass().getResourceAsStream(resource);
+			resp.setContentType(getMimeType(resource));
+			// InputStream in = getClass().getResourceAsStream(resource);
+			File f = new File("src/main/resources" + resource);
+			FileInputStream in = new FileInputStream(f);
+
 			BufferedOutputStream out = new BufferedOutputStream(resp
 					.getOutputStream());
 			byte[] buffer = new byte[1024 * 16];
 			int bytesRead = 0;
+			int size = 0;
 			while ((bytesRead = in.read(buffer)) != -1) {
+				size += bytesRead;
 				out.write(buffer, 0, bytesRead);
 			}
+			out.flush();
 			out.close();
 			in.close();
-			resp.setStatus(HttpServletResponse.SC_OK);
 		} catch (StreamCorruptedException e) {
 			throw new StreamCorruptedException(String
 					.format("Error while reading inputStream of resource %s.",
@@ -235,13 +245,15 @@ public class FrontController extends BaseServlet {
 		}
 	}
 
-	private void prepareExecution(HttpServletRequest req, Session session)
-			throws SessionException, FileUploadException, IOException {
+	private void prepareExecution(HttpServletRequest req,
+			HttpServletResponse resp, Session session) throws SessionException,
+			FileUploadException, IOException {
 		tx = session.getTX();
 		x = null;
 		ctx = new ASQueryContext(tx, metaDataMgr, req.getSession(), req);
 		if (ServletFileUpload.isMultipartContent(req))
 			ctx.setMultiPartParams(convertMultiPartParams(req));
+		resp.setContentType("text/html; charset=UTF-8");
 	}
 
 	private HashMap<String, InputStreamName> convertMultiPartParams(

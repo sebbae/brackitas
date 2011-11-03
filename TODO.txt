@@ -71,3 +71,5 @@
 (OK) Finish mkdir and upload.
 (OK) After directory creation, need to update menus, how?
 (OK) Change development for only 1 file at a time. 
+(  ) Create statistics
+(  ) Improve resources page
