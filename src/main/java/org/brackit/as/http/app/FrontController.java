@@ -38,6 +38,7 @@ import java.io.StreamCorruptedException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -55,16 +56,18 @@ import org.brackit.server.session.SessionException;
 import org.brackit.server.tx.Tx;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
+import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.atomic.Una;
 import org.brackit.xquery.expr.Cast;
-import org.brackit.xquery.expr.ExtVariable;
-import org.brackit.xquery.function.Function;
-import org.brackit.xquery.sequence.type.AtomicType;
-import org.brackit.xquery.sequence.type.SequenceType;
+import org.brackit.xquery.expr.Variable;
+import org.brackit.xquery.xdm.Function;
+import org.brackit.xquery.module.StaticContext;
 import org.brackit.xquery.xdm.Item;
 import org.brackit.xquery.xdm.Sequence;
 import org.brackit.xquery.xdm.Type;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -119,12 +122,18 @@ public class FrontController extends BaseServlet {
 		} else {
 			prepareExecution(req, resp, session);
 			if (RESOURCE.endsWith(".xq")) {
-				resp.getOutputStream().println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
+				resp
+						.getOutputStream()
+						.println(
+								"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
 				processXQueryFileRequest(req, resp);
 				resp.setStatus(HttpServletResponse.SC_OK);
 				return;
 			} else {
-				resp.getOutputStream().println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
+				resp
+						.getOutputStream()
+						.println(
+								"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
 				processMVCRequest(req, resp);
 				resp.setStatus(HttpServletResponse.SC_OK);
 				return;
@@ -142,16 +151,16 @@ public class FrontController extends BaseServlet {
 					.lastIndexOf("/")));
 			x = bac.get(s);
 			bindExternalVariables(req);
-			List<Function[]> l = x.getModule().getFunctions()
-					.getDeclaredFunctions();
-			Iterator<Function[]> i = l.iterator();
+			StaticContext sctx = x.getModule().getStaticContext();
+			Map<QNm, Function[]> l = sctx.getFunctions().getDeclaredFunctions();
+			Iterator<Function[]> i = l.values().iterator();
 			while (i.hasNext()) {
 				Function[] f = (Function[]) i.next();
 				for (int j = 0; j < f.length; j++) {
 					if (f[j].getName().stringValue().equals(RESOURCE)) {
 						x.setPrettyPrint(true);
 						x.serializeSequence(ctx, new PrintStream(resp
-								.getOutputStream()), f[j].execute(ctx,
+								.getOutputStream()), f[j].execute(sctx, ctx,
 								new Sequence[] {}));
 						return;
 					}
@@ -182,21 +191,21 @@ public class FrontController extends BaseServlet {
 
 	private void bindExternalVariables(HttpServletRequest req)
 			throws QueryException {
-		for (ExtVariable var : x.getModule().getVariables()
-				.getDeclaredVariables()) {
+		StaticContext sctx = x.getModule().getStaticContext();
+		for (Variable var : x.getModule().getVariables().getDeclaredVariables()) {
 			SequenceType type = var.getType();
 			// TODO: Correct external binding for non atomic values
 			if ((type != null) && (var.getType().getItemType().isAtomic())) {
 				Type expectedAtomicType = ((AtomicType) var.getType()
-						.getItemType()).type;
+						.getItemType()).getType();
 				String param = req.getParameter(var.getName().getLocalName());
 				if ((param != null) && (!(param = param.trim()).isEmpty())) {
 					Item item = new Una(param);
-					item = Cast.cast(item, expectedAtomicType, false);
+					item = Cast.cast(sctx, item, expectedAtomicType, false);
 					ctx.bind(var.getName(), item);
 				} else {
 					Item item = new Una("");
-					item = Cast.cast(item, expectedAtomicType, false);
+					item = Cast.cast(sctx, item, expectedAtomicType, false);
 					ctx.bind(var.getName(), item);
 				}
 			}

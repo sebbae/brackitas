@@ -44,7 +44,8 @@ import org.brackit.xquery.atomic.Atomic;
 import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
-import org.brackit.xquery.function.Signature;
+import org.brackit.xquery.module.StaticContext;
+import org.brackit.xquery.xdm.Signature;
 import org.brackit.xquery.xdm.Sequence;
 
 /**
@@ -59,15 +60,15 @@ public class CreateXQFile extends AbstractFunction {
 	}
 
 	@Override
-	public Sequence execute(QueryContext ctx, Sequence[] args)
-			throws QueryException {
+	public Sequence execute(StaticContext sctx, QueryContext ctx,
+			Sequence[] args) throws QueryException {
 		try {
 			String fPathName = ((Atomic) args[0]).atomize().stringValue()
 					.trim();
 			String app = fPathName.split("/")[0];
 			String base = String.format("%s/%s", HttpConnector.APPS_PATH,
 					fPathName);
-			ServletContext sctx = ((ASQueryContext) ctx).getReq()
+			ServletContext servletCtx = ((ASQueryContext) ctx).getReq()
 					.getServletContext();
 			FileWriter f = new FileWriter(base);
 			BufferedWriter out = new BufferedWriter(f);
@@ -75,7 +76,7 @@ public class CreateXQFile extends AbstractFunction {
 			out.write(Generate.todo);
 			out.close();
 			Long lastUsed = new File(base).lastModified();
-			BaseAppContext bac = (BaseAppContext) sctx.getAttribute(app);
+			BaseAppContext bac = (BaseAppContext) servletCtx.getAttribute(app);
 			bac.register(HttpConnector.resolvePath(base), lastUsed);
 			return Bool.TRUE;
 		} catch (Exception e) {

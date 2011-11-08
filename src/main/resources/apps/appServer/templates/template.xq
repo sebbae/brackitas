@@ -34,7 +34,7 @@
 :)
 module namespace template="http://brackit.org/lib/appServer/template";
 
-declare function head($title as xs:string) as item() {
+declare function template:head($title as xs:string) as item() {
     <head>
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>    
       <script src="http://localhost:8080/apps/appServer/resources/js/brackitHeader.js" type="text/javascript">""</script>    
@@ -43,7 +43,7 @@ declare function head($title as xs:string) as item() {
     </head>
 };
 
-declare function header() as item() {
+declare function template:header() as item() {
     <table style="width:100%;">
         <tr>
             <td>
@@ -57,13 +57,13 @@ declare function header() as item() {
     </table>
 };
 
-declare function teaser() as item() {
+declare function template:teaser() as item() {
     <div id="teaser" align="center">
       <h2>Brackit Application Server 1.0 </h2>
     </div>
 };
 
-declare function menu() as item() {
+declare function template:menu() as item() {
     <div id="col1_content" class="clearfix">
       <table style="width:100%;">
         <tr>
@@ -78,19 +78,19 @@ declare function menu() as item() {
     </div>
 };
 
-declare function footerBrackit() as item() {
+declare function template:footerBrackit() as item() {
     <div id="footer">
       <a href="http://brackit.org">Brackit XQuery engine</a>
     </div>          
 };
 
-declare function footerYAML() as item() {
+declare function template:footerYAML() as item() {
     <div id="footer">
       Layout based on <a href="http://www.yaml.de/">YAML</a>
     </div>          
 };
 
-declare function baseBody($header as item(),
+declare function template:baseBody($header as item(),
                           $teaser as item(),
                           $menu as item(),
                           $content as item(),
@@ -120,7 +120,7 @@ declare function baseBody($header as item(),
       </div>
 };
 
-declare function base($head as item(),
+declare function template:base($head as item(),
                       $header as item(),
                       $teaser as item(),
                       $menu as item(),
@@ -131,16 +131,16 @@ declare function base($head as item(),
     <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
     {$head}
     <body>
-      {baseBody($header,$teaser,$menu,$content,$footerBrackit,$footerYAML)}
+      {template:baseBody($header,$teaser,$menu,$content,$footerBrackit,$footerYAML)}
     </body>
     </html>
 };
 
-declare function footerScript() as item() {
+declare function template:footerScript() as item() {
     <script src="http://localhost:8080/apps/appServer/resources/js/brackit.js">""</script>
 };
 
-declare function baseFooterScript($head as item(),
+declare function template:baseFooterScript($head as item(),
                                   $header as item(),
                                   $teaser as item(),
                                   $menu as item(),
@@ -152,7 +152,7 @@ declare function baseFooterScript($head as item(),
     <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
     {$head}
     <body>
-      {baseBody($header,$teaser,$menu,$content,$footerBrackit,$footerYAML)}
+      {template:baseBody($header,$teaser,$menu,$content,$footerBrackit,$footerYAML)}
       {$footerScript}      
     </body>
     </html>

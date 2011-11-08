@@ -44,7 +44,8 @@ import org.brackit.xquery.atomic.Atomic;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.function.AbstractFunction;
-import org.brackit.xquery.function.Signature;
+import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.module.StaticContext;
 import org.brackit.xquery.node.SubtreePrinter;
 import org.brackit.xquery.xdm.Node;
 import org.brackit.xquery.xdm.Sequence;
@@ -77,8 +78,8 @@ public class Template extends AbstractFunction {
 		this.tempFields[4] = "footer";
 	}
 
-	public Sequence execute(QueryContext ctx, Sequence[] args)
-			throws QueryException {
+	public Sequence execute(StaticContext sctx, QueryContext ctx,
+			Sequence[] args) throws QueryException {
 		try {
 			/**
 			 * If the field is null, the template load a default file for it and

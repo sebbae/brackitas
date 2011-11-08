@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.brackit</groupId>
   <artifactId>brackitas</artifactId>
-  <version>0.0.5</version>
+  <version>0.0.7</version>
   <name>Brackit Application Server</name>
   <url>http://brackit.org</url>
   <properties>
@@ -150,8 +150,13 @@
     </dependency>
     <dependency>
     	<groupId>org.brackit</groupId>
+    	<artifactId>brackit</artifactId>
+    	<version>0.0.7</version>
+    </dependency>    
+    <dependency>
+    	<groupId>org.brackit</groupId>
     	<artifactId>brackitdb-server</artifactId>
-    	<version>0.0.5</version>
+    	<version>0.0.7</version>
     	<type>jar</type>
     	<scope>compile</scope>
     </dependency>

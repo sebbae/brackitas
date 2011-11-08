@@ -37,8 +37,9 @@ import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
-import org.brackit.xquery.function.Signature;
-import org.brackit.xquery.node.linked.LNodeFactory;
+import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.module.StaticContext;
+import org.brackit.xquery.node.d2linked.D2NodeFactory;
 import org.brackit.xquery.node.parser.DocumentParser;
 import org.brackit.xquery.xdm.Sequence;
 
@@ -54,14 +55,14 @@ public class GetStructure extends AbstractFunction {
 	}
 
 	@Override
-	public Sequence execute(QueryContext ctx, Sequence[] args)
-			throws QueryException {
+	public Sequence execute(StaticContext sctx, QueryContext ctx,
+			Sequence[] args) throws QueryException {
 		try {
 			String app = ((Atomic) args[0]).atomize().stringValue().trim();
 			File f = new File(String.format("%s/%s", HttpConnector.APPS_PATH,
 					app));
 			StringBuffer sb = listStructure(f);
-			return new LNodeFactory().build(new DocumentParser(sb.toString()));
+			return new D2NodeFactory().build(new DocumentParser(sb.toString()));
 		} catch (Exception e) {
 			throw new QueryException(e, ASErrorCode.APP_GETSTRUCTURE_INT_ERROR,
 					e.getMessage());

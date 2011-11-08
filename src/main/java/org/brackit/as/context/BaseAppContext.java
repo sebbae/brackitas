@@ -150,7 +150,7 @@ public class BaseAppContext {
 		target.setLastModified(lastModified);
 		Module module = target.getModule();
 		if (module instanceof LibraryModule) {
-			String uri = ((LibraryModule) module).getTargetNS().getUri();
+			String uri = ((LibraryModule) module).getTargetNS();
 			((BaseResolver) chain.getModuleResolver()).register(uri,
 					(LibraryModule) module);
 			libraries.put(uri, path);
@@ -173,13 +173,13 @@ public class BaseAppContext {
 						.iterator();
 				while (i.hasNext()) {
 					Module m = i.next();
-					String mPath = libraries.get(m.getTargetNS().getUri());
+					String mPath = libraries.get(m.getTargetNS());
 					File fm = new File(base + mPath);
 					ASXQuery qm = queries.get(mPath);
 					if (fm.lastModified() != qm.getLastModified()) {
 						((BaseResolver) chain.getModuleResolver())
 								.unregister(((LibraryModule) qm.getModule())
-										.getTargetNS().getUri());
+										.getTargetNS());
 						register(mPath, fm.lastModified());
 						register(path, f.lastModified());
 					}

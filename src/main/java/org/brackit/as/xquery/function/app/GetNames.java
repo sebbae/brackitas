@@ -41,7 +41,8 @@ import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.function.AbstractFunction;
-import org.brackit.xquery.function.Signature;
+import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.module.StaticContext;
 import org.brackit.xquery.sequence.ItemSequence;
 import org.brackit.xquery.xdm.Item;
 import org.brackit.xquery.xdm.Sequence;
@@ -58,17 +59,17 @@ public class GetNames extends AbstractFunction {
 	}
 
 	@Override
-	public Sequence execute(QueryContext ctx, Sequence[] args)
-			throws QueryException {
+	public Sequence execute(StaticContext sctx, QueryContext ctx,
+			Sequence[] args) throws QueryException {
 		try {
-			ServletContext sctx = ((ASQueryContext) ctx).getReq()
+			ServletContext servletCtx = ((ASQueryContext) ctx).getReq()
 					.getServletContext();
-			Enumeration<String> e = sctx.getAttributeNames();
+			Enumeration<String> e = servletCtx.getAttributeNames();
 			String n;
 			List<Str> names = new ArrayList<Str>();
 			while (e.hasMoreElements()) {
 				n = e.nextElement();
-				if (sctx.getAttribute(n) instanceof BaseAppContext)
+				if (servletCtx.getAttribute(n) instanceof BaseAppContext)
 					names.add(new Str(n));
 			}
 			Item[] result = names.toArray(new Item[0]);

@@ -84,21 +84,20 @@ import org.brackit.xquery.QueryException;
 import org.brackit.xquery.XQuery;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.compiler.CompileChain;
-import org.brackit.xquery.function.Signature;
 import org.brackit.xquery.module.Functions;
 import org.brackit.xquery.module.Namespaces;
 import org.brackit.xquery.node.SubtreePrinter;
-import org.brackit.xquery.sequence.type.AnyItemType;
-import org.brackit.xquery.sequence.type.AnyKindType;
-import org.brackit.xquery.sequence.type.AtomicType;
-import org.brackit.xquery.sequence.type.Cardinality;
-import org.brackit.xquery.sequence.type.SequenceType;
 import org.brackit.xquery.xdm.DocumentException;
 import org.brackit.xquery.xdm.Item;
 import org.brackit.xquery.xdm.Iter;
 import org.brackit.xquery.xdm.Kind;
 import org.brackit.xquery.xdm.Node;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AnyItemType;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * @author Sebastian Baechle
@@ -228,7 +227,7 @@ public class ASXQuery extends XQuery {
 
 		Functions.predefine(new GetParameter(new QNm(Namespaces.REQUEST_NSURI,
 				Namespaces.REQUEST_PREFIX, "getParameter"), new Signature(
-				new SequenceType(AnyKindType.ANY_NODE, Cardinality.One),
+				new SequenceType(AnyItemType.ANY, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
 		Functions.predefine(new GetParameterNames(new QNm(

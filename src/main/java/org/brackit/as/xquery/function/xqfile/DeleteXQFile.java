@@ -41,7 +41,8 @@ import org.brackit.xquery.atomic.Atomic;
 import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
-import org.brackit.xquery.function.Signature;
+import org.brackit.xquery.module.StaticContext;
+import org.brackit.xquery.xdm.Signature;
 import org.brackit.xquery.xdm.Sequence;
 
 /**
@@ -56,8 +57,8 @@ public class DeleteXQFile extends AbstractFunction {
 	}
 
 	@Override
-	public Sequence execute(QueryContext ctx, Sequence[] args)
-			throws QueryException {
+	public Sequence execute(StaticContext sctx, QueryContext ctx,
+			Sequence[] args) throws QueryException {
 		try {
 			String fPathName = ((Atomic) args[0]).atomize().stringValue()
 					.trim();
@@ -66,9 +67,10 @@ public class DeleteXQFile extends AbstractFunction {
 			String app = fPathName.split("/")[0];
 			String base = String.format("%s/%s", HttpConnector.APPS_PATH,
 					fPathName);
-			ServletContext sctx = ((ASQueryContext) ctx).getReq()
+			ServletContext servletCtx = ((ASQueryContext) ctx).getReq()
 					.getServletContext();
-			((BaseAppContext) sctx.getAttribute(app)).unregister(fPathName);
+			((BaseAppContext) servletCtx.getAttribute(app))
+					.unregister(fPathName);
 			return new Bool(new File(base).delete());
 		} catch (Exception e) {
 			throw new QueryException(e, ASErrorCode.XQFILE_DELETE_INT_ERROR, e

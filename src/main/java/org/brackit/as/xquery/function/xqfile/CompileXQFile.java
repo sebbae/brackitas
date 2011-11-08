@@ -46,7 +46,8 @@ import org.brackit.xquery.atomic.Atomic;
 import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
-import org.brackit.xquery.function.Signature;
+import org.brackit.xquery.module.StaticContext;
+import org.brackit.xquery.xdm.Signature;
 import org.brackit.xquery.xdm.Sequence;
 
 /**
@@ -61,8 +62,8 @@ public class CompileXQFile extends AbstractFunction {
 	}
 
 	@Override
-	public Sequence execute(QueryContext ctx, Sequence[] args)
-			throws QueryException {
+	public Sequence execute(StaticContext sctx, QueryContext ctx,
+			Sequence[] args) throws QueryException {
 		try {
 			String fPathName = ((Atomic) args[0]).atomize().stringValue()
 					.trim();
@@ -80,9 +81,9 @@ public class CompileXQFile extends AbstractFunction {
 			// compilation step
 			HttpConnector.compileApplication(new File(String.format("%s/%s",
 					HttpConnector.APPS_PATH, app)));
-			ServletContext sctx = ((ASQueryContext) ctx).getReq()
+			ServletContext servletCtx = ((ASQueryContext) ctx).getReq()
 					.getServletContext();
-			BaseAppContext bac = (BaseAppContext) sctx.getAttribute(app);
+			BaseAppContext bac = (BaseAppContext) servletCtx.getAttribute(app);
 			List<ASUncompiledQuery> l = bac.getUncompiledQueries();
 			Iterator<ASUncompiledQuery> i = l.iterator();
 			while (i.hasNext()) {

@@ -38,7 +38,8 @@ import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
-import org.brackit.xquery.function.Signature;
+import org.brackit.xquery.module.StaticContext;
+import org.brackit.xquery.xdm.Signature;
 import org.brackit.xquery.xdm.Sequence;
 
 /**
@@ -53,8 +54,8 @@ public class GetCreationTime extends AbstractFunction {
 	}
 
 	@Override
-	public Sequence execute(QueryContext ctx, Sequence[] args)
-			throws QueryException {
+	public Sequence execute(StaticContext sctx, QueryContext ctx,
+			Sequence[] args) throws QueryException {
 		try {
 			HttpSession httpSession = ((ASQueryContext) ctx).getHttpSession();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH:mm");
