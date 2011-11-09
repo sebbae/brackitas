@@ -38,7 +38,7 @@ import module namespace view="http://brackit.org/lib/appServer/fileView";
 import module namespace appController="http://brackit.org/lib/appServer/appController";
 import module namespace appView="http://brackit.org/lib/appServer/appView";
 
-declare function save() as item() {
+declare function controller:save() as item() {
 	let $fPathName := req:getParameter("name"),
 		$query := req:getParameter("query")
 	return
@@ -51,7 +51,7 @@ declare function save() as item() {
             appController:loadAfterAction($msg)
 }; 
 
-declare function compile() as item() {
+declare function controller:compile() as item() {
     let $fPathName := req:getParameter("name"),
         $query := req:getParameter("query")
     return
@@ -64,7 +64,7 @@ declare function compile() as item() {
             appController:loadAfterAction($msg)
 };
 
-declare function delete() as item() {
+declare function controller:delete() as item() {
     let $fPathName := req:getParameter("name"),
         $app := req:getParameter("app"),
         $menu := appView:createMenu($app) 
@@ -78,22 +78,22 @@ declare function delete() as item() {
             appView:menuContent($menu,$msg)
 };
 
-declare function action() as item() {
+declare function controller:action() as item() {
     let $action := fn:normalize-space(req:getParameter("action"))
 	return
 		if (fn:compare($action,"save") eq 0) then
-			save()
+			controller:save()
 		else 
 		    if (fn:compare($action,"compile") eq 0) then
-				compile()
+				controller:compile()
 			else
 			    if (fn:compare($action,"delete") eq 0) then
-					delete()
+					controller:delete()
 				else
 					"ops"
 };
 
-declare function create() as item() {
+declare function controller:create() as item() {
     let $butClick := req:getParameter("sub"),
         $fBasePath := req:getParameter("name"),
         $app := req:getParameter("app"),
@@ -117,7 +117,7 @@ declare function create() as item() {
             appView:menuContent($menu,view:createFileForm($fBasePath,$app))
 };
 
-declare function upload() as item() {
+declare function controller:upload() as item() {
     let $butClick := req:getParameter("sub"),
         $fBasePath := req:getParameter("name"),
         $app := req:getParameter("app"),
@@ -132,7 +132,7 @@ declare function upload() as item() {
             appView:menuContent($menu,view:createUploadForm($fBasePath,$app))
 };
 
-declare function mkDir() as item() {
+declare function controller:mkDir() as item() {
     let $butClick := req:getParameter("sub"),
         $fBasePath := req:getParameter("name"),
         $app := req:getParameter("app"),

@@ -36,6 +36,6 @@ module namespace controller="http://brackit.org/lib/appServer/serverController";
 import module namespace template="http://brackit.org/lib/appServer/template";
 import module namespace view="http://brackit.org/lib/appServer/serverView";
 
-declare function index() as item() {
-    view:index();
+declare function controller:index() as item() {
+    view:index()
 }; 

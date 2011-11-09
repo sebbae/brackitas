@@ -38,7 +38,7 @@ import module namespace view="http://brackit.org/lib/appServer/fileView";
 import module namespace appController="http://brackit.org/lib/appServer/appController";
 import module namespace appView="http://brackit.org/lib/appServer/appView";
 
-declare function test() as item() {
+declare function controller:test() as item() {
     try {
         fn:true()
     }
@@ -47,7 +47,7 @@ declare function test() as item() {
     }
 };
 
-declare function create() as item() {
+declare function controller:create() as item() {
     let $butClick := fn:normalize-space(req:getParameter("sub")),
         $fBasePath := req:getParameter("base"),
         $app := req:getParameter("app"),

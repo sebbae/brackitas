@@ -35,7 +35,7 @@
 module namespace model="http://brackit.org/lib/appServer/fileModel";
 import module namespace appModel="http://brackit.org/lib/appServer/appModel";
 
-declare function validateXQFile($name as xs:string) as xs:boolean {
+declare function model:validateXQFile($name as xs:string) as xs:boolean {
     if ((appModel:validateName($name)) and 
         (fn:ends-with($name, ".xq")))
     then
@@ -44,7 +44,7 @@ declare function validateXQFile($name as xs:string) as xs:boolean {
         fn:false()
 };
 
-declare function validateDirName($name as xs:string) as xs:boolean {
+declare function model:validateDirName($name as xs:string) as xs:boolean {
     if (appModel:validateName($name)) then
         fn:true()
     else

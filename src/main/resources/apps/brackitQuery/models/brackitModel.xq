@@ -34,7 +34,7 @@
 :)
 module namespace model="http://brackit.org/lib/brackitQuery/brackitModel";
     
-declare function echo($s as item()*) as item()* 
+declare function model:echo($s as item()*) as item()* 
 {
     $s
-};    
+};

@@ -35,7 +35,7 @@
 module namespace view="http://brackit.org/lib/appServer/serverView";
 import module namespace template="http://brackit.org/lib/appServer/template";
 
-declare function default($content as item()) as item() {
+declare function view:default($content as item()) as item() {
     template:base(template:head("Brackit Application Server"),
                   template:header(),
                   template:teaser(),
@@ -45,9 +45,9 @@ declare function default($content as item()) as item() {
                   template:footerYAML())
 };
 
-declare function index () as item() {
+declare function view:index () as item() {
     let $content :=
         <p>Welcome to Brackit Application Server.</p>
     return
-        default($content)    
+        view:default($content)    
 };

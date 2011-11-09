@@ -34,7 +34,7 @@
 :)
 module namespace appModel="http://brackit.org/lib/appServer/appModel";
 
-declare function validateName($name as xs:string) as xs:boolean {
+declare function appModel:validateName($name as xs:string) as xs:boolean {
     if ((fn:string-length($name) > 0) and 
         (fn:not(fn:contains($name,' ')))) 
     then
@@ -43,16 +43,16 @@ declare function validateName($name as xs:string) as xs:boolean {
         fn:false()
 };
 
-declare function validateApp($app as xs:string) as xs:boolean {
+declare function appModel:validateApp($app as xs:string) as xs:boolean {
     if ((app:exist($app)) and
-        (validateName($app)))
+        (appModel:validateName($app)))
     then
         fn:true()
     else
         fn:false()
 };
 
-declare function validateAppModel($model as xs:string) as xs:boolean {
+declare function appModel:validateAppModel($model as xs:string) as xs:boolean {
     if ((fn:string-length($model) > 0) and
         ((fn:compare($model, "MVC")) or (fn:compare($model, "REG"))))
     then
@@ -61,9 +61,9 @@ declare function validateAppModel($model as xs:string) as xs:boolean {
         fn:false()
 };
 
-declare function validateAppCreation($app as xs:string, $model as xs:string) as xs:boolean {
-    if ((validateAppModel($model)) and 
-        (validateName($app)))
+declare function appModel:validateAppCreation($app as xs:string, $model as xs:string) as xs:boolean {
+    if ((appModel:validateAppModel($model)) and 
+        (appModel:validateName($app)))
     then
         fn:true()
     else

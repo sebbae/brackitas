@@ -52,7 +52,7 @@ let
             </tr>
             <tr>
                 <td colspan="2">
-                {template:showCart();}
+                {template:showCart()}
                 </td>
             </tr>
             <tr>

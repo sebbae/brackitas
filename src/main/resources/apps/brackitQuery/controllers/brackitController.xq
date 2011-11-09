@@ -38,7 +38,7 @@ import module namespace view="http://brackit.org/lib/brackitQuery/brackitView";
 
 declare variable $controller:query as xs:string external;
 
-declare function getSecondsFromDayTimeDuration($d as xs:dayTimeDuration) as xs:integer
+declare function controller:getSecondsFromDayTimeDuration($d as xs:dayTimeDuration) as xs:integer
 {
     fn:days-from-duration($d) * 24 * 60 * 60 +
     fn:hours-from-duration($d) * 60 * 60 +
@@ -46,7 +46,7 @@ declare function getSecondsFromDayTimeDuration($d as xs:dayTimeDuration) as xs:i
     fn:seconds-from-duration($d)
 };
 
-declare function query() as item()* 
+declare function controller:query() as item()* 
 {
     if (fn:string-length($controller:query) = 0) then
         view:showQueryResultTime("","",0)
@@ -55,20 +55,20 @@ declare function query() as item()*
             $oldTime := fn:current-time(),
             $result := bit:eval($controller:query)
         return
-            view:showQueryResultTime($controller:query, $result, getSecondsFromDayTimeDuration(fn:current-time() - $oldTime))
+            view:showQueryResultTime($controller:query, $result, controller:getSecondsFromDayTimeDuration(fn:current-time() - $oldTime))
 };
 
-declare function procedures() as item()* 
+declare function controller:procedures() as item()* 
 {
     "TODO"
 };
 
-declare function upload() as item()*
+declare function controller:upload() as item()*
 {
     view:showUpload()
 };
 
-declare function download() as item()*
+declare function controller:download() as item()*
 {
     "TODO"
 };

@@ -33,17 +33,16 @@
  *
 :)
 module namespace view="http://brackit.org/lib/appServer/fileView";
-import module namespace template="http://brackit.org/lib/appServer/template";
 
-declare function msgSuccess($msg as xs:string) as item() {
+declare function view:msgSuccess($msg as xs:string) as item() {
     <font color="#008000">{$msg}</font>
 };
 
-declare function msgFailure($msg as xs:string) as item() {
+declare function view:msgFailure($msg as xs:string) as item() {
     <font color="#ff0000">{$msg}</font>
 };
 
-declare function createFileForm($fPath as xs:string,
+declare function view:createFileForm($fPath as xs:string,
                                 $app as xs:string) as item() {
     <form action="./create">
         <table style="width: 100%; background-color: rgb(224, 224, 240);">
@@ -65,7 +64,7 @@ declare function createFileForm($fPath as xs:string,
     </form>
 };
 
-declare function createFileFormMsg($fPath as xs:string,
+declare function view:createFileFormMsg($fPath as xs:string,
                                    $app as xs:string,
                                    $msg as xs:string) as item() {
     <form action="./create">
@@ -95,7 +94,7 @@ declare function createFileFormMsg($fPath as xs:string,
     </form>
 };
 
-declare function createUploadForm($fPath as xs:string,
+declare function view:createUploadForm($fPath as xs:string,
                                   $app as xs:string) as item() {
     <form action="./upload" enctype="multipart/form-data" method="post">
         <table style="width: 100%; background-color: rgb(224, 224, 240);">
@@ -118,7 +117,7 @@ declare function createUploadForm($fPath as xs:string,
     </form>
 };
 
-declare function createDirForm($fPath as xs:string,
+declare function view:createDirForm($fPath as xs:string,
                                $app as xs:string) as item() {
     <form action="./mkDir">
         <table style="width: 100%; background-color: rgb(224, 224, 240);">
@@ -141,7 +140,7 @@ declare function createDirForm($fPath as xs:string,
     </form>
 };
 
-declare function createDirFormMsg($fPath as xs:string,
+declare function view:createDirFormMsg($fPath as xs:string,
                                   $app as xs:string,
                                   $msg as xs:string) as item() {
     <form action="./mkDir">

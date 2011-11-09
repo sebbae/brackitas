@@ -30,7 +30,7 @@
 (: TODO Auto-generated XQuery block :) 
 module namespace rscView="http://brackit.org/lib/appServer/rscView";
 
-declare function fileForm($fPathName as xs:string,
+declare function rscView:fileForm($fPathName as xs:string,
                           $app as xs:string) as item() {
     <form action="../rscController/action">                            
       <div class="hlist">
@@ -54,7 +54,7 @@ declare function fileForm($fPathName as xs:string,
     </form>
 };
 
-declare function renameFileForm($fPathName as xs:string,
+declare function rscView:renameFileForm($fPathName as xs:string,
                                 $app as xs:string) as item() {
     <form action="./rename">
         <table style="width: 100%; background-color: rgb(224, 224, 240);">

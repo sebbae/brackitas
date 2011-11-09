@@ -35,7 +35,7 @@
 module namespace rscModel="http://brackit.org/lib/appServer/rscModel";
 import module namespace appModel="http://brackit.org/lib/appServer/appModel";
 
-declare function validateFileName($name as xs:string) as xs:boolean {
+declare function rscModel:validateFileName($name as xs:string) as xs:boolean {
     if ((appModel:validateName($name)) and 
         (fn:not(fn:contains($name, "/"))))
     then

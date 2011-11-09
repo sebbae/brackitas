@@ -37,9 +37,9 @@ module namespace template="http://brackit.org/lib/appServer/template";
 declare function template:head($title as xs:string) as item() {
     <head>
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>    
-      <script src="http://localhost:8080/apps/appServer/resources/js/brackitHeader.js" type="text/javascript">""</script>    
-      <script src="http://localhost:8080/apps/appServer/resources/js/codemirror.js" type="text/javascript">""</script>
-      <link href="http://localhost:8080/apps/appServer/resources/css/layout_vertical_listnav.css" rel="stylesheet" type="text/css" />
+      <script src="http://localhost:8080/apps/appServer/resources/js/codemirror.js" type="text/javascript">" "</script>
+      <link href="http://localhost:8080/apps/appServer/resources/css/layout_vertical_listnav.css" rel="stylesheet"/>
+      <script src="http://localhost:8080/apps/appServer/resources/js/brackitHeader.js" type="text/javascript">" "</script>
     </head>
 };
 

@@ -42,7 +42,7 @@ let
         <form action="./buyCartForm.xq">
             <table>
                 <tr>
-                    {template:showCart();}
+                    {template:showCart()}
                 </tr>
                 <tr>
                     <td>

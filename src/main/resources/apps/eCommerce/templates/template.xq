@@ -34,7 +34,7 @@
 :)
 module namespace template="http://brackit.org/lib/eCommerce/template";
 
-declare function content() as item()+
+declare function template:content() as item()+
 {
     <table style="width: 100%; background-color: #E0E0F0;">
         <tr>
@@ -45,12 +45,12 @@ declare function content() as item()+
     </table>
 };
 
-declare function footer() as item()+
+declare function template:footer() as item()+
 {
     <a href="http://brackit.org">Brackit XQuery engine</a>
 };
 
-declare function head() as item()+
+declare function template:head() as item()+
 {
     <head>
         <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
@@ -59,7 +59,7 @@ declare function head() as item()+
     </head>
 };
 
-declare function header() as item()+
+declare function template:header() as item()+
 {
     let 
         $login := session:getAttribute('login')
@@ -99,7 +99,7 @@ declare function header() as item()+
         </table>
 };
 
-declare function menu() as item()+
+declare function template:menu() as item()+
 {
     <ul>
       <li><a href="./createItemForm.xq">Create Items</a></li>
@@ -108,10 +108,10 @@ declare function menu() as item()+
     </ul>
 };
 
-declare function default($content as item()+) as item()* 
+declare function template:default($content as item()+) as item()* 
 {
     <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
-    {head();}
+    {template:head()}
     <body>
         <div class="page_margins">    
             <div id="border-top">
@@ -120,27 +120,27 @@ declare function default($content as item()+) as item()*
             </div>
             <div class="page">
                 <div id="header" align="center">
-                    {header();}
+                    {template:header()}
                 </div>
                 <div id="main">
                     <div id="col1">
                         <div id="nav">
                             <a id="navigation" name="navigation"></a>
                             <div class="vlist">
-                                {menu();}
+                                {template:menu()}
                             </div>
                         </div>        
                     </div>
                     <div id="col3">
                         <div id="col3_content" class="clearfix">
-                            {$content;}
+                            {$content}
                         </div>
                         <div id="ie_clearing">
                         </div>
                     </div>
                 </div>
                 <div id="footer">
-                    {footer();}
+                    {template:footer()}
                 </div>
             </div>
             <div id="border-bottom">
@@ -152,7 +152,7 @@ declare function default($content as item()+) as item()*
     </html>
 };
 
-declare function getItemFromCollection ($name as xs:string) as item()+
+declare function template:getItemFromCollection ($name as xs:string) as item()+
 {
     for 
         $doc 
@@ -167,7 +167,7 @@ declare function getItemFromCollection ($name as xs:string) as item()+
 }
 ;
 
-declare function showCart() as item()* 
+declare function template:showCart() as item()* 
 {
 let
     $cart := session:getAttribute('cart')
@@ -192,7 +192,7 @@ return
             let
                 $docName := $cartItem/fn:data(name),
                 $quantity := $cartItem/fn:data(quantity),
-                $description := getItemFromCollection($docName)/item/fn:data(description)
+                $description := template:getItemFromCollection($docName)/item/fn:data(description)
             return 
                 <tr>
                     <td>

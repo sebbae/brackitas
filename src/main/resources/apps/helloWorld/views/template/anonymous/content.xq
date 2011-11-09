@@ -1,3 +1,0 @@
-<p>
-    Anonymous content.
-</p>

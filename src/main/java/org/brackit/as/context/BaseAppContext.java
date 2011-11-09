@@ -92,6 +92,7 @@ public class BaseAppContext {
 
 	public void register(String path, long lastModified) {
 		try {
+			System.out.println("COMPILING: " + path);
 			putQuery(path, lastModified);
 		} catch (QueryException e) {
 			uncompiledQueries.add(new ASUncompiledQuery(path, lastModified, e));
@@ -136,6 +137,7 @@ public class BaseAppContext {
 					putQuery(uq.getPath(), uq.getLastModified());
 					i.remove();
 				} catch (QueryException e) {
+					e.printStackTrace();
 					System.out.println(String.format(
 							"Problems while compiling %s. %s.", uq.getPath(), e
 									.getMessage()));
@@ -151,8 +153,8 @@ public class BaseAppContext {
 		Module module = target.getModule();
 		if (module instanceof LibraryModule) {
 			String uri = ((LibraryModule) module).getTargetNS();
-			((BaseResolver) chain.getModuleResolver()).register(uri,
-					(LibraryModule) module);
+			// ((BaseResolver) chain.getModuleResolver()).register(uri,
+			// (LibraryModule) module);
 			libraries.put(uri, path);
 		}
 		queries.put(path, target);
@@ -180,6 +182,7 @@ public class BaseAppContext {
 						((BaseResolver) chain.getModuleResolver())
 								.unregister(((LibraryModule) qm.getModule())
 										.getTargetNS());
+						// TODO: remove it
 						register(mPath, fm.lastModified());
 						register(path, f.lastModified());
 					}

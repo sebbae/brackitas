@@ -35,7 +35,7 @@
 module namespace view="http://brackit.org/lib/brackitQuery/brackitView";
 import module namespace template="http://brackit.org/lib/brackitQuery/template";
 
-declare function showQueryResultTime($query as item()*, $result as item()*, $time) as item()* 
+declare function view:showQueryResultTime($query as item()*, $result as item()*, $time) as item()* 
 {
     let
         $content :=   
@@ -71,7 +71,7 @@ declare function showQueryResultTime($query as item()*, $result as item()*, $tim
         template:default($content)
 };
 
-declare function showUpload() as item()*
+declare function view:showUpload() as item()*
 {
 let
     $content := 

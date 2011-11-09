@@ -33,4 +33,3 @@
  *
 :)
 module namespace view="http://brackit.org/lib/appServer/docView";
-import module namespace template="http://brackit.org/lib/appServer/template";

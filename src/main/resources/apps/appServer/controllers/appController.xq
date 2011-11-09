@@ -37,11 +37,11 @@ import module namespace appModel="http://brackit.org/lib/appServer/appModel";
 import module namespace appView="http://brackit.org/lib/appServer/appView";
 import module namespace rscController="http://brackit.org/lib/appServer/rscController";
 
-declare function index() as item() {
+declare function appController:index() as item() {
     appView:listApps(app:getNames())
 };
 
-declare function create() as item() {
+declare function appController:create() as item() {
     let $butClick := req:getParameter("sub")
     return
         if (fn:string-length($butClick) > 0) then
@@ -50,7 +50,7 @@ declare function create() as item() {
             return
                 if (appModel:validateAppCreation($app, $model)) then
                     if (app:generate($app,$model)) then
-                        index()
+                        appController:index()
                     else
                         appView:default(appView:createAppFormError("Impossible to generate the required application"))
                 else
@@ -59,7 +59,7 @@ declare function create() as item() {
             appView:default(appView:createAppForm())
 };
 
-declare function edit() as item ()* {
+declare function appController:edit() as item ()* {
     let $app := req:getParameter("app")
     return
         if (appModel:validateApp($app)) then
@@ -74,33 +74,33 @@ declare function edit() as item ()* {
             appView:default(fn:concat("Application ",$app," does not exist."))
 };
 
-declare function terminate() as item() {
+declare function appController:terminate() as item() {
     let $app := req:getParameter("app")
     return
         if (app:terminate($app)) then
-            index()
+            appController:index()
         else
             appView:default(fn:concat("Problems terminating application ",$app))
 };
 
-declare function statistics() as item() {
+declare function appController:statistics() as item() {
     "TODO"
 };
 
-declare function delete() as item() {
+declare function appController:delete() as item() {
     appView:delete(app:delete(req:getParameter("app")))
 };
 
-declare function deploy() as item() {
+declare function appController:deploy() as item() {
     let $app := req:getParameter("app")
     return
         if (app:deploy($app)) then
-            index()
+            appController:index()
         else
             appView:default(fn:concat("Problems deploying application ",$app))
 };
 
-declare function load() as item() {
+declare function appController:load() as item() {
     let $app := req:getParameter("app"),
         $resource := fn:normalize-space(req:getParameter("name")),
         $menu := appView:createMenu($app)
@@ -114,7 +114,7 @@ declare function load() as item() {
             appView:editXQuery($menu,$content)
 };
 
-declare function loadAfterAction($msg as xs:string) as item() {
+declare function appController:loadAfterAction($msg as xs:string) as item() {
     let $app := req:getParameter("app"),
         $resource := fn:normalize-space(req:getParameter("name")),
         $menu := appView:createMenu($app)
