@@ -137,8 +137,7 @@ declare function appView:listing($dir as item()*, $app as xs:string, $base as xs
                 in $dir/dir
                 return
                     <ul>{appView:listing($sub,$app,fn:concat($base,"/",fn:data($sub/@name)))}</ul>
-            }
-            {
+                ,
                 for $content
                 in $dir
                 return 
@@ -146,13 +145,36 @@ declare function appView:listing($dir as item()*, $app as xs:string, $base as xs
                     {
                         for $file
                         in $dir/file
+                        let $name := fn:data($file/@name)
                         return
-                            fn:concat("<li><zu><a href='../appController/load?app=",$app,"&amp;name=",$base,"/",$file/@name,">",fn:data($file/@name),"</a></zu></li>")
+                            <li><zu><a href="{fn:concat("../appController/load?app=",$app,"&amp;name=",$base,"/",$name)}">{$name}</a></zu></li>
                     }
                     </ul>
             }
         </li>
     </div>
+};
+
+declare function appView:createMenu2() as item() {
+    let $app := "eCommerce"
+    return
+    <ul class="vlist">
+        <li><h6 class="vlist">{$app}</h6></li>
+        {
+        for 
+            $a
+        in 
+            app:getStructure($app)/app/dir
+        return 
+            <li>
+              <ul>
+                {appView:listing($a,$app,fn:concat($app,
+                                           "/",
+                                           fn:data($a/@name)))}
+              </ul>
+            </li>
+        }
+    </ul>
 };
 
 declare function appView:createMenu($app as xs:string) as item() {
@@ -216,7 +238,7 @@ declare function appView:createAppFormError($msg as xs:string) as item() {
 };
 
 declare function appView:generateFileOptions($fPathName as xs:string,
-                                     $app as xs:string) as item() {
+                                             $app as xs:string) as item() {
   <div class="hlist">
     <ul>
       <li>
@@ -236,11 +258,11 @@ declare function appView:generateFileOptions($fPathName as xs:string,
         let $xqf := fn:concat("apps/",fn:substring-before($fPathName, ".xq")),
             $button := 
             if (xqfile:isModule($xqf)) then 
-                 "1" 
+                 1
             else 
-                 "0"
+                 0
         return
-            fn:concat("<button type='button' onClick='testIt(new Boolean(",$button,"),'",$xqf,")'>test it</button>")
+            <button type="button" onClick="{fn:concat("testIt(new Boolean(",$button,"),'",$xqf,"')")}">test it</button>
         }
         <input type="hidden" name="name" value="{$fPathName}"/>
         <input type="hidden" name="app" value="{$app}"/>        

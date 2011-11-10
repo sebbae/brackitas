@@ -43,7 +43,7 @@ if (bit:existCollection(session:getAttribute('appName'))) then
                     fn:collection(session:getAttribute('appName'))
                 return 
                     <li>
-                        <a href="./showItemForm.xq?itemName={$doc/item/data(name)}">{$doc/item/data(name)}</a>
+                        <a href="{fn:concat("./showItemForm.xq?itemName=",$doc/item/data(name))}">{$doc/item/data(name)}</a>
                         {$doc/item/data(description)}
                     </li> 
             }

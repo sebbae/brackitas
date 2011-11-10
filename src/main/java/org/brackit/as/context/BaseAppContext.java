@@ -92,7 +92,6 @@ public class BaseAppContext {
 
 	public void register(String path, long lastModified) {
 		try {
-			System.out.println("COMPILING: " + path);
 			putQuery(path, lastModified);
 		} catch (QueryException e) {
 			uncompiledQueries.add(new ASUncompiledQuery(path, lastModified, e));

@@ -86,7 +86,7 @@ public class Generate extends AbstractFunction {
 			+ " * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. \n"
 			+ " * \n" + " :)\n";
 
-	public static String viewBody = "declare function default($content as item()) as item() {\n"
+	public static String viewBody = "declare function view:default($content as item()) as item() {\n"
 			+ "  template:base(template:head(),\n"
 			+ "                template:header(),\n"
 			+ "                template:teaser(),\n"
@@ -95,55 +95,60 @@ public class Generate extends AbstractFunction {
 			+ "                template:footerBrackit(),\n"
 			+ "                template:footerYAML())\n" + "};\n";
 
-	public static String controllerBody = "declare function index() as item() {\n"
+	public static String controllerBody = "declare function controller:index() as item() {\n"
 			+ "  let $msg :=\n"
 			+ "    \"Hello World!\"\n"
 			+ "  return\n"
 			+ "    view:default($msg)\n" + "};\n";
 
-	public static String tempHead = "declare function head() as item() {\n"
+	public static String tempHead = "declare function template:head() as item() {\n"
 			+ "  <head>\n"
 			+ "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>\n"
 			+ "    <link href=\"http://localhost:8080/apps/%s/resources/css/%s.css\" rel=\"stylesheet\" type=\"text/css\" />\n"
 			+ "  </head>\n" + "};\n";
 
-	public static String tempHeader = "declare function header() as item() {\n"
-			+ "  <table style=\"width:100%;\">\n" + "    <tr>\n"
-			+ "      <td>\n" + "        <div id=\"header\" align=\"center\">\n"
-			+ "          <h1>Insert header here!</h1>\n" + "        </div>\n"
+	public static String tempHeader = "declare function template:header() as item() {\n"
+			+ "  <table style=\"width:100%;\">\n"
+			+ "    <tr>\n"
+			+ "      <td>\n"
+			+ "        <div id=\"header\" align=\"center\">\n"
+			+ "          <h1>Insert header here!</h1>\n"
+			+ "        </div>\n"
 			+ "      </td>\n" + "    </tr>\n" + "  </table>\n" + "};\n";
 
-	public static String tempTeaser = "declare function teaser() as item() {\n"
+	public static String tempTeaser = "declare function template:teaser() as item() {\n"
 			+ "  <div id=\"teaser\" align=\"center\">\n"
 			+ "    <h2>Insert teaser here!</h2>\n" + "  </div>\n" + "};\n";
 
-	public static String tempMenu = "declare function menu() as item() {\n"
+	public static String tempMenu = "declare function template:menu() as item() {\n"
 			+ "  <div id=\"col1_content\" class=\"clearfix\">\n"
 			+ "    <table style=\"width:100%;\">\n"
 			+ "      <tr>\n"
 			+ "        <td>\n"
 			+ "          <ul class=\"vlist\">\n"
-			+ "            <li><zu><a href=\"./index\"><h6>Link 1</h6></a></zu></li>\n"
-			+ "            <li><zu><a href=\"./index\"><h6>Link 2</h6></a></zu></li>\n"
-			+ "          </ul>\n" + "        </td>\n" + "      </tr>\n"
+			+ "            <li><zu><a><h6>Link 1</h6></a></zu></li>\n"
+			+ "            <li><zu><a><h6>Link 2</h6></a></zu></li>\n"
+			+ "          </ul>\n"
+			+ "        </td>\n"
+			+ "      </tr>\n"
 			+ "    </table>\n" + "  </div>\n" + "};\n";
 
-	public static String tempFooterBrackit = "declare function footerBrackit() as item() {\n"
+	public static String tempFooterBrackit = "declare function template:footerBrackit() as item() {\n"
 			+ "  <div id=\"footer\">\n"
 			+ "    <a href=\"http://brackit.org\">Brackit XQuery engine</a>\n"
 			+ "  </div>\n" + "};\n";
 
-	public static String tempFooterYAML = "declare function footerYAML() as item() {\n"
+	public static String tempFooterYAML = "declare function template:footerYAML() as item() {\n"
 			+ "  <div id=\"footer\">\n"
 			+ "    Layout based on <a href=\"http://www.yaml.de/\">YAML</a>\n"
 			+ "  </div>\n" + "};\n";
 
-	public static String tempBaseBody = "declare function baseBody($header as item(),\n"
-			+ "                          $teaser as item(),\n"
-			+ "                          $menu as item(),\n"
-			+ "                          $content as item(),\n"
-			+ "                          $footerBrackit as item(),\n"
-			+ "                          $footerYAML as item()) as item() {\n"
+	public static String tempBaseBody = "declare function template:baseBody($header as item(),\n"
+			+ "                                   $teaser as item(),\n"
+			+ "                                   $menu as item(),\n"
+			+ "                                   $content as item(),\n"
+			+ "                                   $footerBrackit as item(),\n"
+			+ "                                   $footerYAML as item()) as item() {\n"
 			+ "  <div class=\"page_margins\">\n"
 			+ "    <div class=\"page\">\n"
 			+ "      {$header}\n"
@@ -162,18 +167,27 @@ public class Generate extends AbstractFunction {
 			+ "      {$footerBrackit}\n"
 			+ "      {$footerYAML}\n" + "    </div>\n" + "  </div>\n" + "};\n";
 
-	public static String tempBase = "declare function base($head as item(),\n"
-			+ "                      $header as item(),\n"
-			+ "                      $teaser as item(),\n"
-			+ "                      $menu as item(),\n"
-			+ "                      $content as item(),\n"
-			+ "                      $footerBrackit as item(),\n"
-			+ "                      $footerYAML as item()) {\n"
+	public static String tempBase = "declare function template:base($head as item(),\n"
+			+ "                               $header as item(),\n"
+			+ "                               $teaser as item(),\n"
+			+ "                               $menu as item(),\n"
+			+ "                               $content as item(),\n"
+			+ "                               $footerBrackit as item(),\n"
+			+ "                               $footerYAML as item()) {\n"
 			+ "  <html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"en\">\n"
 			+ "    {$head}\n"
 			+ "    <body>\n"
-			+ "      {baseBody($header,$teaser,$menu,$content,$footerBrackit,$footerYAML)}\n"
+			+ "      {template:baseBody($header,$teaser,$menu,$content,$footerBrackit,$footerYAML)}\n"
 			+ "    </body>\n" + "  </html>\n" + "};\n";
+
+	public static String tempRegBody = "declare function template:default($content as item()) as item() {\n"
+			+ "  template:base(template:head(),\n"
+			+ "                template:header(),\n"
+			+ "                template:teaser(),\n"
+			+ "                template:menu(),\n"
+			+ "                $content,\n"
+			+ "                template:footerBrackit(),\n"
+			+ "                template:footerYAML())\n" + "};\n";
 
 	public static String regBody = "let $msg :=\n" + "  \"Hello World!\"\n"
 			+ "return\n" + "  template:default($msg)\n";
@@ -841,7 +855,7 @@ public class Generate extends AbstractFunction {
 		out.write(tempBase);
 		if (defTemp) {
 			out.write("\n");
-			out.write(viewBody);
+			out.write(tempRegBody);
 		}
 		out.close();
 	}

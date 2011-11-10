@@ -167,8 +167,7 @@ declare function template:getItemFromCollection ($name as xs:string) as item()+
 }
 ;
 
-declare function template:showCart() as item()* 
-{
+declare function template:showCart() as item()* {
 let
     $cart := session:getAttribute('cart')
 return
@@ -196,8 +195,8 @@ return
             return 
                 <tr>
                     <td>
-                        <a href="./showItemForm.xq?itemName={$docName}">{$docName}</a>
-                    </td> 
+                        <a href="{fn:concat("./showItemForm.xq?itemName=",$docName)}">{$docName}</a>
+                    </td>
                     <td>
                         {$description}
                     </td>

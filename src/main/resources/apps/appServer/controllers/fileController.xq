@@ -66,8 +66,7 @@ declare function controller:compile() as item() {
 
 declare function controller:delete() as item() {
     let $fPathName := req:getParameter("name"),
-        $app := req:getParameter("app"),
-        $menu := appView:createMenu($app) 
+        $app := req:getParameter("app")
     return
         let $msg := 
             if (xqfile:delete($fPathName)) then
@@ -75,7 +74,7 @@ declare function controller:delete() as item() {
             else
                 view:msgSuccess("Deletion failed!")
         return
-            appView:menuContent($menu,$msg)
+            appView:menuContent(appView:createMenu($app),$msg)
 };
 
 declare function controller:action() as item() {

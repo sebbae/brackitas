@@ -70,8 +70,7 @@ declare function rscController:rename() as item() {
 
 declare function rscController:delete() as item() {
     let $fPathName := req:getParameter("name"),
-        $app := req:getParameter("app"),
-        $menu := appView:createMenu($app) 
+        $app := req:getParameter("app")
     return
         let $msg := 
             if (rsc:delete($fPathName)) then
@@ -79,7 +78,7 @@ declare function rscController:delete() as item() {
             else
                 view:msgSuccess("Deletion failed!")
         return
-            appView:menuContent($menu,$msg)
+            appView:menuContent(appView:createMenu($app),$msg)
 };
 
 declare function rscController:action() as item() {
