@@ -27,35 +27,19 @@
  */
 package org.brackit.as.xquery.compiler;
 
-import org.brackit.server.metadata.manager.MetaDataMgr;
-import org.brackit.server.tx.Tx;
-import org.brackit.server.xquery.DBCompileChain;
+import org.brackit.xquery.compiler.BaseResolver;
 import org.brackit.xquery.compiler.ModuleResolver;
 
 /**
- * @author Sebastian Baechle
- * @author Henrique Valer
  * 
+ * @author Henrique Valer
+ *
  */
-public class ASCompileChain extends DBCompileChain {
-
-	private ASBaseResolver resolver;
-
-	@Override
-	public ModuleResolver getModuleResolver() {
-		return this.resolver;
-	}
-
-	public ASCompileChain(MetaDataMgr mdm, Tx tx, ASBaseResolver res) {
-		super(mdm, tx);
-		this.resolver = res;
-	}
-
-	public ASCompileChain(MetaDataMgr mdm, Tx tx) {
-		super(mdm, tx);
-	}
+public class ASBaseResolver extends BaseResolver implements ModuleResolver {
 	
-	public ASBaseResolver getResolver () {
-		return this.resolver;
+	public void unregister(String targetNSUri) {
+		if (modules != null) {
+			modules.remove(targetNSUri);
+		}
 	}
 }

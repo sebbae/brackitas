@@ -41,6 +41,7 @@ import javax.servlet.http.HttpSessionListener;
 
 import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.http.app.FrontController;
+import org.brackit.as.xquery.compiler.ASBaseResolver;
 import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.server.metadata.manager.MetaDataMgr;
 import org.brackit.server.session.Session;
@@ -48,7 +49,6 @@ import org.brackit.server.session.SessionException;
 import org.brackit.server.session.SessionMgr;
 import org.brackit.server.tx.IsolationLevel;
 import org.brackit.xquery.QueryException;
-import org.brackit.xquery.compiler.BaseResolver;
 import org.brackit.xquery.util.log.Logger;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.session.HashSessionIdManager;
@@ -169,7 +169,7 @@ public class HttpConnector {
 				new ASCompileChain((MetaDataMgr) sch
 						.getAttribute(MetaDataMgr.class.getName()), sessionMgr
 						.getSession(sessionMgr.login()).getTX(),
-						new BaseResolver()));
+						new ASBaseResolver()));
 		populateAppQueries(app, bac);
 		bac.registerUncompiledQueries();
 		sch.setAttribute(app.getName(), bac);

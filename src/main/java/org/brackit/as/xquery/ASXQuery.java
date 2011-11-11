@@ -448,10 +448,8 @@ public class ASXQuery extends XQuery {
 		return out.toString();
 	}
 
-	public void serializeSequence(ASQueryContext ctx, PrintStream ps,
+	public void serializeResult(ASQueryContext ctx, PrintWriter out,
 			Sequence result) throws DocumentException, QueryException {
-
-		PrintWriter out = new PrintWriter(ps);
 
 		if (result == null) {
 			return;
@@ -463,7 +461,7 @@ public class ASXQuery extends XQuery {
 		printer.setAutoFlush(false);
 		Item item;
 		Iter it = result.iterate();
-		try {
+//		try {
 			while ((item = it.next()) != null) {
 				if (item instanceof Node<?>) {
 					Node<?> node = (Node<?>) item;
@@ -490,11 +488,11 @@ public class ASXQuery extends XQuery {
 					first = false;
 				}
 			}
-		} finally {
-			printer.flush();
-			out.flush();
-			it.close();
-		}
+//		} finally {
+//			printer.flush();
+//			out.flush();
+//			it.close();
+//		}
 	}
 
 }

@@ -36,10 +36,9 @@ module namespace template="http://brackit.org/lib/appServer/template";
 
 declare function template:head($title as xs:string) as item() {
     <head>
-      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>    
-      <script src="http://localhost:8080/apps/appServer/resources/js/codemirror.js" type="text/javascript">" "</script>
+      <script src="http://localhost:8080/apps/appServer/resources/js/codemirror.js">" "</script>
       <link href="http://localhost:8080/apps/appServer/resources/css/layout_vertical_listnav.css" rel="stylesheet"/>
-      <script src="http://localhost:8080/apps/appServer/resources/js/brackitHeader.js" type="text/javascript">" "</script>
+      <script src="http://localhost:8080/apps/appServer/resources/js/brackitHeader.js">" "</script>
     </head>
 };
 
@@ -128,7 +127,7 @@ declare function template:base($head as item(),
                       $footerBrackit as item(),
                       $footerYAML as item()) {
 
-    <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+    <html>
     {$head}
     <body>
       {template:baseBody($header,$teaser,$menu,$content,$footerBrackit,$footerYAML)}
@@ -149,7 +148,7 @@ declare function template:baseFooterScript($head as item(),
                                   $footerYAML as item(),
                                   $footerScript as item()) as item() {
 
-    <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+    <html>
     {$head}
     <body>
       {template:baseBody($header,$teaser,$menu,$content,$footerBrackit,$footerYAML)}

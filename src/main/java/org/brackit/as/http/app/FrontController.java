@@ -28,16 +28,17 @@
 package org.brackit.as.http.app;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.io.StreamCorruptedException;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -61,8 +62,8 @@ import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.atomic.Una;
 import org.brackit.xquery.expr.Cast;
 import org.brackit.xquery.expr.Variable;
-import org.brackit.xquery.xdm.Function;
 import org.brackit.xquery.module.StaticContext;
+import org.brackit.xquery.xdm.Function;
 import org.brackit.xquery.xdm.Item;
 import org.brackit.xquery.xdm.Sequence;
 import org.brackit.xquery.xdm.Type;
@@ -117,25 +118,25 @@ public class FrontController extends BaseServlet {
 		resolveApplication(req, resp);
 		if (!UNKNOWN_MIMETYPE.equals(getMimeType(URI))) {
 			processResourceRequest(APP, URI, resp);
-			resp.setStatus(HttpServletResponse.SC_OK);
+//			resp.setStatus(HttpServletResponse.SC_OK);
 			return;
 		} else {
 			prepareExecution(req, resp, session);
 			if (RESOURCE.endsWith(".xq")) {
 				resp
-						.getOutputStream()
+						.getWriter()
 						.println(
 								"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
 				processXQueryFileRequest(req, resp);
-				resp.setStatus(HttpServletResponse.SC_OK);
+//				resp.setStatus(HttpServletResponse.SC_OK);
 				return;
 			} else {
 				resp
-						.getOutputStream()
+						.getWriter()
 						.println(
 								"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
 				processMVCRequest(req, resp);
-				resp.setStatus(HttpServletResponse.SC_OK);
+//				resp.setStatus(HttpServletResponse.SC_OK);
 				return;
 			}
 		}
@@ -159,9 +160,8 @@ public class FrontController extends BaseServlet {
 				for (int j = 0; j < f.length; j++) {
 					if (f[j].getName().stringValue().equals(RESOURCE)) {
 						x.setPrettyPrint(true);
-						x.serializeSequence(ctx, new PrintStream(resp
-								.getOutputStream()), f[j].execute(sctx, ctx,
-								new Sequence[] {}));
+						x.serializeResult(ctx, resp.getWriter(), f[j].execute(
+								sctx, ctx, new Sequence[] {}));
 						return;
 					}
 				}
@@ -220,19 +220,25 @@ public class FrontController extends BaseServlet {
 		RESOURCE = URI.substring(URI.lastIndexOf("/") + 1);
 		req.getSession().setAttribute(FrontController.APP_SESSION_ATT,
 				(Atomic) new Str(APP));
+		resp.setHeader("Cache-Control", "no-cache");
+		resp.setHeader("Pragma", "no-cache");
+		resp.setDateHeader("Expires", 0);
 	}
 
 	private void processResourceRequest(String app, String resource,
 			HttpServletResponse resp) throws StreamCorruptedException,
 			FileNotFoundException {
 		try {
-			resp.setContentType(getMimeType(resource));
+			resp.setContentType(String.format("%s; charset=UTF-8",
+					getMimeType(resource)));
 			// InputStream in = getClass().getResourceAsStream(resource);
 			File f = new File("src/main/resources" + resource);
 			FileInputStream in = new FileInputStream(f);
-
-			BufferedOutputStream out = new BufferedOutputStream(resp
-					.getOutputStream());
+			// ByteArrayOutputStream, look up its size when done,
+			// put that into the Content-Length field, then send
+			// the content via
+			// byteArrayStream.writeTo(response.getOutputStream()).
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			byte[] buffer = new byte[1024 * 16];
 			int bytesRead = 0;
 			int size = 0;
@@ -240,9 +246,12 @@ public class FrontController extends BaseServlet {
 				size += bytesRead;
 				out.write(buffer, 0, bytesRead);
 			}
-			out.flush();
+			resp.setHeader("Content-Length", String.valueOf(out.size()));
+			resp.setBufferSize(1024 * 16);
+			out.writeTo(resp.getOutputStream());
 			out.close();
 			in.close();
+//			 resp.getOutputStream().flush();
 		} catch (StreamCorruptedException e) {
 			throw new StreamCorruptedException(String
 					.format("Error while reading inputStream of resource %s.",
