@@ -59,7 +59,7 @@ application/x-hdf	hdf	HDF
 application/x-internet-signup	ins	INS
 application/x-internet-signup	isp	ISP
 application/x-iphone	iii	III
-text/javascript	js	JS
+application/javascript	js	JS
 application/x-latex	latex	LATEX
 application/x-msaccess	mdb	MDB
 application/x-mscardfile	crd	CRD

@@ -145,9 +145,25 @@ declare function appView:listing($dir as item()*, $app as xs:string, $base as xs
                     {
                         for $file
                         in $dir/file
-                        let $name := fn:data($file/@name)
+                        let $name := fn:data($file/@name),
+                            $error := fn:data($file/@compError)
                         return
-                            <li><zu><a href="{fn:concat("../appController/load?app=",$app,"&amp;name=",$base,"/",$name)}">{$name}</a></zu></li>
+                            <li>
+                                <zu>
+                                    <a href="{fn:concat("../appController/load?app=",
+                                                        $app,
+                                                        "&amp;name=",
+                                                        $base,"/",
+                                                        $name)}">
+                                                        {
+                                                            if (fn:string-length($error) gt 1) then
+                                                                <font color="#ff0000"> {$name} </font>
+                                                            else
+                                                                $name
+                                                        }
+                                    </a>
+                                </zu>
+                            </li>
                     }
                     </ul>
             }
@@ -245,7 +261,7 @@ declare function appView:generateFileOptions($fPathName as xs:string,
         <strong> File: {$fPathName}  </strong>
       </li>        
       <li>
-      	<input align="middle" type="submit" name="action" value="save"/>
+          <input align="middle" type="submit" name="action" value="save"/>
       </li>
       <li>
         <input align="middle" type="submit" name="action" value="compile"/>

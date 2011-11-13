@@ -32,6 +32,7 @@
  * 
  *
 :)
+ j
 import module namespace template="http://brackit.org/lib/eCommerce/template";
 let 
     $content :=

@@ -29,19 +29,25 @@ package org.brackit.as.xquery.function.app;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
+import javax.servlet.ServletContext;
+
+import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.http.HttpConnector;
 import org.brackit.as.xquery.ASErrorCode;
+import org.brackit.as.xquery.ASQueryContext;
+import org.brackit.as.xquery.ASUncompiledQuery;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
-import org.brackit.xquery.xdm.Signature;
 import org.brackit.xquery.module.StaticContext;
 import org.brackit.xquery.node.d2linked.D2NodeFactory;
 import org.brackit.xquery.node.parser.DocumentParser;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
 
 /**
  * 
@@ -61,7 +67,11 @@ public class GetStructure extends AbstractFunction {
 			String app = ((Atomic) args[0]).atomize().stringValue().trim();
 			File f = new File(String.format("%s/%s", HttpConnector.APPS_PATH,
 					app));
-			StringBuffer sb = listStructure(f);
+			ServletContext s = ((ASQueryContext) ctx).getReq()
+					.getServletContext();
+			List<ASUncompiledQuery> luq = ((BaseAppContext) s.getAttribute(app))
+					.getUncompiledQueries();
+			StringBuffer sb = listStructure(f, luq);
 			return new D2NodeFactory().build(new DocumentParser(sb.toString()));
 		} catch (Exception e) {
 			throw new QueryException(e, ASErrorCode.APP_GETSTRUCTURE_INT_ERROR,
@@ -69,22 +79,32 @@ public class GetStructure extends AbstractFunction {
 		}
 	}
 
-	private StringBuffer listStructure(File f) throws IOException {
+	private StringBuffer listStructure(File f, List<ASUncompiledQuery> luq)
+			throws IOException {
 		StringBuffer sb = new StringBuffer();
 		sb.append(String.format("<app name=\"%s\">\n", f.getName()));
 		for (File c : f.listFiles())
-			readStructure(c, sb);
+			readStructure(c, sb, luq);
 		sb.append("</app> \n");
 		return sb;
 	}
 
-	private void readStructure(File f, StringBuffer sb) throws IOException {
+	private void readStructure(File f, StringBuffer sb,
+			List<ASUncompiledQuery> luq) throws IOException {
 		if (f.isDirectory()) {
 			sb.append(String.format("<dir name=\"%s\">\n", f.getName()));
 			for (File c : f.listFiles())
-				readStructure(c, sb);
+				readStructure(c, sb, luq);
 			sb.append("</dir> \n");
 		} else {
+			for (ASUncompiledQuery uq : luq) {
+				if (f.getPath().contains(uq.getPath())) {
+					sb.append(String.format(
+							"<file name=\"%s\" compError=\"true\"/>\n", f
+									.getName()));
+					return;
+				}
+			}
 			sb.append(String.format("<file name=\"%s\"/>\n", f.getName()));
 		}
 	}
