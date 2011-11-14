@@ -63,11 +63,11 @@ public class IsModule extends AbstractFunction {
 					.trim();
 			fPathName = (fPathName.startsWith("/")) ? fPathName.substring(1)
 					: fPathName;
-			String app = fPathName.split("/")[1];
+			String app = fPathName.split("/")[0];
 			ServletContext servletCtx = ((ASQueryContext) ctx).getReq()
 					.getServletContext();
 			BaseAppContext bac = (BaseAppContext) servletCtx.getAttribute(app);
-			ASXQuery x = bac.get(String.format("/%s.xq", fPathName));
+			ASXQuery x = bac.get(String.format("/apps/%s.xq", fPathName));
 			if (x != null)
 				return new Bool(x.getModule() instanceof LibraryModule);
 			else

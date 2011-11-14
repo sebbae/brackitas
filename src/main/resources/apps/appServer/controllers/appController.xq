@@ -105,13 +105,18 @@ declare function appController:load() as item() {
         $resource := fn:normalize-space(req:getParameter("name")),
         $menu := appView:createMenu($app)
     return 
-        let $content :=
-            if (fn:ends-with($resource, ".xq")) then
-                appView:editQuery($resource,$app)
-            else
-                rscController:load()
+        let $error := xqfile:getCompilationError($resource)
         return
-            appView:editXQuery($menu,$content)
+            if (fn:string-length($error) gt 0) then
+                appController:loadAfterAction($error)
+            else
+                let $content :=
+                    if (fn:ends-with($resource, ".xq")) then
+                        appView:editQuery($resource,$app)
+                    else
+                        rscController:load()
+                return
+                    appView:editXQuery($menu,$content)
 };
 
 declare function appController:loadAfterAction($msg as xs:string) as item() {

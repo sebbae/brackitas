@@ -49,7 +49,7 @@ var CodeMirror = (function(){
     autoMatchParens: false,
     parserConfig: null,
     tabMode: "spaces", // or "spaces", "default", "shift",
-    enterMode: "keep",
+    enterMode: "indent",
     gutter: false,
     reindentOnLoad: false,
     activeTokens: null,

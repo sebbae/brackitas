@@ -39,14 +39,14 @@ declare variable $itemDescription as xs:string external;
 declare function local:Item($name as xs:string, 
                             $description as xs:string) as item()+
     {
-				<item>
-					<name>
-						{$name}
-					</name>
-					<description>
-						{$description}
-					</description>
-				</item>
+                <item>
+                    <name>
+                        {$name}
+                    </name>
+                    <description>
+                        {$description}
+                    </description>
+                </item>
     };
 let $content := 
     if ((string-length($itemName) > 0) and 
@@ -58,7 +58,7 @@ let $content :=
                 if (bit:addDocToCollection(session:getAttribute('appName'),local:Item($itemName,$itemDescription))) then
                    <p> Item {$itemName} created sucessfully </p>
                 else
-            	   <p> Problems storing item problems. </p>
+                   <p> Problems storing item problems. </p>
             else
                 <p> Item {$itemName} already exists </p>                
         else
@@ -69,4 +69,4 @@ let $content :=
     else
         <p> Item {$itemName} not created. Validation problems. </p>
 return 
-	template:default($content)
+    template:default($content)

@@ -25,20 +25,56 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package org.brackit.as.xquery.function.xqfile;
+
+import javax.servlet.ServletContext;
+
+import org.brackit.as.context.BaseAppContext;
+import org.brackit.as.xquery.ASErrorCode;
+import org.brackit.as.xquery.ASQueryContext;
+import org.brackit.as.xquery.ASUncompiledQuery;
+import org.brackit.xquery.QueryContext;
+import org.brackit.xquery.QueryException;
+import org.brackit.xquery.atomic.Atomic;
+import org.brackit.xquery.atomic.QNm;
+import org.brackit.xquery.atomic.Str;
+import org.brackit.xquery.function.AbstractFunction;
+import org.brackit.xquery.module.StaticContext;
+import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
 
 /**
  * 
  * @author Henrique Valer
  * 
  */
-function testIt(test, fPathName) {
-	if (test == true) {
-		var func = prompt(
-				"Enter the name of the function you would like to execute:",
-				"for example: index");
-		window.open("http://localhost:8080/apps/" + fPathName.trim() + "/"
-				+ func.trim());
-	} else {
-		window.open("http://localhost:8080/apps/" + fPathName.trim() + ".xq");
+public class GetCompilationResult extends AbstractFunction {
+
+	public GetCompilationResult(QNm name, Signature signature) {
+		super(name, signature, true);
+	}
+
+	@Override
+	public Sequence execute(StaticContext sctx, QueryContext ctx,
+			Sequence[] args) throws QueryException {
+		try {
+			String fPathName = ((Atomic) args[0]).atomize().stringValue()
+					.trim();
+			fPathName = (fPathName.startsWith("/")) ? fPathName.substring(1)
+					: fPathName;
+			String app = fPathName.split("/")[0];
+			ServletContext servletCtx = ((ASQueryContext) ctx).getReq()
+					.getServletContext();
+			BaseAppContext bac = (BaseAppContext) servletCtx.getAttribute(app);
+			for (ASUncompiledQuery uq : bac.getUncompiledQueries()) {
+				if (uq.getPath().contains(fPathName))
+					return new Str(uq.getE().getMessage());
+			}
+			return new Str(null);
+		} catch (Exception e) {
+			throw new QueryException(e,
+					ASErrorCode.XQFILE_GETCOMPILATIONERROR_INT_ERROR, e
+							.getMessage());
+		}
 	}
 }

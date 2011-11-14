@@ -32,6 +32,7 @@
  * 
  *
 :)
+
 module namespace controller="http://brackit.org/lib/appServer/fileController";
 import module namespace model="http://brackit.org/lib/appServer/fileModel";
 import module namespace view="http://brackit.org/lib/appServer/fileView";
@@ -39,13 +40,13 @@ import module namespace appController="http://brackit.org/lib/appServer/appContr
 import module namespace appView="http://brackit.org/lib/appServer/appView";
 
 declare function controller:save() as item() {
-	let $fPathName := req:getParameter("name"),
-		$query := req:getParameter("query")
-	return
-	    let $msg := 
-    		if (xqfile:save($fPathName, $query)) then
-    		    view:msgSuccess("Saved sucessfully!")
-    		else
+    let $fPathName := req:getParameter("name"),
+        $query := req:getParameter("query")
+    return
+        let $msg := 
+            if (xqfile:save($fPathName, $query)) then
+                view:msgSuccess("Saved sucessfully!")
+            else
                 view:msgFailure("Problems while saving...")
         return
             appController:loadAfterAction($msg)
@@ -79,17 +80,17 @@ declare function controller:delete() as item() {
 
 declare function controller:action() as item() {
     let $action := fn:normalize-space(req:getParameter("action"))
-	return
-		if (fn:compare($action,"save") eq 0) then
-			controller:save()
-		else 
-		    if (fn:compare($action,"compile") eq 0) then
-				controller:compile()
-			else
-			    if (fn:compare($action,"delete") eq 0) then
-					controller:delete()
-				else
-					"ops"
+    return
+        if (fn:compare($action,"save") eq 0) then
+            controller:save()
+        else 
+            if (fn:compare($action,"compile") eq 0) then
+                controller:compile()
+            else
+                if (fn:compare($action,"delete") eq 0) then
+                    controller:delete()
+                else
+                    "ops"
 };
 
 declare function controller:create() as item() {

@@ -32,7 +32,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
 import java.io.PrintWriter;
 
 import org.brackit.as.xquery.function.app.Delete;
@@ -77,6 +76,7 @@ import org.brackit.as.xquery.function.util.Template;
 import org.brackit.as.xquery.function.xqfile.CompileXQFile;
 import org.brackit.as.xquery.function.xqfile.CreateXQFile;
 import org.brackit.as.xquery.function.xqfile.DeleteXQFile;
+import org.brackit.as.xquery.function.xqfile.GetCompilationResult;
 import org.brackit.as.xquery.function.xqfile.IsModule;
 import org.brackit.as.xquery.function.xqfile.SaveXQFile;
 import org.brackit.xquery.ErrorCode;
@@ -334,6 +334,12 @@ public class ASXQuery extends XQuery {
 				new SequenceType(AtomicType.BOOL, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
+		Functions.predefine(new GetCompilationResult(new QNm(
+				Namespaces.XQFILE_NSURI, Namespaces.XQFILE_PREFIX,
+				"getCompilationError"), new Signature(new SequenceType(
+				AtomicType.STR, Cardinality.One), new SequenceType(
+				AtomicType.STR, Cardinality.One))));
+
 		// Resources handling
 		Functions.predefine(new Upload(new QNm(Namespaces.RESOURCE_NSURI,
 				Namespaces.RESOURCE_PREFIX, "upload"), new Signature(
@@ -461,7 +467,7 @@ public class ASXQuery extends XQuery {
 		printer.setAutoFlush(false);
 		Item item;
 		Iter it = result.iterate();
-//		try {
+		try {
 			while ((item = it.next()) != null) {
 				if (item instanceof Node<?>) {
 					Node<?> node = (Node<?>) item;
@@ -488,11 +494,11 @@ public class ASXQuery extends XQuery {
 					first = false;
 				}
 			}
-//		} finally {
-//			printer.flush();
-//			out.flush();
-//			it.close();
-//		}
+		} finally {
+			printer.flush();
+			out.flush();
+			it.close();
+		}
 	}
 
 }

@@ -179,6 +179,9 @@ public class ASErrorCode extends ErrorCode {
 	public static final QNm XQFILE_ISMODULE_INT_ERROR = new QNm(
 			Namespaces.XQFILE_NSURI, Namespaces.XQFILE_PREFIX, "XQFILE0005");
 
+	public static final QNm XQFILE_GETCOMPILATIONERROR_INT_ERROR = new QNm(
+			Namespaces.XQFILE_NSURI, Namespaces.XQFILE_PREFIX, "XQFILE0006");
+
 	/**
 	 * Errors for resource handling functions
 	 */

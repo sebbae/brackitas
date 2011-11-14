@@ -34,6 +34,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StreamCorruptedException;
@@ -118,25 +119,25 @@ public class FrontController extends BaseServlet {
 		resolveApplication(req, resp);
 		if (!UNKNOWN_MIMETYPE.equals(getMimeType(URI))) {
 			processResourceRequest(APP, URI, resp);
-//			resp.setStatus(HttpServletResponse.SC_OK);
+			// resp.setStatus(HttpServletResponse.SC_OK);
 			return;
 		} else {
 			prepareExecution(req, resp, session);
 			if (RESOURCE.endsWith(".xq")) {
-				resp
-						.getWriter()
-						.println(
-								"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
+				PrintWriter writer = new PrintWriter(new OutputStreamWriter(
+						resp.getOutputStream(), "utf-8"));
+				writer
+						.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
 				processXQueryFileRequest(req, resp);
-//				resp.setStatus(HttpServletResponse.SC_OK);
+				// resp.setStatus(HttpServletResponse.SC_OK);
 				return;
 			} else {
-				resp
-						.getWriter()
-						.println(
-								"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
+				PrintWriter writer = new PrintWriter(new OutputStreamWriter(
+						resp.getOutputStream(), "utf-8"));
+				writer
+						.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
 				processMVCRequest(req, resp);
-//				resp.setStatus(HttpServletResponse.SC_OK);
+				// resp.setStatus(HttpServletResponse.SC_OK);
 				return;
 			}
 		}
@@ -160,8 +161,15 @@ public class FrontController extends BaseServlet {
 				for (int j = 0; j < f.length; j++) {
 					if (f[j].getName().stringValue().equals(RESOURCE)) {
 						x.setPrettyPrint(true);
-						x.serializeResult(ctx, resp.getWriter(), f[j].execute(
-								sctx, ctx, new Sequence[] {}));
+						PrintWriter writer = new PrintWriter(
+								new OutputStreamWriter(resp.getOutputStream(),
+										"utf-8"));
+						x.serializeResult(ctx, /*
+												 * new
+												 * PrintWriter(resp.getOutputStream
+												 * ())
+												 */writer, f[j].execute(sctx,
+								ctx, new Sequence[] {}));
 						return;
 					}
 				}
@@ -186,7 +194,9 @@ public class FrontController extends BaseServlet {
 		}
 		bindExternalVariables(req);
 		x.setPrettyPrint(true);
-		x.serialize(ctx, new PrintStream(resp.getOutputStream()));
+		PrintWriter writer = new PrintWriter(new OutputStreamWriter(resp
+				.getOutputStream(), "utf-8"));
+		x.serialize(ctx, writer);
 	}
 
 	private void bindExternalVariables(HttpServletRequest req)
@@ -226,19 +236,15 @@ public class FrontController extends BaseServlet {
 	}
 
 	private void processResourceRequest(String app, String resource,
-			HttpServletResponse resp) throws StreamCorruptedException,
-			FileNotFoundException {
+			HttpServletResponse resp) throws IOException {
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		File f = new File("src/main/resources" + resource);
+		FileInputStream in = new FileInputStream(f);
+
 		try {
 			resp.setContentType(String.format("%s; charset=UTF-8",
 					getMimeType(resource)));
-			// InputStream in = getClass().getResourceAsStream(resource);
-			File f = new File("src/main/resources" + resource);
-			FileInputStream in = new FileInputStream(f);
-			// ByteArrayOutputStream, look up its size when done,
-			// put that into the Content-Length field, then send
-			// the content via
-			// byteArrayStream.writeTo(response.getOutputStream()).
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
+
 			byte[] buffer = new byte[1024 * 16];
 			int bytesRead = 0;
 			int size = 0;
@@ -247,11 +253,7 @@ public class FrontController extends BaseServlet {
 				out.write(buffer, 0, bytesRead);
 			}
 			resp.setHeader("Content-Length", String.valueOf(out.size()));
-			resp.setBufferSize(1024 * 16);
-			out.writeTo(resp.getOutputStream());
-			out.close();
-			in.close();
-//			 resp.getOutputStream().flush();
+			resp.setBufferSize(1024 * 100);
 		} catch (StreamCorruptedException e) {
 			throw new StreamCorruptedException(String
 					.format("Error while reading inputStream of resource %s.",
@@ -260,6 +262,12 @@ public class FrontController extends BaseServlet {
 			throw new FileNotFoundException(String.format(
 					"File %s does not exist under the application resources.",
 					resource));
+		} finally {
+			out.writeTo(resp.getOutputStream());
+			out.flush();
+			resp.getOutputStream().flush();
+			out.close();
+			in.close();
 		}
 	}
 

@@ -271,7 +271,7 @@ declare function appView:generateFileOptions($fPathName as xs:string,
       </li>
       <li>
         { 
-        let $xqf := fn:concat("apps/",fn:substring-before($fPathName, ".xq")),
+        let $xqf := fn:substring-before($fPathName, ".xq"),
             $button := 
             if (xqfile:isModule($xqf)) then 
                  1

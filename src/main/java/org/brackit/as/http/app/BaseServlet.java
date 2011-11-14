@@ -28,7 +28,9 @@
 package org.brackit.as.http.app;
 
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -141,7 +143,9 @@ public class BaseServlet extends TXServlet {
 			service(req, resp, session);
 		} catch (Exception e) {
 			log.error(e);
-			e.printStackTrace(new PrintStream(resp.getOutputStream()));
+			PrintWriter writer = new PrintWriter(new OutputStreamWriter(resp
+					.getOutputStream(), "utf-8"));
+			e.printStackTrace(writer);
 		}
 	}
 }
