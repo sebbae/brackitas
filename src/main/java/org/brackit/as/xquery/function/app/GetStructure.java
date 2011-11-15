@@ -74,7 +74,6 @@ public class GetStructure extends AbstractFunction {
 			StringBuffer sb = listStructure(f, luq);
 			return new D2NodeFactory().build(new DocumentParser(sb.toString()));
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new QueryException(e, ASErrorCode.APP_GETSTRUCTURE_INT_ERROR,
 					e.getMessage());
 		}

@@ -39,5 +39,9 @@ declare function controller:index() as item() {
 };
     
 declare function controller:test() as item() {
-    app:getStructure("eCommerce")
+    try {
+        app:getStructure("eCommee")
+    } catch err:APP0006 {
+        "Error on getStructure"
+    }
 };

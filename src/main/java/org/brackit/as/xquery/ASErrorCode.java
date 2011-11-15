@@ -42,28 +42,28 @@ public class ASErrorCode extends ErrorCode {
 	 * Errors for the predefined application functions
 	 */
 	public static final QNm APP_DELETE_INT_ERROR = new QNm(
-			Namespaces.APP_NSURI, Namespaces.APP_PREFIX, "APP0001");
+			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "APP0001");
 
 	public static final QNm APP_DEPLOY_INT_ERROR = new QNm(
-			Namespaces.APP_NSURI, Namespaces.APP_PREFIX, "APP0002");
+			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "APP0002");
 
 	public static final QNm APP_EXISTS_INT_ERROR = new QNm(
-			Namespaces.APP_NSURI, Namespaces.APP_PREFIX, "APP0003");
+			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "APP0003");
 
 	public static final QNm APP_GENERATE_INT_ERROR = new QNm(
-			Namespaces.APP_NSURI, Namespaces.APP_PREFIX, "APP0004");
+			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "APP0004");
 
 	public static final QNm APP_GETNAMES_INT_ERROR = new QNm(
-			Namespaces.APP_NSURI, Namespaces.APP_PREFIX, "APP0005");
+			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "APP0005");
 
 	public static final QNm APP_GETSTRUCTURE_INT_ERROR = new QNm(
-			Namespaces.APP_NSURI, Namespaces.APP_PREFIX, "APP0006");
+			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "APP0006");
 
 	public static final QNm APP_ISRUNNING_INT_ERROR = new QNm(
-			Namespaces.APP_NSURI, Namespaces.APP_PREFIX, "APP0007");
+			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "APP0007");
 
 	public static final QNm APP_TERMINATE_INT_ERROR = new QNm(
-			Namespaces.APP_NSURI, Namespaces.APP_PREFIX, "APP0008");
+			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "APP0008");
 
 	/**
 	 * Errors for the predefined bit functions
