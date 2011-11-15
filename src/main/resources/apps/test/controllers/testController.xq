@@ -27,9 +27,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
  * 
  :)
-module namespace controller="http://brackit.org/lib/2/2Controller"; 
-import module namespace model="http://brackit.org/lib/2/2Model"; 
-import module namespace view="http://brackit.org/lib/2/2View"; 
+module namespace controller="http://brackit.org/lib/test/testController"; 
+import module namespace model="http://brackit.org/lib/test/testModel"; 
+import module namespace view="http://brackit.org/lib/test/testView"; 
 
 declare function controller:index() as item() {
   let $msg :=
@@ -40,7 +40,7 @@ declare function controller:index() as item() {
     
 declare function controller:test() as item() {
     try {
-        app:getStructure("eCommee")
+        app:getStructure("eCo")
     } catch err:APP0006 {
         "Error on getStructure"
     }
