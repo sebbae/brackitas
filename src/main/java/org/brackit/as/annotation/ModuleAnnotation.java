@@ -1,5 +1,4 @@
-(:
- *
+/*
  * [New BSD License]
  * Copyright (c) 2011, Brackit Project Team <info@brackit.org>  
  * All rights reserved.
@@ -25,24 +24,22 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- **
- * 
- * @author Henrique Valer
+ */
+package org.brackit.as.annotation;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
  * @author Roxana Zapata
- *
-:)
-module namespace docController="http://brackit.org/lib/appServer/docController";
-import module namespace docView="http://brackit.org/lib/appServer/docView";
-import module namespace docModel="http://brackit.org/lib/appServer/docModel";
-
-declare function docController:index() as item() {
-    docView:browserModules(util:listPredefinedModules())
-};
-
-declare function docController:listFunctions() as item() {
-    docView:browserFunctionModules(util:listPredefinedFunctions(req:getParameter("module")))
-};
-
-
-
+ * 
+ */
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target(value = { ElementType.TYPE })
+public @interface ModuleAnnotation {
+	String description();
+}

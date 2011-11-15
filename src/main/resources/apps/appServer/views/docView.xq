@@ -29,7 +29,78 @@
  **
  * 
  * @author Henrique Valer
- * 
+ * @author Roxana Zapata
  *
 :)
-module namespace view="http://brackit.org/lib/appServer/docView";
+module namespace docView="http://brackit.org/lib/appServer/docView";
+import module namespace template="http://brackit.org/lib/appServer/template";
+
+declare function docView:default($content as item()) as item() {
+    template:base(template:head("Brackit Application Server"),
+                  template:header(),
+                  template:teaser(),
+                  template:menu(),
+                  $content,
+                  template:footerBrackit(),
+                  template:footerYAML())
+};
+
+declare function docView:browserModules($results as item()*) as item()* {
+    let $content := 
+        <table>
+        
+        	<tr>
+    			<td>Name</td>
+    			<td>Description</td>
+         		<td>NamespaceURL</td>
+        	</tr> 
+        	{
+            for $module 
+            in $results/Module
+            return
+                <tr>
+                	<td><a href="./listFunctions?module={$module/Name/text()}">{$module/Name/text()}</a></td>
+                	<td>{$module/Description/text()}</td>
+                    <td>{$module/NsURI/text()}</td>
+                </tr>
+        	}
+        </table>   
+    return
+        docView:default($content)     
+};
+
+declare function docView:browserFunctionModules($results as item()*) as item()* {
+     let $content := 
+        <table>
+        	<tr>
+        		<td><b>{fn:concat("Modules", " > ", $results/@name)}</b></td>
+        	</tr>
+        	{
+            for $function 
+            in $results/Function
+            return
+            <tr>
+                <tr>
+                	<td><b>{$function/Name/text()}</b></td>
+                </tr>
+				<tr>
+            		<td>
+						{fn:data($results/@name)} ( 
+						{for $parameter 
+            			in $function/Signature/Parameters/Parameter
+            			return 
+            				fn:concat($parameter/@description, " as ", $parameter,",")
+            			}
+            			 ) as {$function/Signature/Return}
+            		</td>
+                </tr>
+                <tr>
+                	<td>{$function/Description/text()}</td>
+                </tr>
+             </tr>
+        }
+        </table>
+    return
+        docView:default($content)   
+};
+

@@ -70,6 +70,8 @@ import org.brackit.as.xquery.function.session.Invalidate;
 import org.brackit.as.xquery.function.session.RemoveSessionAtt;
 import org.brackit.as.xquery.function.session.SetAttribute;
 import org.brackit.as.xquery.function.session.SetMaxInactiveInterval;
+import org.brackit.as.xquery.function.util.ListPredefinedFunctions;
+import org.brackit.as.xquery.function.util.ListPredefinedModules;
 import org.brackit.as.xquery.function.util.MkDirectory;
 import org.brackit.as.xquery.function.util.PlainPrint;
 import org.brackit.as.xquery.function.util.Template;
@@ -264,6 +266,17 @@ public class ASXQuery extends XQuery {
 				Namespaces.UTIL_PREFIX, "mkDir"), new Signature(
 				new SequenceType(AtomicType.BOOL, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
+		
+		Functions.predefine(new ListPredefinedFunctions(new QNm(
+				Namespaces.UTIL_NSURI, Namespaces.UTIL_PREFIX,
+				"listPredefinedFunctions"), new Signature(new SequenceType(
+				AnyItemType.ANY, Cardinality.One), new SequenceType(
+				AtomicType.STR, Cardinality.One))));
+
+		Functions.predefine(new ListPredefinedModules(new QNm(
+				Namespaces.UTIL_NSURI, Namespaces.UTIL_PREFIX,
+				"listPredefinedModules"), new Signature(new SequenceType(
+				AnyItemType.ANY, Cardinality.One))));
 
 		// App
 		Functions.predefine(new GetNames(new QNm(Namespaces.APP_NSURI,
