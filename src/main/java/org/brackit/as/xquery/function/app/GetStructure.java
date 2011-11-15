@@ -108,5 +108,4 @@ public class GetStructure extends AbstractFunction {
 			sb.append(String.format("<file name=\"%s\"/>\n", f.getName()));
 		}
 	}
-
 }

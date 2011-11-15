@@ -77,3 +77,7 @@
 	(  ) Develop blog app on the platform
 	(  ) Problems:
 		(  ) When saving, "&" should be saved as &amp
+(OK) Test with codemirror from their site
+	Still same problems.
+(  ) Do topics of presentation
+(  ) Create simple auto-completition 
