@@ -47,12 +47,12 @@ declare function docView:default($content as item()) as item() {
 
 declare function docView:browserModules($results as item()*) as item()* {
     let $content := 
-        <table>
+        <table style="width: 100%;">
         
         	<tr>
-    			<td>Name</td>
-    			<td>Description</td>
-         		<td>NamespaceURL</td>
+    			<td><b>Name</b></td>
+    			<td><b>Description</b></td>
+         		<td><b>Namespace URI</b></td>
         	</tr> 
         	{
             for $module 
@@ -71,21 +71,21 @@ declare function docView:browserModules($results as item()*) as item()* {
 
 declare function docView:browserFunctionModules($results as item()*) as item()* {
      let $content := 
-        <table>
+        <table style="width: 100%;">
         	<tr>
-        		<td><b>{fn:concat("Modules", " > ", $results/@name)}</b></td>
+        		<td><a href="./index">Module</a>  > <a href="./listFunctions?module={fn:data($results/@name)}">{fn:data($results/@name)}</a></td>
         	</tr>
         	{
             for $function 
             in $results/Function
             return
-            <tr>
+            <tr style="border-style:solid;;border-width:1px">
                 <tr>
                 	<td><b>{$function/Name/text()}</b></td>
                 </tr>
 				<tr>
             		<td>
-						{fn:data($results/@name)} ( 
+						{fn:data($results/@name)}:( 
 						{for $parameter 
             			in $function/Signature/Parameters/Parameter
             			return 

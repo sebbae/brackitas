@@ -29,6 +29,7 @@ package org.brackit.as.xquery.function.util;
 
 import java.io.File;
 
+import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.http.HttpConnector;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
@@ -46,6 +47,7 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
+@FunctionAnnotation(description = "Makes a directory.", parameters = "")
 public class MkDirectory extends AbstractFunction {
 
 	public MkDirectory(QNm name, Signature signature) {

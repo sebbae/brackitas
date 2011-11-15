@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.annotation.ModuleAnnotation;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -49,6 +50,7 @@ import org.brackit.xquery.xdm.Signature;
  * @author Roxana Zapata
  * 
  */
+@FunctionAnnotation(description = "List predefined modules.", parameters = "")
 public class ListPredefinedModules extends AbstractFunction {
 
 	public ListPredefinedModules(QNm name, Signature signature) {
@@ -91,9 +93,9 @@ public class ListPredefinedModules extends AbstractFunction {
 
 		Module module;
 		Map<String, Module> result = new HashMap<String, Module>();
+		
+		Iterator<Function[]> i = Functions.getPredefinedFunctions().values().iterator();
 
-		Iterator<Function[]> i = new Functions().getDeclaredFunctions()
-				.values().iterator();
 		while (i.hasNext()) {
 			Function[] f = i.next();
 			String description;
@@ -106,7 +108,7 @@ public class ListPredefinedModules extends AbstractFunction {
 				if (annotation != null) {
 					description = annotation.description();
 				} else {
-					description = "TODO";
+					description = "No description present";
 				}
 
 				module = new Module(f[j].getName().getPrefix(), f[j].getName()
@@ -115,8 +117,8 @@ public class ListPredefinedModules extends AbstractFunction {
 					result.put(module.getName(), module);
 				} else {
 					if (result.get(module.name).description
-							.equalsIgnoreCase("TODO")
-							&& !module.description.equalsIgnoreCase("TODO")) {
+							.equalsIgnoreCase("No description present")
+							&& !module.description.equalsIgnoreCase("No description present")) {
 						result.put(module.getName(), module);
 					}
 

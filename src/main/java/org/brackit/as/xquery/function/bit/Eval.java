@@ -29,6 +29,7 @@ package org.brackit.as.xquery.function.bit;
 
 import java.io.PrintStream;
 
+import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.util.FunctionUtils;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASXQuery;
@@ -48,6 +49,7 @@ import org.brackit.xquery.xdm.Signature;
  * @author Henrique Valer
  * 
  */
+@FunctionAnnotation(description = "Evaluates a collection.", parameters = "$collection-name")
 public class Eval extends AbstractFunction {
 	private FunctionUtils fUtils = new FunctionUtils();
 

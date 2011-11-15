@@ -27,6 +27,7 @@
  */
 package org.brackit.as.xquery.function.app;
 
+import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.http.HttpConnector;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
@@ -44,6 +45,7 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
+@FunctionAnnotation(description = "Terminates an application.", parameters = "$application-name")
 public class Terminate extends AbstractFunction {
 
 	public Terminate(QNm name, Signature signature) {

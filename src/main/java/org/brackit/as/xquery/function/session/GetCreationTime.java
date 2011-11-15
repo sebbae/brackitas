@@ -32,6 +32,7 @@ import java.util.Date;
 
 import javax.servlet.http.HttpSession;
 
+import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
@@ -47,6 +48,7 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
+@FunctionAnnotation(description = "Returns the time when this session was created. If a session does not exist, a new one is created.", parameters = "")
 public class GetCreationTime extends AbstractFunction {
 
 	public GetCreationTime(QNm name, Signature signature) {

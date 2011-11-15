@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.brackit.as.annotation.FunctionAnnotation;
+import org.brackit.as.annotation.ModuleAnnotation;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.XQuery;
@@ -48,6 +49,8 @@ import org.brackit.xquery.xdm.type.SequenceType;
  * @author Roxana Zapata
  * 
  */
+@ModuleAnnotation(description = "Util module." )
+@FunctionAnnotation(description = "List all predefined functions.", parameters = "")
 public class ListPredefinedFunctions extends AbstractFunction {
 
 	public ListPredefinedFunctions(QNm name, Signature signature) {
@@ -78,7 +81,7 @@ public class ListPredefinedFunctions extends AbstractFunction {
 						description = annotation.description();
 						parameters = annotation.parameters();
 					} else {
-						description = "TODO description";
+						description = "No description present";
 					}
 
 					result += "<Function>";
@@ -137,10 +140,9 @@ public class ListPredefinedFunctions extends AbstractFunction {
 	private ArrayList<Function> getPredefinedFunctions(String module) {
 
 		ArrayList<Function> result = new ArrayList<Function>();
-
-		Iterator<Function[]> i = new Functions().getDeclaredFunctions().values().iterator();
-		//Iterator<Function[]> i = Functions.getPredefined().values().iterator();
 		
+		Iterator<Function[]> i = Functions.getPredefinedFunctions().values().iterator();
+
 		while (i.hasNext()) {
 			Function[] f = i.next();
 			for (int j = 0; j < f.length; j++) {

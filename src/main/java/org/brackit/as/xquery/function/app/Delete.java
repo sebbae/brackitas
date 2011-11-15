@@ -27,6 +27,8 @@
  */
 package org.brackit.as.xquery.function.app;
 
+import org.brackit.as.annotation.FunctionAnnotation;
+import org.brackit.as.annotation.ModuleAnnotation;
 import org.brackit.as.http.HttpConnector;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
@@ -44,6 +46,8 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
+@ModuleAnnotation(description = "A module for performing various operations on applications in the application server." )
+@FunctionAnnotation(description = "Deletes an application.", parameters = "$application-name")
 public class Delete extends AbstractFunction {
 
 	public Delete(QNm name, Signature signature) {

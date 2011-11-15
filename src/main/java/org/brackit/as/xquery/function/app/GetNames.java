@@ -33,6 +33,7 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 
+import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
@@ -52,6 +53,7 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
+@FunctionAnnotation(description = "Gets the application name.", parameters = "")
 public class GetNames extends AbstractFunction {
 
 	public GetNames(QNm name, Signature signature) {

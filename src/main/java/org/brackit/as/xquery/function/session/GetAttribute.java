@@ -29,6 +29,7 @@ package org.brackit.as.xquery.function.session;
 
 import javax.servlet.http.HttpSession;
 
+import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
@@ -45,6 +46,7 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
+@FunctionAnnotation(description = "Returns an attribute stored in the current session object or an empty sequence if the attribute cannot be found.", parameters = "$name")
 public class GetAttribute extends AbstractFunction {
 
 	public GetAttribute(QNm name, Signature signature) {
