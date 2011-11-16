@@ -44,5 +44,9 @@ declare function docController:listFunctions() as item() {
     docView:browserFunctionModules(util:listPredefinedFunctions(req:getParameter("module")))
 };
 
+declare function docController:test() as item() {
+    util:listPredefinedModules()
+};
+
 
 

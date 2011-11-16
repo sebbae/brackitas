@@ -57,58 +57,45 @@ public class ListPredefinedModules extends AbstractFunction {
 
 	public Sequence execute(StaticContext sctx, QueryContext ctx,
 			Sequence[] args) throws QueryException {
-
 		Set<Entry<String, Module>> results = getPredefinedModules().entrySet();
-
 		if (results.size() > 0) {
-			String result = "<Modules>";
-
-			for (Iterator iterator = results.iterator(); iterator.hasNext();) {
-				Entry<String, Module> module = (Entry<String, Module>) iterator
+			String result = "<modules>";
+			for (Iterator<Entry<String, Module>> i = results.iterator(); i
+					.hasNext();) {
+				Entry<String, Module> module = (Entry<String, Module>) i
 						.next();
-
-				result += "<Module>";
-				result += "<Name>" + module.getValue().name + "</Name>";
-				result += "<Description>" + module.getValue().description
-						+ "</Description>";
-				result += "<NsURI>" + module.getValue().nsURI + "</NsURI>";
-				result += "</Module>";
+				result += "<module>";
+				result += "<name>" + module.getValue().name + "</name>";
+				result += "<description>" + module.getValue().description
+						+ "</description>";
+				result += "<nsURI>" + module.getValue().nsURI + "</nsURI>";
+				result += "</module>";
 			}
-
-			result += "</Modules>";
-
+			result += "</modules>";
 			XQuery xquery = new XQuery(result);
-
 			return xquery.execute(ctx);
 		}
-		XQuery xquery = new XQuery("<Modules> no modules found! </Modules>");
-
+		XQuery xquery = new XQuery("<modules> no modules found! </modules>");
 		return xquery.execute(ctx);
-
 	}
 
 	private Map<String, Module> getPredefinedModules() {
-
 		Module module;
 		Map<String, Module> result = new HashMap<String, Module>();
-
-		Iterator<Function[]> i = new Functions().getDeclaredFunctions()
+		Iterator<Function[]> i = new Functions().getPredefinedFunctions()
 				.values().iterator();
+		
 		while (i.hasNext()) {
 			Function[] f = i.next();
 			String description;
-
 			for (int j = 0; j < f.length; j++) {
-
 				ModuleAnnotation annotation = f[j].getClass().getAnnotation(
 						ModuleAnnotation.class);
-
 				if (annotation != null) {
 					description = annotation.description();
 				} else {
 					description = "TODO";
 				}
-
 				module = new Module(f[j].getName().getPrefix(), f[j].getName()
 						.getNamespaceURI(), description);
 				if (!result.containsKey(module.getName())) {
@@ -119,7 +106,6 @@ public class ListPredefinedModules extends AbstractFunction {
 							&& !module.description.equalsIgnoreCase("TODO")) {
 						result.put(module.getName(), module);
 					}
-
 				}
 			}
 		}
@@ -154,10 +140,7 @@ public class ListPredefinedModules extends AbstractFunction {
 					return true;
 				}
 			}
-
 			return false;
 		};
-
 	}
-
 }

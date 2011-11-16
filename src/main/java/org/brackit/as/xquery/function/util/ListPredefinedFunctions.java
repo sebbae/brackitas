@@ -28,9 +28,11 @@
 package org.brackit.as.xquery.function.util;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 
 import org.brackit.as.annotation.FunctionAnnotation;
+import org.brackit.as.xquery.xdm.ComparableFunction;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.XQuery;
@@ -56,20 +58,14 @@ public class ListPredefinedFunctions extends AbstractFunction {
 
 	public Sequence execute(StaticContext sctx, QueryContext ctx,
 			Sequence[] args) throws QueryException {
-
 		String module = ((Str) args[0]).stringValue().trim();
-
-		ArrayList<Function> results = getPredefinedFunctions(module);
-
+		ArrayList<ComparableFunction> results = getPredefinedFunctions(module);
+		Collections.sort(results);
 		SequenceType[] params;
-
 		if (results.size() > 0) {
-			String result = "<Module name= \"" + module + "\">";
-
+			String result = "<module name= \"" + module + "\">";
 			for (int i = 0; i < results.size(); i++) {
-
-				if (results.get(i).getName() instanceof QNm) {
-
+				if (results.get(i).getF().getName() instanceof QNm) {
 					String description;
 					String[] parameters = null;
 					FunctionAnnotation annotation = results.get(i).getClass()
@@ -80,76 +76,54 @@ public class ListPredefinedFunctions extends AbstractFunction {
 					} else {
 						description = "TODO description";
 					}
-
-					result += "<Function>";
-					result += "<Name>" + results.get(i).getName().localName
-							+ "</Name>";
-					result += "<NsURI>" + results.get(i).getName().nsURI
-							+ "</NsURI>";
-
-					result += "<Description>" + description + "</Description>";
-
-					result += "<Signature>";
-
-					result += "<Return>";
-
-					result += results.get(i).getSignature().getResultType();
-
-					result += "</Return>";
-
-					result += "<Parameters>";
-
-					params = results.get(i).getSignature().getParams();
-
+					result += "<function>";
+					result += "<name>" + results.get(i).getF().getName().localName
+							+ "</name>";
+					result += "<nsURI>" + results.get(i).getF().getName().nsURI
+							+ "</nsURI>";
+					result += "<description>" + description + "</description>";
+					result += "<signature>";
+					result += "<return>";
+					result += results.get(i).getF().getSignature().getResultType();
+					result += "</return>";
+					result += "<parameters>";
+					params = results.get(i).getF().getSignature().getParams();
 					for (int j = 0; j < params.length; j++) {
-
 						if (parameters == null) {
-
-							result += "<Parameter>"
+							result += "<parameter>"
 									+ params[j].getItemType().toString()
-									+ "</Parameter>";
-
+									+ "</parameter>";
 						} else {
-							result += "<Parameter description= \""
+							result += "<parameter description= \""
 									+ annotation.parameters()[j] + "\">"
 									+ params[j].getItemType().toString()
-									+ "</Parameter>";
+									+ "</parameter>";
 						}
-
 					}
-					result += "</Parameters>";
-					result += "</Signature>";
-					result += "</Function>";
+					result += "</parameters>";
+					result += "</signature>";
+					result += "</function>";
 				}
 			}
-			result += "</Module>";
-
+			result += "</module>";
 			XQuery xquery = new XQuery(result);
-
 			return xquery.execute(ctx);
 		}
-		XQuery xquery = new XQuery("<Module> no functions found! </Module>");
-
+		XQuery xquery = new XQuery("<module> no functions found! </module>");
 		return xquery.execute(ctx);
-
 	}
 
-	private ArrayList<Function> getPredefinedFunctions(String module) {
-
-		ArrayList<Function> result = new ArrayList<Function>();
-
-		Iterator<Function[]> i = new Functions().getDeclaredFunctions().values().iterator();
-		//Iterator<Function[]> i = Functions.getPredefined().values().iterator();
-		
+	private ArrayList<ComparableFunction> getPredefinedFunctions(String module) {
+		ArrayList<ComparableFunction> result = new ArrayList<ComparableFunction>();
+		Iterator<Function[]> i = new Functions().getPredefinedFunctions().values().iterator();
 		while (i.hasNext()) {
 			Function[] f = i.next();
 			for (int j = 0; j < f.length; j++) {
 				if (f[j].getName().prefix.equals(module)) {
-					result.add(f[j]);
+					result.add(new ComparableFunction(f[j]));
 				}
 			}
 		}
 		return result;
 	}
-
 }

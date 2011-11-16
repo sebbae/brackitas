@@ -56,12 +56,12 @@ declare function docView:browserModules($results as item()*) as item()* {
         	</tr> 
         	{
             for $module 
-            in $results/Module
+            in $results/module
             return
                 <tr>
-                	<td><a href="./listFunctions?module={$module/Name/text()}">{$module/Name/text()}</a></td>
-                	<td>{$module/Description/text()}</td>
-                    <td>{$module/NsURI/text()}</td>
+                	<td><a href="./listFunctions?module={$module/name/text()}">{$module/name/text()}</a></td>
+                	<td>{$module/description/text()}</td>
+                    <td>{$module/nsURI/text()}</td>
                 </tr>
         	}
         </table>   
@@ -77,25 +77,25 @@ declare function docView:browserFunctionModules($results as item()*) as item()* 
         	</tr>
         	{
             for $function 
-            in $results/Function
+            in $results/function
             return
             <tr>
                 <tr>
-                	<td><b>{$function/Name/text()}</b></td>
+                	<td><b>{$function/name/text()}</b></td>
                 </tr>
 				<tr>
             		<td>
-						{fn:data($results/@name)} ( 
+						{fn:data($results/@name)}:{$function/name/text()} ( 
 						{for $parameter 
-            			in $function/Signature/Parameters/Parameter
+            			in $function/signature/parameters/parameter
             			return 
             				fn:concat($parameter/@description, " as ", $parameter,",")
             			}
-            			 ) as {$function/Signature/Return}
+            			 ) as {$function/signature/return}
             		</td>
                 </tr>
                 <tr>
-                	<td>{$function/Description/text()}</td>
+                	<td>{$function/description/text()}</td>
                 </tr>
              </tr>
         }
