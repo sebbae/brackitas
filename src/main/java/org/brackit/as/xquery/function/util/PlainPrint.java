@@ -50,8 +50,8 @@ import org.brackit.xquery.xdm.Sequence;
  * 
  */
 @FunctionAnnotation(description = "Prints a plain version of any given string"
-		+ "value to the default output. Solves problems live printing \"<\" or \">\" "
-		+ "the would be interpreted by the browser as HTML content.", parameters = "$string")
+		+ "value to the default output. Solves problems like printing \"&lt;\" " +
+		"or \"&gt;\" that would be interpreted by the browser as HTML content.", parameters = "$string")
 public class PlainPrint extends AbstractFunction {
 
 	private FunctionUtils fUtils = new FunctionUtils();

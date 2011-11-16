@@ -57,7 +57,7 @@ declare function view:showQueryResultTime($query as item()*, $result as item()*,
                     <tr>
                         <td>
                             <h5>Result</h5>
-                            <textarea cols="100" name="result" rows="6">{util:plainPrint($result)}</textarea>
+                            <textarea cols="100" name="result" rows="6">{util:plain-print($result)}</textarea>
                         </td>
                     </tr>
                     <tr>

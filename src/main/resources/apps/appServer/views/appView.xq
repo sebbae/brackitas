@@ -74,7 +74,7 @@ declare function appView:appOptions($app as xs:string) as item() {
         <td><a href="./terminate?app={$app}" onclick="return confirm('Are you sure you want to terminate the application?')">Terminate</a></td>
         <td><a href="./delete?app={$app}" onclick="return confirm('Are you sure you want to delete the application?')">Delete</a></td>
         <td>Status: {
-            if (app:isRunning($app)) then
+            if (app:is-running($app)) then
                 <font color="#008000"> Running </font>
             else
                 <font color="#FF0000"> Terminated </font>
@@ -180,7 +180,7 @@ declare function appView:createMenu2() as item() {
         for 
             $a
         in 
-            app:getStructure($app)/app/dir
+            app:get-structure($app)/app/dir
         return 
             <li>
               <ul>
@@ -200,7 +200,7 @@ declare function appView:createMenu($app as xs:string) as item() {
         for 
             $a
         in 
-            app:getStructure($app)/app/dir
+            app:get-structure($app)/app/dir
         return 
             <li>
               <ul>
@@ -273,7 +273,7 @@ declare function appView:generateFileOptions($fPathName as xs:string,
         { 
         let $xqf := fn:substring-before($fPathName, ".xq"),
             $button := 
-            if (xqfile:isLibrary($xqf)) then 
+            if (xqfile:is-library($xqf)) then 
                  1
             else 
                  0
@@ -291,12 +291,12 @@ declare function appView:generateTextArea($fPathName as xs:string, $num as xs:st
     fn:concat("<textarea id='code",
               $num,
               "' name='query' rows='20'>",
-              util:plainPrint(
-                  if (fn:compare(req:getParameter("name"),$fPathName) eq 0 and
-                      fn:string-length(req:getParameter("query")) > 0) then
-                      req:getParameter("query")
+              util:plain-print(
+                  if (fn:compare(req:get-parameter("name"),$fPathName) eq 0 and
+                      fn:string-length(req:get-parameter("query")) > 0) then
+                      req:get-parameter("query")
                   else
-                      bit:loadFile($fPathName)),
+                      bit:load-file($fPathName)),
               "</textarea>")
 };
 

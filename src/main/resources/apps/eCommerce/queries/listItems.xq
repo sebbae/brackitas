@@ -33,14 +33,14 @@
  *
 :)
 import module namespace template="http://brackit.org/lib/eCommerce/template";
-if (bit:existCollection(session:getAttribute('appName'))) then
+if (bit:exist-collection(session:get-attribute('appName'))) then
     let $content := 
         <ul>
             {
                 for 
                     $doc 
                 in 
-                    fn:collection(session:getAttribute('appName'))
+                    fn:collection(session:get-attribute('appName'))
                 return 
                     <li>
                         <a href="{fn:concat("./showItemForm.xq?itemName=",$doc/item/data(name))}">{$doc/item/data(name)}</a>

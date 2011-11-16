@@ -40,8 +40,8 @@ declare function controller:index() as item() {
     
 declare function controller:test() as item() {
     try {
-        app:getStructure("eCo")
+        app:get-structure("eCo")
     } catch err:APP0006 {
-        "Error on getStructure"
+        $err:code, $err:description, $err:line-number
     }
 };

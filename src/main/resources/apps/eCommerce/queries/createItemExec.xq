@@ -53,16 +53,16 @@ let $content :=
         (string-length($itemDescription) > 0) and 
         (not(contains($itemName,' '))))
     then
-        if (bit:existCollection(session:getAttribute('appName'))) then
+        if (bit:exist-collection(session:get-attribute('appName'))) then
             if (not(exists(template:getItemFromCollection($itemName)))) then
-                if (bit:addDocToCollection(session:getAttribute('appName'),local:Item($itemName,$itemDescription))) then
+                if (bit:add-doc-to-collection(session:get-attribute('appName'),local:Item($itemName,$itemDescription))) then
                    <p> Item {$itemName} created sucessfully </p>
                 else
                    <p> Problems storing item problems. </p>
             else
                 <p> Item {$itemName} already exists </p>                
         else
-            if (bit:addDocToCollection(session:getAttribute('appName'),local:Item($itemName,$itemDescription))) then
+            if (bit:add-doc-to-collection(session:get-attribute('appName'),local:Item($itemName,$itemDescription))) then
                <p> Item {$itemName} created sucessfully </p>
             else
                <p> Problems storing item problems. </p>

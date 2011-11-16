@@ -60,7 +60,7 @@ public class Session extends BaseASQueryContextTest {
 		initFields();
 		ASXQuery x = new ASXQuery(
 				new ASCompileChain(metaDataMgr, tx),
-				"let $a := session:setAttribute('test',<a/>) return if (session:clear()) then session:getAttribute('test') else <info> Session clear problems </info>");
+				"let $a := session:set-attribute('test',<a/>) return if (session:clear()) then session:get-attribute('test') else <info> Session clear problems </info>");
 		x.setPrettyPrint(true);
 		x.serialize(ctx, buffer);
 		assertEquals("", buffer.toString());
@@ -71,7 +71,7 @@ public class Session extends BaseASQueryContextTest {
 		initFields();
 		ASXQuery x = new ASXQuery(
 				new ASCompileChain(metaDataMgr, tx),
-				"if (session:setAttribute('test',<p/>) and session:setAttribute('test2',<p/>)) then session:getAttributeNames() else <info/>");
+				"if (session:set-attribute('test',<p/>) and session:set-attribute('test2',<p/>)) then session:get-attribute-names() else <info/>");
 		x.setPrettyPrint(true);
 		x.serialize(ctx, buffer);
 		assertEquals("test test2", buffer.toString());
@@ -84,7 +84,7 @@ public class Session extends BaseASQueryContextTest {
 		Date resultdate = new Date(System.currentTimeMillis());
 		new org.brackit.xquery.atomic.Date(sdf.format(resultdate));
 		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
-				"session:getCreationTime()");
+				"session:get-creation-time()");
 		x.setPrettyPrint(true);
 		x.serialize(ctx, buffer);
 		assertEquals(sdf.format(resultdate), buffer.toString());
@@ -95,7 +95,7 @@ public class Session extends BaseASQueryContextTest {
 		initFields();
 		ASXQuery x = new ASXQuery(
 				new ASCompileChain(metaDataMgr, tx),
-				"if (session:getCreationTime() eq session:getLastAccessedTime()) then <true/> else <false/>");
+				"if (session:get-creation-time() eq session:get-last-accessed-time()) then <true/> else <false/>");
 		x.serialize(ctx, buffer);
 		assertEquals("<true/>", buffer.toString());
 	}
@@ -105,7 +105,7 @@ public class Session extends BaseASQueryContextTest {
 		initFields();
 		ASXQuery x = new ASXQuery(
 				new ASCompileChain(metaDataMgr, tx),
-				"let $a := 50 return if (session:setMaxInactiveInterval($a)) then if (session:getMaxInactiveInterval() eq $a) then <true/> else <false/> else <info> Problem with setMaxInactiveInterval() </info>");
+				"let $a := 50 return if (session:set-max-inactive-interval($a)) then if (session:get-max-inactive-interval() eq $a) then <true/> else <false/> else <info> Problem with setMaxInactiveInterval() </info>");
 		x.serialize(ctx, buffer);
 		assertEquals("<true/>", buffer.toString());
 	}
@@ -115,7 +115,7 @@ public class Session extends BaseASQueryContextTest {
 		initFields();
 		ASXQuery x = new ASXQuery(
 				new ASCompileChain(metaDataMgr, tx),
-				"let $a := session:setAttribute('teste',<p>Test Attribute</p>) return session:getAttribute('teste')");
+				"let $a := session:set-attribute('teste',<p>Test Attribute</p>) return session:get-attribute('teste')");
 		x.serialize(ctx, buffer);
 		assertEquals("<p>Test Attribute</p>", buffer.toString());
 	}
@@ -125,7 +125,7 @@ public class Session extends BaseASQueryContextTest {
 		initFields();
 		ASXQuery x = new ASXQuery(
 				new ASCompileChain(metaDataMgr, tx),
-				"let $a := session:setAttribute('test',<info/>) return let $b := session:invalidate() return session:getAttribute('teste')");
+				"let $a := session:set-attribute('test',<info/>) return let $b := session:invalidate() return session:get-attribute('teste')");
 		x.serialize(ctx, buffer);
 		assertEquals("", buffer.toString());
 	}
@@ -135,7 +135,7 @@ public class Session extends BaseASQueryContextTest {
 		initFields();
 		ASXQuery x = new ASXQuery(
 				new ASCompileChain(metaDataMgr, tx),
-				"let $a := session:setAttribute('test',<p>Test Attribute</p>) return session:removeAttribute('test')");
+				"let $a := session:set-attribute('test',<p>Test Attribute</p>) return session:remove-attribute('test')");
 		x.setPrettyPrint(true);
 		x.serialize(ctx, buffer);
 		assertTrue(new Boolean(buffer.toString()));

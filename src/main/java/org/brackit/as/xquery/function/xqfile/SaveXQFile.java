@@ -71,7 +71,7 @@ public class SaveXQFile extends AbstractFunction {
 					fPathName);
 			FileWriter f = new FileWriter(base);
 			BufferedWriter out = new BufferedWriter(f);
-			out.write(fQuery);
+			out.write(fQuery.replaceAll("&", "&amp;"));
 			out.close();
 			return Bool.TRUE;
 		} catch (Exception e) {

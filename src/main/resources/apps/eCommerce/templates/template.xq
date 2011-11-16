@@ -62,9 +62,9 @@ declare function template:head() as item()+
 declare function template:header() as item()+
 {
     let 
-        $login := session:getAttribute('login')
+        $login := session:get-attribute('login')
     let 
-        $pass := session:getAttribute('pass')
+        $pass := session:get-attribute('pass')
     return
         <table>
             <tr>
@@ -157,7 +157,7 @@ declare function template:getItemFromCollection ($name as xs:string) as item()+
     for 
         $doc 
     in 
-        fn:collection(session:getAttribute('appName'))
+        fn:collection(session:get-attribute('appName'))
     let 
         $docName := $doc/item/fn:data(name)
     where
@@ -169,7 +169,7 @@ declare function template:getItemFromCollection ($name as xs:string) as item()+
 
 declare function template:showCart() as item()* {
 let
-    $cart := session:getAttribute('cart')
+    $cart := session:get-attribute('cart')
 return
     <table>
         <tr>

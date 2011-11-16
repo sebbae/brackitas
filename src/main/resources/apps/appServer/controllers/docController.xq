@@ -37,9 +37,9 @@ import module namespace docView="http://brackit.org/lib/appServer/docView";
 import module namespace docModel="http://brackit.org/lib/appServer/docModel";
 
 declare function docController:index() as item() {
-    docView:browserModules(util:listPredefinedModules())
+    docView:browserModules(util:list-predefined-modules())
 };
 
 declare function docController:listFunctions() as item() {
-    docView:browserFunctionModules(util:listPredefinedFunctions(req:getParameter("module")))
+    docView:browserFunctionModules(util:list-predefined-functions(req:get-parameter("module")))
 };

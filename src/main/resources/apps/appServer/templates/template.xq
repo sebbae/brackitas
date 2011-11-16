@@ -109,7 +109,7 @@ declare function template:baseBody($header as item(),
                 {$content}
               </div>
               <!-- IE Column Clearing -->
-              <div id="ie_clearing"> &#160; </div>
+              <div id="ie_clearing">   </div>
             </div>
           </div>
           <!-- begin: #footer -->

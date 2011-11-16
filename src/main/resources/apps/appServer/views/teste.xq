@@ -28,4 +28,15 @@
  * 
  :)
 (: TODO Auto-generated XQuery block :) 
-"TODO" 
+let $req := <request href="1"
+                     method="put"
+                     username="username"
+                     password="password"
+                     auth-method="basic"
+                     send-authorization="true">
+                <body media-type="application/xml"/>
+            </request>
+return
+    (: error checking is left as an exercise :)
+    (: http:sendRequest($req) :)
+    $req

@@ -39,18 +39,18 @@ import module namespace appView="http://brackit.org/lib/appServer/appView";
 import module namespace rscModel="http://brackit.org/lib/appServer/rscModel";
 
 declare function rscController:load() as item() {
-    let $app := req:getParameter("app"),
-        $base := req:getParameter("name"),
-        $butClick := req:getParameter("renBut")
+    let $app := req:get-parameter("app"),
+        $base := req:get-parameter("name"),
+        $butClick := req:get-parameter("renBut")
     return
         rscView:fileForm($base,$app)
 };
 
 declare function rscController:rename() as item() {
-    let $butClick := req:getParameter("sub"),
-        $fPathName := req:getParameter("name"),
-        $app := req:getParameter("app"),
-        $newName := req:getParameter("newName")
+    let $butClick := req:get-parameter("sub"),
+        $fPathName := req:get-parameter("name"),
+        $app := req:get-parameter("app"),
+        $newName := req:get-parameter("newName")
     return
         let 
             $content :=
@@ -69,8 +69,8 @@ declare function rscController:rename() as item() {
 };
 
 declare function rscController:delete() as item() {
-    let $fPathName := req:getParameter("name"),
-        $app := req:getParameter("app")
+    let $fPathName := req:get-parameter("name"),
+        $app := req:get-parameter("app")
     return
         let $msg := 
             if (rsc:delete($fPathName)) then
@@ -82,7 +82,7 @@ declare function rscController:delete() as item() {
 };
 
 declare function rscController:action() as item() {
-    let $action := fn:normalize-space(req:getParameter("action"))
+    let $action := fn:normalize-space(req:get-parameter("action"))
     return
         if (fn:compare($action,"rename") eq 0) then
             rscController:rename()

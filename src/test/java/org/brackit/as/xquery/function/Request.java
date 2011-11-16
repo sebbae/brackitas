@@ -57,7 +57,7 @@ public class Request extends BaseASQueryContextTest {
 	public void getAttribute() throws Exception {
 		initFields();
 		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
-				"req:getAttribute('1')");
+				"req:get-attribute('1')");
 		x.serialize(ctx, buffer);
 		assertEquals("c1", buffer.toString());
 	}
@@ -66,7 +66,7 @@ public class Request extends BaseASQueryContextTest {
 	public void getAttributeNames() throws Exception {
 		initFields();
 		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
-				"req:getAttributeNames()");
+				"req:get-attribute-names()");
 		x.serialize(ctx, buffer);
 		assertEquals("1 2", buffer.toString());
 	}
@@ -75,7 +75,7 @@ public class Request extends BaseASQueryContextTest {
 	public void getCookie() throws Exception {
 		initFields();
 		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
-				"req:getCookie('1')");
+				"req:get-cookie('1')");
 		x.serialize(ctx, buffer);
 		assertEquals("c1", buffer.toString());
 	}
@@ -84,7 +84,7 @@ public class Request extends BaseASQueryContextTest {
 	public void getCookieNames() throws Exception {
 		initFields();
 		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
-				"req:getCookieNames()");
+				"req:get-cookie-names()");
 		x.serialize(ctx, buffer);
 		assertEquals("1 2", buffer.toString());
 	}
@@ -93,7 +93,7 @@ public class Request extends BaseASQueryContextTest {
 	public void getParameter() throws Exception {
 		initFields();
 		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
-				"req:getParameter('1')");
+				"req:get-parameter('1')");
 		x.serialize(ctx, buffer);
 		assertEquals("c1", buffer.toString());
 	}
@@ -102,7 +102,7 @@ public class Request extends BaseASQueryContextTest {
 	public void getParameterNames() throws Exception {
 		initFields();
 		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
-				"req:getParameterNames()");
+				"req:get-parameter-names()");
 		x.serialize(ctx, buffer);
 		assertEquals("1 2", buffer.toString());
 	}
@@ -111,7 +111,7 @@ public class Request extends BaseASQueryContextTest {
 	public void isMultipartContent() throws Exception {
 		initFields();
 		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
-				"req:isMultipartContent()");
+				"req:is-multipart-content()");
 		x.serialize(ctx, buffer);
 		assertEquals("false", buffer.toString());
 	}

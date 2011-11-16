@@ -38,15 +38,15 @@ import module namespace appView="http://brackit.org/lib/appServer/appView";
 import module namespace rscController="http://brackit.org/lib/appServer/rscController";
 
 declare function appController:index() as item() {
-    appView:listApps(app:getNames())
+    appView:listApps(app:get-names())
 };
 
 declare function appController:create() as item() {
-    let $butClick := req:getParameter("sub")
+    let $butClick := req:get-parameter("sub")
     return
         if (fn:string-length($butClick) > 0) then
-            let $app := req:getParameter("app"),
-                $model := req:getParameter("model")
+            let $app := req:get-parameter("app"),
+                $model := req:get-parameter("model")
             return
                 if (appModel:validateAppCreation($app, $model)) then
                     if (app:generate($app,$model)) then
@@ -60,10 +60,10 @@ declare function appController:create() as item() {
 };
 
 declare function appController:edit() as item ()* {
-    let $app := req:getParameter("app")
+    let $app := req:get-parameter("app")
     return
         if (appModel:validateApp($app)) then
-            if (session:setAttribute("editApp",$app)) then
+            if (session:set-attribute("editApp",$app)) then
                 let 
                     $menu := appView:createMenu($app)
                 return 
@@ -75,7 +75,7 @@ declare function appController:edit() as item ()* {
 };
 
 declare function appController:terminate() as item() {
-    let $app := req:getParameter("app")
+    let $app := req:get-parameter("app")
     return
         if (app:terminate($app)) then
             appController:index()
@@ -88,11 +88,11 @@ declare function appController:statistics() as item() {
 };
 
 declare function appController:delete() as item() {
-    appView:delete(app:delete(req:getParameter("app")))
+    appView:delete(app:delete(req:get-parameter("app")))
 };
 
 declare function appController:deploy() as item() {
-    let $app := req:getParameter("app")
+    let $app := req:get-parameter("app")
     return
         if (app:deploy($app)) then
             appController:index()
@@ -101,11 +101,11 @@ declare function appController:deploy() as item() {
 };
 
 declare function appController:load() as item() {
-    let $app := req:getParameter("app"),
-        $resource := fn:normalize-space(req:getParameter("name")),
+    let $app := req:get-parameter("app"),
+        $resource := fn:normalize-space(req:get-parameter("name")),
         $menu := appView:createMenu($app)
     return 
-        let $error := xqfile:getCompilationError($resource)
+        let $error := xqfile:get-compilation-error($resource)
         return
             if (fn:string-length($error) gt 0) then
                 appController:loadAfterAction($error)
@@ -120,8 +120,8 @@ declare function appController:load() as item() {
 };
 
 declare function appController:loadAfterAction($msg as xs:string) as item() {
-    let $app := req:getParameter("app"),
-        $resource := fn:normalize-space(req:getParameter("name")),
+    let $app := req:get-parameter("app"),
+        $resource := fn:normalize-space(req:get-parameter("name")),
         $menu := appView:createMenu($app)
     return 
         let $content :=

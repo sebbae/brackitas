@@ -84,13 +84,13 @@ declare function docView:browserFunctionModules($results as item()*) as item()* 
                 </tr>
 				<tr>
             		<td>
-						{fn:data($results/@name)}:{$function/name/text()} ( 
+						{fn:data($results/@name)}:{$function/name/text()} (
 						{for $parameter 
             			in $function/signature/parameters/parameter
             			return 
             				fn:concat($parameter/@description, " as ", $parameter,",")
             			}
-            			 ) as {$function/signature/return}
+            			) as {$function/signature/return}
             		</td>
                 </tr>
                 <tr>

@@ -40,8 +40,8 @@ import module namespace appController="http://brackit.org/lib/appServer/appContr
 import module namespace appView="http://brackit.org/lib/appServer/appView";
 
 declare function controller:save() as item() {
-    let $fPathName := req:getParameter("name"),
-        $query := req:getParameter("query")
+    let $fPathName := req:get-parameter("name"),
+        $query := req:get-parameter("query")
     return
         let $msg := 
             if (xqfile:save($fPathName, $query)) then
@@ -53,21 +53,25 @@ declare function controller:save() as item() {
 }; 
 
 declare function controller:compile() as item() {
-    let $fPathName := req:getParameter("name"),
-        $query := req:getParameter("query")
+    let $fPathName := req:get-parameter("name"),
+        $query := req:get-parameter("query")
     return
         let $msg := 
-            if (xqfile:compile($fPathName, $query)) then
-                view:msgSuccess("Compiled sucessfully!")
-            else
-                view:msgFailure("Compilation failed ... ")   
+            try {
+                if (xqfile:compile($fPathName, $query)) then
+                    view:msgSuccess("Compiled sucessfully!")
+                else
+                    view:msgFailure("Compilation failed ... ")
+            } catch * {
+                view:msgFailure(fn:concat("Compilation failed: ", $err:description))
+            }        
        return
             appController:loadAfterAction($msg)
 };
 
 declare function controller:delete() as item() {
-    let $fPathName := req:getParameter("name"),
-        $app := req:getParameter("app")
+    let $fPathName := req:get-parameter("name"),
+        $app := req:get-parameter("app")
     return
         let $msg := 
             if (xqfile:delete($fPathName)) then
@@ -79,7 +83,7 @@ declare function controller:delete() as item() {
 };
 
 declare function controller:action() as item() {
-    let $action := fn:normalize-space(req:getParameter("action"))
+    let $action := fn:normalize-space(req:get-parameter("action"))
     return
         if (fn:compare($action,"save") eq 0) then
             controller:save()
@@ -94,11 +98,11 @@ declare function controller:action() as item() {
 };
 
 declare function controller:create() as item() {
-    let $butClick := req:getParameter("sub"),
-        $fBasePath := req:getParameter("name"),
-        $app := req:getParameter("app"),
+    let $butClick := req:get-parameter("sub"),
+        $fBasePath := req:get-parameter("name"),
+        $app := req:get-parameter("app"),
         $menu := appView:createMenu($app),
-        $fName := req:getParameter("fName"),
+        $fName := req:get-parameter("fName"),
         $fPathName := fn:concat($fBasePath,"/",$fName)
     return
         if (fn:string-length($butClick) > 0) then
@@ -118,9 +122,9 @@ declare function controller:create() as item() {
 };
 
 declare function controller:upload() as item() {
-    let $butClick := req:getParameter("sub"),
-        $fBasePath := req:getParameter("name"),
-        $app := req:getParameter("app"),
+    let $butClick := req:get-parameter("sub"),
+        $fBasePath := req:get-parameter("name"),
+        $app := req:get-parameter("app"),
         $menu := appView:createMenu($app)
     return
         if (fn:string-length($butClick) > 0) then
@@ -133,15 +137,15 @@ declare function controller:upload() as item() {
 };
 
 declare function controller:mkDir() as item() {
-    let $butClick := req:getParameter("sub"),
-        $fBasePath := req:getParameter("name"),
-        $app := req:getParameter("app"),
-        $dirName := req:getParameter("dir"),
+    let $butClick := req:get-parameter("sub"),
+        $fBasePath := req:get-parameter("name"),
+        $app := req:get-parameter("app"),
+        $dirName := req:get-parameter("dir"),
         $menu := appView:createMenu($app)
     return
         if (fn:string-length($butClick) > 0) then
             if (model:validateDirName($dirName)) then 
-                if (util:mkDir(fn:concat($fBasePath,"/",$dirName))) then
+                if (util:mk-dir(fn:concat($fBasePath,"/",$dirName))) then
                     appView:menuContent(appView:createMenu($app),view:msgSuccess("Directory created sucessfully!"))
                 else
                     appView:menuContent($menu,view:msgFailure("Problems creating directory!"))

@@ -50,14 +50,14 @@ declare function controller:test() as item() {
 :)
 
 declare function controller:create() as item() {
-    let $butClick := fn:normalize-space(req:getParameter("sub")),
-        $fBasePath := req:getParameter("base"),
-        $app := req:getParameter("app"),
+    let $butClick := fn:normalize-space(req:get-parameter("sub")),
+        $fBasePath := req:get-parameter("base"),
+        $app := req:get-parameter("app"),
         $menu := appView:createMenu($app)
     return
         if (fn:string-length($butClick) > 0) then
             (
-            let $fName := req:getParameter("fName")
+            let $fName := req:get-parameter("fName")
             return
                 if (model:validateXQFile($fName)) then
                     let $fPathName := fn:concat($fBasePath,"/",$fName)
@@ -68,7 +68,7 @@ declare function controller:create() as item() {
                         else
                             ""
                 else
-                    if (session:setAttribute("msg",view:msgFailure("File name cannot contain space and must finish with .xq"))) then
+                    if (session:set-attribute("msg",view:msgFailure("File name cannot contain space and must finish with .xq"))) then
                         appView:menuContent($menu,view:createFileForm($fBasePath,$app))
                     else
                         appView:menuContent($menu,view:createFileForm($fBasePath,$app))

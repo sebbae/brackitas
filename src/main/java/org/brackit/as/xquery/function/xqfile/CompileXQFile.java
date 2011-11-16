@@ -83,7 +83,7 @@ public class CompileXQFile extends AbstractFunction {
 			// saving step
 			FileWriter f = new FileWriter(base);
 			BufferedWriter out = new BufferedWriter(f);
-			out.write(fQuery);
+			out.write(fQuery.replaceAll("&", "&amp;"));
 			out.close();
 			// compilation step
 			HttpConnector.compileApplication(new File(String.format("%s/%s",

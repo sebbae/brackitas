@@ -55,7 +55,7 @@ The <a href="http://github.com/mbrevoort/CodeMirror/tree/master/contrib/xquery/"
 
 
 <div class="border">
-<code><pre><textarea id="code" cols="120" rows="50"> {util:plainPrint(bit:loadFile("eCommerce/queries/buyCartExec.xq"))} </textarea>
+<code><pre><textarea id="code" cols="120" rows="50"> {util:plain-print(bit:load-file("eCommerce/queries/buyCartExec.xq"))} </textarea>
 </pre></code>
 </div>
 <div style="width:100%;text-align:center;padding-top:15px;">
