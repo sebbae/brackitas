@@ -29,6 +29,7 @@ package org.brackit.as.xquery.function.app;
 
 import javax.servlet.ServletContext;
 
+import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
@@ -47,6 +48,7 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
+@FunctionAnnotation(description = "Returns whether an application runs.", parameters = "$pplication-name")
 public class IsRunning extends AbstractFunction {
 
 	public IsRunning(QNm name, Signature signature) {

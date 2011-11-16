@@ -29,6 +29,7 @@ package org.brackit.as.xquery.function.bit;
 
 import java.io.File;
 
+import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASXQuery;
 import org.brackit.xquery.QueryContext;
@@ -46,6 +47,7 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
+@FunctionAnnotation(description = "Loads a file", parameters = "$file-name")
 public class LoadFile extends AbstractFunction {
 
 	public LoadFile(QNm name, Signature signature) {

@@ -27,6 +27,7 @@
  */
 package org.brackit.as.xquery.function.bit;
 
+import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -43,6 +44,7 @@ import org.brackit.xquery.xdm.Signature;
  * @author Henrique Valer
  * 
  */
+@FunctionAnnotation(description = "Drops a collection.", parameters = "$collection-name")
 public class DropCollection extends AbstractFunction {
 
 	public DropCollection(QNm name, Signature signature) {

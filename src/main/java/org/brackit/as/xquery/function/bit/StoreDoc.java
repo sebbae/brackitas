@@ -29,6 +29,7 @@ package org.brackit.as.xquery.function.bit;
 
 import java.io.PrintStream;
 
+import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.util.FunctionUtils;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
@@ -48,6 +49,7 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
+@FunctionAnnotation(description = "Stores a document into a collection.", parameters = {"$collection-name", "$document-name"})
 public class StoreDoc extends AbstractFunction {
 
 	private static FunctionUtils fUtils = new FunctionUtils();

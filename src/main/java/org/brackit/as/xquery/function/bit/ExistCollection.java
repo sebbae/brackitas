@@ -27,6 +27,7 @@
  */
 package org.brackit.as.xquery.function.bit;
 
+import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -43,6 +44,7 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
+@FunctionAnnotation(description = "Returns whether a collection exists.", parameters = "$collection-name")
 public class ExistCollection extends AbstractFunction {
 
 	public ExistCollection(QNm name, Signature signature) {

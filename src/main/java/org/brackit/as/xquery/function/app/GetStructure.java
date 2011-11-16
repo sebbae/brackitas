@@ -33,6 +33,7 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 
+import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.http.HttpConnector;
 import org.brackit.as.xquery.ASErrorCode;
@@ -54,6 +55,7 @@ import org.brackit.xquery.xdm.Signature;
  * @author Henrique Valer
  * 
  */
+@FunctionAnnotation(description = "Gets the application structure.", parameters = "$application-name")
 public class GetStructure extends AbstractFunction {
 
 	public GetStructure(QNm name, Signature signature) {

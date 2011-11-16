@@ -32,6 +32,7 @@ import java.util.Date;
 
 import javax.servlet.http.HttpSession;
 
+import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
@@ -47,6 +48,7 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
+@FunctionAnnotation(description = "Returns the last time the client sent a request associated with this session.", parameters = "")
 public class GetLastAccessedTime extends AbstractFunction {
 
 	public GetLastAccessedTime(QNm name, Signature signature) {

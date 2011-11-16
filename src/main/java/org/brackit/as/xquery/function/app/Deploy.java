@@ -29,6 +29,7 @@ package org.brackit.as.xquery.function.app;
 
 import java.io.File;
 
+import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.http.HttpConnector;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.server.session.SessionException;
@@ -47,6 +48,7 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
+@FunctionAnnotation(description = "Deploy an application.", parameters = "$application-name")
 public class Deploy extends AbstractFunction {
 
 	public Deploy(QNm name, Signature signature) {

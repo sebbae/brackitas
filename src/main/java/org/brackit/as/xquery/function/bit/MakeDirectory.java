@@ -27,6 +27,7 @@
  */
 package org.brackit.as.xquery.function.bit;
 
+import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.server.metadata.TXQueryContext;
 import org.brackit.server.tx.Tx;
@@ -45,6 +46,7 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
+@FunctionAnnotation(description = "Creates a directory.", parameters = "$directory-name")
 public class MakeDirectory extends AbstractFunction {
 
 	public MakeDirectory(QNm name, Signature signature) {

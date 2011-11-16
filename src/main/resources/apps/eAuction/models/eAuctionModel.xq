@@ -1,4 +1,5 @@
-/*
+(:
+ *
  * [New BSD License]
  * Copyright (c) 2011, Brackit Project Team <info@brackit.org>  
  * All rights reserved.
@@ -24,46 +25,33 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-package org.brackit.as.xquery.function.app;
-
-import java.io.File;
-
-import org.brackit.as.annotation.FunctionAnnotation;
-import org.brackit.as.http.HttpConnector;
-import org.brackit.as.xquery.ASErrorCode;
-import org.brackit.xquery.QueryContext;
-import org.brackit.xquery.QueryException;
-import org.brackit.xquery.atomic.Atomic;
-import org.brackit.xquery.atomic.Bool;
-import org.brackit.xquery.atomic.QNm;
-import org.brackit.xquery.function.AbstractFunction;
-import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.xdm.Signature;
-import org.brackit.xquery.xdm.Sequence;
-
-/**
+ *
+ **
  * 
- * @author Henrique Valer
+ * @author Roxana Zapata
  * 
- */
-@FunctionAnnotation(description = "Returns whether an application exists.", parameters = "$application-name")
-public class Exists extends AbstractFunction {
+ *
+:)
+module namespace eAuctionModel="http://brackit.org/lib/eAuction/eAuctionModel";
 
-	public Exists(QNm name, Signature signature) {
-		super(name, signature, true);
-	}
-
-	@Override
-	public Sequence execute(StaticContext sctx, QueryContext ctx,
-			Sequence[] args) throws QueryException {
-		try {
-			String app = ((Atomic) args[0]).atomize().stringValue().trim();
-			String base = String.format("%s/%s", HttpConnector.APPS_PATH, app);
-			return new Bool(new File(base).exists());
-		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.APP_EXISTS_INT_ERROR, e
-					.getMessage());
-		}
-	}
-}
+declare function eAuctionModel:User($userID as xs:string, $firstName as xs:string, $lastName as xs:string, 
+                            $streetAddress as xs:string, $emailAddress as xs:string) as item()+
+    {
+				<user>
+					<userID>
+						{$userID}
+					</userID>
+					<firstName>
+						{$firstName}
+					</firstName>
+					<lastName>
+						{$lastName}
+					</lastName>
+					<streetAddress>
+						{$streetAddress}
+					</streetAddress>
+					<emailAddress>
+						{$emailAddress}
+					</emailAddress>
+				</user>
+    };

@@ -94,7 +94,7 @@ public class ListPredefinedModules extends AbstractFunction {
 				if (annotation != null) {
 					description = annotation.description();
 				} else {
-					description = "TODO";
+					description = "No description present";
 				}
 				module = new Module(f[j].getName().getPrefix(), f[j].getName()
 						.getNamespaceURI(), description);
@@ -102,8 +102,8 @@ public class ListPredefinedModules extends AbstractFunction {
 					result.put(module.getName(), module);
 				} else {
 					if (result.get(module.name).description
-							.equalsIgnoreCase("TODO")
-							&& !module.description.equalsIgnoreCase("TODO")) {
+							.equalsIgnoreCase("No description present")
+							&& !module.description.equalsIgnoreCase("No description present")) {
 						result.put(module.getName(), module);
 					}
 				}

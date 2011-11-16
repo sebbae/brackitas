@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.Iterator;
 
 import org.brackit.as.annotation.FunctionAnnotation;
+import org.brackit.as.annotation.ModuleAnnotation;
 import org.brackit.as.xquery.xdm.ComparableFunction;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -50,6 +51,8 @@ import org.brackit.xquery.xdm.type.SequenceType;
  * @author Roxana Zapata
  * 
  */
+@ModuleAnnotation(description = "Util module." )
+@FunctionAnnotation(description = "List all predefined functions.", parameters = "")
 public class ListPredefinedFunctions extends AbstractFunction {
 
 	public ListPredefinedFunctions(QNm name, Signature signature) {
@@ -74,7 +77,7 @@ public class ListPredefinedFunctions extends AbstractFunction {
 						description = annotation.description();
 						parameters = annotation.parameters();
 					} else {
-						description = "TODO description";
+						description = "No description present";
 					}
 					result += "<function>";
 					result += "<name>" + results.get(i).getF().getName().localName

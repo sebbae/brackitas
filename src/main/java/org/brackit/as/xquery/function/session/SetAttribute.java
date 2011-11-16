@@ -29,6 +29,7 @@ package org.brackit.as.xquery.function.session;
 
 import javax.servlet.http.HttpSession;
 
+import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
@@ -46,6 +47,7 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
+@FunctionAnnotation(description = "Stores a value in the current session using the supplied attribute name.", parameters = {"$attribute-name", "$name"})
 public class SetAttribute extends AbstractFunction {
 
 	public SetAttribute(QNm name, Signature signature) {

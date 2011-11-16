@@ -27,6 +27,7 @@
  */
 package org.brackit.as.xquery.function.bit;
 
+import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -43,6 +44,7 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
+@FunctionAnnotation(description = "Creates a collection.", parameters = "$collection-name")
 public class CreateCollection extends AbstractFunction {
 
 	public CreateCollection(QNm name, Signature signature) {

@@ -32,6 +32,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.http.HttpConnector;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
