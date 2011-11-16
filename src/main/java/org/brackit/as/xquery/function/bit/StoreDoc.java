@@ -49,7 +49,10 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
-@FunctionAnnotation(description = "Stores a document into a collection.", parameters = {"$collection-name", "$document-name"})
+@FunctionAnnotation(description = "Stores an XML document into the Database. "
+		+ "The document is stored under the given file path name (as long as it "
+		+ "is valid). The content is parsed in order to guaranty a valid XML "
+		+ "document.", parameters = { "$XMLFilePathName", "$content" })
 public class StoreDoc extends AbstractFunction {
 
 	private static FunctionUtils fUtils = new FunctionUtils();

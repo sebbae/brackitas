@@ -74,12 +74,11 @@ import org.brackit.as.xquery.function.util.ListPredefinedFunctions;
 import org.brackit.as.xquery.function.util.ListPredefinedModules;
 import org.brackit.as.xquery.function.util.MkDirectory;
 import org.brackit.as.xquery.function.util.PlainPrint;
-import org.brackit.as.xquery.function.util.Template;
 import org.brackit.as.xquery.function.xqfile.CompileXQFile;
 import org.brackit.as.xquery.function.xqfile.CreateXQFile;
 import org.brackit.as.xquery.function.xqfile.DeleteXQFile;
 import org.brackit.as.xquery.function.xqfile.GetCompilationResult;
-import org.brackit.as.xquery.function.xqfile.IsModule;
+import org.brackit.as.xquery.function.xqfile.IsLibrary;
 import org.brackit.as.xquery.function.xqfile.SaveXQFile;
 import org.brackit.xquery.ErrorCode;
 import org.brackit.xquery.QueryException;
@@ -243,20 +242,6 @@ public class ASXQuery extends XQuery {
 				AtomicType.BOOL, Cardinality.One))));
 
 		// Util
-		Functions.predefine(new Template(new QNm(Namespaces.UTIL_NSURI,
-				Namespaces.UTIL_PREFIX, "template"), new Signature(
-				new SequenceType(AnyItemType.ANY, Cardinality.One),
-				new SequenceType(AnyItemType.ANY, Cardinality.ZeroOrOne),
-				new SequenceType(AnyItemType.ANY, Cardinality.ZeroOrOne),
-				new SequenceType(AnyItemType.ANY, Cardinality.ZeroOrOne),
-				new SequenceType(AnyItemType.ANY, Cardinality.ZeroOrOne),
-				new SequenceType(AnyItemType.ANY, Cardinality.ZeroOrOne))));
-
-		Functions.predefine(new Template(new QNm(Namespaces.UTIL_NSURI,
-				Namespaces.UTIL_PREFIX, "template"), new Signature(
-				new SequenceType(AnyItemType.ANY, Cardinality.One),
-				new SequenceType(AnyItemType.ANY, Cardinality.One))));
-
 		Functions.predefine(new PlainPrint(new QNm(Namespaces.UTIL_NSURI,
 				Namespaces.UTIL_PREFIX, "plainPrint"), new Signature(
 				new SequenceType(AtomicType.STR, Cardinality.ZeroOrOne),
@@ -266,7 +251,7 @@ public class ASXQuery extends XQuery {
 				Namespaces.UTIL_PREFIX, "mkDir"), new Signature(
 				new SequenceType(AtomicType.BOOL, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
-		
+
 		Functions.predefine(new ListPredefinedFunctions(new QNm(
 				Namespaces.UTIL_NSURI, Namespaces.UTIL_PREFIX,
 				"listPredefinedFunctions"), new Signature(new SequenceType(
@@ -342,8 +327,8 @@ public class ASXQuery extends XQuery {
 				new SequenceType(AtomicType.STR, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
-		Functions.predefine(new IsModule(new QNm(Namespaces.XQFILE_NSURI,
-				Namespaces.XQFILE_PREFIX, "isModule"), new Signature(
+		Functions.predefine(new IsLibrary(new QNm(Namespaces.XQFILE_NSURI,
+				Namespaces.XQFILE_PREFIX, "isLibrary"), new Signature(
 				new SequenceType(AtomicType.BOOL, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 

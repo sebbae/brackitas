@@ -30,6 +30,7 @@ package org.brackit.as.xquery.function.xqfile;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 
+import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.http.HttpConnector;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
@@ -47,6 +48,10 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
+@FunctionAnnotation(description = "Saves the given query ($query) at the given file "
+		+ "path name destination. The file path name starts from the applications"
+		+ " directory, by default: src/main/resources/apps.", parameters = {
+		"$filePathName", "$query" })
 public class SaveXQFile extends AbstractFunction {
 
 	public SaveXQFile(QNm name, Signature signature) {

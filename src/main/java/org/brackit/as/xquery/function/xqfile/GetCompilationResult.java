@@ -29,6 +29,7 @@ package org.brackit.as.xquery.function.xqfile;
 
 import javax.servlet.ServletContext;
 
+import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
@@ -48,6 +49,11 @@ import org.brackit.xquery.xdm.Signature;
  * @author Henrique Valer
  * 
  */
+@FunctionAnnotation(description = "Checks whether the given file path name XQuery"
+		+ " is a library module or not. Library modules are modules that do "
+		+ "not contain a Query Body. A library module consists of a module "
+		+ "declaration followed by a Prolog. It provides function and variable"
+		+ " declarations that can be imported into other modules.", parameters = "$filePathName")
 public class GetCompilationResult extends AbstractFunction {
 
 	public GetCompilationResult(QNm name, Signature signature) {

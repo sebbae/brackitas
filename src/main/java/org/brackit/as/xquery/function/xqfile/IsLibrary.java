@@ -49,9 +49,9 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
-public class IsModule extends AbstractFunction {
+public class IsLibrary extends AbstractFunction {
 
-	public IsModule(QNm name, Signature signature) {
+	public IsLibrary(QNm name, Signature signature) {
 		super(name, signature, true);
 	}
 

@@ -273,7 +273,7 @@ declare function appView:generateFileOptions($fPathName as xs:string,
         { 
         let $xqf := fn:substring-before($fPathName, ".xq"),
             $button := 
-            if (xqfile:isModule($xqf)) then 
+            if (xqfile:isLibrary($xqf)) then 
                  1
             else 
                  0
@@ -296,7 +296,7 @@ declare function appView:generateTextArea($fPathName as xs:string, $num as xs:st
                       fn:string-length(req:getParameter("query")) > 0) then
                       req:getParameter("query")
                   else
-                      bit:loadFile(fn:concat("apps/",$fPathName))),
+                      bit:loadFile($fPathName)),
               "</textarea>")
 };
 

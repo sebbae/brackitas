@@ -44,7 +44,8 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
-@FunctionAnnotation(description = "Returns whether a collection exists.", parameters = "$collection-name")
+@FunctionAnnotation(description = "Checks whether a collection "
+		+ "exists or not.", parameters = "$collectionName")
 public class ExistCollection extends AbstractFunction {
 
 	public ExistCollection(QNm name, Signature signature) {

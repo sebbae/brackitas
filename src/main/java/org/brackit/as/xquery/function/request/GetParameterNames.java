@@ -33,6 +33,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
@@ -51,6 +52,8 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
+@FunctionAnnotation(description = "Returns a sequence containing the names of all "
+		+ "parameters available.", parameters = "")
 public class GetParameterNames extends AbstractFunction {
 
 	public GetParameterNames(QNm name, Signature signature) {

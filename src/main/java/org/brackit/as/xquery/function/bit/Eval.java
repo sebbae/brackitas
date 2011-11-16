@@ -49,7 +49,7 @@ import org.brackit.xquery.xdm.Signature;
  * @author Henrique Valer
  * 
  */
-@FunctionAnnotation(description = "Evaluates a collection.", parameters = "$collection-name")
+@FunctionAnnotation(description = "Executes the given query.", parameters = "$query")
 public class Eval extends AbstractFunction {
 	private FunctionUtils fUtils = new FunctionUtils();
 

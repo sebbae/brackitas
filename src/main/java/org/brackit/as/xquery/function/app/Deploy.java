@@ -48,7 +48,9 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
-@FunctionAnnotation(description = "Deploy an application.", parameters = "$application-name")
+@FunctionAnnotation(description = "Deploys the specified application. The "
+		+ "whole application is compiled and the successfully compiled queries "
+		+ "are made avilable for access, and thus execution.", parameters = "$applicationName")
 public class Deploy extends AbstractFunction {
 
 	public Deploy(QNm name, Signature signature) {

@@ -48,7 +48,9 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
-@FunctionAnnotation(description = "Returns whether an application runs.", parameters = "$pplication-name")
+@FunctionAnnotation(description = "Checks whether the specified application is "
+		+ "running or not. The \"running\" state does not solely means that the "
+		+ "application exists, but is accessible as weel.", parameters = "$pplicationName")
 public class IsRunning extends AbstractFunction {
 
 	public IsRunning(QNm name, Signature signature) {

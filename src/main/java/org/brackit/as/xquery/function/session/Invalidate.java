@@ -46,7 +46,7 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
-@FunctionAnnotation(description = "Invalidate (remove) the current HTTP session if present.", parameters = "")
+@FunctionAnnotation(description = "Invalidates the current HTTP session.", parameters = "")
 public class Invalidate extends AbstractFunction {
 
 	public Invalidate(QNm name, Signature signature) {

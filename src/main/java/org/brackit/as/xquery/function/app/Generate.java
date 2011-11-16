@@ -50,6 +50,15 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
+@FunctionAnnotation(description = "Creates a predefined generic application "
+		+ "skeleton. Automatically generated applications follow two main types, "
+		+ "defined by the specified type ($applicationType): MVC applications "
+		+ "($applicationType = \"MVC\") are created following the "
+		+ "movel-view-controller style. Regular applications ($applicationType "
+		+ "= REG) represents generic applications. In both cases, the skeleton "
+		+ "includes a simple \"Hello world!\" initial page and some predefined "
+		+ "CSS stylesheets.", parameters = { "$applicationName",
+		"$applicationType" })
 public class Generate extends AbstractFunction {
 
 	public static String module = "module namespace %s=\"http://brackit.org/lib/%s/%s%s\"; \n";

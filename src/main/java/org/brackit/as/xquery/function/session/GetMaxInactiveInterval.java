@@ -46,7 +46,9 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
-@FunctionAnnotation(description = "Returns the maximum time interval, in seconds, that the servlet container will keep this session open between client accesses.", parameters = "")
+@FunctionAnnotation(description = "Returns the maximum time interval, in seconds, "
+		+ "that the servlet container will keep this session open between "
+		+ "client accesses.", parameters = "")
 public class GetMaxInactiveInterval extends AbstractFunction {
 
 	public GetMaxInactiveInterval(QNm name, Signature signature) {

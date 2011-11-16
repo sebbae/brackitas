@@ -52,7 +52,8 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
-@FunctionAnnotation(description = "Returns a sequence containing the names of all session attributes defined within the current HTTP session.", parameters = "")
+@FunctionAnnotation(description = "Returns a sequence containing the names of all "
+		+ "session attributes defined within the current HTTP session.", parameters = "")
 public class GetAttributeNames extends AbstractFunction {
 
 	public GetAttributeNames(QNm name, Signature signature) {

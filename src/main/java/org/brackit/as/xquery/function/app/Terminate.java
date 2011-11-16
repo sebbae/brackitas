@@ -45,7 +45,9 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
-@FunctionAnnotation(description = "Terminates an application.", parameters = "$application-name")
+@FunctionAnnotation(description = "Terminates the specified application. "
+		+ "Termination does not mean the application will be deleted or altered."
+		+ "It simply guaranties that none of the queries are executed.", parameters = "$applicationName")
 public class Terminate extends AbstractFunction {
 
 	public Terminate(QNm name, Signature signature) {

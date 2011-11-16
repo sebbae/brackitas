@@ -37,8 +37,8 @@ import org.brackit.as.xquery.xdm.ComparableFunction;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.XQuery;
+import org.brackit.xquery.atomic.Atomic;
 import org.brackit.xquery.atomic.QNm;
-import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.Functions;
 import org.brackit.xquery.module.StaticContext;
@@ -49,10 +49,14 @@ import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * @author Roxana Zapata
+ * @author Henrique Valer
  * 
  */
-@ModuleAnnotation(description = "Util module." )
-@FunctionAnnotation(description = "List all predefined functions.", parameters = "")
+@ModuleAnnotation(description = "A module for extra utility functions.")
+@FunctionAnnotation(description = "List all predefined functions of a given module. \n"
+		+ "It returns an XML document with an element for each function. "
+		+ "Each of these elements contains the name function, URI, description "
+		+ " and signature of the given function.", parameters = "$moduleName")
 public class ListPredefinedFunctions extends AbstractFunction {
 
 	public ListPredefinedFunctions(QNm name, Signature signature) {
@@ -61,18 +65,18 @@ public class ListPredefinedFunctions extends AbstractFunction {
 
 	public Sequence execute(StaticContext sctx, QueryContext ctx,
 			Sequence[] args) throws QueryException {
-		String module = ((Str) args[0]).stringValue().trim();
+		String module = ((Atomic) args[0]).stringValue().trim();
 		ArrayList<ComparableFunction> results = getPredefinedFunctions(module);
 		Collections.sort(results);
 		SequenceType[] params;
 		if (results.size() > 0) {
-			String result = "<module name= \"" + module + "\">";
+			String result = "<module name=\"" + module + "\">";
 			for (int i = 0; i < results.size(); i++) {
 				if (results.get(i).getF().getName() instanceof QNm) {
 					String description;
 					String[] parameters = null;
-					FunctionAnnotation annotation = results.get(i).getClass()
-							.getAnnotation(FunctionAnnotation.class);
+					FunctionAnnotation annotation = results.get(i).getF()
+							.getClass().getAnnotation(FunctionAnnotation.class);
 					if (annotation != null) {
 						description = annotation.description();
 						parameters = annotation.parameters();
@@ -80,14 +84,16 @@ public class ListPredefinedFunctions extends AbstractFunction {
 						description = "No description present";
 					}
 					result += "<function>";
-					result += "<name>" + results.get(i).getF().getName().localName
+					result += "<name>"
+							+ results.get(i).getF().getName().localName
 							+ "</name>";
 					result += "<nsURI>" + results.get(i).getF().getName().nsURI
 							+ "</nsURI>";
 					result += "<description>" + description + "</description>";
 					result += "<signature>";
 					result += "<return>";
-					result += results.get(i).getF().getSignature().getResultType();
+					result += results.get(i).getF().getSignature()
+							.getResultType();
 					result += "</return>";
 					result += "<parameters>";
 					params = results.get(i).getF().getSignature().getParams();
@@ -118,7 +124,8 @@ public class ListPredefinedFunctions extends AbstractFunction {
 
 	private ArrayList<ComparableFunction> getPredefinedFunctions(String module) {
 		ArrayList<ComparableFunction> result = new ArrayList<ComparableFunction>();
-		Iterator<Function[]> i = new Functions().getPredefinedFunctions().values().iterator();
+		Iterator<Function[]> i = new Functions().getPredefinedFunctions()
+				.values().iterator();
 		while (i.hasNext()) {
 			Function[] f = i.next();
 			for (int j = 0; j < f.length; j++) {

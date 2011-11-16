@@ -55,7 +55,9 @@ import org.brackit.xquery.xdm.Signature;
  * @author Henrique Valer
  * 
  */
-@FunctionAnnotation(description = "Gets the application structure.", parameters = "$application-name")
+@FunctionAnnotation(description = "Returns the physical structural representation"
+		+ "of the application folders and files. This representation is returned as "
+		+ "an XML document.", parameters = "$applicationName")
 public class GetStructure extends AbstractFunction {
 
 	public GetStructure(QNm name, Signature signature) {

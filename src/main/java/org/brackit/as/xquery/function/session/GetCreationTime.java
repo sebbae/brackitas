@@ -48,7 +48,7 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
-@FunctionAnnotation(description = "Returns the time when this session was created. If a session does not exist, a new one is created.", parameters = "")
+@FunctionAnnotation(description = "Returns the creation time of session object in the given format: yyyy-MM-dd-HH:mm.", parameters = "")
 public class GetCreationTime extends AbstractFunction {
 
 	public GetCreationTime(QNm name, Signature signature) {

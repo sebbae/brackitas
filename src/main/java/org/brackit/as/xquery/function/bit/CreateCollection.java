@@ -44,7 +44,7 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
-@FunctionAnnotation(description = "Creates a collection.", parameters = "$collection-name")
+@FunctionAnnotation(description = "Creates a collection.", parameters = "$collectionName")
 public class CreateCollection extends AbstractFunction {
 
 	public CreateCollection(QNm name, Signature signature) {

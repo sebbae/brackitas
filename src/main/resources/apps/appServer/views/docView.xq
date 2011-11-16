@@ -49,9 +49,9 @@ declare function docView:browserModules($results as item()*) as item()* {
     let $content := 
         <table style="width: 100%;">
         	<tr>
-    			<td><b>Name</b></td>
+    			<td width="10%"><b>Name</b></td>
     			<td><b>Description</b></td>
-         		<td><b>Namespace URI</b></td>
+         		<td width="30%"><b>Namespace URI</b></td>
         	</tr> 
         	{
             for $module 

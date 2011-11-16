@@ -30,6 +30,7 @@ package org.brackit.as.xquery.function.request;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
@@ -46,6 +47,8 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
+@FunctionAnnotation(description = "Returns true if the given request is "
+		+ "multipart content.", parameters = "")
 public class IsMultipartContent extends AbstractFunction {
 
 	public IsMultipartContent(QNm name, Signature signature) {

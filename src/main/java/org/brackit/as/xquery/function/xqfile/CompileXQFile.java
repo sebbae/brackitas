@@ -35,6 +35,7 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 
+import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.http.HttpConnector;
 import org.brackit.as.xquery.ASErrorCode;
@@ -55,6 +56,12 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
+@FunctionAnnotation(description = "Compiles the given query ($query) and stores "
+		+ "it at the given file path name destination. The file path name "
+		+ "starts from the applications directory, by default: src/main/resources/apps."
+		+ " The actual process first saves the query on the file path name, then "
+		+ "compiles it. On success, the query is directly available for access "
+		+ "(execution) over HTTP.", parameters = { "$filePathName", "$query" })
 public class CompileXQFile extends AbstractFunction {
 
 	public CompileXQFile(QNm name, Signature signature) {

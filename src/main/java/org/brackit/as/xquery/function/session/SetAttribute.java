@@ -47,7 +47,8 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
-@FunctionAnnotation(description = "Stores a value in the current session using the supplied attribute name.", parameters = {"$attribute-name", "$name"})
+@FunctionAnnotation(description = "Stores an object as an attribute in the HTTP session. ", parameters = {
+		"$attributeName", "$object" })
 public class SetAttribute extends AbstractFunction {
 
 	public SetAttribute(QNm name, Signature signature) {

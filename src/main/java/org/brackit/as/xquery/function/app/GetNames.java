@@ -53,7 +53,8 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
-@FunctionAnnotation(description = "Gets the application name.", parameters = "")
+@FunctionAnnotation(description = "Returns a sequence with the names of all "
+		+ "applications present in the application server.", parameters = "")
 public class GetNames extends AbstractFunction {
 
 	public GetNames(QNm name, Signature signature) {

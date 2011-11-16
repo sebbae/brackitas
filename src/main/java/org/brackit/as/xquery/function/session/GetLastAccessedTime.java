@@ -48,7 +48,7 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
-@FunctionAnnotation(description = "Returns the last time the client sent a request associated with this session.", parameters = "")
+@FunctionAnnotation(description = "Returns the session last accessed time, in the given format: yyyy-MM-dd-HH:mm.", parameters = "")
 public class GetLastAccessedTime extends AbstractFunction {
 
 	public GetLastAccessedTime(QNm name, Signature signature) {

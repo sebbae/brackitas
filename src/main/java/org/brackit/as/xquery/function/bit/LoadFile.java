@@ -47,7 +47,9 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
-@FunctionAnnotation(description = "Loads a file", parameters = "$file-name")
+@FunctionAnnotation(description = "Loads a file from the file system as plain text. "
+		+ "The file path ($filePathName) starts at the applications directory, by "
+		+ "default: src/main/resources/apps.", parameters = "$filePathName")
 public class LoadFile extends AbstractFunction {
 
 	public LoadFile(QNm name, Signature signature) {
@@ -58,9 +60,11 @@ public class LoadFile extends AbstractFunction {
 	public Sequence execute(StaticContext sctx, QueryContext ctx,
 			Sequence[] args) throws QueryException {
 		try {
-			String fName = ((Atomic) args[0]).stringValue().trim();
+			String fPathName = ((Atomic) args[0]).stringValue().trim();
+			fPathName = (fPathName.startsWith("/")) ? fPathName.substring(1)
+					: fPathName;
 			return new Str(ASXQuery.getStringFromFile(new File(String.format(
-					"src/main/resources/%s", fName))));
+					"src/main/resources/apps/%s", fPathName))));
 		} catch (Exception e) {
 			throw new QueryException(e, ASErrorCode.BIT_LOADFILE_INT_ERROR, e
 					.getMessage());

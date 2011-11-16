@@ -47,7 +47,7 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
-@FunctionAnnotation(description = "Removes session attributes", parameters = "§attribute-name")
+@FunctionAnnotation(description = "Removes the given attribute from the HTTP session.", parameters = "§attributeName")
 public class RemoveSessionAtt extends AbstractFunction {
 
 	public RemoveSessionAtt(QNm name, Signature signature) {

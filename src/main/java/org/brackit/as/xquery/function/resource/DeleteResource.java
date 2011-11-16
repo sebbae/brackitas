@@ -29,6 +29,8 @@ package org.brackit.as.xquery.function.resource;
 
 import java.io.File;
 
+import org.brackit.as.annotation.FunctionAnnotation;
+import org.brackit.as.annotation.ModuleAnnotation;
 import org.brackit.as.http.HttpConnector;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
@@ -46,6 +48,11 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
+@ModuleAnnotation(description = "A module for dealing with resources on the server. "
+		+ "Resources are defined as all files that are not XQuery files.")
+@FunctionAnnotation(description = "Deletes the given resource. The resource path "
+		+ "starts at the applications directory, by default: "
+		+ "src/main/resources/apps. ", parameters = "$rscPathName")
 public class DeleteResource extends AbstractFunction {
 
 	public DeleteResource(QNm name, Signature signature) {

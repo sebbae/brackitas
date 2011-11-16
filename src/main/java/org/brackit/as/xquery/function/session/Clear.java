@@ -49,8 +49,10 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
-@ModuleAnnotation(description = "A module for dealing with the HTTP session." )
-@FunctionAnnotation(description = "Removes all attributes from the current HTTP session.", parameters = "")
+@ModuleAnnotation(description = "A module for dealing with the HTTP session.")
+@FunctionAnnotation(description = "Clears the present HTTP session. It removes all "
+		+ "attributes from the current HTTP session, but "
+		+ "it does not invalidate the session.", parameters = "")
 public class Clear extends AbstractFunction {
 
 	public Clear(QNm name, Signature signature) {

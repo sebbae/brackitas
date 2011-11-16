@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.annotation.ModuleAnnotation;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -47,8 +48,12 @@ import org.brackit.xquery.xdm.Signature;
 
 /**
  * @author Roxana Zapata
+ * @author Henrique Valer
  * 
  */
+@FunctionAnnotation(description = "List all predefined modules available for usage."
+		+ "It returns an XML document with an element for each module. "
+		+ "Each of these elements contains the module name, URI and description.", parameters = "")
 public class ListPredefinedModules extends AbstractFunction {
 
 	public ListPredefinedModules(QNm name, Signature signature) {
@@ -62,8 +67,7 @@ public class ListPredefinedModules extends AbstractFunction {
 			String result = "<modules>";
 			for (Iterator<Entry<String, Module>> i = results.iterator(); i
 					.hasNext();) {
-				Entry<String, Module> module = (Entry<String, Module>) i
-						.next();
+				Entry<String, Module> module = (Entry<String, Module>) i.next();
 				result += "<module>";
 				result += "<name>" + module.getValue().name + "</name>";
 				result += "<description>" + module.getValue().description
@@ -84,7 +88,7 @@ public class ListPredefinedModules extends AbstractFunction {
 		Map<String, Module> result = new HashMap<String, Module>();
 		Iterator<Function[]> i = new Functions().getPredefinedFunctions()
 				.values().iterator();
-		
+
 		while (i.hasNext()) {
 			Function[] f = i.next();
 			String description;
@@ -103,7 +107,8 @@ public class ListPredefinedModules extends AbstractFunction {
 				} else {
 					if (result.get(module.name).description
 							.equalsIgnoreCase("No description present")
-							&& !module.description.equalsIgnoreCase("No description present")) {
+							&& !module.description
+									.equalsIgnoreCase("No description present")) {
 						result.put(module.getName(), module);
 					}
 				}

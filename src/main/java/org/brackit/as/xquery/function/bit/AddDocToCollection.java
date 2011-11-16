@@ -53,8 +53,11 @@ import org.brackit.xquery.xdm.Store;
  * @author Henrique Valer
  * 
  */
-@ModuleAnnotation(description = "A module for performing various operations on collections in the application server." )
-@FunctionAnnotation(description = "Adds a document into a collection.", parameters = {"$collection-name", "$document-name"})
+@ModuleAnnotation(description = "A module for performing various operations "
+		+ "on the Brackit Database.")
+@FunctionAnnotation(description = "Adds a document into a collection. If the "
+		+ "specified collection does not exist, it will be automatically created. ", parameters = {
+		"$collectionName", "$documentName" })
 public class AddDocToCollection extends AbstractFunction {
 
 	private static FunctionUtils fUtils = new FunctionUtils();

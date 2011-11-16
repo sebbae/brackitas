@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
+import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.context.InputStreamName;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
@@ -51,6 +52,8 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
+@FunctionAnnotation(description = "Returns an parameter value present in the current "
+		+ "request object.", parameters = "parameterName")
 public class GetParameter extends AbstractFunction {
 
 	public GetParameter(QNm name, Signature signature) {

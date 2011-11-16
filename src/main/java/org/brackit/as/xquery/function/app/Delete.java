@@ -46,8 +46,10 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
-@ModuleAnnotation(description = "A module for performing various operations on applications in the application server." )
-@FunctionAnnotation(description = "Deletes an application.", parameters = "$application-name")
+@ModuleAnnotation(description = "A module for performing various operations "
+		+ "directly on the applications of the Application Server.")
+@FunctionAnnotation(description = "Deletes an application. The specified application "
+		+ "is physically deleted.", parameters = "$applicationName")
 public class Delete extends AbstractFunction {
 
 	public Delete(QNm name, Signature signature) {

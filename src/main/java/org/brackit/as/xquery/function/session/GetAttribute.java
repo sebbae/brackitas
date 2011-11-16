@@ -46,7 +46,8 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
-@FunctionAnnotation(description = "Returns an attribute stored in the current session object or an empty sequence if the attribute cannot be found.", parameters = "$name")
+@FunctionAnnotation(description = "Returns an attribute stored in the current "
+		+ "session object or an empty sequence if the attribute cannot be found.", parameters = "$attributeName")
 public class GetAttribute extends AbstractFunction {
 
 	public GetAttribute(QNm name, Signature signature) {

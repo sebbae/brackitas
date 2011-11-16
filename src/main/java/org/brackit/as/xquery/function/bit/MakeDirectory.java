@@ -46,7 +46,9 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
-@FunctionAnnotation(description = "Creates a directory.", parameters = "$directory-name")
+@FunctionAnnotation(description = "Creates a directory underneath the Database "
+		+ "metadata structure. Intermediary directories have to be manually "
+		+ "created.", parameters = "$directoryPathName")
 public class MakeDirectory extends AbstractFunction {
 
 	public MakeDirectory(QNm name, Signature signature) {

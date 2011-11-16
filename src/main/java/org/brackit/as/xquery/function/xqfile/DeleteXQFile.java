@@ -31,6 +31,7 @@ import java.io.File;
 
 import javax.servlet.ServletContext;
 
+import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.http.HttpConnector;
 import org.brackit.as.xquery.ASErrorCode;
@@ -50,6 +51,9 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
+@FunctionAnnotation(description = "Deletes the specified XQuery file under "
+		+ "the file path name ($filePathName). The file path name starts from "
+		+ "the applications directory, by default: src/main/resources/apps.", parameters = "$filePathName")
 public class DeleteXQFile extends AbstractFunction {
 
 	public DeleteXQFile(QNm name, Signature signature) {

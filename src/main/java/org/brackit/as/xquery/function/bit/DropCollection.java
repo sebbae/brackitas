@@ -44,7 +44,7 @@ import org.brackit.xquery.xdm.Signature;
  * @author Henrique Valer
  * 
  */
-@FunctionAnnotation(description = "Drops a collection.", parameters = "$collection-name")
+@FunctionAnnotation(description = "Drops the specified collection.", parameters = "$collectionName")
 public class DropCollection extends AbstractFunction {
 
 	public DropCollection(QNm name, Signature signature) {

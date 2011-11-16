@@ -47,7 +47,7 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
-@FunctionAnnotation(description = "Returns whether an application exists.", parameters = "$application-name")
+@FunctionAnnotation(description = "Checks whether an application exists or not.", parameters = "$applicationName")
 public class Exists extends AbstractFunction {
 
 	public Exists(QNm name, Signature signature) {

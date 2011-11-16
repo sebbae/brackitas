@@ -29,6 +29,7 @@ package org.brackit.as.xquery.function.resource;
 
 import java.io.File;
 
+import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.http.HttpConnector;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
@@ -47,6 +48,10 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
+@FunctionAnnotation(description = "Renames the given resource. The resource path "
+		+ "($rscPathName) starts at the applications directory, by default: "
+		+ "src/main/resources/apps.", parameters = { "$rscPathName",
+		"$rscNewName" })
 public class RenameResource extends AbstractFunction {
 
 	public RenameResource(QNm name, Signature signature) {

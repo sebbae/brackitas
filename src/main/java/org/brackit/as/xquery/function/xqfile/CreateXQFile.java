@@ -33,6 +33,7 @@ import java.io.FileWriter;
 
 import javax.servlet.ServletContext;
 
+import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.http.HttpConnector;
 import org.brackit.as.xquery.ASErrorCode;
@@ -53,6 +54,10 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
+@FunctionAnnotation(description = "Creates and XQuery file under the given"
+		+ "by file path name ($filePathName). The file path name starts from "
+		+ "the applications directory, by default: src/main/resources/apps."
+		+ " The content of the file is automatically generated and irrelevant.", parameters = "$filePathName")
 public class CreateXQFile extends AbstractFunction {
 
 	public CreateXQFile(QNm name, Signature signature) {

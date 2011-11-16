@@ -30,6 +30,8 @@ package org.brackit.as.xquery.function.request;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import org.brackit.as.annotation.FunctionAnnotation;
+import org.brackit.as.annotation.ModuleAnnotation;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
@@ -47,6 +49,8 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
+@ModuleAnnotation(description = "A module for dealing with HTTP requests.")
+@FunctionAnnotation(description = "Returns an HTTP cookie object.", parameters = "$cookieName")
 public class GetCookie extends AbstractFunction {
 
 	public GetCookie(QNm name, Signature signature) {

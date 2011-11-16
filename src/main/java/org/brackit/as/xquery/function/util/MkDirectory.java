@@ -47,7 +47,10 @@ import org.brackit.xquery.xdm.Sequence;
  * @author Henrique Valer
  * 
  */
-@FunctionAnnotation(description = "Makes a directory.", parameters = "")
+@FunctionAnnotation(description = "Creates a directory starting from the "
+		+ "applications directory, by default: src/main/resources/apps. "
+		+ "The intermediary folders are created as well when not previously "
+		+ "existent.", parameters = "$dirPathName")
 public class MkDirectory extends AbstractFunction {
 
 	public MkDirectory(QNm name, Signature signature) {
@@ -59,6 +62,8 @@ public class MkDirectory extends AbstractFunction {
 			Sequence[] args) throws QueryException {
 		try {
 			String fDirName = ((Atomic) args[0]).atomize().stringValue().trim();
+			fDirName = (fDirName.startsWith("/")) ? fDirName.substring(1)
+					: fDirName;
 			return new Bool(new File(String.format("%s/%s",
 					HttpConnector.APPS_PATH, fDirName)).mkdirs());
 		} catch (Exception e) {
