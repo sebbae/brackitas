@@ -119,7 +119,7 @@ public class FrontController extends BaseServlet {
 		resolveApplication(req, resp);
 		if (!UNKNOWN_MIMETYPE.equals(getMimeType(URI))) {
 			processResourceRequest(APP, URI, resp);
-			// resp.setStatus(HttpServletResponse.SC_OK);
+			resp.setStatus(HttpServletResponse.SC_OK);
 			return;
 		} else {
 			prepareExecution(req, resp, session);
@@ -129,7 +129,7 @@ public class FrontController extends BaseServlet {
 				writer
 						.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
 				processXQueryFileRequest(req, resp);
-				// resp.setStatus(HttpServletResponse.SC_OK);
+				resp.setStatus(HttpServletResponse.SC_OK);
 				return;
 			} else {
 				PrintWriter writer = new PrintWriter(new OutputStreamWriter(
@@ -137,7 +137,7 @@ public class FrontController extends BaseServlet {
 				writer
 						.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
 				processMVCRequest(req, resp);
-				// resp.setStatus(HttpServletResponse.SC_OK);
+				resp.setStatus(HttpServletResponse.SC_OK);
 				return;
 			}
 		}

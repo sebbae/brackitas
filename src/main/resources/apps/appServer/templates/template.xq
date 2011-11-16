@@ -36,11 +36,12 @@ module namespace template="http://brackit.org/lib/appServer/template";
 
 declare function template:head($title as xs:string) as item() {
     <head>
-      <script src="http://localhost:8080/apps/appServer/resources/js/codemirror.js">" "</script>
+      <title>{$title}</title>
       <link href="http://localhost:8080/apps/appServer/resources/css/layout_vertical_listnav.css" rel="stylesheet"/>
       <script src="http://localhost:8080/apps/appServer/resources/js/brackitHeader.js">" "</script>
     </head>
 };
+
 
 declare function template:header() as item() {
     <table style="width:100%;">
