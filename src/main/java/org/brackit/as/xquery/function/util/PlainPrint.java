@@ -54,8 +54,6 @@ import org.brackit.xquery.xdm.Sequence;
 		"or \"&gt;\" that would be interpreted by the browser as HTML content.", parameters = "$string")
 public class PlainPrint extends AbstractFunction {
 
-	private FunctionUtils fUtils = new FunctionUtils();
-
 	public PlainPrint(QNm name, Signature signature) {
 		super(name, signature, true);
 	}
@@ -68,7 +66,7 @@ public class PlainPrint extends AbstractFunction {
 			if (args[0] instanceof Atomic) {
 				vQuery = ((Atomic) args[0]).stringValue().trim();
 			} else {
-				PrintStream buf = fUtils.createBuffer();
+				PrintStream buf = FunctionUtils.createBuffer();
 				SubtreePrinter s = new SubtreePrinter(buf);
 				s.setPrettyPrint(true);
 				s.print((Node<?>) args[0]);

@@ -46,10 +46,7 @@ import java.util.List;
  */
 public class FunctionUtils {
 
-	public FunctionUtils() {
-	}
-
-	public PrintStream createBuffer() {
+	public static PrintStream createBuffer() {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		return new PrintStream(out) {
 			final OutputStream baos = out;
@@ -66,7 +63,7 @@ public class FunctionUtils {
 	 * @param pInput
 	 * @return
 	 */
-	public String getMd5(String pInput) {
+	public static String getMd5(String pInput) {
 		try {
 			MessageDigest lDigest;
 			lDigest = MessageDigest.getInstance("MD5");
@@ -88,8 +85,8 @@ public class FunctionUtils {
 	 * @return
 	 * @throws FileNotFoundException
 	 */
-	public List<File> getFilteredFileListing(File dir, FileFilter fileFilter)
-			throws FileNotFoundException {
+	public static List<File> getFilteredFileListing(File dir,
+			FileFilter fileFilter) throws FileNotFoundException {
 		List<File> result = new ArrayList<File>();
 		List<File> filesDirs = Arrays.asList(dir.listFiles());
 
@@ -114,7 +111,7 @@ public class FunctionUtils {
 	 * @return
 	 * @throws FileNotFoundException
 	 */
-	public List<File> getFoldersFileListing(File dir)
+	public static List<File> getFoldersFileListing(File dir)
 			throws FileNotFoundException {
 		List<File> result = new ArrayList<File>();
 		List<File> filesDirs = Arrays.asList(dir.listFiles());

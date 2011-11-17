@@ -94,7 +94,7 @@ declare function docView:browserFunctionModules($results as item()*) as item()* 
             		</td>
                 </tr>
                 <tr>
-                	<td>{$function/description/text()}</td>
+                	<td>{util:plain-print($function/description/text())}</td>
                 </tr>
              </tr>
         }

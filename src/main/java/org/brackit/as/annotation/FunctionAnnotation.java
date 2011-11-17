@@ -43,4 +43,5 @@ import java.lang.annotation.Target;
 public @interface FunctionAnnotation {
 	String description();
 	String[] parameters();
+    String example() default "unimplemented"; 	
 }

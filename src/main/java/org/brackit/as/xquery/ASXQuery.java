@@ -50,6 +50,7 @@ import org.brackit.as.xquery.function.bit.ExistCollection;
 import org.brackit.as.xquery.function.bit.LoadFile;
 import org.brackit.as.xquery.function.bit.MakeDirectory;
 import org.brackit.as.xquery.function.bit.StoreDoc;
+import org.brackit.as.xquery.function.http.SendRequest;
 import org.brackit.as.xquery.function.request.GetCookie;
 import org.brackit.as.xquery.function.request.GetCookieNames;
 import org.brackit.as.xquery.function.request.GetParameter;
@@ -357,6 +358,12 @@ public class ASXQuery extends XQuery {
 						AtomicType.BOOL, Cardinality.One), new SequenceType(
 						AtomicType.STR, Cardinality.One), new SequenceType(
 						AtomicType.STR, Cardinality.One))));
+
+		// HTTP handling
+		Functions.predefine(new SendRequest(new QNm(Namespaces.HTTP_NSURI,
+				Namespaces.HTTP_PREFIX, "send-request"), new Signature(
+				new SequenceType(AnyItemType.ANY, Cardinality.One),
+				new SequenceType(AnyItemType.ANY, Cardinality.One))));
 
 	}
 

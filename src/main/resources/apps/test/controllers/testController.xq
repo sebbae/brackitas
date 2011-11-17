@@ -37,11 +37,24 @@ declare function controller:index() as item() {
   return
     view:default($msg)
 };
+
+declare function controller:test2() as item() {
+    fn:doc("/test")
+};
     
 declare function controller:test() as item() {
     try {
-        app:get-structure("eCo")
-    } catch err:APP0006 {
+        let $req := 
+            <request method = "get"
+                     href = "http://www.google.de"
+                     status-only = "false"
+                     timeout = "1000">
+                <header name="name1" value="value1"/>     
+                <header name="name2" value="value2"/>
+            </request>
+        return
+            http:send-request($req)
+    } catch * {
         $err:code, $err:description, $err:line-number
     }
 };

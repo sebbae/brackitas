@@ -51,7 +51,6 @@ import org.brackit.xquery.xdm.Signature;
  */
 @FunctionAnnotation(description = "Executes the given query.", parameters = "$query")
 public class Eval extends AbstractFunction {
-	private FunctionUtils fUtils = new FunctionUtils();
 
 	public Eval(QNm name, Signature signature) {
 		super(name, signature, true);
@@ -65,7 +64,7 @@ public class Eval extends AbstractFunction {
 			if (args[0] instanceof Atomic) {
 				vQuery = ((Atomic) args[0]).stringValue();
 			} else {
-				PrintStream buf = fUtils.createBuffer();
+				PrintStream buf = FunctionUtils.createBuffer();
 				SubtreePrinter.print((Node<?>) args[0], buf);
 				vQuery = buf.toString();
 			}

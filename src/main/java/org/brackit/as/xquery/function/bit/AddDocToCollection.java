@@ -60,8 +60,6 @@ import org.brackit.xquery.xdm.Store;
 		"$collectionName", "$documentName" })
 public class AddDocToCollection extends AbstractFunction {
 
-	private static FunctionUtils fUtils = new FunctionUtils();
-
 	public AddDocToCollection(QNm name, Signature signature) {
 		super(name, signature, true);
 	}
@@ -75,7 +73,7 @@ public class AddDocToCollection extends AbstractFunction {
 			if (args[1] instanceof Atomic) {
 				vContent = ((Atomic) args[1]).stringValue();
 			} else {
-				PrintStream buf = fUtils.createBuffer();
+				PrintStream buf = FunctionUtils.createBuffer();
 				SubtreePrinter.print((Node<?>) args[1], buf);
 				vContent = buf.toString();
 			}
