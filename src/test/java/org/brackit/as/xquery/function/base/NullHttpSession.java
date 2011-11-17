@@ -40,7 +40,6 @@ import javax.servlet.http.HttpSessionContext;
  * @author Henrique Valer
  * 
  */
-@SuppressWarnings("deprecation")
 public class NullHttpSession implements HttpSession {
 
 	private ArrayList<String> attributeNames;

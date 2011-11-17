@@ -57,4 +57,9 @@ public class ASUncompiledQuery {
 	public Exception getE() {
 		return e;
 	}
+	
+	public void setE(Exception e) {
+		this.e = e;
+	}
+	
 }

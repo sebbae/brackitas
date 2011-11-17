@@ -73,7 +73,6 @@ public class BaseServlet extends TXServlet {
 				log.error(e1);
 			}
 			log.error(e);
-			e.printStackTrace(new PrintStream(resp.getOutputStream()));
 		} finally {
 			if (session != null)
 				cleanup(session, tx);
@@ -102,7 +101,6 @@ public class BaseServlet extends TXServlet {
 				log.error(e1);
 			}
 			log.error(e);
-			e.printStackTrace(new PrintStream(resp.getOutputStream()));
 		} finally {
 			if (session != null)
 				cleanup(session, tx);
