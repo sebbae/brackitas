@@ -32,12 +32,13 @@
  * 
  *
 :)
+
 module namespace eAuctionController="http://brackit.org/lib/eAuction/eAuctionController";
 import module namespace eAuctionModel="http://brackit.org/lib/eAuction/eAuctionModel";
 import module namespace eAuctionView="http://brackit.org/lib/eAuction/eAuctionView";
 
 declare function eAuctionController:index() as item() {
-    eAuctionView:index()
+    eAuctionView:index() 9
 };
 
 declare function eAuctionController:itemForm() as item() {
@@ -45,11 +46,9 @@ declare function eAuctionController:itemForm() as item() {
 };
 
 declare function eAuctionController:userForm() as item() {
-	eAuctionView:userForm()
+    eAuctionView:userForm()
 };
 
 declare function eAuctionController:registerUser() as item() {
-	eAuctionView:index()
+    eAuctionView:index()
 };
-
-
