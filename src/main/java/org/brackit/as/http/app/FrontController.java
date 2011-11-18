@@ -54,6 +54,7 @@ import org.brackit.server.session.Session;
 import org.brackit.server.session.SessionException;
 import org.brackit.server.tx.Tx;
 import org.brackit.xquery.QueryException;
+import org.brackit.xquery.XQuery;
 import org.brackit.xquery.atomic.Atomic;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.atomic.Str;
@@ -87,15 +88,20 @@ public class FrontController extends BaseServlet {
 
 	public static final String UNKNOWN_MIMETYPE = "application/octet-stream";
 
-	private Tx tx;
+	private static class Request {
 
-	private ASXQuery x;
+		private Tx tx;
 
-	private static String URI;
+		private ASXQuery x;
 
-	private String APP;
+		private static String URI;
 
-	private String RESOURCE;
+		private String APP;
+
+		private String RESOURCE;
+
+		private BaseAppContext bac;
+	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp,
@@ -113,90 +119,112 @@ public class FrontController extends BaseServlet {
 			Session session) throws StreamCorruptedException,
 			FileNotFoundException, SessionException, Exception, QueryException,
 			IOException {
-		resolveApplication(req, resp);
-		if (!UNKNOWN_MIMETYPE.equals(getMimeType(URI))) {
-			processResourceRequest(APP, URI, resp);
+		Request r = createRequest(req, resp);
+		if (!resolveApplication(r)) {
+			showError(req, resp, "Unknown application: " + r.APP, null);
+			return;
+		}
+		if (!UNKNOWN_MIMETYPE.equals(getMimeType(r.URI))) {
+			processResourceRequest(r, resp);
 			resp.setStatus(HttpServletResponse.SC_OK);
 			return;
 		} else {
-			prepareExecution(req, resp, session);
-			if (RESOURCE.endsWith(".xq")) {
+			prepareExecution(r, req, resp, session);
+			if (r.RESOURCE.endsWith(".xq")) {
 				PrintWriter writer = new PrintWriter(new OutputStreamWriter(
 						resp.getOutputStream(), "utf-8"));
-				writer
-						.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
-				processXQueryFileRequest(req, resp);
+				writer.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
+				processXQueryFileRequest(r, req, resp);
 				resp.setStatus(HttpServletResponse.SC_OK);
 				return;
 			} else {
 				PrintWriter writer = new PrintWriter(new OutputStreamWriter(
 						resp.getOutputStream(), "utf-8"));
-				writer
-						.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
-				processMVCRequest(req, resp);
+				writer.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
+				processMVCRequest(r, req, resp);
 				resp.setStatus(HttpServletResponse.SC_OK);
 				return;
 			}
 		}
 	}
 
-	private void processMVCRequest(HttpServletRequest req,
+	private void showError(HttpServletRequest req, HttpServletResponse resp,
+			String msg, Exception e) throws Exception {
+		PrintWriter writer = new PrintWriter(new OutputStreamWriter(
+				resp.getOutputStream(), "utf-8"));
+		writer.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
+		writer.println("<html><h1>Oops:</h1>");
+		writer.println("<p>");
+		writer.println(msg);
+		writer.println("</p>");
+		if (e != null) {
+			writer.println("<p>");
+			e.printStackTrace(writer);
+			writer.println("</p>");
+		}
+		writer.println("</html>");
+		writer.flush();
+		resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+	}
+
+	private void processMVCRequest(Request r, HttpServletRequest req,
 			HttpServletResponse resp) throws Exception {
-		Object o = getServletContext().getAttribute(APP);
-		BaseAppContext bac;
-		if (o != null) {
-			bac = (BaseAppContext) o;
-			String s = String.format("%s.xq", URI.substring(0, URI
-					.lastIndexOf("/")));
-			x = bac.get(s);
-			bindExternalVariables(req);
-			StaticContext sctx = x.getModule().getStaticContext();
-			Map<QNm, Function[]> l = sctx.getFunctions().getDeclaredFunctions();
-			Iterator<Function[]> i = l.values().iterator();
-			while (i.hasNext()) {
-				Function[] f = (Function[]) i.next();
-				for (int j = 0; j < f.length; j++) {
-					if (f[j].getName().stringValue().equals(RESOURCE)) {
-						x.setPrettyPrint(true);
-						PrintWriter writer = new PrintWriter(
-								new OutputStreamWriter(resp.getOutputStream(),
-										"utf-8"));
-						x.serializeResult(ctx, /*
-												 * new
-												 * PrintWriter(resp.getOutputStream
-												 * ())
-												 */writer, f[j].execute(sctx,
-								ctx, new Sequence[] {}));
-						return;
-					}
+		BaseAppContext bac = r.bac;
+		String s = String.format("%s.xq",
+				r.URI.substring(0, r.URI.lastIndexOf("/")));
+		r.x = bac.get(s);
+
+		if (r.x == null) {
+			showError(req, resp, "Unknown query: " + r.URI + ".xq", null);
+			return;
+		}
+
+		bindExternalVariables(r.x, req);
+		StaticContext sctx = r.x.getModule().getStaticContext();
+		Map<QNm, Function[]> l = sctx.getFunctions().getDeclaredFunctions();
+		Iterator<Function[]> i = l.values().iterator();
+		while (i.hasNext()) {
+			Function[] f = (Function[]) i.next();
+			for (int j = 0; j < f.length; j++) {
+				if (f[j].getName().stringValue().equals(r.RESOURCE)) {
+					r.x.setPrettyPrint(true);
+					PrintWriter writer = new PrintWriter(
+							new OutputStreamWriter(resp.getOutputStream(),
+									"utf-8"));
+					r.x.serializeResult(ctx, /*
+											 * new
+											 * PrintWriter(resp.getOutputStream
+											 * ())
+											 */writer,
+							f[j].execute(sctx, ctx, new Sequence[] {}));
+					return;
 				}
 			}
-		} else {
-			throw new Exception(String.format("Application %s does not exist",
-					APP));
 		}
 	}
 
-	private void processXQueryFileRequest(HttpServletRequest req,
+	private void processXQueryFileRequest(Request r, HttpServletRequest req,
 			HttpServletResponse resp) throws Exception, QueryException,
 			IOException {
-		Object o = getServletContext().getAttribute(APP);
-		BaseAppContext bac;
-		if (o != null) {
-			bac = (BaseAppContext) o;
-			x = bac.get(URI);
-		} else {
-			throw new Exception(String.format("Application %s does not exist",
-					APP));
-		}
-		bindExternalVariables(req);
-		x.setPrettyPrint(true);
-		PrintWriter writer = new PrintWriter(new OutputStreamWriter(resp
-				.getOutputStream(), "utf-8"));
-		x.serialize(ctx, writer);
+		bindExternalVariables(r.x, req);
+		r.x = r.bac.get(r.URI);
+		r.x.setPrettyPrint(true);
+		PrintWriter writer = new PrintWriter(new OutputStreamWriter(
+				resp.getOutputStream(), "utf-8"));
+		r.x.serialize(ctx, writer);
 	}
 
-	private void bindExternalVariables(HttpServletRequest req)
+	private boolean resolveApplication(Request r) throws Exception {
+		Object o = getServletContext().getAttribute(r.APP);
+		BaseAppContext bac;
+		if (o == null) {
+			return false;
+		}
+		r.bac = (BaseAppContext) o;
+		return true;
+	}
+
+	private void bindExternalVariables(ASXQuery x, HttpServletRequest req)
 			throws QueryException {
 		StaticContext sctx = x.getModule().getStaticContext();
 		for (Variable var : x.getModule().getVariables().getDeclaredVariables()) {
@@ -219,22 +247,25 @@ public class FrontController extends BaseServlet {
 		}
 	}
 
-	private void resolveApplication(HttpServletRequest req,
+	private Request createRequest(HttpServletRequest req,
 			HttpServletResponse resp) {
-		URI = req.getRequestURI();
-		String[] URIParts = URI.split("/");
-		APP = URIParts[2];
-		RESOURCE = URI.substring(URI.lastIndexOf("/") + 1);
+		Request r = new Request();
+		r.URI = req.getRequestURI();
+		String[] URIParts = r.URI.split("/");
+		r.APP = URIParts[2];
+		r.RESOURCE = r.URI.substring(r.URI.lastIndexOf("/") + 1);
 		req.getSession().setAttribute(FrontController.APP_SESSION_ATT,
-				(Atomic) new Str(APP));
+				(Atomic) new Str(r.APP));
 		resp.setHeader("Cache-Control", "no-cache");
 		resp.setHeader("Pragma", "no-cache");
 		resp.setDateHeader("Expires", 0);
+		return r;
 	}
 
-	private void processResourceRequest(String app, String resource,
-			HttpServletResponse resp) throws IOException {
+	private void processResourceRequest(Request r, HttpServletResponse resp)
+			throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		String resource = r.URI;
 		File f = new File("src/main/resources" + resource);
 		FileInputStream in = new FileInputStream(f);
 
@@ -252,8 +283,9 @@ public class FrontController extends BaseServlet {
 			resp.setHeader("Content-Length", String.valueOf(out.size()));
 			resp.setBufferSize(1024 * 100);
 		} catch (StreamCorruptedException e) {
-			throw new StreamCorruptedException(String
-					.format("Error while reading inputStream of resource %s.",
+			throw new StreamCorruptedException(
+					String.format(
+							"Error while reading inputStream of resource %s.",
 							resource));
 		} catch (Exception e) {
 			throw new FileNotFoundException(String.format(
@@ -268,12 +300,11 @@ public class FrontController extends BaseServlet {
 		}
 	}
 
-	private void prepareExecution(HttpServletRequest req,
+	private void prepareExecution(Request r, HttpServletRequest req,
 			HttpServletResponse resp, Session session) throws SessionException,
 			FileUploadException, IOException {
-		tx = session.getTX();
-		x = null;
-		ctx = new ASQueryContext(tx, metaDataMgr, req.getSession(), req);
+		r.tx = session.getTX();
+		ctx = new ASQueryContext(r.tx, metaDataMgr, req.getSession(), req);
 		if (ServletFileUpload.isMultipartContent(req))
 			ctx.setMultiPartParams(convertMultiPartParams(req));
 		resp.setContentType("text/html; charset=UTF-8");
@@ -286,8 +317,8 @@ public class FrontController extends BaseServlet {
 				new DiskFileItemFactory()).parseRequest(req).iterator();
 		while (iter.hasNext()) {
 			FileItem item = (FileItem) iter.next();
-			result.put(item.getFieldName(), new InputStreamName(item
-					.getInputStream(), item.getName()));
+			result.put(item.getFieldName(),
+					new InputStreamName(item.getInputStream(), item.getName()));
 		}
 		return result;
 	}
