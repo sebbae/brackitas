@@ -41,6 +41,7 @@ import javax.servlet.http.HttpSessionListener;
 
 import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.http.app.FrontController;
+import org.brackit.as.util.FunctionUtils;
 import org.brackit.as.xquery.compiler.ASBaseResolver;
 import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.server.metadata.manager.MetaDataMgr;
@@ -183,7 +184,7 @@ public class HttpConnector {
 			} else {
 				if (f[i].getName().endsWith(".xq")) {
 					try {
-						String s = f[i].getPath();
+						String s = FunctionUtils.getNormalizedPath(f[i]);
 						bac.register(resolvePath(s), f[i].lastModified());
 					} catch (Exception e) {
 						log.error(e);
