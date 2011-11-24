@@ -38,6 +38,7 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * 
@@ -125,4 +126,11 @@ public class FunctionUtils {
 		return result;
 	}
 
+	/**
+	 * Returns the 'normalized' path from a file, i.e. the resulting path string
+	 * contains only slashes as folder separators.
+	 */
+	public static String getNormalizedPath(File f) {
+		return f.getPath().replaceAll(Pattern.quote(File.separator), "/");
+	}
 }

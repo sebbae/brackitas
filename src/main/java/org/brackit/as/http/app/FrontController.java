@@ -209,8 +209,14 @@ public class FrontController extends BaseServlet {
 	private void processXQueryFileRequest(Request r, HttpServletRequest req,
 			HttpServletResponse resp) throws Exception, QueryException,
 			IOException {
-		bindExternalVariables(r.x, req);
 		r.x = r.bac.get(r.URI);
+		
+		if (r.x == null) {
+			showError(req, resp, "Unknown query: " + r.URI + ".xq", null);
+			return;
+		}
+		
+		bindExternalVariables(r.x, req);		
 		r.x.setPrettyPrint(true);
 		PrintWriter writer = new PrintWriter(new OutputStreamWriter(
 				resp.getOutputStream(), "utf-8"));
