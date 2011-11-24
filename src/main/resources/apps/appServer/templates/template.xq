@@ -36,10 +36,11 @@ module namespace template="http://brackit.org/lib/appServer/template";
 
 declare function template:head($title as xs:string) as item() {
     <head>
+      <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />    
       <title>{$title}</title>
-      <script src="http://localhost:8080/apps/appServer/resources/js/codemirror.js">" "</script>      
-      <link href="http://localhost:8080/apps/appServer/resources/css/layout_vertical_listnav.css" rel="stylesheet"/>
-      <script src="http://localhost:8080/apps/appServer/resources/js/brackitHeader.js">" "</script>
+      <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/codemirror.js">" "</script>      
+      <link type="text/css" href="http://localhost:8080/apps/appServer/resources/css/layout_vertical_listnav.css" rel="stylesheet"/>
+      <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/brackitHeader.js">" "</script>
     </head>
 };
 
@@ -49,7 +50,7 @@ declare function template:header() as item() {
             <td>
                 <div id="header" align="center">
                     <a href="http://localhost:8080/apps/appServer/controllers/appController/index">                  
-                        <img align="center" src="http://localhost:8080/apps/appServer/resources/images/brackit.png" />
+                        <img align="middle" alt="Brackit" src="http://localhost:8080/apps/appServer/resources/images/brackit.png" />
                     </a>
                 </div>
             </td>
@@ -69,8 +70,8 @@ declare function template:menu() as item() {
         <tr>
           <td>
             <ul class="vlist">
-              <li><zu><a href="../appController/index"><h6>Apps</h6></a></zu></li>
-              <li><zu><a href="../docController/index"><h6>Docs</h6></a></zu></li>
+              <li><p><a href="../appController/index">Apps</a></p></li>
+              <li><p><a href="../docController/index">Docs</a></p></li>
             </ul>
           </td>
         </tr>
@@ -79,15 +80,15 @@ declare function template:menu() as item() {
 };
 
 declare function template:footerBrackit() as item() {
-    <div id="footer">
+    <p>
       <a href="http://brackit.org">Brackit XQuery engine</a>
-    </div>          
+    </p>          
 };
 
 declare function template:footerYAML() as item() {
-    <div id="footer">
+    <p>
       Layout based on <a href="http://www.yaml.de/">YAML</a>
-    </div>          
+    </p>          
 };
 
 declare function template:baseBody($header as item(),
@@ -101,7 +102,7 @@ declare function template:baseBody($header as item(),
           {$header}
           {$teaser}
           <div id="main">
-            <div id="col1" role="complementary">
+            <div id="col1">
               {$menu}
             </div>
             <div id="col3">
@@ -113,8 +114,10 @@ declare function template:baseBody($header as item(),
             </div>
           </div>
           <!-- begin: #footer -->
+          <div id="footer">
             {$footerBrackit}
             {$footerYAML}
+          </div>
           <!-- begin: #footer -->
         </div>
       </div>
@@ -128,7 +131,7 @@ declare function template:base($head as item(),
                       $footerBrackit as item(),
                       $footerYAML as item()) {
 
-    <html>
+    <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
     {$head}
     <body>
       {template:baseBody($header,$teaser,$menu,$content,$footerBrackit,$footerYAML)}
@@ -137,7 +140,7 @@ declare function template:base($head as item(),
 };
 
 declare function template:footerScript() as item() {
-    <script src="http://localhost:8080/apps/appServer/resources/js/brackit.js">""</script>
+    <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/brackit.js">""</script>
 };
 
 declare function template:baseFooterScript($head as item(),
@@ -149,7 +152,7 @@ declare function template:baseFooterScript($head as item(),
                                   $footerYAML as item(),
                                   $footerScript as item()) as item() {
 
-    <html>
+    <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
     {$head}
     <body>
       {template:baseBody($header,$teaser,$menu,$content,$footerBrackit,$footerYAML)}

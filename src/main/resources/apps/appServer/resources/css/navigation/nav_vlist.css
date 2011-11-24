@@ -51,7 +51,7 @@
     padding:0;
   }
 
-  .vlist zu,	
+  .vlist p,	
   .vlist strong,
   .vlist span {
     display:block;
@@ -60,8 +60,8 @@
     border-bottom:1px #ddd solid;
   }
 
-  .vlist zu:visited,
-  .vlist zu,
+  .vlist p:visited,
+  .vlist p,
   .vlist a,
   .vlist a:visited {
     color:#444;
@@ -81,78 +81,78 @@
   }
 
   /* Level 1 */
-  .vlist li zu,
+  .vlist li p,
   .vlist li strong,
   .vlist li span { width:95%; padding-left:5%; } /* LTR */
 
-  .vlist li zu:focus,
-  .vlist li zu:hover,
-  .vlist li zu:active { background-color:#a88; color:#fff; outline: 0 none; }
+  .vlist li p:focus,
+  .vlist li p:hover,
+  .vlist li p:active { background-color:#a88; color:#fff; outline: 0 none; }
 
   /* Level 2 */
-  .vlist li ul li zu,
+  .vlist li ul li p,
   .vlist li ul li strong,
   .vlist li ul li span { width:90%; padding-left:10%; } /* LTR */
 
-  .vlist li ul li zu, 
-  .vlist li ul li zu:visited { background-color:#f8f8f8; color:#333; }
-  .vlist li ul li zu:focus,
-  .vlist li ul li zu:hover,
-  .vlist li ul li zu:active { background-color:#a88; color:#fff; }
+  .vlist li ul li p, 
+  .vlist li ul li p:visited { background-color:#f8f8f8; color:#333; }
+  .vlist li ul li p:focus,
+  .vlist li ul li p:hover,
+  .vlist li ul li p:active { background-color:#a88; color:#fff; }
 
   /* Level 3 */
-  .vlist li ul li ul li zu,
+  .vlist li ul li ul li p,
   .vlist li ul li ul li strong,
   .vlist li ul li ul li span { width:85%; padding-left:15%; } /* LTR */
 
-  .vlist li ul li ul li zu,
-  .vlist li ul li ul li zu:visited{ background-color:#f0f0f0; color:#222; }
-  .vlist li ul li ul li zu:focus,
-  .vlist li ul li ul li zu:hover,
-  .vlist li ul li ul li zu:active { background-color:#a88; color:#fff; }
+  .vlist li ul li ul li p,
+  .vlist li ul li ul li p:visited{ background-color:#f0f0f0; color:#222; }
+  .vlist li ul li ul li p:focus,
+  .vlist li ul li ul li p:hover,
+  .vlist li ul li ul li p:active { background-color:#a88; color:#fff; }
 
   /* Level 4 */
-  .vlist li ul li ul li ul li zu,
+  .vlist li ul li ul li ul li p,
   .vlist li ul li ul li ul li strong,
   .vlist li ul li ul li ul li span { width:80%; padding-left:20%; } /* LTR */
 
-  .vlist li ul li ul li ul li zu,
-  .vlist li ul li ul li ul li zu:visited { background-color:#e8e8e8; color:#111; }
-  .vlist li ul li ul li ul li zu:focus,
-  .vlist li ul li ul li ul li zu:hover,
-  .vlist li ul li ul li ul li zu:active { background-color:#a88; color:#fff; }
+  .vlist li ul li ul li ul li p,
+  .vlist li ul li ul li ul li p:visited { background-color:#e8e8e8; color:#111; }
+  .vlist li ul li ul li ul li p:focus,
+  .vlist li ul li ul li ul li p:hover,
+  .vlist li ul li ul li ul li p:active { background-color:#a88; color:#fff; }
   
   /* Level 5 */
-  .vlist li ul li ul li ul li ul li zu,
+  .vlist li ul li ul li ul li ul li p,
   .vlist li ul li ul li ul li ul li strong,
   .vlist li ul li ul li ul li ul li span { width:75%; padding-left:25%; } /* LTR */
 
-  .vlist li ul li ul li ul li ul li zu,
-  .vlist li ul li ul li ul li ul li zu:visited { background-color:#e0e0e0; color:#111; }
-  .vlist li ul li ul li ul li ul li zu:focus,
-  .vlist li ul li ul li ul li ul li zu:hover,
-  .vlist li ul li ul li ul li ul li zu:active { background-color:#a88; color:#fff; }
+  .vlist li ul li ul li ul li ul li p,
+  .vlist li ul li ul li ul li ul li p:visited { background-color:#e0e0e0; color:#111; }
+  .vlist li ul li ul li ul li ul li p:focus,
+  .vlist li ul li ul li ul li ul li p:hover,
+  .vlist li ul li ul li ul li ul li p:active { background-color:#a88; color:#fff; }
 	
   /* Level 6 */
-  .vlist li ul li ul li ul li ul li ul li zu,
+  .vlist li ul li ul li ul li ul li ul li p,
   .vlist li ul li ul li ul li ul li ul li strong,
   .vlist li ul li ul li ul li ul li ul li span { width:70%; padding-left:30%; } /* LTR */
 
-  .vlist li ul li ul li ul li ul li ul li zu,
-  .vlist li ul li ul li ul li ul li ul li zu:visited { background-color:#d8d8d8; color:#111; }
-  .vlist li ul li ul li ul li ul li ul li zu:focus,
-  .vlist li ul li ul li ul li ul li ul li zu:hover,
-  .vlist li ul li ul li ul li ul li ul li zu:active { background-color:#a88; color:#fff; }
+  .vlist li ul li ul li ul li ul li ul li p,
+  .vlist li ul li ul li ul li ul li ul li p:visited { background-color:#d8d8d8; color:#111; }
+  .vlist li ul li ul li ul li ul li ul li p:focus,
+  .vlist li ul li ul li ul li ul li ul li p:hover,
+  .vlist li ul li ul li ul li ul li ul li p:active { background-color:#a88; color:#fff; }
 	
   /* Level 7 */
-  .vlist li ul li ul li ul li ul li ul li ul li zu,
+  .vlist li ul li ul li ul li ul li ul li ul li p,
   .vlist li ul li ul li ul li ul li ul li ul li strong,
   .vlist li ul li ul li ul li ul li ul li ul li span { width:65%; padding-left:35%; } /* LTR */
 
-  .vlist li ul li ul li ul li ul li ul li ul li zu,
-  .vlist li ul li ul li ul li ul li ul li ul li zu:visited { background-color:#d0d0d0; color:#111; }
-  .vlist li ul li ul li ul li ul li ul li ul li zu:focus,
-  .vlist li ul li ul li ul li ul li ul li ul li zu:hover,
-  .vlist li ul li ul li ul li ul li ul li ul li zu:active { background-color:#a88; color:#fff; }
+  .vlist li ul li ul li ul li ul li ul li ul li p,
+  .vlist li ul li ul li ul li ul li ul li ul li p:visited { background-color:#d0d0d0; color:#111; }
+  .vlist li ul li ul li ul li ul li ul li ul li p:focus,
+  .vlist li ul li ul li ul li ul li ul li ul li p:hover,
+  .vlist li ul li ul li ul li ul li ul li ul li p:active { background-color:#a88; color:#fff; }
 	
 }

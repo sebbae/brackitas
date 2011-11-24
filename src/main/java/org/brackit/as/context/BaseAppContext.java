@@ -136,6 +136,7 @@ public class BaseAppContext {
 					putQuery(uq.getPath(), uq.getLastModified());
 					i.remove();
 				} catch (QueryException e) {
+					System.out.println(String.format("Problems compiling: %s. \n %s \n", uq.getPath(), e.getMessage()));
 					uq.setE(e);
 				}
 			}

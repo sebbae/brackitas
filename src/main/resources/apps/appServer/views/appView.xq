@@ -116,9 +116,9 @@ declare function appView:delete($result as xs:boolean) as item() {
 };
 
 declare function appView:listing($dir as item()*, $app as xs:string, $base as xs:string) as item()* {
-    <div>
+    <ul>
         <li>
-          <zu>
+          <p>
             <a>{fn:data($dir/@name)}</a>
             <a href="../fileController/mkDir?app={$app}&amp;name={$base}">
                 <img align="right" width="16" height="16" alt="Create a new folder" title="Create a new folder" src="http://localhost:8080/apps/appServer/resources/images/03_folder.gif"/>            
@@ -129,67 +129,50 @@ declare function appView:listing($dir as item()*, $app as xs:string, $base as xs
             <a href="../fileController/create?app={$app}&amp;name={$base}">
                 <img align="right" width="16" height="16" alt="Create new XQuery file" title="Create new XQuery file" src="http://localhost:8080/apps/appServer/resources/images/01_create.gif"/>
             </a>
-          </zu>
+          </p>
         </li>
         <li>
-            {
-                for $sub
-                in $dir/dir
-                return
-                    <ul>{appView:listing($sub,$app,fn:concat($base,"/",fn:data($sub/@name)))}</ul>
-                ,
-                for $content
-                in $dir
-                return 
-                    <ul>
-                    {
-                        for $file
-                        in $dir/file
-                        let $name := fn:data($file/@name),
-                            $error := fn:data($file/@compError)
-                        return
-                            <li>
-                                <zu>
-                                    <a href="{fn:concat("../appController/load?app=",
-                                                        $app,
-                                                        "&amp;name=",
-                                                        $base,"/",
-                                                        $name)}">
-                                                        {
-                                                            if (fn:string-length($error) gt 1) then
-                                                                <font color="#ff0000"> {$name} </font>
-                                                            else
-                                                                $name
-                                                        }
-                                    </a>
-                                </zu>
-                            </li>
-                    }
-                    </ul>
-            }
-        </li>
-    </div>
-};
-
-declare function appView:createMenu2() as item() {
-    let $app := "eCommerce"
-    return
-    <ul class="vlist">
-        <li><h6 class="vlist">{$app}</h6></li>
         {
-        for 
-            $a
-        in 
-            app:get-structure($app)/app/dir
-        return 
-            <li>
-              <ul>
-                {appView:listing($a,$app,fn:concat($app,
-                                           "/",
-                                           fn:data($a/@name)))}
-              </ul>
-            </li>
+            for $sub
+            in $dir/dir
+            return
+                appView:listing($sub,$app,fn:concat($base,"/",fn:data($sub/@name)))
+            ,
+            for $content
+            in $dir
+            return 
+                let $subMenu := 
+                    for $file
+                    in $dir/file
+                    let $name := fn:data($file/@name),
+                        $error := fn:data($file/@compError)
+                    return
+                        <li>
+                            <p>
+                                <a href="{fn:concat("../appController/load?app=",
+                                                    $app,
+                                                    "&amp;name=",
+                                                    $base,"/",
+                                                    $name)}">
+                                                    {
+                                                        if (fn:string-length($error) gt 1) then
+                                                            <font color="#ff0000"> {$name} </font>
+                                                        else
+                                                            $name
+                                                    }
+                                </a>
+                            </p>
+                        </li>
+                return
+                    if (fn:exists($subMenu)) then
+                        <ul>
+                            {$subMenu}
+                        </ul>
+                    else
+                        ""
+
         }
+        </li>
     </ul>
 };
 
@@ -203,11 +186,9 @@ declare function appView:createMenu($app as xs:string) as item() {
             app:get-structure($app)/app/dir
         return 
             <li>
-              <ul>
                 {appView:listing($a,$app,fn:concat($app,
                                            "/",
                                            fn:data($a/@name)))}
-              </ul>
             </li>
         }
     </ul>
@@ -278,7 +259,7 @@ declare function appView:generateFileOptions($fPathName as xs:string,
             else 
                  0
         return
-            <button type="button" onClick="{fn:concat("testIt(new Boolean(",$button,"),'",$xqf,"')")}">test it</button>
+            <button type="button" onclick="{fn:concat("testIt(new Boolean(",$button,"),'",$xqf,"')")}">test it</button>
         }
         <input type="hidden" name="name" value="{$fPathName}"/>
         <input type="hidden" name="app" value="{$app}"/>        
@@ -287,10 +268,9 @@ declare function appView:generateFileOptions($fPathName as xs:string,
   </div>
 };
 
-declare function appView:generateTextArea($fPathName as xs:string, $num as xs:string) as item() {
+declare function appView:generateTextArea($fPathName as xs:string) as item() {
     fn:concat("<textarea id='code",
-              $num,
-              "' name='query' rows='20'>",
+              "' name='query' rows='20' cols='50'>",
               util:plain-print(
                   if (fn:compare(req:get-parameter("name"),$fPathName) eq 0 and
                       fn:string-length(req:get-parameter("query")) > 0) then
@@ -312,7 +292,7 @@ declare function appView:editQuery($resource as xs:string,
       <tr>
         <td>
           <div class="textwrapper">
-            {appView:generateTextArea($resource,"")}            
+            {appView:generateTextArea($resource)}            
           </div>
         </td>
       </tr>
@@ -340,7 +320,7 @@ declare function appView:editQueryAfterAction($resource as xs:string,
       <tr>
         <td>
           <div class="textwrapper">
-            {appView:generateTextArea($resource,"")}            
+            {appView:generateTextArea($resource)}            
           </div>
         </td>
       </tr>

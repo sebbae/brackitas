@@ -133,14 +133,17 @@ public class FrontController extends BaseServlet {
 			if (r.RESOURCE.endsWith(".xq")) {
 				PrintWriter writer = new PrintWriter(new OutputStreamWriter(
 						resp.getOutputStream(), "utf-8"));
-				writer.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
+				
+				writer.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
+				writer.flush();
 				processXQueryFileRequest(r, req, resp);
 				resp.setStatus(HttpServletResponse.SC_OK);
 				return;
 			} else {
 				PrintWriter writer = new PrintWriter(new OutputStreamWriter(
 						resp.getOutputStream(), "utf-8"));
-				writer.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
+				writer.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
+				writer.flush();
 				processMVCRequest(r, req, resp);
 				resp.setStatus(HttpServletResponse.SC_OK);
 				return;
