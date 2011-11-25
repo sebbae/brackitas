@@ -54,7 +54,6 @@ import org.brackit.server.session.Session;
 import org.brackit.server.session.SessionException;
 import org.brackit.server.tx.Tx;
 import org.brackit.xquery.QueryException;
-import org.brackit.xquery.XQuery;
 import org.brackit.xquery.atomic.Atomic;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.atomic.Str;
@@ -94,7 +93,7 @@ public class FrontController extends BaseServlet {
 
 		private ASXQuery x;
 
-		private static String URI;
+		private String URI;
 
 		private String APP;
 
@@ -133,8 +132,9 @@ public class FrontController extends BaseServlet {
 			if (r.RESOURCE.endsWith(".xq")) {
 				PrintWriter writer = new PrintWriter(new OutputStreamWriter(
 						resp.getOutputStream(), "utf-8"));
-				
-				writer.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
+
+				writer
+						.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
 				writer.flush();
 				processXQueryFileRequest(r, req, resp);
 				resp.setStatus(HttpServletResponse.SC_OK);
@@ -142,7 +142,8 @@ public class FrontController extends BaseServlet {
 			} else {
 				PrintWriter writer = new PrintWriter(new OutputStreamWriter(
 						resp.getOutputStream(), "utf-8"));
-				writer.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
+				writer
+						.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
 				writer.flush();
 				processMVCRequest(r, req, resp);
 				resp.setStatus(HttpServletResponse.SC_OK);
@@ -153,9 +154,10 @@ public class FrontController extends BaseServlet {
 
 	private void showError(HttpServletRequest req, HttpServletResponse resp,
 			String msg, Exception e) throws Exception {
-		PrintWriter writer = new PrintWriter(new OutputStreamWriter(
-				resp.getOutputStream(), "utf-8"));
-		writer.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
+		PrintWriter writer = new PrintWriter(new OutputStreamWriter(resp
+				.getOutputStream(), "utf-8"));
+		writer
+				.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
 		writer.println("<html><h1>Oops:</h1>");
 		writer.println("<p>");
 		writer.println(msg);
@@ -173,12 +175,13 @@ public class FrontController extends BaseServlet {
 	private void processMVCRequest(Request r, HttpServletRequest req,
 			HttpServletResponse resp) throws Exception {
 		BaseAppContext bac = r.bac;
-		String s = String.format("%s.xq",
-				r.URI.substring(0, r.URI.lastIndexOf("/")));
+		String s = String.format("%s.xq", r.URI.substring(0, r.URI
+				.lastIndexOf("/")));
 		r.x = bac.get(s);
 
 		if (r.x == null) {
-			showError(req, resp, "Unknown query: " + r.URI + ".xq", null);
+			showError(req, resp, String.format("Unknown query: %s", r.URI),
+					null);
 			return;
 		}
 
@@ -198,34 +201,37 @@ public class FrontController extends BaseServlet {
 											 * new
 											 * PrintWriter(resp.getOutputStream
 											 * ())
-											 */writer,
-							f[j].execute(sctx, ctx, new Sequence[] {}));
+											 */writer, f[j].execute(sctx, ctx,
+							new Sequence[] {}));
 					return;
 				}
 			}
 		}
+		showError(req, resp, String.format("Unknown function: %s", r.RESOURCE),
+				null);
+		return;
 	}
 
 	private void processXQueryFileRequest(Request r, HttpServletRequest req,
 			HttpServletResponse resp) throws Exception, QueryException,
 			IOException {
 		r.x = r.bac.get(r.URI);
-		
+
 		if (r.x == null) {
-			showError(req, resp, "Unknown query: " + r.URI + ".xq", null);
+			showError(req, resp, String.format("Unknown file query: %s", r.URI),
+					null);
 			return;
 		}
-		
-		bindExternalVariables(r.x, req);		
+
+		bindExternalVariables(r.x, req);
 		r.x.setPrettyPrint(true);
-		PrintWriter writer = new PrintWriter(new OutputStreamWriter(
-				resp.getOutputStream(), "utf-8"));
+		PrintWriter writer = new PrintWriter(new OutputStreamWriter(resp
+				.getOutputStream(), "utf-8"));
 		r.x.serialize(ctx, writer);
 	}
 
 	private boolean resolveApplication(Request r) throws Exception {
 		Object o = getServletContext().getAttribute(r.APP);
-		BaseAppContext bac;
 		if (o == null) {
 			return false;
 		}
@@ -292,9 +298,8 @@ public class FrontController extends BaseServlet {
 			resp.setHeader("Content-Length", String.valueOf(out.size()));
 			resp.setBufferSize(1024 * 100);
 		} catch (StreamCorruptedException e) {
-			throw new StreamCorruptedException(
-					String.format(
-							"Error while reading inputStream of resource %s.",
+			throw new StreamCorruptedException(String
+					.format("Error while reading inputStream of resource %s.",
 							resource));
 		} catch (Exception e) {
 			throw new FileNotFoundException(String.format(
@@ -326,8 +331,8 @@ public class FrontController extends BaseServlet {
 				new DiskFileItemFactory()).parseRequest(req).iterator();
 		while (iter.hasNext()) {
 			FileItem item = (FileItem) iter.next();
-			result.put(item.getFieldName(),
-					new InputStreamName(item.getInputStream(), item.getName()));
+			result.put(item.getFieldName(), new InputStreamName(item
+					.getInputStream(), item.getName()));
 		}
 		return result;
 	}
