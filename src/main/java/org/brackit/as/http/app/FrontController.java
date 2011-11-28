@@ -123,6 +123,11 @@ public class FrontController extends BaseServlet {
 			showError(req, resp, "Unknown application: " + r.APP, null);
 			return;
 		}
+		if (!r.bac.isRunning()) {
+			showError(req, resp, String.format("Application terminated: %s",
+					r.APP), null);
+			return;
+		}
 		if (!UNKNOWN_MIMETYPE.equals(getMimeType(r.URI))) {
 			processResourceRequest(r, resp);
 			resp.setStatus(HttpServletResponse.SC_OK);
@@ -152,39 +157,17 @@ public class FrontController extends BaseServlet {
 		}
 	}
 
-	private void showError(HttpServletRequest req, HttpServletResponse resp,
-			String msg, Exception e) throws Exception {
-		PrintWriter writer = new PrintWriter(new OutputStreamWriter(resp
-				.getOutputStream(), "utf-8"));
-		writer
-				.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
-		writer.println("<html><h1>Oops:</h1>");
-		writer.println("<p>");
-		writer.println(msg);
-		writer.println("</p>");
-		if (e != null) {
-			writer.println("<p>");
-			e.printStackTrace(writer);
-			writer.println("</p>");
-		}
-		writer.println("</html>");
-		writer.flush();
-		resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-	}
-
 	private void processMVCRequest(Request r, HttpServletRequest req,
 			HttpServletResponse resp) throws Exception {
 		BaseAppContext bac = r.bac;
 		String s = String.format("%s.xq", r.URI.substring(0, r.URI
 				.lastIndexOf("/")));
 		r.x = bac.get(s);
-
 		if (r.x == null) {
 			showError(req, resp, String.format("Unknown query: %s", r.URI),
 					null);
 			return;
 		}
-
 		bindExternalVariables(r.x, req);
 		StaticContext sctx = r.x.getModule().getStaticContext();
 		Map<QNm, Function[]> l = sctx.getFunctions().getDeclaredFunctions();
@@ -197,11 +180,7 @@ public class FrontController extends BaseServlet {
 					PrintWriter writer = new PrintWriter(
 							new OutputStreamWriter(resp.getOutputStream(),
 									"utf-8"));
-					r.x.serializeResult(ctx, /*
-											 * new
-											 * PrintWriter(resp.getOutputStream
-											 * ())
-											 */writer, f[j].execute(sctx, ctx,
+					r.x.serializeResult(ctx, writer, f[j].execute(sctx, ctx,
 							new Sequence[] {}));
 					return;
 				}
@@ -216,13 +195,11 @@ public class FrontController extends BaseServlet {
 			HttpServletResponse resp) throws Exception, QueryException,
 			IOException {
 		r.x = r.bac.get(r.URI);
-
 		if (r.x == null) {
-			showError(req, resp, String.format("Unknown file query: %s", r.URI),
-					null);
+			showError(req, resp,
+					String.format("Unknown file query: %s", r.URI), null);
 			return;
 		}
-
 		bindExternalVariables(r.x, req);
 		r.x.setPrettyPrint(true);
 		PrintWriter writer = new PrintWriter(new OutputStreamWriter(resp
@@ -283,7 +260,6 @@ public class FrontController extends BaseServlet {
 		String resource = r.URI;
 		File f = new File("src/main/resources" + resource);
 		FileInputStream in = new FileInputStream(f);
-
 		try {
 			resp.setContentType(String.format("%s; charset=UTF-8",
 					getMimeType(resource)));

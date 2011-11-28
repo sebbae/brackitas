@@ -29,8 +29,8 @@ package org.brackit.as.http.app;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -73,6 +73,7 @@ public class BaseServlet extends TXServlet {
 				log.error(e1);
 			}
 			log.error(e);
+			showError(req, resp, "Get error: ", e);
 		} finally {
 			if (session != null)
 				cleanup(session, tx);
@@ -101,6 +102,7 @@ public class BaseServlet extends TXServlet {
 				log.error(e1);
 			}
 			log.error(e);
+			showError(req, resp, "Post error: ", e);
 		} finally {
 			if (session != null)
 				cleanup(session, tx);
@@ -117,7 +119,7 @@ public class BaseServlet extends TXServlet {
 			doPut(req, resp, session);
 		} catch (Exception e) {
 			log.error(e);
-			e.printStackTrace(new PrintStream(resp.getOutputStream()));
+			showError(req, resp, "Put error:", e);
 		}
 	};
 
@@ -129,7 +131,7 @@ public class BaseServlet extends TXServlet {
 			doDelete(req, resp, session);
 		} catch (Exception e) {
 			log.error(e);
-			e.printStackTrace(new PrintStream(resp.getOutputStream()));
+			showError(req, resp, "Delete error:", e);
 		}
 	};
 
@@ -141,9 +143,43 @@ public class BaseServlet extends TXServlet {
 			service(req, resp, session);
 		} catch (Exception e) {
 			log.error(e);
-			PrintWriter writer = new PrintWriter(new OutputStreamWriter(resp
-					.getOutputStream(), "utf-8"));
-			e.printStackTrace(writer);
+			showError(req, resp, "Service error: ", e);
 		}
 	}
+
+	protected void showError(HttpServletRequest req, HttpServletResponse resp,
+			String msg, Exception e) {
+		PrintWriter writer;
+		try {
+			writer = new PrintWriter(new OutputStreamWriter(resp
+					.getOutputStream(), "utf-8"));
+			writer
+					.println("<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"en\" xml:lang=\"en\">");
+			writer.println("    <head>");
+			writer
+					.println("        <title>Brackit Application Server error</title>");
+			writer
+					.println("        <meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\"></meta>");
+			writer.println("    </head>");
+			writer.println("    <body>");
+			writer.println("    <h1>Oops:</h1>");
+			writer.println("    <p>");
+			writer.println("    " + msg);
+			writer.println("    </p>");
+			if (e != null) {
+				writer.println("    <p>");
+				e.printStackTrace(writer);
+				writer.println("    </p>");
+			}
+			writer.println("    </body>");
+			writer.println("</html>");
+			writer.flush();
+			resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	}
+
 }

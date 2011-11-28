@@ -136,7 +136,9 @@ public class BaseAppContext {
 					putQuery(uq.getPath(), uq.getLastModified());
 					i.remove();
 				} catch (QueryException e) {
-					System.out.println(String.format("Problems compiling: %s. \n %s \n", uq.getPath(), e.getMessage()));
+					System.out.println(String.format(
+							"Problems compiling: %s. \n %s \n", uq.getPath(), e
+									.getMessage()));
 					uq.setE(e);
 				}
 			}
@@ -158,36 +160,30 @@ public class BaseAppContext {
 	}
 
 	public ASXQuery get(String path) throws Exception {
-		// Check if query need to be recompiled
-		if (isRunning()) {
-			String base = "src/main/resources";
-			File f = new File(base + path);
-			ASXQuery x = queries.get(path);
-			if (x != null) {
-				if (f.lastModified() != x.getLastModified()) {
+		String base = "src/main/resources";
+		File f = new File(base + path);
+		ASXQuery x = queries.get(path);
+		if (x != null) {
+			if (f.lastModified() != x.getLastModified()) {
+				register(path, f.lastModified());
+			}
+			// Check if imported modules need to be recompiled
+			Iterator<Module> i = x.getModule().getImportedModules().iterator();
+			while (i.hasNext()) {
+				Module m = i.next();
+				String mPath = libraries.get(m.getTargetNS());
+				File fm = new File(base + mPath);
+				ASXQuery qm = queries.get(mPath);
+				if (fm.lastModified() != qm.getLastModified()) {
+					((ASBaseResolver) chain.getResolver())
+							.unregister(((LibraryModule) qm.getModule())
+									.getTargetNS());
+					register(mPath, fm.lastModified());
 					register(path, f.lastModified());
 				}
-				// Check if imported modules need to be recompiled
-				Iterator<Module> i = x.getModule().getImportedModules()
-						.iterator();
-				while (i.hasNext()) {
-					Module m = i.next();
-					String mPath = libraries.get(m.getTargetNS());
-					File fm = new File(base + mPath);
-					ASXQuery qm = queries.get(mPath);
-					if (fm.lastModified() != qm.getLastModified()) {
-						((ASBaseResolver) chain.getResolver())
-								.unregister(((LibraryModule) qm.getModule())
-										.getTargetNS());
-						// TODO: remove it
-						register(mPath, fm.lastModified());
-						register(path, f.lastModified());
-					}
-				}
-				return queries.get(path);
-			} else
-				return x;
+			}
+			return queries.get(path);
 		} else
-			throw new Exception("Application terminated");
+			return x;
 	}
 }
