@@ -112,9 +112,12 @@ declare function appController:load() as item() {
             else
                 let $content :=
                     if (fn:ends-with($resource, ".xq")) then
-                        appView:editQuery($resource,$app)
+                        appView:editQuery($resource,$app,fn:true())
                     else
-                        rscController:load()
+                        if (fn:starts-with(util:get-mime-type($resource),"text")) then
+                            appView:editQuery($resource,$app,fn:false())
+                        else
+                            rscController:load()
                 return
                     appView:editXQuery($menu,$content)
 };
@@ -126,9 +129,12 @@ declare function appController:loadAfterAction($msg as xs:string) as item() {
     return 
         let $content :=
             if (fn:ends-with($resource, ".xq")) then
-                appView:editQueryAfterAction($resource,$app,$msg)
+                appView:editQueryAfterAction($resource,$app,$msg,fn:true())
             else
-                rscController:load()
+                if (fn:starts-with(util:get-mime-type($resource),"text")) then
+                    appView:editQueryAfterAction($resource,$app,$msg,fn:false())
+                else
+                    rscController:load()
         return
             appView:editXQuery($menu,$content)
 };

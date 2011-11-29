@@ -235,7 +235,8 @@ declare function appView:createAppFormError($msg as xs:string) as item() {
 };
 
 declare function appView:generateFileOptions($fPathName as xs:string,
-                                             $app as xs:string) as item() {
+                                             $app as xs:string,
+                                             $compile as xs:boolean) as item() {
   <div class="hlist">
     <ul>
       <li>
@@ -244,9 +245,11 @@ declare function appView:generateFileOptions($fPathName as xs:string,
       <li>
           <input align="middle" type="submit" name="action" value="save"/>
       </li>
+      { if ($compile) then
       <li>
         <input align="middle" type="submit" name="action" value="compile"/>
       </li>
+      else ""}
       <li>
         <input align="middle" type="submit" name="action" value="delete" onclick="return confirm('Are you sure you want to delete?')"/>
       </li>
@@ -281,12 +284,13 @@ declare function appView:generateTextArea($fPathName as xs:string) as item() {
 };
 
 declare function appView:editQuery($resource as xs:string,
-                           $app as xs:string) as item() {
+                                   $app as xs:string,
+                                   $compile as xs:boolean) as item() {
   <form action="../fileController/action" method="post">
     <table style="width:100%;">
       <tr>
         <td>
-          {appView:generateFileOptions($resource,$app)}
+          {appView:generateFileOptions($resource,$app,$compile)}
         </td>
       </tr>
       <tr>
@@ -301,13 +305,14 @@ declare function appView:editQuery($resource as xs:string,
 };
 
 declare function appView:editQueryAfterAction($resource as xs:string,
-                                      $app as xs:string,
-                                      $msg as xs:string) as item() {
+                                              $app as xs:string,
+                                              $msg as xs:string,
+                                              $compile as xs:boolean) as item() {
   <form action="../fileController/action" method="post">
     <table style="width:100%;">
       <tr>
         <td>
-          {appView:generateFileOptions($resource,$app)}
+          {appView:generateFileOptions($resource,$app,$compile)}
         </td>
       </tr>
       <tr>

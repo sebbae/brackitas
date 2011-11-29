@@ -71,6 +71,7 @@ import org.brackit.as.xquery.function.session.Invalidate;
 import org.brackit.as.xquery.function.session.RemoveSessionAtt;
 import org.brackit.as.xquery.function.session.SetAttribute;
 import org.brackit.as.xquery.function.session.SetMaxInactiveInterval;
+import org.brackit.as.xquery.function.util.GetMimeType;
 import org.brackit.as.xquery.function.util.ListPredefinedFunctions;
 import org.brackit.as.xquery.function.util.ListPredefinedModules;
 import org.brackit.as.xquery.function.util.MkDirectory;
@@ -263,6 +264,11 @@ public class ASXQuery extends XQuery {
 				Namespaces.UTIL_NSURI, Namespaces.UTIL_PREFIX,
 				"list-predefined-modules"), new Signature(new SequenceType(
 				AnyItemType.ANY, Cardinality.One))));
+
+		Functions.predefine(new GetMimeType(new QNm(Namespaces.UTIL_NSURI,
+				Namespaces.UTIL_PREFIX, "get-mime-type"), new Signature(
+				new SequenceType(AtomicType.STR, Cardinality.One),
+				new SequenceType(AtomicType.STR, Cardinality.One))));
 
 		// App
 		Functions.predefine(new GetNames(new QNm(Namespaces.APP_NSURI,

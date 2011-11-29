@@ -33,6 +33,7 @@ import java.util.Iterator;
 
 import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.annotation.ModuleAnnotation;
+import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.xdm.ComparableFunction;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -65,61 +66,71 @@ public class ListPredefinedFunctions extends AbstractFunction {
 
 	public Sequence execute(StaticContext sctx, QueryContext ctx,
 			Sequence[] args) throws QueryException {
-		String module = ((Atomic) args[0]).stringValue().trim();
-		ArrayList<ComparableFunction> results = getPredefinedFunctions(module);
-		Collections.sort(results);
-		SequenceType[] params;
-		if (results.size() > 0) {
-			String result = "<module name=\"" + module + "\">";
-			for (int i = 0; i < results.size(); i++) {
-				if (results.get(i).getF().getName() instanceof QNm) {
-					String description;
-					String[] parameters = null;
-					FunctionAnnotation annotation = results.get(i).getF()
-							.getClass().getAnnotation(FunctionAnnotation.class);
-					if (annotation != null) {
-						description = annotation.description();
-						parameters = annotation.parameters();
-					} else {
-						description = "No description present";
-					}
-					result += "<function>";
-					result += "<name>"
-							+ results.get(i).getF().getName().localName
-							+ "</name>";
-					result += "<nsURI>" + results.get(i).getF().getName().nsURI
-							+ "</nsURI>";
-					result += "<description>" + description + "</description>";
-					result += "<signature>";
-					result += "<return>";
-					result += results.get(i).getF().getSignature()
-							.getResultType();
-					result += "</return>";
-					result += "<parameters>";
-					params = results.get(i).getF().getSignature().getParams();
-					for (int j = 0; j < params.length; j++) {
-						if (parameters == null) {
-							result += "<parameter>"
-									+ params[j].getItemType().toString()
-									+ "</parameter>";
+		try {
+			String module = ((Atomic) args[0]).stringValue().trim();
+			ArrayList<ComparableFunction> results = getPredefinedFunctions(module);
+			Collections.sort(results);
+			SequenceType[] params;
+			if (results.size() > 0) {
+				String result = "<module name=\"" + module + "\">";
+				for (int i = 0; i < results.size(); i++) {
+					if (results.get(i).getF().getName() instanceof QNm) {
+						String description;
+						String[] parameters = null;
+						FunctionAnnotation annotation = results.get(i).getF()
+								.getClass().getAnnotation(
+										FunctionAnnotation.class);
+						if (annotation != null) {
+							description = annotation.description();
+							parameters = annotation.parameters();
 						} else {
-							result += "<parameter description= \""
-									+ annotation.parameters()[j] + "\">"
-									+ params[j].getItemType().toString()
-									+ "</parameter>";
+							description = "No description present";
 						}
+						result += "<function>";
+						result += "<name>"
+								+ results.get(i).getF().getName().localName
+								+ "</name>";
+						result += "<nsURI>"
+								+ results.get(i).getF().getName().nsURI
+								+ "</nsURI>";
+						result += "<description>" + description
+								+ "</description>";
+						result += "<signature>";
+						result += "<return>";
+						result += results.get(i).getF().getSignature()
+								.getResultType();
+						result += "</return>";
+						result += "<parameters>";
+						params = results.get(i).getF().getSignature()
+								.getParams();
+						for (int j = 0; j < params.length; j++) {
+							if (parameters == null) {
+								result += "<parameter>"
+										+ params[j].getItemType().toString()
+										+ "</parameter>";
+							} else {
+								result += "<parameter description= \""
+										+ annotation.parameters()[j] + "\">"
+										+ params[j].getItemType().toString()
+										+ "</parameter>";
+							}
+						}
+						result += "</parameters>";
+						result += "</signature>";
+						result += "</function>";
 					}
-					result += "</parameters>";
-					result += "</signature>";
-					result += "</function>";
 				}
+				result += "</module>";
+				XQuery xquery = new XQuery(result);
+				return xquery.execute(ctx);
 			}
-			result += "</module>";
-			XQuery xquery = new XQuery(result);
+			XQuery xquery = new XQuery("<module> no functions found! </module>");
 			return xquery.execute(ctx);
+		} catch (Exception e) {
+			throw new QueryException(e,
+					ASErrorCode.UTIL_LISTPREDEFINEDFUNCTIONS_INT_ERROR, e
+							.getMessage());
 		}
-		XQuery xquery = new XQuery("<module> no functions found! </module>");
-		return xquery.execute(ctx);
 	}
 
 	private ArrayList<ComparableFunction> getPredefinedFunctions(String module) {

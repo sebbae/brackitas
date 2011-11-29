@@ -35,6 +35,7 @@ import java.util.Map.Entry;
 
 import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.annotation.ModuleAnnotation;
+import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.XQuery;
@@ -62,25 +63,33 @@ public class ListPredefinedModules extends AbstractFunction {
 
 	public Sequence execute(StaticContext sctx, QueryContext ctx,
 			Sequence[] args) throws QueryException {
-		Set<Entry<String, Module>> results = getPredefinedModules().entrySet();
-		if (results.size() > 0) {
-			String result = "<modules>";
-			for (Iterator<Entry<String, Module>> i = results.iterator(); i
-					.hasNext();) {
-				Entry<String, Module> module = (Entry<String, Module>) i.next();
-				result += "<module>";
-				result += "<name>" + module.getValue().name + "</name>";
-				result += "<description>" + module.getValue().description
-						+ "</description>";
-				result += "<nsURI>" + module.getValue().nsURI + "</nsURI>";
-				result += "</module>";
+		try {
+			Set<Entry<String, Module>> results = getPredefinedModules()
+					.entrySet();
+			if (results.size() > 0) {
+				String result = "<modules>";
+				for (Iterator<Entry<String, Module>> i = results.iterator(); i
+						.hasNext();) {
+					Entry<String, Module> module = (Entry<String, Module>) i
+							.next();
+					result += "<module>";
+					result += "<name>" + module.getValue().name + "</name>";
+					result += "<description>" + module.getValue().description
+							+ "</description>";
+					result += "<nsURI>" + module.getValue().nsURI + "</nsURI>";
+					result += "</module>";
+				}
+				result += "</modules>";
+				XQuery xquery = new XQuery(result);
+				return xquery.execute(ctx);
 			}
-			result += "</modules>";
-			XQuery xquery = new XQuery(result);
+			XQuery xquery = new XQuery("<modules> no modules found! </modules>");
 			return xquery.execute(ctx);
+		} catch (Exception e) {
+			throw new QueryException(e,
+					ASErrorCode.UTIL_LISTPREDEFINEDMODULES_INT_ERROR, e
+							.getMessage());
 		}
-		XQuery xquery = new XQuery("<modules> no modules found! </modules>");
-		return xquery.execute(ctx);
 	}
 
 	private Map<String, Module> getPredefinedModules() {

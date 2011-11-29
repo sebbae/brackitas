@@ -25,33 +25,31 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.xquery.function.xqfile;
+package org.brackit.as.xquery.function.util;
 
-import javax.servlet.ServletContext;
+import javax.activation.MimetypesFileTypeMap;
 
-import org.brackit.as.context.BaseAppContext;
+import org.brackit.as.http.HttpConnector;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
-import org.brackit.as.xquery.ASXQuery;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
-import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
+import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.function.AbstractFunction;
-import org.brackit.xquery.xdm.Signature;
-import org.brackit.xquery.module.LibraryModule;
 import org.brackit.xquery.module.StaticContext;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
 
 /**
  * 
  * @author Henrique Valer
  * 
  */
-public class IsLibrary extends AbstractFunction {
+public class GetMimeType extends AbstractFunction {
 
-	public IsLibrary(QNm name, Signature signature) {
+	public GetMimeType(QNm name, Signature signature) {
 		super(name, signature, true);
 	}
 
@@ -59,24 +57,15 @@ public class IsLibrary extends AbstractFunction {
 	public Sequence execute(StaticContext sctx, QueryContext ctx,
 			Sequence[] args) throws QueryException {
 		try {
-			String fPathName = ((Atomic) args[0]).atomize().stringValue()
-					.trim();
-			fPathName = (fPathName.startsWith("/")) ? fPathName.substring(1)
-					: fPathName;
-			String app = fPathName.split("/")[0];
-			ServletContext servletCtx = ((ASQueryContext) ctx).getReq()
-					.getServletContext();
-			try {
-				BaseAppContext bac = (BaseAppContext) servletCtx
-						.getAttribute(app);
-				ASXQuery x = bac.get(String.format("/apps/%s.xq", fPathName));
-				return new Bool(x.getModule() instanceof LibraryModule);
-			} catch (NullPointerException e) {
-				return Bool.FALSE;
-			}
+			String s = ((Atomic) args[0]).stringValue().trim();
+			String mimeType = ((MimetypesFileTypeMap) ((ASQueryContext) ctx)
+					.getReq().getServletContext().getAttribute(
+							HttpConnector.APP_MIME_TYPES)).getContentType(s);
+			return new Str(mimeType);
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.XQFILE_ISMODULE_INT_ERROR,
+			throw new QueryException(e, ASErrorCode.UTIL_GETMIMETYPE_INT_ERROR,
 					e.getMessage());
 		}
 	}
+
 }

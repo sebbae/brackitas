@@ -158,8 +158,14 @@ public class ASErrorCode extends ErrorCode {
 	public static final QNm UTIL_PLAINPRINT_INT_ERROR = new QNm(
 			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "UTIL0002");
 
-	public static final QNm UTIL_TEMPLATE_INT_ERROR = new QNm(
+	public static final QNm UTIL_LISTPREDEFINEDFUNCTIONS_INT_ERROR = new QNm(
 			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "UTIL0003");
+
+	public static final QNm UTIL_LISTPREDEFINEDMODULES_INT_ERROR = new QNm(
+			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "UTIL0004");
+
+	public static final QNm UTIL_GETMIMETYPE_INT_ERROR = new QNm(
+			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "UTIL0005");
 
 	/**
 	 * Errors for the predefined xqfile functions

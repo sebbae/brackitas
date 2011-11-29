@@ -109,7 +109,7 @@ declare function controller:create() as item() {
             if (model:validateXQFile($fName)) then
                 if (xqfile:create($fPathName)) then
                     appView:editXQuery(appView:createMenu($app),
-                                       appView:editQuery($fPathName,$app))
+                                       appView:editQuery($fPathName,$app,fn:true()))
                 else
                     appView:menuContent($menu,view:msgFailure("Problems creating new file"))
             else
