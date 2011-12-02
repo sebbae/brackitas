@@ -9,5 +9,6 @@ var editor = CodeMirror
 			path : "http://localhost:8080/apps/appServer/resources/js/",
 			continuousScanning : false,
 			indentUnit : 4,
+			matchBrackets: true,
 			lineNumbers : true
 		});

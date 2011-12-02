@@ -56,7 +56,7 @@ declare function rscView:fileForm($fPathName as xs:string,
 
 declare function rscView:renameFileForm($fPathName as xs:string,
                                 $app as xs:string) as item() {
-    <form action="./rename">
+    <form action="../rscController/rename">
         <table style="width: 100%; background-color: rgb(224, 224, 240);">
             <tr>
                 <td colspan="3" style="width: 20%;"><b>Rename file</b></td>

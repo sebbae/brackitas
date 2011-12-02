@@ -27,15 +27,4 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
  * 
  :)
-module namespace view="http://brackit.org/lib/test/testView"; 
-import module namespace template="http://brackit.org/lib/test/testTemplate"; 
-
-declare function view:default($content as item()) as item() {
-  template:base(template:head(),
-                template:header(),
-                template:teaser(),
-                template:menu(),
-                $content,
-                template:footerBrackit(),
-                template:footerYAML())
-};
+module namespace model="http://brackit.org/lib/highlighting2/highlighting2Model"; 

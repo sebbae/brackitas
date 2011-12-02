@@ -27,12 +27,16 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
  * 
  :)
-module namespace template="http://brackit.org/lib/test/testTemplate"; 
+module namespace template="http://brackit.org/lib/highlighting2/highlighting2Template"; 
 
 declare function template:head() as item() {
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <link href="http://localhost:8080/apps/test/resources/css/test.css" rel="stylesheet" type="text/css" />
+    <link href="http://localhost:8080/apps/highlighting2/resources/css/highlighting2.css" rel="stylesheet" type="text/css"/>
+    <link href="http://localhost:8080/apps/highlighting2/resources/css/codemirror.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="http://localhost:8080/apps/highlighting2/resources/js/codemirror.js"/>
+    <script type="text/javascript" src="http://localhost:8080/apps/highlighting2/resources/js/clike.js"/>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
   </head>
 };
 
@@ -80,6 +84,10 @@ declare function template:footerYAML() as item() {
     Layout based on <a href="http://www.yaml.de/">YAML</a>
   </div>
 };
+  
+declare function template:footerScript() as item() {
+    <script type="text/javascript" src="http://localhost:8080/apps/highlighting2/resources/js/footerScript.js"/>
+};
 
 declare function template:baseBody($header as item(),
                                    $teaser as item(),
@@ -115,10 +123,11 @@ declare function template:base($head as item(),
                                $content as item(),
                                $footerBrackit as item(),
                                $footerYAML as item()) {
-  <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     {$head}
     <body>
       {template:baseBody($header,$teaser,$menu,$content,$footerBrackit,$footerYAML)}
+      {template:footerScript()}
     </body>
   </html>
 };

@@ -38,6 +38,7 @@ import module namespace model="http://brackit.org/lib/appServer/fileModel";
 import module namespace view="http://brackit.org/lib/appServer/fileView";
 import module namespace appController="http://brackit.org/lib/appServer/appController";
 import module namespace appView="http://brackit.org/lib/appServer/appView";
+import module namespace rscController="http://brackit.org/lib/appServer/rscController";
 
 declare function controller:save() as item() {
     let $fPathName := req:get-parameter("name"),
@@ -94,7 +95,10 @@ declare function controller:action() as item() {
                 if (fn:compare($action,"delete") eq 0) then
                     controller:delete()
                 else
-                    "ops"
+                    if (fn:compare($action,"rename") eq 0) then
+                        rscController:rename()
+                    else
+                        "ops"
 };
 
 declare function controller:create() as item() {

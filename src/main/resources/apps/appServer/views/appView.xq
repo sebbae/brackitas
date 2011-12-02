@@ -241,7 +241,10 @@ declare function appView:generateFileOptions($fPathName as xs:string,
     <ul>
       <li>
         <strong> File: {$fPathName}  </strong>
-      </li>        
+      </li>
+      <li>
+          <input align="middle" type="submit" name="action" value="rename"/>
+      </li>      
       <li>
           <input align="middle" type="submit" name="action" value="save"/>
       </li>
