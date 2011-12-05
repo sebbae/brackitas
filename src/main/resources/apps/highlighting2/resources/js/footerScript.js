@@ -12,26 +12,18 @@
 		reindentOnLoad : false,
 		activeTokens : null,
 		cursorActivity : null,
-        extraKeys: {"F11": toggleFullscreenEditing, "Esc": toggleFullscreenEditing}
+		onCursorActivity: function() {
+		  editor.setLineClass(hlLine, null);
+		  hlLine = editor.setLineClass(editor.getCursor().line, "activeline");
+		},
+        extraKeys: {"Ctrl-Space": function(cm) {CodeMirror.simpleHint(cm, CodeMirror.javascriptHint);}}		
+
     });
 
-    function toggleFullscreenEditing()
-    {
-    	alert ("here");
-        var editorDiv = $('.CodeMirror-scroll');
-        if (!editorDiv.hasClass('fullscreen')) {
-            toggleFullscreenEditing.beforeFullscreen = { height: editorDiv.height(), width: editorDiv.width() }
-            editorDiv.addClass('fullscreen');
-            editorDiv.height('100%');
-            editorDiv.width('100%');
-            editor.refresh();
-        }
-        else {
-            editorDiv.removeClass('fullscreen');
-            editorDiv.height(toggleFullscreenEditing.beforeFullscreen.height);
-            editorDiv.width(toggleFullscreenEditing.beforeFullscreen.width);
-            editor.refresh();
-        }
-    }
+	var hlLine = editor.setLineClass(0, "activeline");    
 
+	function testF() {alert("msg");}
+	
 })();
+
+
