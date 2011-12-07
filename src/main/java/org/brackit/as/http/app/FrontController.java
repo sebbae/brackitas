@@ -248,9 +248,6 @@ public class FrontController extends BaseServlet {
 		r.RESOURCE = r.URI.substring(r.URI.lastIndexOf("/") + 1);
 		req.getSession().setAttribute(FrontController.APP_SESSION_ATT,
 				(Atomic) new Str(r.APP));
-		resp.setHeader("Cache-Control", "no-cache");
-		resp.setHeader("Pragma", "no-cache");
-		resp.setDateHeader("Expires", 0);
 		return r;
 	}
 

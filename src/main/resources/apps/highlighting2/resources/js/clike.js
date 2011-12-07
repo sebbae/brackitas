@@ -4,8 +4,12 @@ CodeMirror.defineMode("xquery", function(config, parserConfig) {
   var isOperatorChar = /[=+\-*&%!?@\/]/;
   var isVariableChar = /^\$[A-Za-z0-9]$/;
   var curPunc;
-  var w = "else after ancestor ancestor-or-self and as ascending assert attribute before by case cast child comment comment declare default define descendant descendant-or-self descending document-node element element else eq every except external following following-sibling follows for function if import in instance intersect item let module namespace node node of only or order parent precedes preceding preceding-sibling processing-instruction ref return returns satisfies schema schema-element self some sortby stable text then to treat typeswitch union variable version where xquery";
-
+  var wordSet = "attribute comment document-node element empty-sequence function if item namespace-node node processing-instruction schema-attribute schema-element switch text typeswitch" +
+  		"module namespace declare default element function collation base-uri"; 
+	  
+	  
+	  
+  var typeSet = "anyURI boolean byte date dateTime decimal dayTimeDuration double duration float gDay gMonthDay gYear gYearMonth int long Name QName short string time yearMonthDuration";
   
   function words(str) {
 		var obj = {}, words = str.split(" ");
@@ -29,7 +33,6 @@ CodeMirror.defineMode("xquery", function(config, parserConfig) {
         return tokenComment(stream, state);
       }
     }
-  
     if (/\$/.test(ch)) {
         stream.eatWhile(/[\w]/);    	
         return "variable";
@@ -40,7 +43,7 @@ CodeMirror.defineMode("xquery", function(config, parserConfig) {
     }
     stream.eatWhile(/[\w_]/);
     var cur = stream.current();
-    if (words(w).propertyIsEnumerable(cur)) {
+    if (words(wordSet).propertyIsEnumerable(cur)) {
       return "keyword";
     }
     return "word";

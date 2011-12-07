@@ -33,14 +33,9 @@ import module namespace view="http://brackit.org/lib/highlighting2/highlighting2
 
 declare function controller:index() as item() {
     let $msg :=
-<textarea id="code" name="code">
-     let $app := req:get-parameter("app")
-     return
-         if (app:deploy($app)) then
-             appController:index()
-         else
-             appView:default(fn:concat("Problems deploying application ",$app))
-</textarea>
+        <textarea id="code" name="code">
+            {bit:load-file("highlighting2/controllers/test.xq")}
+        </textarea>
     return
         view:default($msg)
 };
