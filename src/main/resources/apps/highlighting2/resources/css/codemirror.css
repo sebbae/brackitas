@@ -16,7 +16,7 @@
 .CodeMirror-gutter {
   position: absolute; left: 0; top: 0;
   z-index: 10;
-  background-color: #f7f7f7;
+  background-color: #EEEEEE;
   border-right: 1px solid #eee;
   min-width: 2em;
   height: 100%;
@@ -73,7 +73,7 @@ span.CodeMirror-selected { background: #d9d9d9; }
 
 /* Default theme */
 .cm-s-default span.cm-word {color: black;}
-.cm-s-default span.cm-keyword {color: blue; font-weight:bold;}
+.cm-s-default span.cm-keyword {color: darkblue; font-weight:bold;}
 .cm-s-default span.cm-atom {color: #219;}
 .cm-s-default span.cm-number {color: #164;}
 .cm-s-default span.cm-def {color: #00f;}
@@ -96,10 +96,12 @@ span.CodeMirror-selected { background: #d9d9d9; }
 .cm-s-default span.cm-quote {color: #090;}
 .cm-s-default span.cm-hr {color: #999;}
 .cm-s-default span.cm-link {color: #00c;}
+.cm-s-default span.cm-datatype {color: purple; font-weight:bold;}
+.cm-s-default span.cm-function {color: fuchsia;}
 
 .CodeMirror-completions {
   position: absolute;
-  z-index: 10;
+  z-index: 15;
   overflow: hidden;
   -webkit-box-shadow: 2px 3px 5px rgba(0,0,0,.2);
   -moz-box-shadow: 2px 3px 5px rgba(0,0,0,.2);

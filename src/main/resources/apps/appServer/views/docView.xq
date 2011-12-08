@@ -48,21 +48,21 @@ declare function docView:default($content as item()) as item() {
 declare function docView:browserModules($results as item()*) as item()* {
     let $content := 
         <table style="width: 100%;">
-        	<tr>
-    			<td width="10%"><b>Name</b></td>
-    			<td><b>Description</b></td>
-         		<td width="30%"><b>Namespace URI</b></td>
-        	</tr> 
-        	{
+            <tr>
+                <td width="10%"><b>Name</b></td>
+                <td><b>Description</b></td>
+                 <td width="30%"><b>Namespace URI</b></td>
+            </tr> 
+            {
             for $module 
             in $results/module
             return
                 <tr>
-                	<td><a href="./listFunctions?module={$module/name/text()}">{$module/name/text()}</a></td>
-                	<td>{$module/description/text()}</td>
+                    <td><a href="./listFunctions?module={$module/name/text()}">{$module/name/text()}</a></td>
+                    <td>{$module/description/text()}</td>
                     <td>{$module/nsURI/text()}</td>
                 </tr>
-        	}
+            }
         </table>   
     return
         docView:default($content)     
@@ -71,30 +71,30 @@ declare function docView:browserModules($results as item()*) as item()* {
 declare function docView:browserFunctionModules($results as item()*) as item()* {
      let $content := 
         <table style="width: 100%;">
-        	<tr>
-        		<td><a href="./index">Module</a>  > <a href="./listFunctions?module={fn:data($results/@name)}">{fn:data($results/@name)}</a></td>
-        	</tr>
-        	{
+            <tr>
+                <td><a href="./index">Module</a>  > <a href="./listFunctions?module={fn:data($results/@name)}">{fn:data($results/@name)}</a></td>
+            </tr>
+            {
             for $function 
             in $results/function
             return
             <tr style="border-style:solid;;border-width:1px">
                 <tr>
-                	<td><b>{$function/name/text()}</b></td>
-                </tr>
-				<tr>
-            		<td>
-						{fn:data($results/@name)}:{$function/name/text()} (
-						{for $parameter 
-            			in $function/signature/parameters/parameter
-            			return 
-            				fn:concat($parameter/@description, " as ", $parameter,",")
-            			}
-            			) as {$function/signature/return}
-            		</td>
+                    <td><b>{$function/name/text()}</b></td>
                 </tr>
                 <tr>
-                	<td>{util:plain-print($function/description/text())}</td>
+                    <td>
+                        {fn:data($results/@name)}:{$function/name/text()} (
+                        {for $parameter 
+                        in $function/signature/parameters/parameter
+                        return 
+                            fn:concat($parameter/@description, " as ", $parameter,",")
+                        }
+                        ) as {$function/signature/return}
+                    </td>
+                </tr>
+                <tr>
+                    <td>{util:plain-print($function/description/text())}</td>
                 </tr>
              </tr>
         }
@@ -102,4 +102,3 @@ declare function docView:browserFunctionModules($results as item()*) as item()* 
     return
         docView:default($content)   
 };
-

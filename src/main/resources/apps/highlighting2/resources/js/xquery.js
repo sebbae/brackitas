@@ -152,9 +152,14 @@ CodeMirror.defineMode("xquery", function(config, parserConfig) {
     for (var i = 0; i < words.length; ++i) obj[words[i]] = true;
     return obj;
   }
-  var cKeywords = "auto if break int case long char register continue return default short do sizeof " +
-    "double static else struct entry switch extern typedef float union for unsigned " +
-    "goto while enum void const signed volatile";
+  var cKeywords = "after ancestor ancestor-or-self and as ascending assert attribute" +
+  		" before by case cast child comment comment declare default define descendant" +
+  		" descendant-or-self descending document-node element element else eq every except" +
+  		" external following following-sibling follows for function if import in instance" +
+  		" intersect item let module namespace node node of only or order parent precedes" +
+  		" preceding preceding-sibling processing-instruction ref return returns satisfies" +
+  		" schema schema-element self some sortby stable text then to treat typeswitch union" +
+  		" variable version where xquery try catch ne lt le gt ge";
 
   function cppHook(stream, state) {
     if (!state.startOfLine) return false;

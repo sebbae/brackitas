@@ -31,7 +31,7 @@ module namespace controller="http://brackit.org/lib/highlighting2/highlighting2C
 import module namespace model="http://brackit.org/lib/highlighting2/highlighting2Model"; 
 import module namespace view="http://brackit.org/lib/highlighting2/highlighting2View"; 
 
-declare function controller:index() as item() {
+declare function controller:index() as xs:boolean {
     let $msg :=
         <textarea id="code" name="code">
             {bit:load-file("highlighting2/controllers/test.xq")}
