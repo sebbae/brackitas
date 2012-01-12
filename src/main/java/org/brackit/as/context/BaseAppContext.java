@@ -36,7 +36,6 @@ import java.util.Map;
 
 import org.brackit.as.xquery.ASUncompiledQuery;
 import org.brackit.as.xquery.ASXQuery;
-import org.brackit.as.xquery.compiler.ASBaseResolver;
 import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.module.LibraryModule;
@@ -175,9 +174,7 @@ public class BaseAppContext {
 				File fm = new File(base + mPath);
 				ASXQuery qm = queries.get(mPath);
 				if (fm.lastModified() != qm.getLastModified()) {
-					((ASBaseResolver) chain.getResolver())
-							.unregister(((LibraryModule) qm.getModule())
-									.getTargetNS());
+					chain.getResolver().unregister(qm.getModule().getTargetNS());
 					register(mPath, fm.lastModified());
 					register(path, f.lastModified());
 				}

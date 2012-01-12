@@ -109,7 +109,43 @@ import org.brackit.xquery.xdm.type.SequenceType;
  */
 public class ASXQuery extends XQuery {
 
+	public static final String UTIL_NSURI = "http://brackit.org/ns/util";
+
+	public static final String SESSION_NSURI = "http://brackit.org/ns/session";
+
+	public static final String REQUEST_NSURI = "http://brackit.org/ns/request";
+
+	public static final String APP_NSURI = "http://brackit.org/ns/app";
+
+	public static final String XQFILE_NSURI = "http://brackit.org/ns/xqfile";
+
+	public static final String RESOURCE_NSURI = "http://brackit.org/ns/resource";
+
+	public static final String HTTP_NSURI = "http://brackit.org/ns/http";
+	
+	public static final String UTIL_PREFIX = "util";
+
+	public static final String SESSION_PREFIX = "session";
+
+	public static final String REQUEST_PREFIX = "req";
+
+	public static final String APP_PREFIX = "app";
+
+	public static final String XQFILE_PREFIX = "xqfile";
+
+	public static final String RESOURCE_PREFIX = "rsc";
+
+	public static final String HTTP_PREFIX = "http";
+	
 	static {
+		Namespaces.predefine(UTIL_PREFIX, UTIL_NSURI);
+		Namespaces.predefine(SESSION_PREFIX, SESSION_NSURI);
+		Namespaces.predefine(REQUEST_PREFIX, REQUEST_NSURI);
+		Namespaces.predefine(APP_PREFIX, APP_NSURI);
+		Namespaces.predefine(XQFILE_PREFIX, XQFILE_NSURI);
+		Namespaces.predefine(RESOURCE_PREFIX, RESOURCE_NSURI);
+		Namespaces.predefine(HTTP_PREFIX, HTTP_NSURI);
+		
 		// Bit
 		Functions.predefine(new DropCollection(new QNm(Namespaces.BIT_NSURI,
 				Namespaces.BIT_PREFIX, "drop-collection"), new Signature(
@@ -155,219 +191,219 @@ public class ASXQuery extends XQuery {
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
 		// SESSION
-		Functions.predefine(new Clear(new QNm(Namespaces.SESSION_NSURI,
-				Namespaces.SESSION_PREFIX, "clear"), new Signature(
+		Functions.predefine(new Clear(new QNm(SESSION_NSURI,
+				SESSION_PREFIX, "clear"), new Signature(
 				new SequenceType(AtomicType.BOOL, Cardinality.One))));
 
 		Functions.predefine(new GetAttributeNames(new QNm(
-				Namespaces.SESSION_NSURI, Namespaces.SESSION_PREFIX,
+				SESSION_NSURI, SESSION_PREFIX,
 				"get-attribute-names"), new Signature(new SequenceType(
 				AnyItemType.ANY, Cardinality.ZeroOrMany))));
 
 		Functions.predefine(new GetCreationTime(new QNm(
-				Namespaces.SESSION_NSURI, Namespaces.SESSION_PREFIX,
+				SESSION_NSURI, SESSION_PREFIX,
 				"get-creation-time"), new Signature(new SequenceType(
 				AtomicType.DATE, Cardinality.ZeroOrOne))));
 
 		Functions.predefine(new GetLastAccessedTime(new QNm(
-				Namespaces.SESSION_NSURI, Namespaces.SESSION_PREFIX,
+				SESSION_NSURI, SESSION_PREFIX,
 				"get-last-accessed-time"), new Signature(new SequenceType(
 				AtomicType.DATE, Cardinality.ZeroOrOne))));
 
 		Functions.predefine(new GetMaxInactiveInterval(new QNm(
-				Namespaces.SESSION_NSURI, Namespaces.SESSION_PREFIX,
+				SESSION_NSURI, SESSION_PREFIX,
 				"get-max-inactive-interval"), new Signature(new SequenceType(
 				AtomicType.INT, Cardinality.ZeroOrOne))));
 
-		Functions.predefine(new GetAttribute(new QNm(Namespaces.SESSION_NSURI,
-				Namespaces.SESSION_PREFIX, "get-attribute"), new Signature(
+		Functions.predefine(new GetAttribute(new QNm(SESSION_NSURI,
+				SESSION_PREFIX, "get-attribute"), new Signature(
 				new SequenceType(AnyItemType.ANY, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
-		Functions.predefine(new Invalidate(new QNm(Namespaces.SESSION_NSURI,
-				Namespaces.SESSION_PREFIX, "invalidate"), new Signature(
+		Functions.predefine(new Invalidate(new QNm(SESSION_NSURI,
+				SESSION_PREFIX, "invalidate"), new Signature(
 				new SequenceType(AtomicType.BOOL, Cardinality.One))));
 
 		Functions.predefine(new RemoveSessionAtt(new QNm(
-				Namespaces.SESSION_NSURI, Namespaces.SESSION_PREFIX,
+				SESSION_NSURI, SESSION_PREFIX,
 				"remove-attribute"), new Signature(new SequenceType(
 				AnyItemType.ANY, Cardinality.One), new SequenceType(
 				AtomicType.STR, Cardinality.One))));
 
 		Functions.predefine(new SetMaxInactiveInterval(new QNm(
-				Namespaces.SESSION_NSURI, Namespaces.SESSION_PREFIX,
+				SESSION_NSURI, SESSION_PREFIX,
 				"set-max-inactive-interval"), new Signature(new SequenceType(
 				AtomicType.BOOL, Cardinality.One), new SequenceType(
 				AtomicType.INT, Cardinality.One))));
 
-		Functions.predefine(new SetAttribute(new QNm(Namespaces.SESSION_NSURI,
-				Namespaces.SESSION_PREFIX, "set-attribute"), new Signature(
+		Functions.predefine(new SetAttribute(new QNm(SESSION_NSURI,
+				SESSION_PREFIX, "set-attribute"), new Signature(
 				new SequenceType(AtomicType.BOOL, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One),
 				new SequenceType(AnyItemType.ANY, Cardinality.One))));
 
 		// Request
 		Functions.predefine(new GetReqAttribute(new QNm(
-				Namespaces.REQUEST_NSURI, Namespaces.REQUEST_PREFIX,
+				REQUEST_NSURI, REQUEST_PREFIX,
 				"get-attribute"), new Signature(new SequenceType(
 				AnyItemType.ANY, Cardinality.One), new SequenceType(
 				AtomicType.STR, Cardinality.One))));
 
 		Functions.predefine(new GetReqAttributeNames(new QNm(
-				Namespaces.REQUEST_NSURI, Namespaces.REQUEST_PREFIX,
+				REQUEST_NSURI, REQUEST_PREFIX,
 				"get-attribute-names"), new Signature(new SequenceType(
 				AnyItemType.ANY, Cardinality.ZeroOrMany))));
 
-		Functions.predefine(new GetCookie(new QNm(Namespaces.REQUEST_NSURI,
-				Namespaces.REQUEST_PREFIX, "get-cookie"), new Signature(
+		Functions.predefine(new GetCookie(new QNm(REQUEST_NSURI,
+				REQUEST_PREFIX, "get-cookie"), new Signature(
 				new SequenceType(AnyItemType.ANY, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
 		Functions.predefine(new GetCookieNames(new QNm(
-				Namespaces.REQUEST_NSURI, Namespaces.REQUEST_PREFIX,
+				REQUEST_NSURI, REQUEST_PREFIX,
 				"get-cookie-names"), new Signature(new SequenceType(
 				AnyItemType.ANY, Cardinality.ZeroOrMany))));
 
-		Functions.predefine(new GetParameter(new QNm(Namespaces.REQUEST_NSURI,
-				Namespaces.REQUEST_PREFIX, "get-parameter"), new Signature(
+		Functions.predefine(new GetParameter(new QNm(REQUEST_NSURI,
+				REQUEST_PREFIX, "get-parameter"), new Signature(
 				new SequenceType(AnyItemType.ANY, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
 		Functions.predefine(new GetParameterNames(new QNm(
-				Namespaces.REQUEST_NSURI, Namespaces.REQUEST_PREFIX,
+				REQUEST_NSURI, REQUEST_PREFIX,
 				"get-parameter-names"), new Signature(new SequenceType(
 				AnyItemType.ANY, Cardinality.ZeroOrMany))));
 
 		Functions.predefine(new IsMultipartContent(new QNm(
-				Namespaces.REQUEST_NSURI, Namespaces.REQUEST_PREFIX,
+				REQUEST_NSURI, REQUEST_PREFIX,
 				"is-multipart-content"), new Signature(new SequenceType(
 				AtomicType.BOOL, Cardinality.One))));
 
 		// Util
-		Functions.predefine(new PlainPrint(new QNm(Namespaces.UTIL_NSURI,
-				Namespaces.UTIL_PREFIX, "plain-print"), new Signature(
+		Functions.predefine(new PlainPrint(new QNm(UTIL_NSURI,
+				UTIL_PREFIX, "plain-print"), new Signature(
 				new SequenceType(AtomicType.STR, Cardinality.ZeroOrOne),
 				new SequenceType(AnyItemType.ANY, Cardinality.One))));
 
-		Functions.predefine(new MkDirectory(new QNm(Namespaces.UTIL_NSURI,
-				Namespaces.UTIL_PREFIX, "mk-dir"), new Signature(
+		Functions.predefine(new MkDirectory(new QNm(UTIL_NSURI,
+				UTIL_PREFIX, "mk-dir"), new Signature(
 				new SequenceType(AtomicType.BOOL, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
 		Functions.predefine(new ListPredefinedFunctions(new QNm(
-				Namespaces.UTIL_NSURI, Namespaces.UTIL_PREFIX,
+				UTIL_NSURI, UTIL_PREFIX,
 				"list-predefined-functions"), new Signature(new SequenceType(
 				AnyItemType.ANY, Cardinality.One), new SequenceType(
 				AtomicType.STR, Cardinality.One))));
 
 		Functions.predefine(new ListPredefinedModules(new QNm(
-				Namespaces.UTIL_NSURI, Namespaces.UTIL_PREFIX,
+				UTIL_NSURI, UTIL_PREFIX,
 				"list-predefined-modules"), new Signature(new SequenceType(
 				AnyItemType.ANY, Cardinality.One))));
 
-		Functions.predefine(new GetMimeType(new QNm(Namespaces.UTIL_NSURI,
-				Namespaces.UTIL_PREFIX, "get-mime-type"), new Signature(
+		Functions.predefine(new GetMimeType(new QNm(UTIL_NSURI,
+				UTIL_PREFIX, "get-mime-type"), new Signature(
 				new SequenceType(AtomicType.STR, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
 		// App
-		Functions.predefine(new GetNames(new QNm(Namespaces.APP_NSURI,
-				Namespaces.APP_PREFIX, "get-names"), new Signature(
+		Functions.predefine(new GetNames(new QNm(APP_NSURI,
+				APP_PREFIX, "get-names"), new Signature(
 				new SequenceType(AnyItemType.ANY, Cardinality.One))));
 
-		Functions.predefine(new Delete(new QNm(Namespaces.APP_NSURI,
-				Namespaces.APP_PREFIX, "delete"), new Signature(
+		Functions.predefine(new Delete(new QNm(APP_NSURI,
+				APP_PREFIX, "delete"), new Signature(
 				new SequenceType(AtomicType.BOOL, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
-		Functions.predefine(new Terminate(new QNm(Namespaces.APP_NSURI,
-				Namespaces.APP_PREFIX, "terminate"), new Signature(
+		Functions.predefine(new Terminate(new QNm(APP_NSURI,
+				APP_PREFIX, "terminate"), new Signature(
 				new SequenceType(AtomicType.BOOL, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
-		Functions.predefine(new IsRunning(new QNm(Namespaces.APP_NSURI,
-				Namespaces.APP_PREFIX, "is-running"), new Signature(
+		Functions.predefine(new IsRunning(new QNm(APP_NSURI,
+				APP_PREFIX, "is-running"), new Signature(
 				new SequenceType(AtomicType.BOOL, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
-		Functions.predefine(new Deploy(new QNm(Namespaces.APP_NSURI,
-				Namespaces.APP_PREFIX, "deploy"), new Signature(
+		Functions.predefine(new Deploy(new QNm(APP_NSURI,
+				APP_PREFIX, "deploy"), new Signature(
 				new SequenceType(AtomicType.BOOL, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
-		Functions.predefine(new GetStructure(new QNm(Namespaces.APP_NSURI,
-				Namespaces.APP_PREFIX, "get-structure"), new Signature(
+		Functions.predefine(new GetStructure(new QNm(APP_NSURI,
+				APP_PREFIX, "get-structure"), new Signature(
 				new SequenceType(AnyItemType.ANY, Cardinality.ZeroOrOne),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
-		Functions.predefine(new Generate(new QNm(Namespaces.APP_NSURI,
-				Namespaces.APP_PREFIX, "generate"), new Signature(
+		Functions.predefine(new Generate(new QNm(APP_NSURI,
+				APP_PREFIX, "generate"), new Signature(
 				new SequenceType(AtomicType.BOOL, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
-		Functions.predefine(new Exists(new QNm(Namespaces.APP_NSURI,
-				Namespaces.APP_PREFIX, "exist"), new Signature(
+		Functions.predefine(new Exists(new QNm(APP_NSURI,
+				APP_PREFIX, "exist"), new Signature(
 				new SequenceType(AtomicType.BOOL, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
 		// XQFile
-		Functions.predefine(new CompileXQFile(new QNm(Namespaces.XQFILE_NSURI,
-				Namespaces.XQFILE_PREFIX, "compile"), new Signature(
+		Functions.predefine(new CompileXQFile(new QNm(XQFILE_NSURI,
+				XQFILE_PREFIX, "compile"), new Signature(
 				new SequenceType(AtomicType.BOOL, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
-		Functions.predefine(new CreateXQFile(new QNm(Namespaces.XQFILE_NSURI,
-				Namespaces.XQFILE_PREFIX, "create"), new Signature(
+		Functions.predefine(new CreateXQFile(new QNm(XQFILE_NSURI,
+				XQFILE_PREFIX, "create"), new Signature(
 				new SequenceType(AtomicType.BOOL, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
-		Functions.predefine(new DeleteXQFile(new QNm(Namespaces.XQFILE_NSURI,
-				Namespaces.XQFILE_PREFIX, "delete"), new Signature(
+		Functions.predefine(new DeleteXQFile(new QNm(XQFILE_NSURI,
+				XQFILE_PREFIX, "delete"), new Signature(
 				new SequenceType(AtomicType.BOOL, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
-		Functions.predefine(new SaveXQFile(new QNm(Namespaces.XQFILE_NSURI,
-				Namespaces.XQFILE_PREFIX, "save"), new Signature(
+		Functions.predefine(new SaveXQFile(new QNm(XQFILE_NSURI,
+				XQFILE_PREFIX, "save"), new Signature(
 				new SequenceType(AtomicType.BOOL, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
-		Functions.predefine(new IsLibrary(new QNm(Namespaces.XQFILE_NSURI,
-				Namespaces.XQFILE_PREFIX, "is-library"), new Signature(
+		Functions.predefine(new IsLibrary(new QNm(XQFILE_NSURI,
+				XQFILE_PREFIX, "is-library"), new Signature(
 				new SequenceType(AtomicType.BOOL, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
 		Functions.predefine(new GetCompilationResult(new QNm(
-				Namespaces.XQFILE_NSURI, Namespaces.XQFILE_PREFIX,
+				XQFILE_NSURI, XQFILE_PREFIX,
 				"get-compilation-error"), new Signature(new SequenceType(
 				AtomicType.STR, Cardinality.One), new SequenceType(
 				AtomicType.STR, Cardinality.One))));
 
 		// Resources handling
-		Functions.predefine(new Upload(new QNm(Namespaces.RESOURCE_NSURI,
-				Namespaces.RESOURCE_PREFIX, "upload"), new Signature(
+		Functions.predefine(new Upload(new QNm(RESOURCE_NSURI,
+				RESOURCE_PREFIX, "upload"), new Signature(
 				new SequenceType(AtomicType.BOOL, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
 
 		Functions.predefine(new DeleteResource(
-				new QNm(Namespaces.RESOURCE_NSURI, Namespaces.RESOURCE_PREFIX,
+				new QNm(RESOURCE_NSURI, RESOURCE_PREFIX,
 						"delete"), new Signature(new SequenceType(
 						AtomicType.BOOL, Cardinality.One), new SequenceType(
 						AtomicType.STR, Cardinality.One))));
 
 		Functions.predefine(new RenameResource(
-				new QNm(Namespaces.RESOURCE_NSURI, Namespaces.RESOURCE_PREFIX,
+				new QNm(RESOURCE_NSURI, RESOURCE_PREFIX,
 						"rename"), new Signature(new SequenceType(
 						AtomicType.BOOL, Cardinality.One), new SequenceType(
 						AtomicType.STR, Cardinality.One), new SequenceType(
 						AtomicType.STR, Cardinality.One))));
 
 		// HTTP handling
-		Functions.predefine(new SendRequest(new QNm(Namespaces.HTTP_NSURI,
-				Namespaces.HTTP_PREFIX, "send-request"), new Signature(
+		Functions.predefine(new SendRequest(new QNm(HTTP_NSURI,
+				HTTP_PREFIX, "send-request"), new Signature(
 				new SequenceType(AnyItemType.ANY, Cardinality.One),
 				new SequenceType(AnyItemType.ANY, Cardinality.One))));
 

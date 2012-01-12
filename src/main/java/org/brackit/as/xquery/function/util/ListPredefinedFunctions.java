@@ -135,7 +135,7 @@ public class ListPredefinedFunctions extends AbstractFunction {
 
 	private ArrayList<ComparableFunction> getPredefinedFunctions(String module) {
 		ArrayList<ComparableFunction> result = new ArrayList<ComparableFunction>();
-		Iterator<Function[]> i = new Functions().getPredefinedFunctions()
+		Iterator<Function[]> i = new Functions().getDeclaredFunctions()
 				.values().iterator();
 		while (i.hasNext()) {
 			Function[] f = i.next();

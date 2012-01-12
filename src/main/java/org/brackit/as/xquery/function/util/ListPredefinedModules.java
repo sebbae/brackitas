@@ -95,7 +95,7 @@ public class ListPredefinedModules extends AbstractFunction {
 	private Map<String, Module> getPredefinedModules() {
 		Module module;
 		Map<String, Module> result = new HashMap<String, Module>();
-		Iterator<Function[]> i = new Functions().getPredefinedFunctions()
+		Iterator<Function[]> i = new Functions().getDeclaredFunctions()
 				.values().iterator();
 
 		while (i.hasNext()) {
