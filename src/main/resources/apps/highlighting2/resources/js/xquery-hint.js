@@ -41,7 +41,7 @@
   		" bdb:create-name-index bdb:create-path-index bdb:set-isolation" +
   		" bdb:set-lockdepth before bit:add-doc-to-collection bit:create-collection" +
   		" bit:drop-collection bit:eval bit:every bit:exist-collection bit:load-file" +
-  		" bit:make-directory bit:parse bit:put bit:put bit:silent bit:some" +
+  		" bit:parse bit:put bit:put bit:silent bit:some" +
   		" bit:store-doc by case cast catch child comment declare default define" +
   		" descendant descendant-or-self descending document-node element else eq" +
   		" every except external fn:abs fn:adjust-date-to-timezone" +

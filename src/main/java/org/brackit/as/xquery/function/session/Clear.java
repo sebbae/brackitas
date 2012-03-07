@@ -31,8 +31,8 @@ import java.util.Enumeration;
 
 import javax.servlet.http.HttpSession;
 
-import org.brackit.as.annotation.FunctionAnnotation;
-import org.brackit.as.annotation.ModuleAnnotation;
+import org.brackit.annotation.FunctionAnnotation;
+import org.brackit.annotation.ModuleAnnotation;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;

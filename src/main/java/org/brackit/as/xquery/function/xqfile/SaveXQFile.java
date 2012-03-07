@@ -30,7 +30,7 @@ package org.brackit.as.xquery.function.xqfile;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 
-import org.brackit.as.annotation.FunctionAnnotation;
+import org.brackit.annotation.FunctionAnnotation;
 import org.brackit.as.http.HttpConnector;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;

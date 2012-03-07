@@ -27,10 +27,7 @@
  */
 package org.brackit.as.xquery;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 
@@ -42,14 +39,6 @@ import org.brackit.as.xquery.function.app.GetNames;
 import org.brackit.as.xquery.function.app.GetStructure;
 import org.brackit.as.xquery.function.app.IsRunning;
 import org.brackit.as.xquery.function.app.Terminate;
-import org.brackit.as.xquery.function.bit.AddDocToCollection;
-import org.brackit.as.xquery.function.bit.CreateCollection;
-import org.brackit.as.xquery.function.bit.DropCollection;
-import org.brackit.as.xquery.function.bit.Eval;
-import org.brackit.as.xquery.function.bit.ExistCollection;
-import org.brackit.as.xquery.function.bit.LoadFile;
-import org.brackit.as.xquery.function.bit.MakeDirectory;
-import org.brackit.as.xquery.function.bit.StoreDoc;
 import org.brackit.as.xquery.function.http.SendRequest;
 import org.brackit.as.xquery.function.request.GetCookie;
 import org.brackit.as.xquery.function.request.GetCookieNames;
@@ -90,6 +79,7 @@ import org.brackit.xquery.compiler.CompileChain;
 import org.brackit.xquery.module.Functions;
 import org.brackit.xquery.module.Namespaces;
 import org.brackit.xquery.node.SubtreePrinter;
+import org.brackit.xquery.util.FunctionUtils;
 import org.brackit.xquery.xdm.DocumentException;
 import org.brackit.xquery.xdm.Item;
 import org.brackit.xquery.xdm.Iter;
@@ -110,50 +100,6 @@ import org.brackit.xquery.xdm.type.SequenceType;
 public class ASXQuery extends XQuery {
 
 	static {
-		// Bit
-		Functions.predefine(new DropCollection(new QNm(Namespaces.BIT_NSURI,
-				Namespaces.BIT_PREFIX, "drop-collection"), new Signature(
-				new SequenceType(AtomicType.BOOL, Cardinality.One),
-				new SequenceType(AtomicType.STR, Cardinality.One))));
-
-		Functions.predefine(new Eval(new QNm(Namespaces.BIT_NSURI,
-				Namespaces.BIT_PREFIX, "eval"), new Signature(new SequenceType(
-				AtomicType.STR, Cardinality.ZeroOrOne), new SequenceType(
-				AnyItemType.ANY, Cardinality.One))));
-
-		Functions.predefine(new LoadFile(new QNm(Namespaces.BIT_NSURI,
-				Namespaces.BIT_PREFIX, "load-file"), new Signature(
-				new SequenceType(AtomicType.STR, Cardinality.ZeroOrOne),
-				new SequenceType(AtomicType.STR, Cardinality.One))));
-
-		Functions.predefine(new MakeDirectory(new QNm(Namespaces.BIT_NSURI,
-				Namespaces.BIT_PREFIX, "make-directory"), new Signature(
-				new SequenceType(AtomicType.STR, Cardinality.One),
-				new SequenceType(AtomicType.STR, Cardinality.One))));
-
-		Functions.predefine(new StoreDoc(new QNm(Namespaces.BIT_NSURI,
-				Namespaces.BIT_PREFIX, "store-doc"), new Signature(
-				new SequenceType(AtomicType.STR, Cardinality.ZeroOrOne),
-				new SequenceType(AtomicType.STR, Cardinality.One),
-				new SequenceType(AnyItemType.ANY, Cardinality.One))));
-
-		Functions.predefine(new AddDocToCollection(new QNm(
-				Namespaces.BIT_NSURI, Namespaces.BIT_PREFIX,
-				"add-doc-to-collection"), new Signature(new SequenceType(
-				AtomicType.STR, Cardinality.ZeroOrOne), new SequenceType(
-				AtomicType.STR, Cardinality.One), new SequenceType(
-				AnyItemType.ANY, Cardinality.One))));
-
-		Functions.predefine(new CreateCollection(new QNm(Namespaces.BIT_NSURI,
-				Namespaces.BIT_PREFIX, "create-collection"), new Signature(
-				new SequenceType(AtomicType.BOOL, Cardinality.One),
-				new SequenceType(AtomicType.STR, Cardinality.One))));
-
-		Functions.predefine(new ExistCollection(new QNm(Namespaces.BIT_NSURI,
-				Namespaces.BIT_PREFIX, "exist-collection"), new Signature(
-				new SequenceType(AtomicType.BOOL, Cardinality.One),
-				new SequenceType(AtomicType.STR, Cardinality.One))));
-
 		// SESSION
 		Functions.predefine(new Clear(new QNm(Namespaces.SESSION_NSURI,
 				Namespaces.SESSION_PREFIX, "clear"), new Signature(
@@ -394,7 +340,7 @@ public class ASXQuery extends XQuery {
 	}
 
 	public ASXQuery(InputStream in) throws QueryException {
-		super(getStringFromInputStream(in));
+		super(FunctionUtils.getStringFromInputStream(in));
 		this.longLive = false;
 	}
 
@@ -404,65 +350,23 @@ public class ASXQuery extends XQuery {
 	}
 
 	public ASXQuery(File f) throws QueryException {
-		super(getStringFromFile(f));
+		super(FunctionUtils.getStringFromFile(f));
 		this.longLive = false;
 	}
 
 	public ASXQuery(CompileChain chain, File f) throws QueryException {
-		super(chain, getStringFromFile(f));
+		super(chain, FunctionUtils.getStringFromFile(f));
 		this.longLive = false;
 	}
 
 	public ASXQuery(CompileChain chain, InputStream in) throws QueryException {
-		super(chain, getStringFromInputStream(in));
+		super(chain, FunctionUtils.getStringFromInputStream(in));
 		this.longLive = false;
 	}
 
 	public ASXQuery(CompileChain chain, String s) throws QueryException {
 		super(chain, s);
 		this.longLive = false;
-	}
-
-	public static String getStringFromFile(File pFile) throws QueryException {
-		byte[] buffer = new byte[(int) pFile.length()];
-		BufferedInputStream in = null;
-		try {
-			in = new BufferedInputStream(new FileInputStream(pFile));
-			in.read(buffer);
-		} catch (IOException e) {
-			throw new QueryException(e, ErrorCode.ERR_PARSING_ERROR, e
-					.getMessage());
-		} finally {
-			if (in != null)
-				try {
-					in.close();
-				} catch (IOException ignored) {
-				}
-		}
-		return new String(buffer);
-	}
-
-	private static String getStringFromInputStream(InputStream in)
-			throws QueryException {
-
-		StringBuffer out = new StringBuffer();
-		byte[] b = new byte[4096];
-		try {
-			for (int n; (n = in.read(b)) != -1;) {
-				out.append(new String(b, 0, n));
-			}
-		} catch (IOException e) {
-			throw new QueryException(e, ErrorCode.ERR_PARSING_ERROR, e
-					.getMessage());
-		} finally {
-			if (in != null)
-				try {
-					in.close();
-				} catch (IOException ignored) {
-				}
-		}
-
-		return out.toString();
 	}
 
 	public void serializeResult(ASQueryContext ctx, PrintWriter out,

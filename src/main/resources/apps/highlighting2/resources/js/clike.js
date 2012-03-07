@@ -26,7 +26,7 @@ CodeMirror.defineMode("xquery", function(config, parserConfig) {
 
   var functionSet = "bit:add-doc-to-collection bit:create-collection" +
   		" bit:drop-collection bit:eval bit:exist-collection bit:load-file" +
-  		" bit:make-directory bit:parse bit:put bit:put bit:silent bit:store-doc" +
+  		" bit:parse bit:put bit:put bit:silent bit:store-doc" +
   		" bit:every bit:some" +
   		" app:delete app:deploy app:exist app:generate" +
   		" app:get-names app:get-structure app:is-running app:terminate" +

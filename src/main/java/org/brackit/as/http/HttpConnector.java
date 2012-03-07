@@ -41,7 +41,7 @@ import javax.servlet.http.HttpSessionListener;
 
 import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.http.app.FrontController;
-import org.brackit.as.util.FunctionUtils;
+import org.brackit.xquery.util.FunctionUtils;
 import org.brackit.as.xquery.compiler.ASBaseResolver;
 import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.server.metadata.manager.MetaDataMgr;

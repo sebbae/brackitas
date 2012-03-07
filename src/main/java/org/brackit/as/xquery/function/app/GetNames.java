@@ -33,7 +33,7 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 
-import org.brackit.as.annotation.FunctionAnnotation;
+import org.brackit.annotation.FunctionAnnotation;
 import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;

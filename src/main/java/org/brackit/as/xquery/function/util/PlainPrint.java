@@ -29,8 +29,8 @@ package org.brackit.as.xquery.function.util;
 
 import java.io.PrintStream;
 
-import org.brackit.as.annotation.FunctionAnnotation;
-import org.brackit.as.util.FunctionUtils;
+import org.brackit.annotation.FunctionAnnotation;
+import org.brackit.xquery.util.FunctionUtils;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;

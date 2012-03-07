@@ -31,9 +31,9 @@ import java.io.PrintStream;
 import java.util.Enumeration;
 import java.util.HashMap;
 
-import org.brackit.as.annotation.FunctionAnnotation;
-import org.brackit.as.annotation.ModuleAnnotation;
-import org.brackit.as.util.FunctionUtils;
+import org.brackit.annotation.FunctionAnnotation;
+import org.brackit.annotation.ModuleAnnotation;
+import org.brackit.xquery.util.FunctionUtils;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;

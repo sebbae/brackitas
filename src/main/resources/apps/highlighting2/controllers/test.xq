@@ -32,7 +32,7 @@
  * 
  *
 :)
-module namespace appController="http://brackit.org/lib/appServer/appController";
+module namespace appController = "http://brackit.org/lib/appServer/appController";
 import module namespace appModel="http://brackit.org/lib/appServer/appModel";
 import module namespace appView="http://brackit.org/lib/appServer/appView";
 import module namespace rscController="http://brackit.org/lib/appServer/rscController";
@@ -56,7 +56,7 @@ declare function appController:edit() as item ()* {
             appView:default(fn:concat("Application ",$app," does not exist."))
 };
 
-declare function template:head() as item() {
+declare function appController:head() as item() {
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link href="http://localhost:8080/apps/highlighting2/resources/css/highlighting2.css" rel="stylesheet" type="text/css"/>

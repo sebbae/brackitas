@@ -29,7 +29,7 @@ package org.brackit.as.xquery.function.session;
 
 import javax.servlet.http.HttpSession;
 
-import org.brackit.as.annotation.FunctionAnnotation;
+import org.brackit.annotation.FunctionAnnotation;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
