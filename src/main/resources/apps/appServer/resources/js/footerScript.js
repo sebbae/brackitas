@@ -12,6 +12,7 @@
 				reindentOnLoad : false,
 				activeTokens : null,
 				cursorActivity : null,
+				lineWrapping : true,
 				onCursorActivity : function() {
 					editor.setLineClass(hlLine, null);
 					hlLine = editor.setLineClass(editor.getCursor().line,

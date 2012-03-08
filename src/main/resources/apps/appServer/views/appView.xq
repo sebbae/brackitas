@@ -45,17 +45,6 @@ declare function appView:default($content as item()) as item() {
                   template:footerYAML())
 };
 
-declare function appView:editXQuery($menu as item(), $content as item()) as item() {
-    template:baseFooterScript(template:head("Brackit Application Server"),
-                              template:header(),
-                              template:teaser(),
-                              $menu,
-                              $content,
-                              template:footerBrackit(),
-                              template:footerYAML(), 
-                              template:footerScript())
-};
-
 declare function appView:menuContent($menu as item(), $content as item()) as item() {
     template:base(template:head("Brackit Application Server"),
                   template:header(),

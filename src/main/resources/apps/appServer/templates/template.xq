@@ -34,6 +34,7 @@
 :)
 module namespace template="http://brackit.org/lib/appServer/template";
 
+(:
 declare function template:head($title as xs:string) as item() {
     <head>
       <meta http-equiv="Content-Type" content="text/html;charset=utf-8"></meta>
@@ -41,6 +42,21 @@ declare function template:head($title as xs:string) as item() {
       <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/codemirror.js"/>
       <link type="text/css" href="http://localhost:8080/apps/appServer/resources/css/layout_vertical_listnav.css" rel="stylesheet"/>
       <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/brackitHeader.js"/>
+    </head>
+};
+:)
+
+declare function template:head($title as xs:string) as item() {
+    <head>
+      <meta http-equiv="Content-Type" content="text/html;charset=utf-8"></meta>
+      <title>{$title}</title>
+      <link type="text/css" href="http://localhost:8080/apps/appServer/resources/css/layout_vertical_listnav.css" rel="stylesheet"/>
+      <link type="text/css" href="http://localhost:8080/apps/appServer/resources/css/codemirror.css" rel="stylesheet" />
+      <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/brackitHeader.js"/>
+      <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/codemirror.js"/>
+      <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/xquery.js"/>
+      <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/simple-hint.js"/>
+      <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/xquery-hint.js"/>
     </head>
 };
 
@@ -123,6 +139,10 @@ declare function template:baseBody($header as item(),
       </div>
 };
 
+declare function template:footerScript() as item() {
+    <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/footerScript.js"/>
+};
+
 declare function template:base($head as item(),
                       $header as item(),
                       $teaser as item(),
@@ -135,28 +155,9 @@ declare function template:base($head as item(),
     {$head}
     <body>
       {template:baseBody($header,$teaser,$menu,$content,$footerBrackit,$footerYAML)}
+      {template:footerScript()}      
     </body>
     </html>
 };
 
-declare function template:footerScript() as item() {
-    <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/brackit.js"/>
-};
 
-declare function template:baseFooterScript($head as item(),
-                                  $header as item(),
-                                  $teaser as item(),
-                                  $menu as item(),
-                                  $content as item(),
-                                  $footerBrackit as item(),
-                                  $footerYAML as item(),
-                                  $footerScript as item()) as item() {
-
-    <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-    {$head}
-    <body>
-      {template:baseBody($header,$teaser,$menu,$content,$footerBrackit,$footerYAML)}
-      {$footerScript}      
-    </body>
-    </html>
-};

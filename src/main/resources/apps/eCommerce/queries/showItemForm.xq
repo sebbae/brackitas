@@ -39,7 +39,7 @@ let
 	$a := 
         for 
             $doc 
-        in 
+        in
             fn:collection(session:get-attribute('appName'))
         let 
             $docName := $doc/item/data(name)
@@ -48,7 +48,7 @@ let
         return 
             $doc
 return
-	let 
+	let
 	    $content :=
                     <form action="./addToCartExec.xq">
     	                <table style="width: 100%; background-color: #E0E0F0;">

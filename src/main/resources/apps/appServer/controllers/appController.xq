@@ -119,7 +119,7 @@ declare function appController:load() as item() {
                         else
                             rscController:load()
                 return
-                    appView:editXQuery($menu,$content)
+                    appView:menuContent($menu,$content)
 };
 
 declare function appController:loadAfterAction($msg as xs:string) as item() {
@@ -136,5 +136,5 @@ declare function appController:loadAfterAction($msg as xs:string) as item() {
                 else
                     rscController:load()
         return
-            appView:editXQuery($menu,$content)
+            appView:menuContent($menu,$content)
 };

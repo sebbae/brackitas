@@ -95,7 +95,7 @@
   big { font-size:116.667%; }
   small { font-size:91.667%; }
  
-  pre { line-height:1.5em; margin:0 0 1em 0; }
+  pre { line-height:1.2em; margin:0 0 1em 0; }
   pre, code, kbd, tt, samp, var { font-size:100%; }
   pre, code { color:#800; }
   kbd, samp, var, tt { color:#666; font-weight:bold; }

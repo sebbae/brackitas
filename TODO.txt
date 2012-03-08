@@ -26,8 +26,8 @@
 	Naming
 	Usage
 	Clicking information?
-(  ) Create documentation application
-	(  ) Roxana's working on it.
+(OK) Create documentation application
+	(OK) Roxana's working on it.
 (OK) Create mechanism for hot-deployment of applications
 	(OK) Necessary to recompile all queries
 (  ) Create authentication screen for private content
@@ -72,7 +72,7 @@
 (OK) After directory creation, need to update menus, how?
 (OK) Change development for only 1 file at a time. 
 (  ) Create statistics
-(  ) Improve resources page
+(OK) Improve resources page
 (  ) Bug race: 
 	(  ) Develop blog app on the platform
 	(  ) Problems:
@@ -80,4 +80,4 @@
 (OK) Test with codemirror from their site
 	Still same problems.
 (  ) Do topics of presentation
-(  ) Create simple auto-completition 
+(OK) Create simple auto-completition 

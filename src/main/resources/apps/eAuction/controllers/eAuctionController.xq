@@ -38,7 +38,7 @@ import module namespace eAuctionModel="http://brackit.org/lib/eAuction/eAuctionM
 import module namespace eAuctionView="http://brackit.org/lib/eAuction/eAuctionView";
 
 declare function eAuctionController:index() as item() {
-    eAuctionView:index() 9
+    eAuctionView:index()
 };
 
 declare function eAuctionController:itemForm() as item() {
