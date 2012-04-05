@@ -35,7 +35,7 @@
 module namespace eAuctionModel="http://brackit.org/lib/eAuction/eAuctionModel";
 
 declare function eAuctionModel:User($userID as xs:string, $firstName as xs:string, $lastName as xs:string, 
-                            $streetAddress as xs:string, $emailAddress as xs:string) as item()+
+                            $streetAddress as xs:string, $emailAddress as xs:string) as item() 
     {
 				<user>
 					<userID>

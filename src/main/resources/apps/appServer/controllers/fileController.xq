@@ -44,14 +44,11 @@ declare function controller:save() as item() {
     let $fPathName := req:get-parameter("name"),
         $query := req:get-parameter("query")
     return
-        let $msg := 
-            if (xqfile:save($fPathName, $query)) then
-                view:msgSuccess("Saved sucessfully!")
-            else
-                view:msgFailure("Problems while saving...")
-        return
-            appController:loadAfterAction($msg)
-}; 
+        if (xqfile:save($fPathName, $query)) then
+            view:msgSuccess("Saved sucessfully!")
+        else
+            view:msgFailure("Problems while saving...")
+};
 
 declare function controller:compile() as item() {
     let $fPathName := req:get-parameter("name"),
@@ -67,38 +64,26 @@ declare function controller:compile() as item() {
                 view:msgFailure(fn:concat("Compilation failed: ", $err:description))
             }        
        return
-            appController:loadAfterAction($msg)
+            $msg
+};
+
+declare function controller:deleteAjax() as item() {
+    let $fPathName := req:get-parameter("name")
+    return
+        if (xqfile:delete($fPathName)) then
+            view:msgSuccess("Deleted sucessfully!")
+        else
+            view:msgSuccess("Deletion failed!")
 };
 
 declare function controller:delete() as item() {
     let $fPathName := req:get-parameter("name"),
         $app := req:get-parameter("app")
     return
-        let $msg := 
-            if (xqfile:delete($fPathName)) then
-                view:msgSuccess("Deleted sucessfully!")
-            else
-                view:msgSuccess("Deletion failed!")
-        return
-            appView:menuContent(appView:createMenu($app),$msg)
-};
-
-declare function controller:action() as item() {
-    let $action := fn:normalize-space(req:get-parameter("action"))
-    return
-        if (fn:compare($action,"save") eq 0) then
-            controller:save()
-        else 
-            if (fn:compare($action,"compile") eq 0) then
-                controller:compile()
-            else
-                if (fn:compare($action,"delete") eq 0) then
-                    controller:delete()
-                else
-                    if (fn:compare($action,"rename") eq 0) then
-                        rscController:rename()
-                    else
-                        "ops"
+        if (xqfile:delete($fPathName)) then
+            view:msgSuccess("Deleted sucessfully!")
+        else
+            view:msgSuccess("Deletion failed!")
 };
 
 declare function controller:create() as item() {
@@ -113,7 +98,7 @@ declare function controller:create() as item() {
             if (model:validateXQFile($fName)) then
                 if (xqfile:create($fPathName)) then
                     appView:menuContent(appView:createMenu($app),
-                                       appView:editQuery($fPathName,$app,fn:true()))
+                                       appView:editQuery($fPathName,$app,"",fn:true()))
                 else
                     appView:menuContent($menu,view:msgFailure("Problems creating new file"))
             else

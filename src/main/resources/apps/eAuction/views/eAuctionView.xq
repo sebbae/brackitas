@@ -128,8 +128,3 @@ let
 return
     template:default($content)   
 };
-
-
-
-
-

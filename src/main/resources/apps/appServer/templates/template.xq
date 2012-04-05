@@ -34,24 +34,13 @@
 :)
 module namespace template="http://brackit.org/lib/appServer/template";
 
-(:
-declare function template:head($title as xs:string) as item() {
-    <head>
-      <meta http-equiv="Content-Type" content="text/html;charset=utf-8"></meta>
-      <title>{$title}</title>
-      <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/codemirror.js"/>
-      <link type="text/css" href="http://localhost:8080/apps/appServer/resources/css/layout_vertical_listnav.css" rel="stylesheet"/>
-      <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/brackitHeader.js"/>
-    </head>
-};
-:)
-
 declare function template:head($title as xs:string) as item() {
     <head>
       <meta http-equiv="Content-Type" content="text/html;charset=utf-8"></meta>
       <title>{$title}</title>
       <link type="text/css" href="http://localhost:8080/apps/appServer/resources/css/layout_vertical_listnav.css" rel="stylesheet"/>
       <link type="text/css" href="http://localhost:8080/apps/appServer/resources/css/codemirror.css" rel="stylesheet" />
+      <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/jquery-1.7.1.js"/>
       <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/brackitHeader.js"/>
       <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/codemirror.js"/>
       <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/xquery.js"/>
@@ -159,5 +148,3 @@ declare function template:base($head as item(),
     </body>
     </html>
 };
-
-

@@ -123,6 +123,9 @@ CodeMirror.defineMode("xquery", function(config, parserConfig) {
     if (words(functionSet).propertyIsEnumerable(cur)) {
       return "function";
     }
+    if (cur.indexOf(":") != -1) {
+      return "function";
+    }
     return "word";
   }
 

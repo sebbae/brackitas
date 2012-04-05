@@ -19,6 +19,8 @@
   .hlist {
     /* (en) containing floats in IE */
     /* (de) Einfassen der Floats im IE */
+	float:right;
+	cursor:pointer;    
     width:100%;
     overflow:hidden;
     /* (en) containing floats in all other browsers */

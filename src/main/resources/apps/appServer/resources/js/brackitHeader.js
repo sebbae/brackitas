@@ -35,10 +35,10 @@ function testIt(test, fPathName) {
 	if (test == true) {
 		var func = prompt(
 				"Enter the name of the function you would like to execute:",
-				"for example: index");
+				"index");
 		window.open("http://localhost:8080/apps/" + fPathName.trim() + "/"
 				+ func.trim());
 	} else {
 		window.open("http://localhost:8080/apps/" + fPathName.trim() + ".xq");
 	}
-}
+};

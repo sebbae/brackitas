@@ -34,7 +34,7 @@
 :)
 module namespace template="http://brackit.org/lib/eAuction/template";
 
-declare function template:head() as item()+
+declare function template:head() as item() 
 {
     <head>
         <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
@@ -43,7 +43,7 @@ declare function template:head() as item()+
     </head>
 };
 
-declare function template:header() as item()+
+declare function template:header() as item() 
 {
         <h1>
         
@@ -51,7 +51,7 @@ declare function template:header() as item()+
         </h1>
 };
 
-declare function template:navigation() as item()+
+declare function template:navigation() as item() 
 {
         <ul>
             <li><a href="#">My eAuction</a></li>
@@ -61,16 +61,16 @@ declare function template:navigation() as item()+
         </ul>
 };
 
-declare function template:searching() as item()+
+declare function template:searching() as item() 
 {
         <ul>
-            <input type="text" name="valueSearch" size="60%"/>
-            <input type="text" name="categorySearh" size="30%"/>    
-            <input align="middle" type="submit" name="searchButton" value="Search" size="10%"/>
-          </ul>
+            <input type="text" name="valueSearch" size="60" />
+            <input type="text" name="categorySearh" size="30" />    
+            <input align="middle" type="submit" name="searchButton" value="Search" size="10" />
+        </ul>
 };
 
-declare function template:section-navigation() as item()+
+declare function template:section-navigation() as item() 
 {
             <ul>
                 <li><a href="./listAllCategories.xq">All Categories</a></li>
@@ -85,14 +85,14 @@ declare function template:section-navigation() as item()+
             </ul>   
 };
 
-declare function template:content() as item()+
+declare function template:content() as item() 
 {
             <h2>
                 Welcome to eAuction
             </h2>
 };
 
-declare function template:aside() as item()+
+declare function template:aside() as item() 
 {
             <p>
                 <l> Welcome </l>
@@ -103,12 +103,12 @@ declare function template:aside() as item()+
 };
 
 
-declare function template:footer() as item()+
+declare function template:footer() as item() 
 {
     <p> Copyright eAuction - Brackit, 2011 </p>
 };
 
-declare function template:default($content as item()+) as item()* 
+declare function template:default($content as item() ) as item()* 
 {
     <html xmlns="http://www.w3.org/1999/xhtml">
     {template:head()}
