@@ -33,7 +33,7 @@
  *
 :)
 import module namespace template="http://brackit.org/lib/eCommerce/template";
-if (bit:exist-collection(session:get-attribute('appName'))) then
+if (bit:exists(session:get-attribute('appName'))) then
     let $content := 
         <ul>
             {

@@ -152,12 +152,12 @@
     <dependency>
     	<groupId>org.brackit</groupId>
     	<artifactId>brackit</artifactId>
-    	<version>0.0.9</version>
+    	<version>0.1.2</version>
     </dependency>    
     <dependency>
     	<groupId>org.brackit</groupId>
     	<artifactId>brackitdb-server</artifactId>
-    	<version>0.0.9</version>
+    	<version>0.1.2</version>
     	<type>jar</type>
     	<scope>compile</scope>
     </dependency>

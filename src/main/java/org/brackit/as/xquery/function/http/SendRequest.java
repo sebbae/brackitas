@@ -31,9 +31,10 @@ import java.io.PrintStream;
 import java.util.Enumeration;
 import java.util.HashMap;
 
-import org.brackit.annotation.FunctionAnnotation;
-import org.brackit.annotation.ModuleAnnotation;
-import org.brackit.xquery.util.FunctionUtils;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
+import org.brackit.xquery.util.annotation.ModuleAnnotation;
+import org.brackit.xquery.util.io.IOUtils;
+import org.brackit.xquery.util.serialize.SubtreePrinter;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -42,7 +43,6 @@ import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.node.SubtreePrinter;
 import org.brackit.xquery.node.d2linked.D2NodeFactory;
 import org.brackit.xquery.node.parser.DocumentParser;
 import org.brackit.xquery.sequence.ItemSequence;
@@ -90,7 +90,7 @@ public class SendRequest extends AbstractFunction {
 		if (args[0] instanceof Atomic) {
 			req = ((Atomic) args[0]).stringValue();
 		} else {
-			PrintStream buf = FunctionUtils.createBuffer();
+			PrintStream buf = IOUtils.createBuffer();
 			SubtreePrinter.print((Node<?>) args[0], buf);
 			req = buf.toString();
 		}
@@ -129,31 +129,29 @@ public class SendRequest extends AbstractFunction {
 					while ((header = headers.next()) != null) {
 						if (header.getName().getLocalName().equals("header")) {
 							try {
-								String name = header.getAttribute(
-										new QNm("name")).getValue()
-										.stringValue();
-								String value = header.getAttribute(
-										new QNm("value")).getValue()
-										.stringValue();
+								String name = header
+										.getAttribute(new QNm("name"))
+										.getValue().stringValue();
+								String value = header
+										.getAttribute(new QNm("value"))
+										.getValue().stringValue();
 								if (name == null || value == null)
 									throw new QueryException(
 											ASErrorCode.HTTP_SENDREQUEST_INT_ERROR,
-											String
-													.format("Mall formed header element."));
+											String.format("Mall formed header element."));
 								reqHeaders.put(name, value);
 							} catch (Exception e) {
 								throw new QueryException(
 										ASErrorCode.HTTP_SENDREQUEST_INT_ERROR,
-										String
-												.format("Badly formed header element."));
+										String.format("Badly formed header element."));
 							}
 						}
 					}
 				} else {
 					throw new QueryException(
-							ASErrorCode.HTTP_SENDREQUEST_INT_ERROR, String
-									.format("Undesired element %s.", childName
-											.getLocalName(), args));
+							ASErrorCode.HTTP_SENDREQUEST_INT_ERROR,
+							String.format("Undesired element %s.",
+									childName.getLocalName(), args));
 				}
 			}
 		} catch (Exception e) {
@@ -224,9 +222,10 @@ public class SendRequest extends AbstractFunction {
 				return new D2NodeFactory().build(new DocumentParser(response
 						.toString()));
 			} else {
-				return new ItemSequence(new D2NodeFactory()
-						.build(new DocumentParser(response.toString())),
-						new Str(exchange.getResponseContent()));
+				return new ItemSequence(
+						new D2NodeFactory().build(new DocumentParser(response
+								.toString())), new Str(
+								exchange.getResponseContent()));
 			}
 
 		} catch (Exception e) {

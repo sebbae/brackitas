@@ -32,7 +32,7 @@ import java.util.Date;
 
 import javax.servlet.http.HttpSession;
 
-import org.brackit.annotation.FunctionAnnotation;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;

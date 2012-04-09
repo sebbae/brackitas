@@ -29,8 +29,9 @@ package org.brackit.as.xquery.function.util;
 
 import java.io.PrintStream;
 
-import org.brackit.annotation.FunctionAnnotation;
-import org.brackit.xquery.util.FunctionUtils;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
+import org.brackit.xquery.util.io.IOUtils;
+import org.brackit.xquery.util.serialize.SubtreePrinter;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -40,7 +41,6 @@ import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.xdm.Signature;
 import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.node.SubtreePrinter;
 import org.brackit.xquery.xdm.Node;
 import org.brackit.xquery.xdm.Sequence;
 
@@ -50,8 +50,8 @@ import org.brackit.xquery.xdm.Sequence;
  * 
  */
 @FunctionAnnotation(description = "Prints a plain version of any given string"
-		+ "value to the default output. Solves problems like printing \"&lt;\" " +
-		"or \"&gt;\" that would be interpreted by the browser as HTML content.", parameters = "$string")
+		+ "value to the default output. Solves problems like printing \"&lt;\" "
+		+ "or \"&gt;\" that would be interpreted by the browser as HTML content.", parameters = "$string")
 public class PlainPrint extends AbstractFunction {
 
 	public PlainPrint(QNm name, Signature signature) {
@@ -66,7 +66,7 @@ public class PlainPrint extends AbstractFunction {
 			if (args[0] instanceof Atomic) {
 				vQuery = ((Atomic) args[0]).stringValue().trim();
 			} else {
-				PrintStream buf = FunctionUtils.createBuffer();
+				PrintStream buf = IOUtils.createBuffer();
 				SubtreePrinter s = new SubtreePrinter(buf);
 				s.setPrettyPrint(true);
 				s.print((Node<?>) args[0]);

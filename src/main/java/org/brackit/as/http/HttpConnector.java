@@ -41,7 +41,6 @@ import javax.servlet.http.HttpSessionListener;
 
 import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.http.app.FrontController;
-import org.brackit.xquery.util.FunctionUtils;
 import org.brackit.as.xquery.compiler.ASBaseResolver;
 import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.server.metadata.manager.MetaDataMgr;
@@ -50,6 +49,7 @@ import org.brackit.server.session.SessionException;
 import org.brackit.server.session.SessionMgr;
 import org.brackit.server.tx.IsolationLevel;
 import org.brackit.xquery.QueryException;
+import org.brackit.xquery.util.io.IOUtils;
 import org.brackit.xquery.util.log.Logger;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.session.HashSessionIdManager;
@@ -184,7 +184,7 @@ public class HttpConnector {
 			} else {
 				if (f[i].getName().endsWith(".xq")) {
 					try {
-						String s = FunctionUtils.getNormalizedPath(f[i]);
+						String s = IOUtils.getNormalizedPath(f[i]);
 						bac.register(resolvePath(s), f[i].lastModified());
 					} catch (Exception e) {
 						log.error(e);

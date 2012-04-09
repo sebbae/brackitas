@@ -31,8 +31,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
-import org.brackit.annotation.FunctionAnnotation;
-import org.brackit.annotation.ModuleAnnotation;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
+import org.brackit.xquery.util.annotation.ModuleAnnotation;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.xdm.ComparableFunction;
 import org.brackit.xquery.QueryContext;

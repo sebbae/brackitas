@@ -78,8 +78,8 @@ import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.compiler.CompileChain;
 import org.brackit.xquery.module.Functions;
 import org.brackit.xquery.module.Namespaces;
-import org.brackit.xquery.node.SubtreePrinter;
-import org.brackit.xquery.util.FunctionUtils;
+import org.brackit.xquery.util.io.IOUtils;
+import org.brackit.xquery.util.serialize.SubtreePrinter;
 import org.brackit.xquery.xdm.DocumentException;
 import org.brackit.xquery.xdm.Item;
 import org.brackit.xquery.xdm.Iter;
@@ -340,7 +340,7 @@ public class ASXQuery extends XQuery {
 	}
 
 	public ASXQuery(InputStream in) throws QueryException {
-		super(FunctionUtils.getStringFromInputStream(in));
+		super(IOUtils.getStringFromInputStream(in));
 		this.longLive = false;
 	}
 
@@ -350,17 +350,17 @@ public class ASXQuery extends XQuery {
 	}
 
 	public ASXQuery(File f) throws QueryException {
-		super(FunctionUtils.getStringFromFile(f));
+		super(IOUtils.getStringFromFile(f));
 		this.longLive = false;
 	}
 
 	public ASXQuery(CompileChain chain, File f) throws QueryException {
-		super(chain, FunctionUtils.getStringFromFile(f));
+		super(chain, IOUtils.getStringFromFile(f));
 		this.longLive = false;
 	}
 
 	public ASXQuery(CompileChain chain, InputStream in) throws QueryException {
-		super(chain, FunctionUtils.getStringFromInputStream(in));
+		super(chain, IOUtils.getStringFromInputStream(in));
 		this.longLive = false;
 	}
 

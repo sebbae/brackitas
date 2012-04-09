@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
-import org.brackit.annotation.FunctionAnnotation;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.as.context.InputStreamName;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;

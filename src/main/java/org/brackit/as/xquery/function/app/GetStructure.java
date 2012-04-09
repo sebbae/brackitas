@@ -33,10 +33,10 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 
-import org.brackit.annotation.FunctionAnnotation;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.http.HttpConnector;
-import org.brackit.xquery.util.FunctionUtils;
+import org.brackit.xquery.util.io.IOUtils;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.as.xquery.ASUncompiledQuery;
@@ -103,7 +103,7 @@ public class GetStructure extends AbstractFunction {
 			sb.append("</dir> \n");
 		} else {
 			for (ASUncompiledQuery uq : luq) {
-				if (FunctionUtils.getNormalizedPath(f).contains(uq.getPath())) {
+				if (IOUtils.getNormalizedPath(f).contains(uq.getPath())) {
 					sb.append(String.format(
 							"<file name=\"%s\" compError=\"true\"/>\n",
 							f.getName()));

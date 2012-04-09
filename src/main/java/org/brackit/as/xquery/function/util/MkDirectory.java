@@ -29,7 +29,7 @@ package org.brackit.as.xquery.function.util;
 
 import java.io.File;
 
-import org.brackit.annotation.FunctionAnnotation;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.as.http.HttpConnector;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
