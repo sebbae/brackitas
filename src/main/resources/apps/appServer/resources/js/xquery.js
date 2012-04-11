@@ -24,9 +24,9 @@ CodeMirror.defineMode("xquery", function(config, parserConfig) {
   		" xs:token xs:unsignedByte xs:unsignedInt xs:unsignedLong xs:unsignedShort" +
   		" xs:untyped xs:untypedAtomic xs:yearMonthDuration";
 
-  var functionSet = "bit:add-doc-to-collection bit:create-collection" +
-  		" bit:drop-collection bit:eval bit:exist-collection bit:load-file" +
-  		" bit:parse bit:put bit:put bit:silent bit:store-doc" +
+  var functionSet = "bit:create-collection" +
+  		" bit:drop-collection bit:eval bit:exist-collection" +
+  		" bit:parse bit:put bit:put bit:silent bit:store" +
   		" bit:every bit:some" +
   		" app:delete app:deploy app:exist app:generate" +
   		" app:get-names app:get-structure app:is-running app:terminate" +

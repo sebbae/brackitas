@@ -77,6 +77,6 @@ if (
                 session:set-attribute('cart',$newCart)
     )
 then
-    bit:eval(bit:load-file('eCommerce/queries/showCartForm.xq'))
+    bit:eval(io:read('src/main/resources/apps/eCommerce/queries/showCartForm.xq'))
 else
     template:default(<p>Error adding item to cart!</p>)

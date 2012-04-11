@@ -237,6 +237,9 @@ declare function appView:generateFileOptions($fPathName as xs:string,
         <strong> File: {$fPathName}  </strong>
       </li>
       <li>
+        <div id="addForm"><a>add form</a></div>
+      </li>      
+      <li>
         <div id="rename"><a>rename</a></div>
       </li>      
       <li>
@@ -276,7 +279,7 @@ declare function appView:generateTextArea($fPathName as xs:string) as item() {
                       fn:string-length(req:get-parameter("query")) > 0) then
                       req:get-parameter("query")
                   else
-                      bit:load-file($fPathName)),
+                      io:read(fn:concat("src/main/resources/apps/", $fPathName))),
               "</textarea>")
 };
 

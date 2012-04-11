@@ -110,6 +110,12 @@ declare function template:baseBody($header as item(),
             <div id="col1">
               {$menu}
             </div>
+            <div id="col2">
+              <div id="col2_content" class="clearfix">
+              </div>
+              <!-- IE Column Clearing -->
+              <div id="ie_clearing">   </div>
+            </div>
             <div id="col3">
               <div id="col3_content" class="clearfix">
                 {$content}

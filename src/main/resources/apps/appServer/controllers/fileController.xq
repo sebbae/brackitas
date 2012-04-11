@@ -54,26 +54,14 @@ declare function controller:compile() as item() {
     let $fPathName := req:get-parameter("name"),
         $query := req:get-parameter("query")
     return
-        let $msg := 
-            try {
-                if (xqfile:compile($fPathName, $query)) then
-                    view:msgSuccess("Compiled sucessfully!")
-                else
-                    view:msgFailure("Compilation failed ... ")
-            } catch * {
-                view:msgFailure(fn:concat("Compilation failed: ", $err:description))
-            }        
-       return
-            $msg
-};
-
-declare function controller:deleteAjax() as item() {
-    let $fPathName := req:get-parameter("name")
-    return
-        if (xqfile:delete($fPathName)) then
-            view:msgSuccess("Deleted sucessfully!")
-        else
-            view:msgSuccess("Deletion failed!")
+        try {
+            if (xqfile:compile($fPathName, $query)) then
+                view:msgSuccess("Compiled sucessfully!")
+            else
+                view:msgFailure("Compilation failed ... ")
+        } catch * {
+            view:msgFailure(fn:concat("Compilation failed: ", $err:description))
+        }        
 };
 
 declare function controller:delete() as item() {

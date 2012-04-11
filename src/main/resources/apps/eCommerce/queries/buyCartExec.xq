@@ -60,7 +60,7 @@ declare function local:cart($name as xs:string,
 
 let $content := 
     let 
-        $a := bit:add-doc-to-collection('orders',local:cart($cliName,$cliAddress))
+        $a := bit:store('orders',local:cart($cliName,$cliAddress))
     return
         if (session:remove-attribute('cart')) then
             <p> Buy order for the given cart added sucessfully. </p>

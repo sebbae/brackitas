@@ -99,7 +99,21 @@
 				$("#col1").html(html);
 			});
 	    }
-	});		
+	});
 	
+	$("#addForm").click(function() {
+		var pathName = $("#name").val();
+		var app = $("#app").val();
+		$.ajax( {
+			type : "POST",
+			data : "name=" + pathName + "&app=" + app + "&action=rename",
+			url : "../fileController/newForm",
+			cache : false
+		}).done(function(html) {
+			$("#col3").css("margin-right","25%");
+			$("#col3_content").html(html);
+			$("#col2_content").html(html);
+		});
+	});
 
 })();
