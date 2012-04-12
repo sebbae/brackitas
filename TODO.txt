@@ -81,3 +81,4 @@
 	Still same problems.
 (  ) Do topics of presentation
 (OK) Create simple auto-completition 
+(  ) Improve URL paths: remove "controllers" or "views" necessity.

@@ -43,7 +43,7 @@ declare function view:msgFailure($msg as xs:string) as item() {
 };
 
 declare function view:createFileForm($fPath as xs:string,
-                                $app as xs:string) as item() {
+                                     $app as xs:string) as item() {
     <form action="./create">
         <table style="width: 100%; background-color: rgb(224, 224, 240);">
             <tr>
@@ -65,8 +65,8 @@ declare function view:createFileForm($fPath as xs:string,
 };
 
 declare function view:createFileFormMsg($fPath as xs:string,
-                                   $app as xs:string,
-                                   $msg as xs:string) as item() {
+                                        $app as xs:string,
+                                        $msg as xs:string) as item() {
     <form action="./create">
         <table style="width: 100%; background-color: rgb(224, 224, 240);">
             <tr>
@@ -92,6 +92,50 @@ declare function view:createFileFormMsg($fPath as xs:string,
             </tr>
         </table>
     </form>
+};
+
+declare function view:createFormForm() as item() {
+    let $name := req:get-parameter("name"),
+        $app := req:get-parameter("app")
+    return
+        <form action="../../controllers/fileController/createForm">
+            <table style="width: 100%; background-color: rgb(224, 224, 240);">
+                <tr>
+                    <td style="width: 20%;"><h5>Form function name</h5></td>
+                    <td><input type="text" name="formName"/></td>
+                </tr>
+                <tr>
+                    <td style="width: 20%;"><h5>Under</h5></td>
+                    <td><input type="text" readonly="readonly" name="name" value="{$name}"/></td>
+                </tr>            
+                <tr>
+                    <td colspan="3" align="center">
+                      <input align="center" type="submit" name="sub" value="Create form"/>
+                      <input type="hidden" name="app" value="{$app}"/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+};
+
+declare function view:createFormOptions() as item() {
+    <div>
+        <div id="textInput" class="button blue">
+            Text input   
+        </div>
+        <div id="paragraphInput" class="button blue">
+            Paragraph input  
+        </div>
+        <div id="multipleChoiceInput" class="button blue">
+            Multiple choice input  
+        </div>
+        <div id="dateInput" class="button blue">
+            Date input  
+        </div>
+        <div id="fileUpload" class="button blue">
+            File upload  
+        </div>
+    </div>
 };
 
 declare function view:createUploadForm($fPath as xs:string,
