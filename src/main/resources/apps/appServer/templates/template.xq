@@ -150,7 +150,7 @@ declare function template:base($head as item(),
     {$head}
     <body>
       {template:baseBody($header,$teaser,$menu,$content,$footerBrackit,$footerYAML)}
-      {template:footerScript()}      
+      {template:footerScript()}
     </body>
     </html>
 };

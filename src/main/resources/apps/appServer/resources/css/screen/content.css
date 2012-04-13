@@ -256,4 +256,11 @@
 	background: -moz-linear-gradient(center top , #FEFFFF 0%, #DDF1F9 70%, #A0D8EF 100%) repeat scroll 0 0 transparent;
   }
 
+  .boxsizingBorder {
+    margin:5px 0;
+    padding:3px;
+    width:95%;
+  }
+	
+	
 }

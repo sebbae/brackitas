@@ -115,13 +115,22 @@ declare function view:createFormForm() as item() {
                     </td>
                 </tr>
             </table>
+            <table style="width: 100%; background-color: rgb(224, 224, 240);" id="formPreview">
+                <tr>
+                    <td colspan="2">
+                        <div>
+                            Preview
+                        </div>
+                    </td>                        
+                </tr>
+            </table>                
         </form>
 };
 
 declare function view:createFormOptions() as item() {
     <div>
         <div id="textInput" class="button blue">
-            Text input   
+            <a>Text input</a>
         </div>
         <div id="paragraphInput" class="button blue">
             Paragraph input  
