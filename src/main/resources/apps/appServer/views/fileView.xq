@@ -110,12 +110,13 @@ declare function view:createFormForm() as item() {
                 </tr>            
                 <tr>
                     <td colspan="3" align="center">
-                      <input align="center" type="submit" name="sub" value="Create form"/>
+                      <input align="center" id="createFormButton" type="submit" name="sub" value="Create form" onclick="alert($('#formPreview').html"/>
                       <input type="hidden" name="app" value="{$app}"/>
+                      <input type="hidden" name="createFormPayload" id="createFormPayload" value=""/>
                     </td>
                 </tr>
             </table>
-            <table style="width: 100%; background-color: rgb(224, 224, 240);" id="formPreview">
+            <table style="width: 100%; background-color: rgb(224, 224, 240);">
                 <tr>
                     <td colspan="2">
                         <div>
@@ -123,7 +124,8 @@ declare function view:createFormForm() as item() {
                         </div>
                     </td>                        
                 </tr>
-            </table>                
+            </table>
+            <ul id="formPreview"/>
         </form>
 };
 

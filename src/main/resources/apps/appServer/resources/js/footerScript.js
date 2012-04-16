@@ -163,9 +163,8 @@
 				.bind(
 						'click',
 						function() {
-							$("#formPreview")
-									.append(
-											'<tr><td style="width: 20%;">text input</td><td><input type="text" name="textInput" /></td></tr>');
+							$('#formPreview')
+									.append("<li class=\"state-default\">text input <input type=\"text\" name=\"textInput\">e</input></li>")
 						});
 		$('#paragraphInput')
 				.unbind('click')
@@ -174,7 +173,7 @@
 						function() {
 							$("#formPreview")
 									.append(
-											'<tr><td style="width: 20%;">text area</td><td><textarea rows="6" cols="10" class="boxsizingBorder"/></td></tr>');
+											'<li class="state-default">text area   <textarea rows="6" cols="10" class="boxsizingBorder"/></li>');
 						});
 		$('#multipleChoiceInput')
 				.unbind('click')
@@ -183,7 +182,7 @@
 						function() {
 							$("#formPreview")
 									.append(
-											'<tr><td style="width: 20%;">multiple choice</td><td><input type="radio" name="multipleChoice" value="option1" checked>option1<br><input type="radio" name="multipleChoice" value="option2">option2<br><input type="radio" name="multipleChoice" value="option3">option3</td></tr>');
+											'<li class="state-default">multiple choice   <input type="radio" name="multipleChoice" value="option1" checked>option1</input></br><input type="radio" name="multipleChoice" value="option2">option2</input></br><input type="radio" name="multipleChoice" value="option3">option3</input></li>');
 						});
 		$('#dateInput')
 				.unbind('click')
@@ -192,7 +191,7 @@
 						function() {
 							$("#formPreview")
 									.append(
-											'<tr><td style="width: 20%;">date input</td><td><input id="inputCalendar" class="hasDatepicker" type="text"></td></tr>');
+											'<li class="state-default">date input   <input id="inputCalendar" class="hasDatepicker" type="text"/></li>');
 						});
 		$('#fileUpload')
 				.unbind('click')
@@ -201,8 +200,22 @@
 						function() {
 							$("#formPreview")
 									.append(
-											'<tr><td style="width: 20%;">file upload</td><td><input type="file" name="fileUpload" /></td></tr>');
+											'<li class="state-default">file upload   <input type="file" name="fileUpload"/></li>');
 						});
+		$(function() {
+			$("#formPreview").sortable( {
+				revert : true
+			});
+		});
+		
+		$(function(){
+			$("#createFormButton").click(function(){
+				//alert($("#formPreview").html());
+				$("#createFormPayload").val($("#formPreview").html());
+			});
+		});
+		
+		
 	}
 	;
 })();

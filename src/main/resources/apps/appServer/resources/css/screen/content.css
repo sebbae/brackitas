@@ -261,6 +261,13 @@
     padding:3px;
     width:95%;
   }
+  
+  .state-default {
+  	border: 1px solid #D3D3D3;
+    margin: 5px;
+    padding: 5px;
+	list-style-type: none;
+  }
 	
 	
 }

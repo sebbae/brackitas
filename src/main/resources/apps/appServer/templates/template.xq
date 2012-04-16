@@ -38,14 +38,15 @@ declare function template:head($title as xs:string) as item() {
     <head>
       <meta http-equiv="Content-Type" content="text/html;charset=utf-8"></meta>
       <title>{$title}</title>
-      <link type="text/css" href="http://localhost:8080/apps/appServer/resources/css/layout_vertical_listnav.css" rel="stylesheet"/>
-      <link type="text/css" href="http://localhost:8080/apps/appServer/resources/css/codemirror.css" rel="stylesheet" />
-      <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/jquery-1.7.1.js"/>
-      <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/brackitHeader.js"/>
-      <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/codemirror.js"/>
-      <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/xquery.js"/>
-      <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/simple-hint.js"/>
-      <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/xquery-hint.js"/>
+      <link type="text/css" href="http://localhost:8080/apps/appServer/resources/css/layout_vertical_listnav.css" rel="stylesheet"> </link>
+      <link type="text/css" href="http://localhost:8080/apps/appServer/resources/css/codemirror.css" rel="stylesheet"> </link>
+      <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/jquery-1.7.1.js"> </script>
+      <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/brackitHeader.js"> </script>
+      <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/codemirror.js"> </script>
+      <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/xquery.js"> </script>
+      <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/simple-hint.js"> </script>
+      <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/xquery-hint.js"> </script>
+      <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/jquery-ui-1.8.18.min.js"> </script>
     </head>
 };
 

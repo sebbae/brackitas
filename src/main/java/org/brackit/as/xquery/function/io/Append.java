@@ -25,65 +25,84 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.xquery.function.util;
 
-import java.io.PrintStream;
+package org.brackit.as.xquery.function.io;
 
-import org.brackit.as.xquery.ASErrorCode;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
+import org.brackit.xquery.atomic.Int32;
+import org.brackit.xquery.atomic.IntNumeric;
 import org.brackit.xquery.atomic.QNm;
-import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.function.AbstractFunction;
+import org.brackit.xquery.function.io.IOFun;
 import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.util.annotation.FunctionAnnotation;
-import org.brackit.xquery.util.io.IOUtils;
+import org.brackit.xquery.util.io.URIHandler;
 import org.brackit.xquery.xdm.Item;
 import org.brackit.xquery.xdm.Iter;
 import org.brackit.xquery.xdm.Sequence;
 import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AnyItemType;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
  * @author Henrique Valer
  * 
  */
-@FunctionAnnotation(description = "Prints a plain version of any given string"
-		+ "value to the default output. Solves problems like printing \"&lt;\" "
-		+ "or \"&gt;\" that would be interpreted by the browser as HTML content.", parameters = "$string")
-public class PlainPrint extends AbstractFunction {
+public class Append extends AbstractFunction {
 
-	public PlainPrint(QNm name, Signature signature) {
+	public Append(QNm name, Signature signature) {
 		super(name, signature, true);
+	}
+
+	public static final QNm DEFAULT_NAME = new QNm(IOFun.IO_NSURI,
+			IOFun.IO_PREFIX, "append");
+
+	public Append() {
+		this(DEFAULT_NAME);
+	}
+
+	public Append(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.INR,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One), new SequenceType(AnyItemType.ANY,
+				Cardinality.ZeroOrMany)), true);
 	}
 
 	@Override
 	public Sequence execute(StaticContext sctx, QueryContext ctx,
-			Sequence[] args) throws QueryException {
-		String vQuery = null;
-		PrintStream buf = IOUtils.createBuffer();
+			final Sequence[] args) throws QueryException {
+		if (args[1] == null) {
+			return Int32.ZERO;
+		}
 		try {
-			Iter it = args[0].iterate();
+			IntNumeric count = Int32.ZERO;
+			String uri = ((Atomic) args[0]).stringValue();
+			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(
+					URIHandler.getOutputStream(uri, false)));
+			Iter it = args[1].iterate();
 			try {
 				Item item;
 				while ((item = it.next()) != null) {
-					buf.append(item.toString());
-					buf.append('\n');
+					out.append(item.toString());
+					out.append('\n');
+					count = count.inc();
 				}
-				vQuery = buf.toString();
-			} catch (Exception e) {
-				vQuery = ((Atomic) args[0]).stringValue().trim();
 			} finally {
 				it.close();
 			}
-		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.UTIL_PLAINPRINT_INT_ERROR,
-					e.getMessage());
-		} finally {
-			buf.close();
+			out.close();
+			return count;
+		} catch (IOException e) {
+			throw new QueryException(e, IOFunAS.IO_APPEND_INT_ERROR);
 		}
-		vQuery = vQuery.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-		return new Str(vQuery);
 	}
+
 }

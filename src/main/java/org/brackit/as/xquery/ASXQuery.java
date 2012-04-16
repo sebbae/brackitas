@@ -40,6 +40,7 @@ import org.brackit.as.xquery.function.app.GetStructure;
 import org.brackit.as.xquery.function.app.IsRunning;
 import org.brackit.as.xquery.function.app.Terminate;
 import org.brackit.as.xquery.function.http.SendRequest;
+import org.brackit.as.xquery.function.io.Append;
 import org.brackit.as.xquery.function.request.GetCookie;
 import org.brackit.as.xquery.function.request.GetCookieNames;
 import org.brackit.as.xquery.function.request.GetParameter;
@@ -316,6 +317,9 @@ public class ASXQuery extends XQuery {
 				Namespaces.HTTP_PREFIX, "send-request"), new Signature(
 				new SequenceType(AnyItemType.ANY, Cardinality.One),
 				new SequenceType(AnyItemType.ANY, Cardinality.One))));
+		
+		// IO
+		Functions.predefine(new Append());
 
 	}
 
