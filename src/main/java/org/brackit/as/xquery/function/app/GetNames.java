@@ -28,7 +28,9 @@
 package org.brackit.as.xquery.function.app;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -65,9 +67,16 @@ public class GetNames extends AbstractFunction {
 	public Sequence execute(StaticContext sctx, QueryContext ctx,
 			Sequence[] args) throws QueryException {
 		try {
-			ServletContext servletCtx = ((ASQueryContext) ctx).getReq()
-					.getServletContext();
-			Enumeration<String> e = servletCtx.getAttributeNames();
+			Enumeration<String> e = null;
+			ServletContext servletCtx = null;
+			try {
+				servletCtx = ((ASQueryContext) ctx).getReq()
+						.getServletContext();
+				e = servletCtx.getAttributeNames();
+			} catch (Exception e1) {
+				HashSet<String> set = new HashSet<String>();
+				e = Collections.enumeration(set);
+			}
 			String n;
 			List<Str> names = new ArrayList<Str>();
 			while (e.hasMoreElements()) {

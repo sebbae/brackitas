@@ -29,6 +29,7 @@ package org.brackit.as.xquery.function.app;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -72,10 +73,15 @@ public class GetStructure extends AbstractFunction {
 			String app = ((Atomic) args[0]).atomize().stringValue().trim();
 			File f = new File(String.format("%s/%s", HttpConnector.APPS_PATH,
 					app));
-			ServletContext s = ((ASQueryContext) ctx).getReq()
-					.getServletContext();
-			List<ASUncompiledQuery> luq = ((BaseAppContext) s.getAttribute(app))
-					.getUncompiledQueries();
+			List<ASUncompiledQuery> luq;
+			try {
+				ServletContext s = ((ASQueryContext) ctx).getReq()
+						.getServletContext();
+				luq = ((BaseAppContext) s.getAttribute(app))
+						.getUncompiledQueries();
+			} catch (Exception e) {
+				luq = new ArrayList<ASUncompiledQuery>();
+			}
 			StringBuffer sb = listStructure(f, luq);
 			return new D2NodeFactory().build(new DocumentParser(sb.toString()));
 		} catch (Exception e) {
@@ -105,8 +111,8 @@ public class GetStructure extends AbstractFunction {
 			for (ASUncompiledQuery uq : luq) {
 				if (IOUtils.getNormalizedPath(f).contains(uq.getPath())) {
 					sb.append(String.format(
-							"<file name=\"%s\" compError=\"true\"/>\n",
-							f.getName()));
+							"<file name=\"%s\" compError=\"true\"/>\n", f
+									.getName()));
 					return;
 				}
 			}

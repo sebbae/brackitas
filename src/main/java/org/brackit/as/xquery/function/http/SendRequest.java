@@ -60,7 +60,7 @@ import org.eclipse.jetty.client.HttpClient;
  * 
  */
 
-@ModuleAnnotation(description = "A module for dealnig with HTTP requests and "
+@ModuleAnnotation(description = "A module for dealing with HTTP requests and "
 		+ "responses.")
 @FunctionAnnotation(description = "Sends an HTTP request and return the "
 		+ "corresponding response. It is a simplified version of the protocol, "
@@ -129,29 +129,31 @@ public class SendRequest extends AbstractFunction {
 					while ((header = headers.next()) != null) {
 						if (header.getName().getLocalName().equals("header")) {
 							try {
-								String name = header
-										.getAttribute(new QNm("name"))
-										.getValue().stringValue();
-								String value = header
-										.getAttribute(new QNm("value"))
-										.getValue().stringValue();
+								String name = header.getAttribute(
+										new QNm("name")).getValue()
+										.stringValue();
+								String value = header.getAttribute(
+										new QNm("value")).getValue()
+										.stringValue();
 								if (name == null || value == null)
 									throw new QueryException(
 											ASErrorCode.HTTP_SENDREQUEST_INT_ERROR,
-											String.format("Mall formed header element."));
+											String
+													.format("Mall formed header element."));
 								reqHeaders.put(name, value);
 							} catch (Exception e) {
 								throw new QueryException(
 										ASErrorCode.HTTP_SENDREQUEST_INT_ERROR,
-										String.format("Badly formed header element."));
+										String
+												.format("Badly formed header element."));
 							}
 						}
 					}
 				} else {
 					throw new QueryException(
-							ASErrorCode.HTTP_SENDREQUEST_INT_ERROR,
-							String.format("Undesired element %s.",
-									childName.getLocalName(), args));
+							ASErrorCode.HTTP_SENDREQUEST_INT_ERROR, String
+									.format("Undesired element %s.", childName
+											.getLocalName(), args));
 				}
 			}
 		} catch (Exception e) {
@@ -222,10 +224,8 @@ public class SendRequest extends AbstractFunction {
 				return new D2NodeFactory().build(new DocumentParser(response
 						.toString()));
 			} else {
-				return new ItemSequence(
-						new D2NodeFactory().build(new DocumentParser(response
-								.toString())), new Str(
-								exchange.getResponseContent()));
+				return new ItemSequence(new Str(response.toString()), new Str(
+						exchange.getResponseContent()));
 			}
 
 		} catch (Exception e) {

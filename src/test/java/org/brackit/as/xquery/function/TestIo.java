@@ -25,55 +25,52 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.xquery.function.app;
+package org.brackit.as.xquery.function;
 
-import javax.servlet.ServletContext;
+import static org.junit.Assert.assertEquals;
 
-import org.brackit.xquery.util.annotation.FunctionAnnotation;
-import org.brackit.as.context.BaseAppContext;
-import org.brackit.as.xquery.ASErrorCode;
-import org.brackit.as.xquery.ASQueryContext;
-import org.brackit.xquery.QueryContext;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
+import org.brackit.as.xquery.ASXQuery;
+import org.brackit.as.xquery.compiler.ASCompileChain;
+import org.brackit.as.xquery.function.base.BaseASQueryContextTest;
 import org.brackit.xquery.QueryException;
-import org.brackit.xquery.atomic.Atomic;
-import org.brackit.xquery.atomic.Bool;
-import org.brackit.xquery.atomic.QNm;
-import org.brackit.xquery.function.AbstractFunction;
-import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.xdm.Signature;
-import org.brackit.xquery.xdm.Sequence;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * 
  * @author Henrique Valer
- * 
+ *
  */
-@FunctionAnnotation(description = "Checks whether the specified application is "
-		+ "running or not. The \"running\" state does not solely means that the "
-		+ "application exists, but is accessible as weel.", parameters = "$pplicationName")
-public class IsRunning extends AbstractFunction {
+public class TestIo extends BaseASQueryContextTest {
 
-	public IsRunning(QNm name, Signature signature) {
-		super(name, signature, true);
+	@Before
+	public void initFields() throws Exception {
+		super.initFields();
+		new File("src/test/appendTestFile.xq").createNewFile();
+	};
+
+	@Test
+	public void append() throws QueryException, FileNotFoundException,
+			IOException {
+		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
+				"io:append(\"src/test/appendTestFile.xq\",\"APPENDED TEXT\")");
+		x.setPrettyPrint(true);
+		x.serialize(ctx, buffer);
+		assertEquals(true, new BufferedReader(new FileReader(new File(
+				"src/test/appendTestFile.xq"))).readLine().contains(
+				"APPENDED TEXT") ? true : false);
 	}
 
-	@Override
-	public Sequence execute(StaticContext sctx, QueryContext ctx,
-			Sequence[] args) throws QueryException {
-		try {
-			String name = ((Atomic) args[0]).atomize().stringValue().trim();
-			boolean isRunning;
-			try {
-				ServletContext s = ((ASQueryContext) ctx).getReq()
-						.getServletContext();
-				isRunning = ((BaseAppContext) s.getAttribute(name)).isRunning();
-			} catch (Exception e) {
-				isRunning = false;
-			}
-			return new Bool(isRunning);
-		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.APP_ISRUNNING_INT_ERROR, e
-					.getMessage());
-		}
+	@After
+	public void removeFile() throws QueryException {
+		new File("src/test/appendTestFile.xq").delete();
 	}
+
 }

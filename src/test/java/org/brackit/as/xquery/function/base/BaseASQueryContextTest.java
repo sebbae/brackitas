@@ -33,10 +33,8 @@ import java.io.PrintStream;
 
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.server.BrackitDB;
-import org.brackit.server.ServerException;
 import org.brackit.server.metadata.manager.MetaDataMgr;
 import org.brackit.server.tx.Tx;
-import org.brackit.server.tx.TxException;
 
 /**
  * 
@@ -45,13 +43,13 @@ import org.brackit.server.tx.TxException;
  */
 public class BaseASQueryContextTest {
 
-	protected static PrintStream buffer;
+	public static PrintStream buffer;
 
-	protected static ASQueryContext ctx;
+	public static ASQueryContext ctx;
 
-	protected static MetaDataMgr metaDataMgr;
+	public static MetaDataMgr metaDataMgr;
 
-	protected static BrackitDB db;
+	public static BrackitDB db;
 
 	protected static Tx tx;
 
@@ -66,11 +64,13 @@ public class BaseASQueryContextTest {
 		};
 	}
 
-	protected void initFields() throws ServerException, TxException {
+	protected void initFields() throws Exception {
 		db = new BrackitDB(true);
 		metaDataMgr = db.getMetadataMgr();
 		tx = db.getTaMgr().begin();
 		buffer = createBuffer();
+		ctx = new ASQueryContext(tx, metaDataMgr, new NullHttpSession(),
+				new NullHttpServletRequest());
 	}
 
 }

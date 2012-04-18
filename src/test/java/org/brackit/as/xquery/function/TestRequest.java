@@ -27,73 +27,80 @@
  */
 package org.brackit.as.xquery.function;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
+import static org.junit.Assert.assertEquals;
 
-import org.brackit.as.http.app.FrontController;
 import org.brackit.as.xquery.ASXQuery;
-import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.as.xquery.compiler.ASCompileChain;
-import org.brackit.as.xquery.function.base.NullHttpSession;
-import org.brackit.server.BrackitDB;
-import org.brackit.server.metadata.manager.MetaDataMgr;
-import org.brackit.server.tx.Tx;
+import org.brackit.as.xquery.function.base.BaseASQueryContextTest;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
  * 
  * @author Henrique Valer
- *
+ * 
  */
-public class ECommerce {
+public class TestRequest extends BaseASQueryContextTest {
 
-	protected static PrintStream createBuffer() {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		return new PrintStream(out) {
-			final OutputStream baos = out;
-
-			public String toString() {
-				return baos.toString();
-			}
-		};
-	}
-
-	private static PrintStream buffer;
-
-	private static ASQueryContext ctx;
-
-	private static MetaDataMgr metaDataMgr;
-
-	private static BrackitDB db;
-
-	private static Tx tx;
-
+	@Before
+	public void initFields() throws Exception {
+		super.initFields();
+	};
 
 	@Test
-	public void listItems() throws Exception {
-		try {
-			buffer = createBuffer();
-			db = new BrackitDB(true);
-			metaDataMgr = db.getMetadataMgr();
-			tx = db.getTaMgr().begin();
-			ctx = new ASQueryContext(tx, metaDataMgr, new NullHttpSession());
-			ctx.getHttpSession().setAttribute(FrontController.APP_SESSION_ATT, "eCommerce");
-			ASXQuery x = new ASXQuery(
-					new ASCompileChain(metaDataMgr, tx),
-					getClass().getClassLoader().getResourceAsStream("apps/eCommerce/queries/test.xq"));
-			x.setPrettyPrint(true);
-			x.serialize(ctx, buffer);
-			
-			System.out.println(buffer.toString());
-			x.serialize(ctx, buffer);
-			
-			System.out.println(buffer.toString());			
-			
-		}catch (Exception e) {
-			e.printStackTrace();
-			// TODO: handle exception
-		}
-	}	
-	
+	public void getAttribute() throws Exception {
+		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
+				"req:get-attribute('1')");
+		x.serialize(ctx, buffer);
+		assertEquals("c1", buffer.toString());
+	}
+
+	@Test
+	public void getAttributeNames() throws Exception {
+		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
+				"req:get-attribute-names()");
+		x.serialize(ctx, buffer);
+		assertEquals("1 2", buffer.toString());
+	}
+
+	@Test
+	public void getCookie() throws Exception {
+		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
+				"req:get-cookie('1')");
+		x.serialize(ctx, buffer);
+		assertEquals("c1", buffer.toString());
+	}
+
+	@Test
+	public void getCookieNames() throws Exception {
+		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
+				"req:get-cookie-names()");
+		x.serialize(ctx, buffer);
+		assertEquals("1 2", buffer.toString());
+	}
+
+	@Test
+	public void getParameter() throws Exception {
+		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
+				"req:get-parameter('1')");
+		x.serialize(ctx, buffer);
+		assertEquals("c1", buffer.toString());
+	}
+
+	@Test
+	public void getParameterNames() throws Exception {
+		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
+				"req:get-parameter-names()");
+		x.serialize(ctx, buffer);
+		assertEquals("1 2", buffer.toString());
+	}
+
+	@Test
+	public void isMultipartContent() throws Exception {
+		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
+				"req:is-multipart-content()");
+		x.serialize(ctx, buffer);
+		assertEquals("false", buffer.toString());
+	}
+
 }

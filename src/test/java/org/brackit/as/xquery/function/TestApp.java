@@ -28,18 +28,17 @@
 package org.brackit.as.xquery.function;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.as.xquery.ASXQuery;
 import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.as.xquery.function.base.BaseASQueryContextTest;
+import org.brackit.as.xquery.function.base.NullAppServer;
+import org.brackit.as.xquery.function.base.NullHttpServletRequest;
 import org.brackit.as.xquery.function.base.NullHttpSession;
-import org.brackit.server.ServerException;
-import org.brackit.server.tx.TxException;
+import org.brackit.xquery.QueryException;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -47,97 +46,106 @@ import org.junit.Test;
  * @author Henrique Valer
  * 
  */
-public class Session extends BaseASQueryContextTest {
+public class TestApp extends BaseASQueryContextTest {
 
-	@Override
-	protected void initFields() throws ServerException, TxException {
+	public static NullAppServer appServer;
+
+	@Before
+	public void initFields() throws Exception {
 		super.initFields();
-		ctx = new ASQueryContext(tx, metaDataMgr, new NullHttpSession());
+		if (appServer == null)
+			appServer = new NullAppServer();
+		ctx = new ASQueryContext(tx, metaDataMgr, new NullHttpSession(),
+				new NullHttpServletRequest());
 	};
 
-	@Test
-	public void clear() throws Exception {
-		initFields();
-		ASXQuery x = new ASXQuery(
-				new ASCompileChain(metaDataMgr, tx),
-				"let $a := session:set-attribute('test',<a/>) return if (session:clear()) then session:get-attribute('test') else <info> Session clear problems </info>");
-		x.setPrettyPrint(true);
-		x.serialize(ctx, buffer);
-		assertEquals("", buffer.toString());
-	}
-
-	@Test
-	public void getAttributeNames() throws Exception {
-		initFields();
-		ASXQuery x = new ASXQuery(
-				new ASCompileChain(metaDataMgr, tx),
-				"if (session:set-attribute('test',<p/>) and session:set-attribute('test2',<p/>)) then session:get-attribute-names() else <info/>");
-		x.setPrettyPrint(true);
-		x.serialize(ctx, buffer);
-		assertEquals("test test2", buffer.toString());
-	}
-
-	@Test
-	public void getCreationTime() throws Exception {
-		initFields();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH:mm");
-		Date resultdate = new Date(System.currentTimeMillis());
-		new org.brackit.xquery.atomic.Date(sdf.format(resultdate));
+	@After
+	public void removeApp() throws QueryException {
 		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
-				"session:get-creation-time()");
+				"app:delete('a')");
+		x.execute(ctx);
+	}
+
+	@Test
+	public void delete() throws Exception {
+		ASXQuery x = new ASXQuery(
+				new ASCompileChain(metaDataMgr, tx),
+				"let $a := app:generate('a','MVC') return if ($a) then if (app:delete('a')) then 'OK' else 'ERROR' else 'ERROR'");
 		x.setPrettyPrint(true);
 		x.serialize(ctx, buffer);
-		assertEquals(sdf.format(resultdate), buffer.toString());
+		x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
+				"app:generate('a','MVC')");
+		x.execute(ctx);
+		assertEquals("OK", buffer.toString());
 	}
 
 	@Test
-	public void getLastAccessedTime() throws Exception {
-		initFields();
+	public void deploy() throws Exception {
 		ASXQuery x = new ASXQuery(
 				new ASCompileChain(metaDataMgr, tx),
-				"if (session:get-creation-time() eq session:get-last-accessed-time()) then <true/> else <false/>");
-		x.serialize(ctx, buffer);
-		assertEquals("<true/>", buffer.toString());
-	}
-
-	@Test
-	public void getAndSetMaxInactiveInterval() throws Exception {
-		initFields();
-		ASXQuery x = new ASXQuery(
-				new ASCompileChain(metaDataMgr, tx),
-				"let $a := 50 return if (session:set-max-inactive-interval($a)) then if (session:get-max-inactive-interval() eq $a) then <true/> else <false/> else <info> Problem with setMaxInactiveInterval() </info>");
-		x.serialize(ctx, buffer);
-		assertEquals("<true/>", buffer.toString());
-	}
-
-	@Test
-	public void getSessionAtt() throws Exception {
-		initFields();
-		ASXQuery x = new ASXQuery(
-				new ASCompileChain(metaDataMgr, tx),
-				"let $a := session:set-attribute('teste',<p>Test Attribute</p>) return session:get-attribute('teste')");
-		x.serialize(ctx, buffer);
-		assertEquals("<p>Test Attribute</p>", buffer.toString());
-	}
-
-	@Test
-	public void invalidate() throws Exception {
-		initFields();
-		ASXQuery x = new ASXQuery(
-				new ASCompileChain(metaDataMgr, tx),
-				"let $a := session:set-attribute('test',<info/>) return let $b := session:invalidate() return session:get-attribute('teste')");
-		x.serialize(ctx, buffer);
-		assertEquals("", buffer.toString());
-	}
-
-	@Test
-	public void removeSessionAtt() throws Exception {
-		initFields();
-		ASXQuery x = new ASXQuery(
-				new ASCompileChain(metaDataMgr, tx),
-				"let $a := session:set-attribute('test',<p>Test Attribute</p>) return session:remove-attribute('test')");
+				"let $a := app:generate('a','MVC') return if ($a) then if (app:deploy('a')) then 'OK' else 'ERROR' else 'ERROR'");
 		x.setPrettyPrint(true);
 		x.serialize(ctx, buffer);
-		assertTrue(new Boolean(buffer.toString()));
+		assertEquals("OK", buffer.toString());
 	}
+
+	@Test
+	public void exists() throws Exception {
+		ASXQuery x = new ASXQuery(
+				new ASCompileChain(metaDataMgr, tx),
+				"let $a := app:generate('a','MVC') return if ($a) then if (app:exist('a')) then 'OK' else 'ERROR' else 'ERROR'");
+		x.setPrettyPrint(true);
+		x.serialize(ctx, buffer);
+		assertEquals("OK", buffer.toString());
+	}
+
+	@Test
+	public void generate() throws Exception {
+		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
+				"let $a := app:generate('a','MVC') return if ($a) then 'OK' else 'ERROR'");
+		x.setPrettyPrint(true);
+		x.serialize(ctx, buffer);
+		assertEquals("OK", buffer.toString());
+	}
+
+	@Test
+	public void getNames() throws Exception {
+		ASXQuery x = new ASXQuery(
+				new ASCompileChain(metaDataMgr, tx),
+				"let $a := app:generate('a','MVC') return if ($a) then if (not(app:get-names() = 'a')) then 'OK' else 'ERROR' else 'ERROR'");
+		x.setPrettyPrint(true);
+		x.serialize(ctx, buffer);
+		assertEquals("OK", buffer.toString());
+	}
+
+	@Test
+	public void getStructure() throws Exception {
+		ASXQuery x = new ASXQuery(
+				new ASCompileChain(metaDataMgr, tx),
+				"let $a := app:generate('a','MVC') return if ($a) then if (app:get-structure('a')) then 'OK' else 'ERROR' else 'ERROR'");
+		x.setPrettyPrint(true);
+		x.serialize(ctx, buffer);
+		assertEquals("OK", buffer.toString());
+	}
+
+	@Test
+	public void isRunning() throws Exception {
+		ASXQuery x = new ASXQuery(
+				new ASCompileChain(metaDataMgr, tx),
+				"let $a := app:generate('a','MVC') return if ($a) then if (not(app:is-running('a'))) then 'OK' else 'ERROR' else 'ERROR'");
+		x.setPrettyPrint(true);
+		x.serialize(ctx, buffer);
+		assertEquals("OK", buffer.toString());
+	}
+
+	@Test
+	public void terminate() throws Exception {
+		ASXQuery x = new ASXQuery(
+				new ASCompileChain(metaDataMgr, tx),
+				"let $a := app:generate('a','MVC') return if ($a) then if (app:terminate('a')) then 'OK' else 'ERROR' else 'ERROR'");
+		x.setPrettyPrint(true);
+		x.serialize(ctx, buffer);
+		assertEquals("OK", buffer.toString());
+	}
+
 }

@@ -27,5 +27,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
  * 
  :)
-(: TODO Auto-generated XQuery block :) 
-"TODO" 
+module namespace view="http://brackit.org/lib/e-learning/e-learningView"; 
+import module namespace template="http://brackit.org/lib/e-learning/e-learningTemplate"; 
+
+declare function view:default($content as item()) as item() {
+  template:base(template:head(),
+                template:header(),
+                template:teaser(),
+                template:menu(),
+                $content,
+                template:footerBrackit(),
+                template:footerYAML())
+};

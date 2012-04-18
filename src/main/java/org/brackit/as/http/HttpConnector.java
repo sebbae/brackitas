@@ -142,9 +142,7 @@ public class HttpConnector {
 
 	private void processDeployment(ServletContextHandler sch,
 			SessionMgr sessionMgr, MetaDataMgr mdm) {
-		System.out.println("Deploy applications ... ");
 		File f = new File(APPS_PATH);
-
 		try {
 			Session session = sessionMgr.getSession(sessionMgr.login());
 			session.setIsolationLevel(IsolationLevel.NONE);

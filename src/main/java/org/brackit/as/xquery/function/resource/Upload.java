@@ -39,7 +39,6 @@ import java.net.URLConnection;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.as.context.InputStreamName;
 import org.brackit.as.http.HttpConnector;
 import org.brackit.as.xquery.ASErrorCode;
@@ -52,8 +51,9 @@ import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
 
 /**
  * 
@@ -96,9 +96,14 @@ public class Upload extends AbstractFunction {
 				}
 			} else if (scheme.equals("http") || scheme.equals("https")
 					|| scheme.equals("ftp") || scheme.equals("jar")) {
-				URL url = new URL(((AnyURI) args[0]).stringValue());
+				URL url;
+				if (args[1] instanceof Atomic)
+					url = new URL(((Atomic) args[1]).stringValue());
+				else
+					url = new URL(((AnyURI) args[1]).stringValue());
 				conn = url.openConnection();
-				fName = conn.getURL().getPath();
+				fName = conn.getURL().getPath().substring(
+						conn.getURL().getPath().lastIndexOf("/") + 1);
 				in = conn.getInputStream();
 			}
 			File f = new File(String.format("%s/%s/%s",

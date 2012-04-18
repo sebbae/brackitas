@@ -29,14 +29,16 @@ package org.brackit.as.xquery.function;
 
 import static org.junit.Assert.assertEquals;
 
-import org.brackit.as.xquery.ASQueryContext;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import org.brackit.as.xquery.ASXQuery;
 import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.as.xquery.function.base.BaseASQueryContextTest;
-import org.brackit.as.xquery.function.base.NullHttpServletRequest;
-import org.brackit.as.xquery.function.base.NullHttpSession;
-import org.brackit.server.ServerException;
-import org.brackit.server.tx.TxException;
+import org.brackit.xquery.QueryException;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -44,76 +46,51 @@ import org.junit.Test;
  * @author Henrique Valer
  * 
  */
-public class Request extends BaseASQueryContextTest {
+public class TestResource extends BaseASQueryContextTest {
 
-	@Override
-	protected void initFields() throws ServerException, TxException {
+	private static String path = "src/main/resources/apps/resourceTestFile.xq";
+
+	@Before
+	public void initFields() throws Exception {
 		super.initFields();
-		ctx = new ASQueryContext(tx, metaDataMgr, new NullHttpSession(),
-				new NullHttpServletRequest());
+		new File(path).createNewFile();
 	};
 
 	@Test
-	public void getAttribute() throws Exception {
-		initFields();
+	public void deleteResource() throws QueryException, FileNotFoundException,
+			IOException {
 		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
-				"req:get-attribute('1')");
+				"if (rsc:delete(\"resourceTestFile.xq\")) then \"true\" else \"false\"");
+		x.setPrettyPrint(true);
 		x.serialize(ctx, buffer);
-		assertEquals("c1", buffer.toString());
+		assertEquals("true", buffer.toString());
 	}
 
 	@Test
-	public void getAttributeNames() throws Exception {
-		initFields();
-		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
-				"req:get-attribute-names()");
+	public void renameResource() throws QueryException, FileNotFoundException,
+			IOException {
+		ASXQuery x = new ASXQuery(
+				new ASCompileChain(metaDataMgr, tx),
+				"if (rsc:rename('resourceTestFile.xq','resource')) then if (rsc:rename('resource','resourceTestFile.xq')) then 'true' else 'false' else 'false'");
+		x.setPrettyPrint(true);
 		x.serialize(ctx, buffer);
-		assertEquals("1 2", buffer.toString());
+		assertEquals("true", buffer.toString());
 	}
 
 	@Test
-	public void getCookie() throws Exception {
-		initFields();
-		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
-				"req:get-cookie('1')");
+	public void uploadResource() throws QueryException, FileNotFoundException,
+			IOException {
+		ASXQuery x = new ASXQuery(
+				new ASCompileChain(metaDataMgr, tx),
+				"if (rsc:upload('appServer','http://www.ebookpdf.net/screen/cover2/51fvzphaxml_aa240_.jpg')) then if (rsc:delete('appServer/51fvzphaxml_aa240_.jpg')) then 'true' else 'false' else 'false'");
+		x.setPrettyPrint(true);
 		x.serialize(ctx, buffer);
-		assertEquals("c1", buffer.toString());
+		assertEquals("true", buffer.toString());
 	}
 
-	@Test
-	public void getCookieNames() throws Exception {
-		initFields();
-		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
-				"req:get-cookie-names()");
-		x.serialize(ctx, buffer);
-		assertEquals("1 2", buffer.toString());
-	}
-
-	@Test
-	public void getParameter() throws Exception {
-		initFields();
-		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
-				"req:get-parameter('1')");
-		x.serialize(ctx, buffer);
-		assertEquals("c1", buffer.toString());
-	}
-
-	@Test
-	public void getParameterNames() throws Exception {
-		initFields();
-		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
-				"req:get-parameter-names()");
-		x.serialize(ctx, buffer);
-		assertEquals("1 2", buffer.toString());
-	}
-
-	@Test
-	public void isMultipartContent() throws Exception {
-		initFields();
-		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
-				"req:is-multipart-content()");
-		x.serialize(ctx, buffer);
-		assertEquals("false", buffer.toString());
+	@After
+	public void removeFile() throws QueryException {
+		new File(path).delete();
 	}
 
 }

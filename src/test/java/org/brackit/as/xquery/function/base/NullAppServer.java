@@ -25,55 +25,44 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.xquery.function.app;
+package org.brackit.as.xquery.function.base;
 
-import javax.servlet.ServletContext;
-
-import org.brackit.xquery.util.annotation.FunctionAnnotation;
-import org.brackit.as.context.BaseAppContext;
-import org.brackit.as.xquery.ASErrorCode;
-import org.brackit.as.xquery.ASQueryContext;
-import org.brackit.xquery.QueryContext;
-import org.brackit.xquery.QueryException;
-import org.brackit.xquery.atomic.Atomic;
-import org.brackit.xquery.atomic.Bool;
-import org.brackit.xquery.atomic.QNm;
-import org.brackit.xquery.function.AbstractFunction;
-import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.xdm.Signature;
-import org.brackit.xquery.xdm.Sequence;
+import org.brackit.as.http.HttpConnector;
 
 /**
  * 
  * @author Henrique Valer
- * 
+ *
  */
-@FunctionAnnotation(description = "Checks whether the specified application is "
-		+ "running or not. The \"running\" state does not solely means that the "
-		+ "application exists, but is accessible as weel.", parameters = "$pplicationName")
-public class IsRunning extends AbstractFunction {
+public class NullAppServer {
 
-	public IsRunning(QNm name, Signature signature) {
-		super(name, signature, true);
-	}
-
-	@Override
-	public Sequence execute(StaticContext sctx, QueryContext ctx,
-			Sequence[] args) throws QueryException {
-		try {
-			String name = ((Atomic) args[0]).atomize().stringValue().trim();
-			boolean isRunning;
+	private HttpConnector connector;
+	
+	private class ShutdownThread extends Thread {
+		@Override
+		public void run() {
 			try {
-				ServletContext s = ((ASQueryContext) ctx).getReq()
-						.getServletContext();
-				isRunning = ((BaseAppContext) s.getAttribute(name)).isRunning();
+				connector.stop();
 			} catch (Exception e) {
-				isRunning = false;
+				System.out.print("failed: ");
+				System.out.println(e.getMessage());
 			}
-			return new Bool(isRunning);
-		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.APP_ISRUNNING_INT_ERROR, e
-					.getMessage());
 		}
+	}	
+	
+	public NullAppServer() throws Exception {
+		startHTTP(8080);
+		Runtime.getRuntime().addShutdownHook(new ShutdownThread());		
 	}
+	
+	private void startHTTP(int port) throws Exception {
+		try {
+			connector = new HttpConnector(BaseASQueryContextTest.metaDataMgr, BaseASQueryContextTest.db
+					.getSessionMgr(), port);
+			connector.start();
+		} catch (Exception e) {
+			System.out.print("failed: ");
+			System.out.println(e.getMessage());
+		}
+	}		
 }
