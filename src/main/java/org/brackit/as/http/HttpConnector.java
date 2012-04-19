@@ -30,8 +30,8 @@ package org.brackit.as.http;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Random;
 
 import javax.activation.MimetypesFileTypeMap;
@@ -108,8 +108,7 @@ public class HttpConnector {
 		servletContextHandler.setAttribute(MetaDataMgr.class.getName(), mdm);
 		servletContextHandler.setAttribute(SessionMgr.class.getName(),
 				sessionMgr);
-		servletContextHandler
-				.setAttribute(APP_MIME_TYPES, this.loadMimeTypes());
+		servletContextHandler.setAttribute(APP_MIME_TYPES, loadMimeTypes());
 		servletContextHandler.addEventListener(new SessionEndListener(
 				sessionMgr));
 		servletContextHandler.addServlet(FrontController.class,
@@ -218,12 +217,11 @@ public class HttpConnector {
 		return p;
 	}
 
-	private MimetypesFileTypeMap loadMimeTypes() {
+	public static MimetypesFileTypeMap loadMimeTypes() {
 		MimetypesFileTypeMap mimeMap = new MimetypesFileTypeMap();
 		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					getClass().getClassLoader().getResourceAsStream(
-							"mime.types")));
+			BufferedReader br = new BufferedReader(new FileReader(
+					"src/main/resources/mime.types"));
 			String strLine = null;
 			while ((strLine = br.readLine()) != null) {
 				mimeMap.addMimeTypes(strLine);

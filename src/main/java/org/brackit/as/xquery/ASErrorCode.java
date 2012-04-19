@@ -167,6 +167,9 @@ public class ASErrorCode extends ErrorCode {
 	public static final QNm UTIL_GETMIMETYPE_INT_ERROR = new QNm(
 			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "UTIL0005");
 
+	public static final QNm UTIL_RMDIRECTORY_INT_ERROR = new QNm(
+			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "UTIL0006");
+
 	/**
 	 * Errors for the predefined xqfile functions
 	 */

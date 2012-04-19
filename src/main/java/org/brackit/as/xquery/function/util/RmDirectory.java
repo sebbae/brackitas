@@ -25,29 +25,23 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package org.brackit.as.xquery.function.util;
 
-package org.brackit.as.xquery.function.io;
+import java.io.File;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-
+import org.brackit.as.http.HttpConnector;
+import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
-import org.brackit.xquery.atomic.Int32;
-import org.brackit.xquery.atomic.IntNumeric;
+import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
-import org.brackit.xquery.function.io.IOFun;
+import org.brackit.xquery.module.Namespaces;
 import org.brackit.xquery.module.StaticContext;
 import org.brackit.xquery.util.annotation.FunctionAnnotation;
-import org.brackit.xquery.util.io.URIHandler;
-import org.brackit.xquery.xdm.Item;
-import org.brackit.xquery.xdm.Iter;
 import org.brackit.xquery.xdm.Sequence;
 import org.brackit.xquery.xdm.Signature;
-import org.brackit.xquery.xdm.type.AnyItemType;
 import org.brackit.xquery.xdm.type.AtomicType;
 import org.brackit.xquery.xdm.type.Cardinality;
 import org.brackit.xquery.xdm.type.SequenceType;
@@ -57,57 +51,56 @@ import org.brackit.xquery.xdm.type.SequenceType;
  * @author Henrique Valer
  * 
  */
-@FunctionAnnotation(description = "Appends the sequence of items to a given file, "
-		+ "specified by its URI. The URI should start with the application name and "
-		+ "then follow the application structure as needed. ", parameters = {
-		"$fileURI", "$content" })
-public class Append extends AbstractFunction {
+@FunctionAnnotation(description = "Removes a directory recursively from the "
+		+ "applications directory, by default: src/main/resources/apps. "
+		+ "The subdirectories are deleted as well.", parameters = "$dirPathName")
+public class RmDirectory extends AbstractFunction {
 
-	public Append(QNm name, Signature signature) {
+	public RmDirectory(QNm name, Signature signature) {
 		super(name, signature, true);
 	}
 
-	public static final QNm DEFAULT_NAME = new QNm(IOFun.IO_NSURI,
-			IOFun.IO_PREFIX, "append");
+	public static final QNm DEFAULT_NAME = new QNm(Namespaces.UTIL_NSURI,
+			Namespaces.UTIL_PREFIX, "rm-directory");
 
-	public Append() {
+	public RmDirectory() {
 		this(DEFAULT_NAME);
 	}
 
-	public Append(QNm name) {
-		super(name, new Signature(new SequenceType(AtomicType.INR,
+	public RmDirectory(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.BOOL,
 				Cardinality.One), new SequenceType(AtomicType.STR,
-				Cardinality.One), new SequenceType(AnyItemType.ANY,
-				Cardinality.ZeroOrMany)), true);
+				Cardinality.One)), true);
 	}
 
 	@Override
 	public Sequence execute(StaticContext sctx, QueryContext ctx,
-			final Sequence[] args) throws QueryException {
-		if (args[1] == null) {
-			return Int32.ZERO;
-		}
+			Sequence[] args) throws QueryException {
 		try {
-			IntNumeric count = Int32.ZERO;
-			String uri = ((Atomic) args[0]).stringValue();
-			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(
-					URIHandler.getOutputStream(uri, false)));
-			Iter it = args[1].iterate();
-			try {
-				Item item;
-				while ((item = it.next()) != null) {
-					out.append(item.toString());
-					out.append('\n');
-					count = count.inc();
-				}
-			} finally {
-				it.close();
-			}
-			out.close();
-			return count;
-		} catch (IOException e) {
-			throw new QueryException(e, IOFunAS.IO_APPEND_INT_ERROR);
+			String fDirName = ((Atomic) args[0]).atomize().stringValue().trim();
+			if (fDirName.length() == 0)
+				return new Bool(false);
+			fDirName = (fDirName.startsWith("/")) ? fDirName.substring(1)
+					: fDirName;
+			return new Bool(deleteDir(new File(String.format("%s/%s",
+					HttpConnector.APPS_PATH, fDirName))));
+		} catch (Exception e) {
+			throw new QueryException(e, ASErrorCode.UTIL_RMDIRECTORY_INT_ERROR,
+					e.getMessage());
 		}
+	}
+
+	public static boolean deleteDir(File dir) {
+		if (dir.isDirectory()) {
+			String[] children = dir.list();
+			for (int i = 0; i < children.length; i++) {
+				boolean success = deleteDir(new File(dir, children[i]));
+				if (!success) {
+					return false;
+				}
+			}
+		}
+		return dir.delete();
 	}
 
 }

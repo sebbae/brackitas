@@ -66,6 +66,7 @@ import org.brackit.as.xquery.function.util.ListPredefinedFunctions;
 import org.brackit.as.xquery.function.util.ListPredefinedModules;
 import org.brackit.as.xquery.function.util.MkDirectory;
 import org.brackit.as.xquery.function.util.PlainPrint;
+import org.brackit.as.xquery.function.util.RmDirectory;
 import org.brackit.as.xquery.function.xqfile.CompileXQFile;
 import org.brackit.as.xquery.function.xqfile.CreateXQFile;
 import org.brackit.as.xquery.function.xqfile.DeleteXQFile;
@@ -216,6 +217,8 @@ public class ASXQuery extends XQuery {
 				Namespaces.UTIL_PREFIX, "get-mime-type"), new Signature(
 				new SequenceType(AtomicType.STR, Cardinality.One),
 				new SequenceType(AtomicType.STR, Cardinality.One))));
+		
+		Functions.predefine(new RmDirectory());
 
 		// App
 		Functions.predefine(new GetNames(new QNm(Namespaces.APP_NSURI,

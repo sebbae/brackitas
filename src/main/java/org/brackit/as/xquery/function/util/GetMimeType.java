@@ -58,10 +58,15 @@ public class GetMimeType extends AbstractFunction {
 			Sequence[] args) throws QueryException {
 		try {
 			String s = ((Atomic) args[0]).stringValue().trim();
-			String mimeType = ((MimetypesFileTypeMap) ((ASQueryContext) ctx)
-					.getReq().getServletContext().getAttribute(
-							HttpConnector.APP_MIME_TYPES)).getContentType(s);
-			return new Str(mimeType);
+			MimetypesFileTypeMap mtMap;
+			try {
+				mtMap = (MimetypesFileTypeMap) ((ASQueryContext) ctx).getReq()
+						.getServletContext().getAttribute(
+								HttpConnector.APP_MIME_TYPES);
+			} catch (Exception e) {
+				mtMap = HttpConnector.loadMimeTypes();
+			}
+			return new Str(mtMap.getContentType(s));
 		} catch (Exception e) {
 			throw new QueryException(e, ASErrorCode.UTIL_GETMIMETYPE_INT_ERROR,
 					e.getMessage());
