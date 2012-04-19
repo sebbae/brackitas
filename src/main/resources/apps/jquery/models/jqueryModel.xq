@@ -27,4 +27,4 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
  * 
  :)
-module namespace model="http://brackit.org/lib/jquery/jqueryModel"; 
+module namespace model="http://brackit.org/lib/jquery/jqueryModel";

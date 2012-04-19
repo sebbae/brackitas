@@ -27,19 +27,89 @@
  */
 package org.brackit.as.xquery.function;
 
+import static org.junit.Assert.*;
+
+import org.brackit.as.xquery.ASXQuery;
+import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.as.xquery.function.base.BaseASQueryContextTest;
+import org.brackit.xquery.QueryException;
+import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 
 /**
  * 
  * @author Henrique Valer
- *
+ * 
  */
-public class TestXqfile extends BaseASQueryContextTest{
+public class TestXqfile extends BaseASQueryContextTest {
+
+	public static String fileName = "test.xq";
 
 	@Before
 	public void initFields() throws Exception {
 		super.initFields();
+		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx), String
+				.format("xqfile:create('%s')", fileName));
+		x.execute(ctx);
 	}
-	
+
+	@Test
+	public void compileXQFile() throws QueryException {
+		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx), String
+				.format("xqfile:compile('%s','1')", fileName));
+		x.serialize(ctx, buffer);
+		assertEquals("true", buffer.toString());
+	}
+
+	@Test
+	public void createXQFile() throws QueryException {
+		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
+				"if (xqfile:create('test2.xq')) then xqfile:delete('test2.xq') else fn:false()");
+		x.serialize(ctx, buffer);
+		assertEquals("true", buffer.toString());
+	}
+
+	@Test
+	public void deleteXQFile() throws QueryException {
+		ASXQuery x = new ASXQuery(
+				new ASCompileChain(metaDataMgr, tx),
+				String
+						.format(
+								"if (xqfile:delete('%s')) then xqfile:create('%s') else fn:false()",
+								fileName, fileName));
+		x.serialize(ctx, buffer);
+		assertEquals("true", buffer.toString());
+	}
+
+	@Test
+	public void getCompilationResult() throws QueryException {
+		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx), String
+				.format("xqfile:get-compilation-error('%s')", fileName));
+		x.serialize(ctx, buffer);
+		assertEquals("", buffer.toString());
+	}
+
+	@Test
+	public void isLibrary() throws QueryException {
+		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx), String
+				.format("xqfile:is-library('%s')", fileName));
+		x.serialize(ctx, buffer);
+		assertEquals("false", buffer.toString());
+	}
+
+	@Test
+	public void saveXQFile() throws QueryException {
+		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx), String
+				.format("xqfile:save('%s','2')", fileName));
+		x.serialize(ctx, buffer);
+		assertEquals("true", buffer.toString());
+	}
+
+	@After
+	public void removeFields() throws QueryException {
+		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx), String
+				.format("xqfile:delete('%s')", fileName));
+		x.execute(ctx);
+	}
 }

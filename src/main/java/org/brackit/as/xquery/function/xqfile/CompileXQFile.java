@@ -41,6 +41,7 @@ import org.brackit.as.http.HttpConnector;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.as.xquery.ASUncompiledQuery;
+import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -86,11 +87,21 @@ public class CompileXQFile extends AbstractFunction {
 			out.write(fQuery.replaceAll("&", "&amp;"));
 			out.close();
 			// compilation step
-			HttpConnector.compileApplication(new File(String.format("%s/%s",
-					HttpConnector.APPS_PATH, app)));
+			try {
+				HttpConnector.compileApplication(new File(String.format(
+						"%s/%s", HttpConnector.APPS_PATH, app)));
+			} catch (NullPointerException e) {
+			}
 			ServletContext servletCtx = ((ASQueryContext) ctx).getReq()
 					.getServletContext();
-			BaseAppContext bac = (BaseAppContext) servletCtx.getAttribute(app);
+			BaseAppContext bac;
+			try {
+				bac = (BaseAppContext) servletCtx.getAttribute(app);
+			} catch (Exception e) {
+				bac = new BaseAppContext(app, new ASCompileChain(
+						((ASQueryContext) ctx).getMDM(), ((ASQueryContext) ctx)
+								.getTX()));
+			}
 			List<ASUncompiledQuery> l = bac.getUncompiledQueries();
 			Iterator<ASUncompiledQuery> i = l.iterator();
 			while (i.hasNext()) {

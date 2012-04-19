@@ -38,6 +38,7 @@ import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.http.HttpConnector;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
+import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.as.xquery.function.app.Generate;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -81,7 +82,14 @@ public class CreateXQFile extends AbstractFunction {
 			out.write(Generate.todo);
 			out.close();
 			Long lastUsed = new File(base).lastModified();
-			BaseAppContext bac = (BaseAppContext) servletCtx.getAttribute(app);
+			BaseAppContext bac;
+			try {
+				bac = (BaseAppContext) servletCtx.getAttribute(app);
+			} catch (Exception e) {
+				bac = new BaseAppContext(app, new ASCompileChain(
+						((ASQueryContext) ctx).getMDM(), ((ASQueryContext) ctx)
+								.getTX()));
+			}
 			bac.register(HttpConnector.resolvePath(base), lastUsed);
 			return Bool.TRUE;
 		} catch (Exception e) {

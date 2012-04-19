@@ -34,6 +34,7 @@ import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.as.xquery.ASUncompiledQuery;
+import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -71,7 +72,14 @@ public class GetCompilationResult extends AbstractFunction {
 			String app = fPathName.split("/")[0];
 			ServletContext servletCtx = ((ASQueryContext) ctx).getReq()
 					.getServletContext();
-			BaseAppContext bac = (BaseAppContext) servletCtx.getAttribute(app);
+			BaseAppContext bac;
+			try {
+				bac = (BaseAppContext) servletCtx.getAttribute(app);
+			} catch (Exception e) {
+				bac = new BaseAppContext(app, new ASCompileChain(
+						((ASQueryContext) ctx).getMDM(), ((ASQueryContext) ctx)
+								.getTX()));
+			}
 			for (ASUncompiledQuery uq : bac.getUncompiledQueries()) {
 				if (uq.getPath().contains(fPathName))
 					return new Str(uq.getE().getMessage());
