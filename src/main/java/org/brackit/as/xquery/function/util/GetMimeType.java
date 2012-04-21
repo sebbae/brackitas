@@ -30,7 +30,7 @@ package org.brackit.as.xquery.function.util;
 import javax.activation.MimetypesFileTypeMap;
 
 import org.brackit.as.http.HttpConnector;
-import org.brackit.as.xquery.ASErrorCode;
+
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -61,14 +61,14 @@ public class GetMimeType extends AbstractFunction {
 			MimetypesFileTypeMap mtMap;
 			try {
 				mtMap = (MimetypesFileTypeMap) ((ASQueryContext) ctx).getReq()
-						.getServletContext().getAttribute(
-								HttpConnector.APP_MIME_TYPES);
+						.getServletContext()
+						.getAttribute(HttpConnector.APP_MIME_TYPES);
 			} catch (Exception e) {
 				mtMap = HttpConnector.loadMimeTypes();
 			}
 			return new Str(mtMap.getContentType(s));
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.UTIL_GETMIMETYPE_INT_ERROR,
+			throw new QueryException(e, UtilFun.UTIL_GETMIMETYPE_INT_ERROR,
 					e.getMessage());
 		}
 	}

@@ -31,7 +31,6 @@ import java.util.Enumeration;
 
 import javax.servlet.http.HttpSession;
 
-import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -70,7 +69,7 @@ public class Clear extends AbstractFunction {
 			}
 			return Bool.TRUE;
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.SESSION_CLEAR_INT_ERROR,
+			throw new QueryException(e, SessionFun.SESSION_CLEAR_INT_ERROR,
 					e.getMessage());
 		}
 	}

@@ -25,51 +25,41 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.xquery.function.session;
+package org.brackit.as.xquery.function.util;
 
-import javax.servlet.http.HttpSession;
-
-import org.brackit.xquery.util.annotation.FunctionAnnotation;
-
-import org.brackit.as.xquery.ASQueryContext;
-import org.brackit.xquery.QueryContext;
-import org.brackit.xquery.QueryException;
-import org.brackit.xquery.atomic.Bool;
-import org.brackit.xquery.atomic.Int;
 import org.brackit.xquery.atomic.QNm;
-import org.brackit.xquery.function.AbstractFunction;
-import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.xdm.Signature;
-import org.brackit.xquery.xdm.Item;
-import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.module.Namespaces;
 
 /**
  * 
  * @author Henrique Valer
  * 
  */
-@FunctionAnnotation(description = "Sets the maximum time interval, in seconds, "
-		+ "that the servlet container will keep this session open between client "
-		+ "accesses.", parameters = "$interval")
-public class SetMaxInactiveInterval extends AbstractFunction {
+public class UtilFun {
 
-	public SetMaxInactiveInterval(QNm name, Signature signature) {
-		super(name, signature, true);
-	}
+	public static final String UTIL_NSURI = "http://brackit.org/ns/util";
 
-	@Override
-	public Sequence execute(StaticContext sctx, QueryContext ctx,
-			Sequence[] args) throws QueryException {
-		try {
-			HttpSession httpSession = ((ASQueryContext) ctx).getHttpSession();
-			Int maxInactiveInterval = new Int(((Item) args[0]).atomize()
-					.stringValue());
-			httpSession.setMaxInactiveInterval(maxInactiveInterval.intValue());
-			return Bool.TRUE;
-		} catch (Exception e) {
-			throw new QueryException(e,
-					SessionFun.SESSION_SETMAXINACTIVEINTERVAL_INT_ERROR,
-					e.getMessage());
-		}
-	}
+	public static final String UTIL_PREFIX = "util";
+
+	/**
+	 * Errors for the predefined util functions
+	 */
+	public static final QNm UTIL_MKDIRECTORY_INT_ERROR = new QNm(
+			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "UTIL0001");
+
+	public static final QNm UTIL_PLAINPRINT_INT_ERROR = new QNm(
+			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "UTIL0002");
+
+	public static final QNm UTIL_LISTPREDEFINEDFUNCTIONS_INT_ERROR = new QNm(
+			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "UTIL0003");
+
+	public static final QNm UTIL_LISTPREDEFINEDMODULES_INT_ERROR = new QNm(
+			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "UTIL0004");
+
+	public static final QNm UTIL_GETMIMETYPE_INT_ERROR = new QNm(
+			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "UTIL0005");
+
+	public static final QNm UTIL_RMDIRECTORY_INT_ERROR = new QNm(
+			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "UTIL0006");
+
 }

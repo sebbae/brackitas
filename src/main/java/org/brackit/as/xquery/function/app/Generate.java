@@ -34,7 +34,6 @@ import java.io.IOException;
 
 import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.as.http.HttpConnector;
-import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -829,12 +828,12 @@ public class Generate extends AbstractFunction {
 						"%s/%s", HttpConnector.APPS_PATH, app)));
 				return Bool.TRUE;
 			} else {
-				throw new QueryException(ASErrorCode.APP_GENERATE_INT_ERROR,
+				throw new QueryException(AppFun.APP_GENERATE_INT_ERROR,
 						"Application type not supported");
 			}
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.APP_GENERATE_INT_ERROR, e
-					.getMessage());
+			throw new QueryException(e, AppFun.APP_GENERATE_INT_ERROR,
+					e.getMessage());
 		}
 	}
 
@@ -882,8 +881,8 @@ public class Generate extends AbstractFunction {
 		out = new BufferedWriter(f);
 		out.write(mainCSS);
 		out.close();
-		f = new FileWriter(String
-				.format("%s/resources/css/core/base.css", base));
+		f = new FileWriter(
+				String.format("%s/resources/css/core/base.css", base));
 		out = new BufferedWriter(f);
 		out.write(baseCSS);
 		out.close();
@@ -909,9 +908,7 @@ public class Generate extends AbstractFunction {
 		out = new BufferedWriter(f);
 		out.write(BSDLicense);
 		out.write(String.format(module, "view", app, app, "View"));
-		out
-				.write(String.format(importModule, "template", app, app,
-						"Template"));
+		out.write(String.format(importModule, "template", app, app, "Template"));
 		out.write("\n");
 		out.write(viewBody);
 		out.close();

@@ -31,7 +31,7 @@ import java.io.File;
 
 import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.as.http.HttpConnector;
-import org.brackit.as.xquery.ASErrorCode;
+
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -67,7 +67,7 @@ public class MkDirectory extends AbstractFunction {
 			return new Bool(new File(String.format("%s/%s",
 					HttpConnector.APPS_PATH, fDirName)).mkdirs());
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.UTIL_MKDIRECTORY_INT_ERROR,
+			throw new QueryException(e, UtilFun.UTIL_MKDIRECTORY_INT_ERROR,
 					e.getMessage());
 		}
 	}

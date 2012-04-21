@@ -31,7 +31,6 @@ import java.io.File;
 
 import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.as.http.HttpConnector;
-import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.server.session.SessionException;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -66,8 +65,8 @@ public class Deploy extends AbstractFunction {
 					HttpConnector.APPS_PATH, name)));
 			return Bool.TRUE;
 		} catch (SessionException e) {
-			throw new QueryException(e, ASErrorCode.APP_DEPLOY_INT_ERROR, e
-					.getMessage());
+			throw new QueryException(e, AppFun.APP_DEPLOY_INT_ERROR,
+					e.getMessage());
 		}
 	}
 }

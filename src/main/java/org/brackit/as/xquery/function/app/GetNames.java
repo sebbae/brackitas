@@ -37,7 +37,6 @@ import javax.servlet.ServletContext;
 
 import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.as.context.BaseAppContext;
-import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -87,8 +86,8 @@ public class GetNames extends AbstractFunction {
 			Item[] result = names.toArray(new Item[0]);
 			return new ItemSequence(result);
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.APP_GETNAMES_INT_ERROR, e
-					.getMessage());
+			throw new QueryException(e, AppFun.APP_GETNAMES_INT_ERROR,
+					e.getMessage());
 		}
 	}
 }

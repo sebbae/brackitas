@@ -34,7 +34,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.brackit.xquery.util.annotation.FunctionAnnotation;
-import org.brackit.as.xquery.ASErrorCode;
+
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -74,8 +74,8 @@ public class GetAttributeNames extends AbstractFunction {
 			return new ItemSequence(result);
 		} catch (Exception e) {
 			throw new QueryException(e,
-					ASErrorCode.SESSION_GETATTRIBUTENAMES_INT_ERROR, e
-							.getMessage());
+					SessionFun.SESSION_GETATTRIBUTENAMES_INT_ERROR,
+					e.getMessage());
 		}
 	}
 }

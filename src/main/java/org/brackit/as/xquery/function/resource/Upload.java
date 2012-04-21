@@ -41,7 +41,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.brackit.as.context.InputStreamName;
 import org.brackit.as.http.HttpConnector;
-import org.brackit.as.xquery.ASErrorCode;
+
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -102,8 +102,10 @@ public class Upload extends AbstractFunction {
 				else
 					url = new URL(((AnyURI) args[1]).stringValue());
 				conn = url.openConnection();
-				fName = conn.getURL().getPath().substring(
-						conn.getURL().getPath().lastIndexOf("/") + 1);
+				fName = conn
+						.getURL()
+						.getPath()
+						.substring(conn.getURL().getPath().lastIndexOf("/") + 1);
 				in = conn.getInputStream();
 			}
 			File f = new File(String.format("%s/%s/%s",
@@ -119,8 +121,8 @@ public class Upload extends AbstractFunction {
 			in.close();
 			return Bool.TRUE;
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.RSC_UPLOAD_INT_ERROR, e
-					.getMessage());
+			throw new QueryException(e, ResourceFun.RSC_UPLOAD_INT_ERROR,
+					e.getMessage());
 		} finally {
 			if (conn != null) {
 				if (conn != null) {

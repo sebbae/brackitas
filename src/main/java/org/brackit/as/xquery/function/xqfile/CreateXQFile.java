@@ -36,7 +36,7 @@ import javax.servlet.ServletContext;
 import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.http.HttpConnector;
-import org.brackit.as.xquery.ASErrorCode;
+
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.as.xquery.function.app.Generate;
 import org.brackit.xquery.QueryContext;
@@ -85,8 +85,8 @@ public class CreateXQFile extends AbstractFunction {
 			bac.register(HttpConnector.resolvePath(base), lastUsed);
 			return Bool.TRUE;
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.XQFILE_CREATE_INT_ERROR, e
-					.getMessage());
+			throw new QueryException(e, XqfileFun.XQFILE_CREATE_INT_ERROR,
+					e.getMessage());
 		}
 	}
 }

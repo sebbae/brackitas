@@ -27,49 +27,51 @@
  */
 package org.brackit.as.xquery.function.session;
 
-import javax.servlet.http.HttpSession;
-
-import org.brackit.xquery.util.annotation.FunctionAnnotation;
-
-import org.brackit.as.xquery.ASQueryContext;
-import org.brackit.xquery.QueryContext;
-import org.brackit.xquery.QueryException;
-import org.brackit.xquery.atomic.Bool;
-import org.brackit.xquery.atomic.Int;
 import org.brackit.xquery.atomic.QNm;
-import org.brackit.xquery.function.AbstractFunction;
-import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.xdm.Signature;
-import org.brackit.xquery.xdm.Item;
-import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.module.Namespaces;
 
 /**
  * 
  * @author Henrique Valer
  * 
  */
-@FunctionAnnotation(description = "Sets the maximum time interval, in seconds, "
-		+ "that the servlet container will keep this session open between client "
-		+ "accesses.", parameters = "$interval")
-public class SetMaxInactiveInterval extends AbstractFunction {
+public class SessionFun {
 
-	public SetMaxInactiveInterval(QNm name, Signature signature) {
-		super(name, signature, true);
-	}
+	public static final String SESSION_NSURI = "http://brackit.org/ns/session";
 
-	@Override
-	public Sequence execute(StaticContext sctx, QueryContext ctx,
-			Sequence[] args) throws QueryException {
-		try {
-			HttpSession httpSession = ((ASQueryContext) ctx).getHttpSession();
-			Int maxInactiveInterval = new Int(((Item) args[0]).atomize()
-					.stringValue());
-			httpSession.setMaxInactiveInterval(maxInactiveInterval.intValue());
-			return Bool.TRUE;
-		} catch (Exception e) {
-			throw new QueryException(e,
-					SessionFun.SESSION_SETMAXINACTIVEINTERVAL_INT_ERROR,
-					e.getMessage());
-		}
-	}
+	public static final String SESSION_PREFIX = "session";
+
+	/**
+	 * Errors for the predefined session functions
+	 */
+	public static final QNm SESSION_CLEAR_INT_ERROR = new QNm(
+			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "SESSION0001");
+
+	public static final QNm SESSION_GETATTRIBUTE_INT_ERROR = new QNm(
+			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "SESSION0002");
+
+	public static final QNm SESSION_GETATTRIBUTENAMES_INT_ERROR = new QNm(
+			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "SESSION0003");
+
+	public static final QNm SESSION_GETCREATIONTIME_INT_ERROR = new QNm(
+			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "SESSION0004");
+
+	public static final QNm SESSION_GETLASTACCESSEDTIME_INT_ERROR = new QNm(
+			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "SESSION0005");
+
+	public static final QNm SESSION_GETMAXINACTIVEINTERVAL_INT_ERROR = new QNm(
+			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "SESSION0006");
+
+	public static final QNm SESSION_INVALIDATE_INT_ERROR = new QNm(
+			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "SESSION0007");
+
+	public static final QNm SESSION_REMOVEATTRIBUTE_INT_ERROR = new QNm(
+			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "SESSION0008");
+
+	public static final QNm SESSION_SETATTRIBUTE_INT_ERROR = new QNm(
+			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "SESSION0009");
+
+	public static final QNm SESSION_SETMAXINACTIVEINTERVAL_INT_ERROR = new QNm(
+			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "SESSION0010");
+
 }

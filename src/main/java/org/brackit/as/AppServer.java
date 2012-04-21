@@ -28,8 +28,17 @@
 package org.brackit.as;
 
 import org.brackit.as.http.HttpConnector;
+import org.brackit.as.xquery.function.app.AppFun;
+import org.brackit.as.xquery.function.http.HttpFun;
+import org.brackit.as.xquery.function.io.IOFunAS;
+import org.brackit.as.xquery.function.request.RequestFun;
+import org.brackit.as.xquery.function.resource.ResourceFun;
+import org.brackit.as.xquery.function.session.SessionFun;
+import org.brackit.as.xquery.function.util.UtilFun;
+import org.brackit.as.xquery.function.xqfile.XqfileFun;
 import org.brackit.server.BrackitDB;
 import org.brackit.server.ServerException;
+import org.brackit.xquery.module.Namespaces;
 
 /**
  * 
@@ -66,8 +75,23 @@ public class AppServer {
 
 	public AppServer(boolean install) throws Exception {
 		startDB(install);
+		registerNamespaces();
 		startHTTP(8080);
 		Runtime.getRuntime().addShutdownHook(new ShutdownThread());
+	}
+
+	private void registerNamespaces() {
+		Namespaces.predefine(IOFunAS.IO_PREFIX, IOFunAS.IO_NSURI);
+		Namespaces.predefine(UtilFun.UTIL_PREFIX, UtilFun.UTIL_NSURI);
+		Namespaces.predefine(SessionFun.SESSION_PREFIX,
+				SessionFun.SESSION_NSURI);
+		Namespaces.predefine(RequestFun.REQUEST_PREFIX,
+				RequestFun.REQUEST_NSURI);
+		Namespaces.predefine(AppFun.APP_PREFIX, AppFun.APP_NSURI);
+		Namespaces.predefine(XqfileFun.XQFILE_PREFIX, XqfileFun.XQFILE_NSURI);
+		Namespaces.predefine(ResourceFun.RESOURCE_PREFIX,
+				ResourceFun.RESOURCE_NSURI);
+		Namespaces.predefine(HttpFun.HTTP_PREFIX, HttpFun.HTTP_NSURI);
 	}
 
 	private void startHTTP(int port) throws Exception {
@@ -75,8 +99,8 @@ public class AppServer {
 		System.out.println(port);
 		System.out.print(" ... ");
 		try {
-			connector = new HttpConnector(db.getMetadataMgr(), db
-					.getSessionMgr(), port);
+			connector = new HttpConnector(db.getMetadataMgr(),
+					db.getSessionMgr(), port);
 			connector.start();
 		} catch (Exception e) {
 			System.out.print("failed: ");

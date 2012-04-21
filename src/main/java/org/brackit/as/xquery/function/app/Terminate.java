@@ -29,7 +29,7 @@ package org.brackit.as.xquery.function.app;
 
 import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.as.http.HttpConnector;
-import org.brackit.as.xquery.ASErrorCode;
+
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -62,8 +62,8 @@ public class Terminate extends AbstractFunction {
 			HttpConnector.terminateApplication(name);
 			return Bool.TRUE;
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.APP_TERMINATE_INT_ERROR, e
-					.getMessage());
+			throw new QueryException(e, AppFun.APP_TERMINATE_INT_ERROR,
+					e.getMessage());
 		}
 	}
 }

@@ -32,7 +32,7 @@ import java.io.File;
 import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.xquery.util.annotation.ModuleAnnotation;
 import org.brackit.as.http.HttpConnector;
-import org.brackit.as.xquery.ASErrorCode;
+
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -71,8 +71,8 @@ public class DeleteResource extends AbstractFunction {
 					fPathName);
 			return new Bool(new File(base).delete());
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.RSC_DELETE_INT_ERROR, e
-					.getMessage());
+			throw new QueryException(e, ResourceFun.RSC_DELETE_INT_ERROR,
+					e.getMessage());
 		}
 	}
 }
