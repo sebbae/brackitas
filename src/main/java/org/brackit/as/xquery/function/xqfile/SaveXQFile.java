@@ -30,9 +30,7 @@ package org.brackit.as.xquery.function.xqfile;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 
-import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.as.http.HttpConnector;
-
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -40,8 +38,12 @@ import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -53,6 +55,20 @@ import org.brackit.xquery.xdm.Sequence;
 		+ " directory, by default: src/main/resources/apps.", parameters = {
 		"$filePathName", "$query" })
 public class SaveXQFile extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(XqfileFun.XQFILE_NSURI,
+			XqfileFun.XQFILE_PREFIX, "save");
+
+	public SaveXQFile() {
+		this(DEFAULT_NAME);
+	}
+
+	public SaveXQFile(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.BOOL,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One)), true);
+	}
 
 	public SaveXQFile(QNm name, Signature signature) {
 		super(name, signature, true);
@@ -75,8 +91,8 @@ public class SaveXQFile extends AbstractFunction {
 			out.close();
 			return Bool.TRUE;
 		} catch (Exception e) {
-			throw new QueryException(e, XqfileFun.XQFILE_SAVE_INT_ERROR,
-					e.getMessage());
+			throw new QueryException(e, XqfileFun.XQFILE_SAVE_INT_ERROR, e
+					.getMessage());
 		}
 	}
 }

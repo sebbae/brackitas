@@ -29,17 +29,20 @@ package org.brackit.as.xquery.function.request;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.brackit.xquery.util.annotation.FunctionAnnotation;
-
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.xquery.xdm.Item;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AnyItemType;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -49,6 +52,19 @@ import org.brackit.xquery.xdm.Sequence;
 @FunctionAnnotation(description = "Returns an attribute present in the current "
 		+ "request object.", parameters = "attributeName")
 public class GetReqAttribute extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(RequestFun.REQUEST_NSURI,
+			RequestFun.REQUEST_PREFIX, "get-attribute");
+
+	public GetReqAttribute() {
+		this(DEFAULT_NAME);
+	}
+
+	public GetReqAttribute(QNm name) {
+		super(name, new Signature(new SequenceType(AnyItemType.ANY,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One)), true);
+	}
 
 	public GetReqAttribute(QNm name, Signature signature) {
 		super(name, signature, true);

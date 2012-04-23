@@ -31,11 +31,6 @@ import java.io.PrintStream;
 import java.util.Enumeration;
 import java.util.HashMap;
 
-import org.brackit.xquery.util.annotation.FunctionAnnotation;
-import org.brackit.xquery.util.annotation.ModuleAnnotation;
-import org.brackit.xquery.util.io.IOUtils;
-import org.brackit.xquery.util.serialize.SubtreePrinter;
-
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -46,11 +41,18 @@ import org.brackit.xquery.module.StaticContext;
 import org.brackit.xquery.node.d2linked.D2NodeFactory;
 import org.brackit.xquery.node.parser.DocumentParser;
 import org.brackit.xquery.sequence.ItemSequence;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
+import org.brackit.xquery.util.annotation.ModuleAnnotation;
+import org.brackit.xquery.util.io.IOUtils;
+import org.brackit.xquery.util.serialize.SubtreePrinter;
 import org.brackit.xquery.xdm.Collection;
 import org.brackit.xquery.xdm.Node;
 import org.brackit.xquery.xdm.Sequence;
 import org.brackit.xquery.xdm.Signature;
 import org.brackit.xquery.xdm.Stream;
+import org.brackit.xquery.xdm.type.AnyItemType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 import org.eclipse.jetty.client.ContentExchange;
 import org.eclipse.jetty.client.HttpClient;
 
@@ -77,6 +79,19 @@ import org.eclipse.jetty.client.HttpClient;
 		+ "a xs:string, so the result of the function is a sequence composed of a "
 		+ "response object followed by the possible many html bodies.", parameters = "$request")
 public class SendRequest extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(HttpFun.HTTP_NSURI,
+			HttpFun.HTTP_PREFIX, "send-request");
+
+	public SendRequest() {
+		this(DEFAULT_NAME);
+	}
+
+	public SendRequest(QNm name) {
+		super(name, new Signature(new SequenceType(AnyItemType.ANY,
+				Cardinality.One), new SequenceType(AnyItemType.ANY,
+				Cardinality.One)), true);
+	}
 
 	public SendRequest(QNm name, Signature signature) {
 		super(name, signature, true);
@@ -129,42 +144,44 @@ public class SendRequest extends AbstractFunction {
 					while ((header = headers.next()) != null) {
 						if (header.getName().getLocalName().equals("header")) {
 							try {
-								String name = header
-										.getAttribute(new QNm("name"))
-										.getValue().stringValue();
-								String value = header
-										.getAttribute(new QNm("value"))
-										.getValue().stringValue();
+								String name = header.getAttribute(
+										new QNm("name")).getValue()
+										.stringValue();
+								String value = header.getAttribute(
+										new QNm("value")).getValue()
+										.stringValue();
 								if (name == null || value == null)
 									throw new QueryException(
 											HttpFun.HTTP_SENDREQUEST_INT_ERROR,
-											String.format("Mall formed header element."));
+											String
+													.format("Mall formed header element."));
 								reqHeaders.put(name, value);
 							} catch (Exception e) {
 								throw new QueryException(
 										HttpFun.HTTP_SENDREQUEST_INT_ERROR,
-										String.format("Badly formed header element."));
+										String
+												.format("Badly formed header element."));
 							}
 						}
 					}
 				} else {
 					throw new QueryException(
 							HttpFun.HTTP_SENDREQUEST_INT_ERROR, String.format(
-									"Undesired element %s.",
-									childName.getLocalName(), args));
+									"Undesired element %s.", childName
+											.getLocalName(), args));
 				}
 			}
 		} catch (Exception e) {
-			throw new QueryException(e, HttpFun.HTTP_SENDREQUEST_INT_ERROR,
-					e.getMessage());
+			throw new QueryException(e, HttpFun.HTTP_SENDREQUEST_INT_ERROR, e
+					.getMessage());
 		}
 
 		// request attributes validation
 		if (!reqAtts.get("method").toUpperCase().equals("GET")
 				&& !reqAtts.get("method").toUpperCase().equals("POST")) {
-			throw new QueryException(HttpFun.HTTP_SENDREQUEST_INT_ERROR,
-					String.format("Specified method, %s, is not valid.",
-							reqAtts.get("method")));
+			throw new QueryException(HttpFun.HTTP_SENDREQUEST_INT_ERROR, String
+					.format("Specified method, %s, is not valid.", reqAtts
+							.get("method")));
 		}
 		if (reqAtts.get("href") == null) {
 			throw new QueryException(HttpFun.HTTP_SENDREQUEST_INT_ERROR,
@@ -225,8 +242,8 @@ public class SendRequest extends AbstractFunction {
 			}
 
 		} catch (Exception e) {
-			throw new QueryException(e, HttpFun.HTTP_SENDREQUEST_INT_ERROR,
-					e.getMessage());
+			throw new QueryException(e, HttpFun.HTTP_SENDREQUEST_INT_ERROR, e
+					.getMessage());
 		}
 	}
 

@@ -32,7 +32,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.as.http.HttpConnector;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -41,8 +40,12 @@ import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -787,6 +790,20 @@ public class Generate extends AbstractFunction {
 			+ "  tbody tr:hover tbody th.sub { background:#f0e8e8; }\n"
 			+ "  tbody tr:hover td { background:#fff8f8; }\n" + "\n" + "}\n";
 
+	public static final QNm DEFAULT_NAME = new QNm(AppFun.APP_NSURI,
+			AppFun.APP_PREFIX, "generate");
+
+	public Generate() {
+		this(DEFAULT_NAME);
+	}
+
+	public Generate(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.BOOL,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One)), true);
+	}
+
 	public Generate(QNm name, Signature signature) {
 		super(name, signature, true);
 	}
@@ -832,8 +849,8 @@ public class Generate extends AbstractFunction {
 						"Application type not supported");
 			}
 		} catch (Exception e) {
-			throw new QueryException(e, AppFun.APP_GENERATE_INT_ERROR,
-					e.getMessage());
+			throw new QueryException(e, AppFun.APP_GENERATE_INT_ERROR, e
+					.getMessage());
 		}
 	}
 
@@ -881,8 +898,8 @@ public class Generate extends AbstractFunction {
 		out = new BufferedWriter(f);
 		out.write(mainCSS);
 		out.close();
-		f = new FileWriter(
-				String.format("%s/resources/css/core/base.css", base));
+		f = new FileWriter(String
+				.format("%s/resources/css/core/base.css", base));
 		out = new BufferedWriter(f);
 		out.write(baseCSS);
 		out.close();
@@ -908,7 +925,9 @@ public class Generate extends AbstractFunction {
 		out = new BufferedWriter(f);
 		out.write(BSDLicense);
 		out.write(String.format(module, "view", app, app, "View"));
-		out.write(String.format(importModule, "template", app, app, "Template"));
+		out
+				.write(String.format(importModule, "template", app, app,
+						"Template"));
 		out.write("\n");
 		out.write(viewBody);
 		out.close();

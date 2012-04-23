@@ -42,6 +42,10 @@ import org.brackit.xquery.xdm.Item;
 import org.brackit.xquery.xdm.Iter;
 import org.brackit.xquery.xdm.Sequence;
 import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AnyItemType;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -52,6 +56,19 @@ import org.brackit.xquery.xdm.Signature;
 		+ "value to the default output. Solves problems like printing \"&lt;\" "
 		+ "or \"&gt;\" that would be interpreted by the browser as HTML content.", parameters = "$string")
 public class PlainPrint extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(UtilFun.UTIL_NSURI,
+			UtilFun.UTIL_PREFIX, "plain-print");
+
+	public PlainPrint() {
+		this(DEFAULT_NAME);
+	}
+
+	public PlainPrint(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.STR,
+				Cardinality.ZeroOrOne), new SequenceType(AnyItemType.ANY,
+				Cardinality.One)), true);
+	}
 
 	public PlainPrint(QNm name, Signature signature) {
 		super(name, signature, true);
@@ -77,8 +94,8 @@ public class PlainPrint extends AbstractFunction {
 				it.close();
 			}
 		} catch (Exception e) {
-			throw new QueryException(e, UtilFun.UTIL_PLAINPRINT_INT_ERROR,
-					e.getMessage());
+			throw new QueryException(e, UtilFun.UTIL_PLAINPRINT_INT_ERROR, e
+					.getMessage());
 		} finally {
 			buf.close();
 		}

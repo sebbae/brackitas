@@ -35,10 +35,8 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 
-import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.http.HttpConnector;
-
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.as.xquery.ASUncompiledQuery;
 import org.brackit.as.xquery.compiler.ASCompileChain;
@@ -49,8 +47,12 @@ import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -64,6 +66,20 @@ import org.brackit.xquery.xdm.Sequence;
 		+ "compiles it. On success, the query is directly available for access "
 		+ "(execution) over HTTP.", parameters = { "$filePathName", "$query" })
 public class CompileXQFile extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(XqfileFun.XQFILE_NSURI,
+			XqfileFun.XQFILE_PREFIX, "compile");
+
+	public CompileXQFile() {
+		this(DEFAULT_NAME);
+	}
+
+	public CompileXQFile(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.BOOL,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One)), true);
+	}
 
 	public CompileXQFile(QNm name, Signature signature) {
 		super(name, signature, true);
@@ -113,8 +129,8 @@ public class CompileXQFile extends AbstractFunction {
 			}
 			return Bool.TRUE;
 		} catch (Exception e) {
-			throw new QueryException(e, XqfileFun.XQFILE_COMPILE_INT_ERROR,
-					e.getMessage());
+			throw new QueryException(e, XqfileFun.XQFILE_COMPILE_INT_ERROR, e
+					.getMessage());
 		}
 	}
 }

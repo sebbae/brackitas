@@ -41,6 +41,10 @@ import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
 import org.brackit.xquery.xdm.Signature;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.type.AnyItemType;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -50,6 +54,20 @@ import org.brackit.xquery.xdm.Sequence;
 @FunctionAnnotation(description = "Stores an object as an attribute in the HTTP session. ", parameters = {
 		"$attributeName", "$object" })
 public class SetAttribute extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(SessionFun.SESSION_NSURI,
+			SessionFun.SESSION_PREFIX, "set-attribute");
+
+	public SetAttribute() {
+		this(DEFAULT_NAME);
+	}
+
+	public SetAttribute(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.BOOL,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One), new SequenceType(AnyItemType.ANY,
+				Cardinality.One)), true);
+	}
 
 	public SetAttribute(QNm name, Signature signature) {
 		super(name, signature, true);

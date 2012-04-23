@@ -42,6 +42,9 @@ import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.xquery.util.annotation.ModuleAnnotation;
 import org.brackit.xquery.xdm.Signature;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -54,8 +57,20 @@ import org.brackit.xquery.xdm.Sequence;
 		+ "it does not invalidate the session.", parameters = "")
 public class Clear extends AbstractFunction {
 
+	public static final QNm DEFAULT_NAME = new QNm(SessionFun.SESSION_NSURI,
+			SessionFun.SESSION_PREFIX, "clear");
+
 	public Clear(QNm name, Signature signature) {
 		super(name, signature, true);
+	}
+
+	public Clear() {
+		this(DEFAULT_NAME);
+	}
+
+	public Clear(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.BOOL,
+				Cardinality.One)), true);
 	}
 
 	@Override
@@ -69,8 +84,8 @@ public class Clear extends AbstractFunction {
 			}
 			return Bool.TRUE;
 		} catch (Exception e) {
-			throw new QueryException(e, SessionFun.SESSION_CLEAR_INT_ERROR,
-					e.getMessage());
+			throw new QueryException(e, SessionFun.SESSION_CLEAR_INT_ERROR, e
+					.getMessage());
 		}
 	}
 }

@@ -33,10 +33,8 @@ import java.io.FileWriter;
 
 import javax.servlet.ServletContext;
 
-import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.http.HttpConnector;
-
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.as.xquery.function.app.Generate;
@@ -47,8 +45,12 @@ import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -60,6 +62,19 @@ import org.brackit.xquery.xdm.Sequence;
 		+ "the applications directory, by default: src/main/resources/apps."
 		+ " The content of the file is automatically generated and irrelevant.", parameters = "$filePathName")
 public class CreateXQFile extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(XqfileFun.XQFILE_NSURI,
+			XqfileFun.XQFILE_PREFIX, "create");
+
+	public CreateXQFile() {
+		this(DEFAULT_NAME);
+	}
+
+	public CreateXQFile(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.BOOL,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One)), true);
+	}
 
 	public CreateXQFile(QNm name, Signature signature) {
 		super(name, signature, true);

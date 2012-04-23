@@ -33,9 +33,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import org.brackit.xquery.util.annotation.FunctionAnnotation;
-import org.brackit.xquery.util.annotation.ModuleAnnotation;
-
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.XQuery;
@@ -43,9 +40,14 @@ import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.Functions;
 import org.brackit.xquery.module.StaticContext;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
+import org.brackit.xquery.util.annotation.ModuleAnnotation;
 import org.brackit.xquery.xdm.Function;
 import org.brackit.xquery.xdm.Sequence;
 import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AnyItemType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * @author Roxana Zapata
@@ -56,6 +58,18 @@ import org.brackit.xquery.xdm.Signature;
 		+ "It returns an XML document with an element for each module. "
 		+ "Each of these elements contains the module name, URI and description.", parameters = "")
 public class ListPredefinedModules extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(UtilFun.UTIL_NSURI,
+			UtilFun.UTIL_PREFIX, "list-predefined-modules");
+
+	public ListPredefinedModules() {
+		this(DEFAULT_NAME);
+	}
+
+	public ListPredefinedModules(QNm name) {
+		super(name, new Signature(new SequenceType(AnyItemType.ANY,
+				Cardinality.One)), true);
+	}
 
 	public ListPredefinedModules(QNm name, Signature signature) {
 		super(name, signature, true);
@@ -87,8 +101,8 @@ public class ListPredefinedModules extends AbstractFunction {
 			return xquery.execute(ctx);
 		} catch (Exception e) {
 			throw new QueryException(e,
-					UtilFun.UTIL_LISTPREDEFINEDMODULES_INT_ERROR,
-					e.getMessage());
+					UtilFun.UTIL_LISTPREDEFINEDMODULES_INT_ERROR, e
+							.getMessage());
 		}
 	}
 

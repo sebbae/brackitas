@@ -30,7 +30,6 @@ package org.brackit.as.xquery.function.util;
 import javax.activation.MimetypesFileTypeMap;
 
 import org.brackit.as.http.HttpConnector;
-
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -41,6 +40,9 @@ import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
 import org.brackit.xquery.xdm.Sequence;
 import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -48,6 +50,19 @@ import org.brackit.xquery.xdm.Signature;
  * 
  */
 public class GetMimeType extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(UtilFun.UTIL_NSURI,
+			UtilFun.UTIL_PREFIX, "get-mime-type");
+
+	public GetMimeType() {
+		this(DEFAULT_NAME);
+	}
+
+	public GetMimeType(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.STR,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One)), true);
+	}
 
 	public GetMimeType(QNm name, Signature signature) {
 		super(name, signature, true);
@@ -61,15 +76,15 @@ public class GetMimeType extends AbstractFunction {
 			MimetypesFileTypeMap mtMap;
 			try {
 				mtMap = (MimetypesFileTypeMap) ((ASQueryContext) ctx).getReq()
-						.getServletContext()
-						.getAttribute(HttpConnector.APP_MIME_TYPES);
+						.getServletContext().getAttribute(
+								HttpConnector.APP_MIME_TYPES);
 			} catch (Exception e) {
 				mtMap = HttpConnector.loadMimeTypes();
 			}
 			return new Str(mtMap.getContentType(s));
 		} catch (Exception e) {
-			throw new QueryException(e, UtilFun.UTIL_GETMIMETYPE_INT_ERROR,
-					e.getMessage());
+			throw new QueryException(e, UtilFun.UTIL_GETMIMETYPE_INT_ERROR, e
+					.getMessage());
 		}
 	}
 

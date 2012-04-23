@@ -29,9 +29,7 @@ package org.brackit.as.xquery.function.xqfile;
 
 import javax.servlet.ServletContext;
 
-import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.as.context.BaseAppContext;
-
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.as.xquery.ASUncompiledQuery;
 import org.brackit.as.xquery.compiler.ASCompileChain;
@@ -42,8 +40,12 @@ import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.xquery.xdm.Sequence;
 import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -56,6 +58,19 @@ import org.brackit.xquery.xdm.Signature;
 		+ "declaration followed by a Prolog. It provides function and variable"
 		+ " declarations that can be imported into other modules.", parameters = "$filePathName")
 public class GetCompilationResult extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(XqfileFun.XQFILE_NSURI,
+			XqfileFun.XQFILE_PREFIX, "get-compilation-error");
+
+	public GetCompilationResult() {
+		this(DEFAULT_NAME);
+	}
+
+	public GetCompilationResult(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.STR,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One)), true);
+	}
 
 	public GetCompilationResult(QNm name, Signature signature) {
 		super(name, signature, true);

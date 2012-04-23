@@ -164,7 +164,7 @@
 						'click',
 						function() {
 							$('#formPreview')
-									.append("<li class=\"state-default\">text input <input type=\"text\" name=\"textInput\">e</input></li>")
+									.append("<li class=\"state-default\">text input <input type=\"text\" name=\"textInput\"></input></li>")
 						});
 		$('#paragraphInput')
 				.unbind('click')

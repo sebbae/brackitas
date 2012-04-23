@@ -40,6 +40,10 @@ import org.brackit.xquery.module.StaticContext;
 import org.brackit.xquery.xdm.Signature;
 import org.brackit.xquery.xdm.Item;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.type.AnyItemType;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -49,6 +53,19 @@ import org.brackit.xquery.xdm.Sequence;
 @FunctionAnnotation(description = "Returns an attribute stored in the current "
 		+ "session object or an empty sequence if the attribute cannot be found.", parameters = "$attributeName")
 public class GetAttribute extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(SessionFun.SESSION_NSURI,
+			SessionFun.SESSION_PREFIX, "get-attribute");
+
+	public GetAttribute() {
+		this(DEFAULT_NAME);
+	}
+
+	public GetAttribute(QNm name) {
+		super(name, new Signature(new SequenceType(AnyItemType.ANY,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One)), true);
+	}
 
 	public GetAttribute(QNm name, Signature signature) {
 		super(name, signature, true);

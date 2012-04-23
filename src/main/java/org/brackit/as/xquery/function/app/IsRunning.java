@@ -29,7 +29,6 @@ package org.brackit.as.xquery.function.app;
 
 import javax.servlet.ServletContext;
 
-import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
@@ -39,8 +38,12 @@ import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -51,6 +54,19 @@ import org.brackit.xquery.xdm.Sequence;
 		+ "running or not. The \"running\" state does not solely means that the "
 		+ "application exists, but is accessible as weel.", parameters = "$pplicationName")
 public class IsRunning extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(AppFun.APP_NSURI,
+			AppFun.APP_PREFIX, "is-running");
+
+	public IsRunning() {
+		this(DEFAULT_NAME);
+	}
+
+	public IsRunning(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.BOOL,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One)), true);
+	}
 
 	public IsRunning(QNm name, Signature signature) {
 		super(name, signature, true);
@@ -71,8 +87,8 @@ public class IsRunning extends AbstractFunction {
 			}
 			return new Bool(isRunning);
 		} catch (Exception e) {
-			throw new QueryException(e, AppFun.APP_ISRUNNING_INT_ERROR,
-					e.getMessage());
+			throw new QueryException(e, AppFun.APP_ISRUNNING_INT_ERROR, e
+					.getMessage());
 		}
 	}
 }

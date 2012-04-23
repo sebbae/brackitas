@@ -42,6 +42,9 @@ import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
 import org.brackit.xquery.xdm.Signature;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -50,6 +53,18 @@ import org.brackit.xquery.xdm.Sequence;
  */
 @FunctionAnnotation(description = "Returns the session last accessed time, in the given format: yyyy-MM-dd-HH:mm.", parameters = "")
 public class GetLastAccessedTime extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(SessionFun.SESSION_NSURI,
+			SessionFun.SESSION_PREFIX, "get-last-accessed-time");
+
+	public GetLastAccessedTime() {
+		this(DEFAULT_NAME);
+	}
+
+	public GetLastAccessedTime(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.DATE,
+				Cardinality.ZeroOrOne)), true);
+	}
 
 	public GetLastAccessedTime(QNm name, Signature signature) {
 		super(name, signature, true);
@@ -65,8 +80,8 @@ public class GetLastAccessedTime extends AbstractFunction {
 			return new org.brackit.xquery.atomic.Date(sdf.format(resultdate));
 		} catch (Exception e) {
 			throw new QueryException(e,
-					SessionFun.SESSION_GETLASTACCESSEDTIME_INT_ERROR,
-					e.getMessage());
+					SessionFun.SESSION_GETLASTACCESSEDTIME_INT_ERROR, e
+							.getMessage());
 		}
 	}
 }

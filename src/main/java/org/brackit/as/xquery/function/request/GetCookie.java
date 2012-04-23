@@ -30,9 +30,6 @@ package org.brackit.as.xquery.function.request;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
-import org.brackit.xquery.util.annotation.FunctionAnnotation;
-import org.brackit.xquery.util.annotation.ModuleAnnotation;
-
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -40,9 +37,15 @@ import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
+import org.brackit.xquery.util.annotation.ModuleAnnotation;
 import org.brackit.xquery.xdm.Item;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AnyItemType;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -52,6 +55,19 @@ import org.brackit.xquery.xdm.Sequence;
 @ModuleAnnotation(description = "A module for dealing with HTTP requests.")
 @FunctionAnnotation(description = "Returns an HTTP cookie object.", parameters = "$cookieName")
 public class GetCookie extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(RequestFun.REQUEST_NSURI,
+			RequestFun.REQUEST_PREFIX, "get-cookie");
+
+	public GetCookie() {
+		this(DEFAULT_NAME);
+	}
+
+	public GetCookie(QNm name) {
+		super(name, new Signature(new SequenceType(AnyItemType.ANY,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One)), true);
+	}
 
 	public GetCookie(QNm name, Signature signature) {
 		super(name, signature, true);
@@ -71,8 +87,8 @@ public class GetCookie extends AbstractFunction {
 			}
 			return new Str("");
 		} catch (Exception e) {
-			throw new QueryException(e, RequestFun.REQ_GETCOOKIE_INT_ERROR,
-					e.getMessage());
+			throw new QueryException(e, RequestFun.REQ_GETCOOKIE_INT_ERROR, e
+					.getMessage());
 		}
 	}
 }

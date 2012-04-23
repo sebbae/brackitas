@@ -31,10 +31,8 @@ import java.io.File;
 
 import javax.servlet.ServletContext;
 
-import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.http.HttpConnector;
-
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -43,8 +41,12 @@ import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -55,6 +57,19 @@ import org.brackit.xquery.xdm.Sequence;
 		+ "the file path name ($filePathName). The file path name starts from "
 		+ "the applications directory, by default: src/main/resources/apps.", parameters = "$filePathName")
 public class DeleteXQFile extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(XqfileFun.XQFILE_NSURI,
+			XqfileFun.XQFILE_PREFIX, "delete");
+
+	public DeleteXQFile() {
+		this(DEFAULT_NAME);
+	}
+
+	public DeleteXQFile(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.BOOL,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One)), true);
+	}
 
 	public DeleteXQFile(QNm name, Signature signature) {
 		super(name, signature, true);

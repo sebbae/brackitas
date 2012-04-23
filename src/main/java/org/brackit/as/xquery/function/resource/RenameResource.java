@@ -29,9 +29,7 @@ package org.brackit.as.xquery.function.resource;
 
 import java.io.File;
 
-import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.as.http.HttpConnector;
-
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -39,8 +37,12 @@ import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * #
@@ -53,6 +55,20 @@ import org.brackit.xquery.xdm.Sequence;
 		+ "src/main/resources/apps.", parameters = { "$rscPathName",
 		"$rscNewName" })
 public class RenameResource extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(ResourceFun.RESOURCE_NSURI,
+			ResourceFun.RESOURCE_PREFIX, "rename");
+
+	public RenameResource() {
+		this(DEFAULT_NAME);
+	}
+
+	public RenameResource(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.BOOL,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One)), true);
+	}
 
 	public RenameResource(QNm name, Signature signature) {
 		super(name, signature, true);
@@ -69,12 +85,12 @@ public class RenameResource extends AbstractFunction {
 			String fNewName = ((Atomic) args[1]).atomize().stringValue().trim();
 			String baseOld = String.format("%s/%s", HttpConnector.APPS_PATH,
 					fPathName);
-			String baseNew = String.format("%s/%s",
-					baseOld.substring(0, baseOld.lastIndexOf("/")), fNewName);
+			String baseNew = String.format("%s/%s", baseOld.substring(0,
+					baseOld.lastIndexOf("/")), fNewName);
 			return new Bool(new File(baseOld).renameTo(new File(baseNew)));
 		} catch (Exception e) {
-			throw new QueryException(e, ResourceFun.RSC_RENAME_INT_ERROR,
-					e.getMessage());
+			throw new QueryException(e, ResourceFun.RSC_RENAME_INT_ERROR, e
+					.getMessage());
 		}
 	}
 }

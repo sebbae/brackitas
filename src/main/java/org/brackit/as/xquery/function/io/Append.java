@@ -63,15 +63,15 @@ import org.brackit.xquery.xdm.type.SequenceType;
 		"$fileURI", "$content" })
 public class Append extends AbstractFunction {
 
-	public Append(QNm name, Signature signature) {
-		super(name, signature, true);
-	}
-
 	public static final QNm DEFAULT_NAME = new QNm(IOFun.IO_NSURI,
 			IOFun.IO_PREFIX, "append");
 
 	public Append() {
 		this(DEFAULT_NAME);
+	}
+
+	public Append(QNm name, Signature signature) {
+		super(name, signature, true);
 	}
 
 	public Append(QNm name) {

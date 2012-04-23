@@ -39,6 +39,9 @@ import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.xquery.util.annotation.ModuleAnnotation;
 import org.brackit.xquery.xdm.Sequence;
 import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -50,6 +53,19 @@ import org.brackit.xquery.xdm.Signature;
 @FunctionAnnotation(description = "Deletes an application. The specified application "
 		+ "is physically deleted.", parameters = "$applicationName")
 public class Delete extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(AppFun.APP_NSURI,
+			AppFun.APP_PREFIX, "delete");
+
+	public Delete() {
+		this(DEFAULT_NAME);
+	}
+
+	public Delete(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.BOOL,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One)), true);
+	}
 
 	public Delete(QNm name, Signature signature) {
 		super(name, signature, true);

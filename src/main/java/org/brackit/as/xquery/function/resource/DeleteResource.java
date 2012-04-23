@@ -29,10 +29,7 @@ package org.brackit.as.xquery.function.resource;
 
 import java.io.File;
 
-import org.brackit.xquery.util.annotation.FunctionAnnotation;
-import org.brackit.xquery.util.annotation.ModuleAnnotation;
 import org.brackit.as.http.HttpConnector;
-
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -40,8 +37,13 @@ import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
+import org.brackit.xquery.util.annotation.ModuleAnnotation;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -54,6 +56,19 @@ import org.brackit.xquery.xdm.Sequence;
 		+ "starts at the applications directory, by default: "
 		+ "src/main/resources/apps. ", parameters = "$rscPathName")
 public class DeleteResource extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(ResourceFun.RESOURCE_NSURI,
+			ResourceFun.RESOURCE_PREFIX, "delete");
+
+	public DeleteResource() {
+		this(DEFAULT_NAME);
+	}
+
+	public DeleteResource(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.BOOL,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One)), true);
+	}
 
 	public DeleteResource(QNm name, Signature signature) {
 		super(name, signature, true);
@@ -71,8 +86,8 @@ public class DeleteResource extends AbstractFunction {
 					fPathName);
 			return new Bool(new File(base).delete());
 		} catch (Exception e) {
-			throw new QueryException(e, ResourceFun.RSC_DELETE_INT_ERROR,
-					e.getMessage());
+			throw new QueryException(e, ResourceFun.RSC_DELETE_INT_ERROR, e
+					.getMessage());
 		}
 	}
 }
