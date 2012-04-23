@@ -31,7 +31,7 @@ import java.io.File;
 
 import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.as.http.HttpConnector;
-import org.brackit.as.xquery.ASErrorCode;
+
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -69,12 +69,12 @@ public class RenameResource extends AbstractFunction {
 			String fNewName = ((Atomic) args[1]).atomize().stringValue().trim();
 			String baseOld = String.format("%s/%s", HttpConnector.APPS_PATH,
 					fPathName);
-			String baseNew = String.format("%s/%s", baseOld.substring(0,
-					baseOld.lastIndexOf("/")), fNewName);
+			String baseNew = String.format("%s/%s",
+					baseOld.substring(0, baseOld.lastIndexOf("/")), fNewName);
 			return new Bool(new File(baseOld).renameTo(new File(baseNew)));
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.RSC_RENAME_INT_ERROR, e
-					.getMessage());
+			throw new QueryException(e, ResourceFun.RSC_RENAME_INT_ERROR,
+					e.getMessage());
 		}
 	}
 }

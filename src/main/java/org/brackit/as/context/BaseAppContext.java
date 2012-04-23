@@ -137,8 +137,8 @@ public class BaseAppContext {
 					i.remove();
 				} catch (QueryException e) {
 					// System.out.println(String.format(
-					// "Problems compiling: %s. \n %s \n", uq.getPath(), e
-					// .getMessage()));
+					// "Problems compiling: %s. \n %s \n", uq.getPath(),
+					// e.getMessage()));
 					uq.setE(e);
 				}
 			}

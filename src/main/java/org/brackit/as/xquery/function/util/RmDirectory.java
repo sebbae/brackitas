@@ -30,14 +30,12 @@ package org.brackit.as.xquery.function.util;
 import java.io.File;
 
 import org.brackit.as.http.HttpConnector;
-import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
 import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
-import org.brackit.xquery.module.Namespaces;
 import org.brackit.xquery.module.StaticContext;
 import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.xquery.xdm.Sequence;
@@ -60,8 +58,8 @@ public class RmDirectory extends AbstractFunction {
 		super(name, signature, true);
 	}
 
-	public static final QNm DEFAULT_NAME = new QNm(Namespaces.UTIL_NSURI,
-			Namespaces.UTIL_PREFIX, "rm-directory");
+	public static final QNm DEFAULT_NAME = new QNm(UtilFun.UTIL_NSURI,
+			UtilFun.UTIL_PREFIX, "rm-directory");
 
 	public RmDirectory() {
 		this(DEFAULT_NAME);
@@ -85,7 +83,7 @@ public class RmDirectory extends AbstractFunction {
 			return new Bool(deleteDir(new File(String.format("%s/%s",
 					HttpConnector.APPS_PATH, fDirName))));
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.UTIL_RMDIRECTORY_INT_ERROR,
+			throw new QueryException(e, UtilFun.UTIL_RMDIRECTORY_INT_ERROR,
 					e.getMessage());
 		}
 	}

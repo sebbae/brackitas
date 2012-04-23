@@ -35,7 +35,7 @@ import java.util.Map.Entry;
 
 import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.xquery.util.annotation.ModuleAnnotation;
-import org.brackit.as.xquery.ASErrorCode;
+
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.XQuery;
@@ -87,8 +87,8 @@ public class ListPredefinedModules extends AbstractFunction {
 			return xquery.execute(ctx);
 		} catch (Exception e) {
 			throw new QueryException(e,
-					ASErrorCode.UTIL_LISTPREDEFINEDMODULES_INT_ERROR, e
-							.getMessage());
+					UtilFun.UTIL_LISTPREDEFINEDMODULES_INT_ERROR,
+					e.getMessage());
 		}
 	}
 

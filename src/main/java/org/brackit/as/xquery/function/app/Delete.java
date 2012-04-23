@@ -27,10 +27,7 @@
  */
 package org.brackit.as.xquery.function.app;
 
-import org.brackit.xquery.util.annotation.FunctionAnnotation;
-import org.brackit.xquery.util.annotation.ModuleAnnotation;
 import org.brackit.as.http.HttpConnector;
-import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -38,8 +35,10 @@ import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
+import org.brackit.xquery.util.annotation.ModuleAnnotation;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
 
 /**
  * 
@@ -64,7 +63,7 @@ public class Delete extends AbstractFunction {
 			HttpConnector.deleteApplication(name);
 			return Bool.TRUE;
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.APP_DELETE_INT_ERROR, e
+			throw new QueryException(e, AppFun.APP_DELETE_INT_ERROR, e
 					.getMessage());
 		}
 	}

@@ -35,7 +35,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.as.context.InputStreamName;
-import org.brackit.as.xquery.ASErrorCode;
+
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -78,7 +78,7 @@ public class GetParameter extends AbstractFunction {
 				return new Str((param == null) ? "" : param.trim());
 			}
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.REQ_GETPARAMETER_INT_ERROR,
+			throw new QueryException(e, RequestFun.REQ_GETPARAMETER_INT_ERROR,
 					e.getMessage());
 		}
 	}

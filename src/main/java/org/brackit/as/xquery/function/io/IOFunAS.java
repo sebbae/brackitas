@@ -37,6 +37,9 @@ import org.brackit.xquery.function.io.IOFun;
  */
 public class IOFunAS extends IOFun {
 
+	/**
+	 * Errors for IO functions
+	 */
 	public static final QNm IO_APPEND_INT_ERROR = new QNm(IO_NSURI, IO_PREFIX,
 			"BIIO003");
 

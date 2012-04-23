@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.xquery.util.annotation.ModuleAnnotation;
-import org.brackit.as.xquery.ASErrorCode;
+
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -71,8 +71,8 @@ public class GetCookie extends AbstractFunction {
 			}
 			return new Str("");
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.REQ_GETCOOKIE_INT_ERROR, e
-					.getMessage());
+			throw new QueryException(e, RequestFun.REQ_GETCOOKIE_INT_ERROR,
+					e.getMessage());
 		}
 	}
 }

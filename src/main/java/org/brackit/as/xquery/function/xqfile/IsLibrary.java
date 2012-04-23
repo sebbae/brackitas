@@ -30,7 +30,7 @@ package org.brackit.as.xquery.function.xqfile;
 import javax.servlet.ServletContext;
 
 import org.brackit.as.context.BaseAppContext;
-import org.brackit.as.xquery.ASErrorCode;
+
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.as.xquery.ASXQuery;
 import org.brackit.xquery.QueryContext;
@@ -75,7 +75,7 @@ public class IsLibrary extends AbstractFunction {
 				return Bool.FALSE;
 			}
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.XQFILE_ISMODULE_INT_ERROR,
+			throw new QueryException(e, XqfileFun.XQFILE_ISMODULE_INT_ERROR,
 					e.getMessage());
 		}
 	}

@@ -29,7 +29,6 @@ package org.brackit.as.xquery.function.util;
 
 import java.io.PrintStream;
 
-import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -78,7 +77,7 @@ public class PlainPrint extends AbstractFunction {
 				it.close();
 			}
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.UTIL_PLAINPRINT_INT_ERROR,
+			throw new QueryException(e, UtilFun.UTIL_PLAINPRINT_INT_ERROR,
 					e.getMessage());
 		} finally {
 			buf.close();

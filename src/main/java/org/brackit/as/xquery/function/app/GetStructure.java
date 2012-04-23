@@ -38,7 +38,6 @@ import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.http.HttpConnector;
 import org.brackit.xquery.util.io.IOUtils;
-import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.as.xquery.ASUncompiledQuery;
 import org.brackit.xquery.QueryContext;
@@ -85,7 +84,7 @@ public class GetStructure extends AbstractFunction {
 			StringBuffer sb = listStructure(f, luq);
 			return new D2NodeFactory().build(new DocumentParser(sb.toString()));
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.APP_GETSTRUCTURE_INT_ERROR,
+			throw new QueryException(e, AppFun.APP_GETSTRUCTURE_INT_ERROR,
 					e.getMessage());
 		}
 	}
@@ -111,8 +110,8 @@ public class GetStructure extends AbstractFunction {
 			for (ASUncompiledQuery uq : luq) {
 				if (IOUtils.getNormalizedPath(f).contains(uq.getPath())) {
 					sb.append(String.format(
-							"<file name=\"%s\" compError=\"true\"/>\n", f
-									.getName()));
+							"<file name=\"%s\" compError=\"true\"/>\n",
+							f.getName()));
 					return;
 				}
 			}

@@ -31,7 +31,7 @@ import javax.servlet.ServletContext;
 
 import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.as.context.BaseAppContext;
-import org.brackit.as.xquery.ASErrorCode;
+
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.as.xquery.ASUncompiledQuery;
 import org.brackit.as.xquery.compiler.ASCompileChain;
@@ -87,7 +87,7 @@ public class GetCompilationResult extends AbstractFunction {
 			return new Str(null);
 		} catch (Exception e) {
 			throw new QueryException(e,
-					ASErrorCode.XQFILE_GETCOMPILATIONERROR_INT_ERROR, e
+					XqfileFun.XQFILE_GETCOMPILATIONERROR_INT_ERROR, e
 							.getMessage());
 		}
 	}

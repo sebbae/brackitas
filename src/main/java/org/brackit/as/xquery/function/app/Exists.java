@@ -31,7 +31,6 @@ import java.io.File;
 
 import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.as.http.HttpConnector;
-import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -62,8 +61,8 @@ public class Exists extends AbstractFunction {
 			String base = String.format("%s/%s", HttpConnector.APPS_PATH, app);
 			return new Bool(new File(base).exists());
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.APP_EXISTS_INT_ERROR, e
-					.getMessage());
+			throw new QueryException(e, AppFun.APP_EXISTS_INT_ERROR,
+					e.getMessage());
 		}
 	}
 }
