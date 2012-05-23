@@ -80,11 +80,13 @@ public class RmDirectory extends AbstractFunction {
 				return new Bool(false);
 			fDirName = (fDirName.startsWith("/")) ? fDirName.substring(1)
 					: fDirName;
-			return new Bool(deleteDir(new File(String.format("%s/%s",
-					HttpConnector.APPS_PATH, fDirName))));
+			return new Bool(deleteDir(new File(HttpConnector.class
+					.getClassLoader().getResource(
+							String.format("%s/%s", HttpConnector.APPS_PATH,
+									fDirName)).toURI())));
 		} catch (Exception e) {
-			throw new QueryException(e, UtilFun.UTIL_RMDIRECTORY_INT_ERROR,
-					e.getMessage());
+			throw new QueryException(e, UtilFun.UTIL_RMDIRECTORY_INT_ERROR, e
+					.getMessage());
 		}
 	}
 

@@ -31,7 +31,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.brackit.as.xquery.ASXQuery;
 import org.brackit.as.xquery.compiler.ASCompileChain;
-import org.brackit.as.xquery.function.base.BaseASQueryContextTest;
+import org.brackit.as.xquery.function.base.BaseASQueryContext;
 import org.brackit.xquery.QueryException;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,7 +41,7 @@ import org.junit.Test;
  * @author Henrique Valer
  * 
  */
-public class TestHttp extends BaseASQueryContextTest {
+public class TestHttp extends BaseASQueryContext {
 
 	@Before
 	public void initFields() throws Exception {

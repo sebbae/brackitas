@@ -30,8 +30,9 @@ package org.brackit.as.http;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URISyntaxException;
 import java.util.Random;
 
 import javax.activation.MimetypesFileTypeMap;
@@ -86,7 +87,7 @@ public class HttpConnector {
 		}
 	}
 
-	public static final String APPS_PATH = "src/main/resources/apps";
+	public static final String APPS_PATH = "apps";
 
 	public static final String APP_MIME_TYPES = "mimeTypes";
 
@@ -99,7 +100,7 @@ public class HttpConnector {
 	private static ServletContextHandler sch;
 
 	public HttpConnector(final MetaDataMgr mdm, final SessionMgr sessionMgr,
-			final int port) {
+			final int port) throws URISyntaxException {
 		Log.setLog(new JettyLogger());
 		this.server = new Server(port);
 		server.setSessionIdManager(new HashSessionIdManager(new Random()));
@@ -140,18 +141,17 @@ public class HttpConnector {
 	}
 
 	private void processDeployment(ServletContextHandler sch,
-			SessionMgr sessionMgr, MetaDataMgr mdm) {
-		File f = new File(APPS_PATH);
+			SessionMgr sessionMgr, MetaDataMgr mdm) throws URISyntaxException {
+		File f = new File(HttpConnector.class.getClassLoader().getResource(
+				APPS_PATH).toURI());
 		try {
 			Session session = sessionMgr.getSession(sessionMgr.login());
 			session.setIsolationLevel(IsolationLevel.NONE);
 			if (f.isDirectory()) {
 				File[] apps = f.listFiles();
-				for (int i = 0; i < apps.length; i++) {
-					if (apps[i].isDirectory()) {
+				for (int i = 0; i < apps.length; i++)
+					if (apps[i].isDirectory())
 						compileApplication(apps[i]);
-					}
-				}
 			}
 		} catch (Exception e) {
 			log.error(e);
@@ -182,7 +182,7 @@ public class HttpConnector {
 				if (f[i].getName().endsWith(".xq")) {
 					try {
 						String s = IOUtils.getNormalizedPath(f[i]);
-						bac.register(resolvePath(s), f[i].lastModified());
+						bac.register(s, f[i].lastModified());
 					} catch (Exception e) {
 						log.error(e);
 					}
@@ -191,10 +191,12 @@ public class HttpConnector {
 		}
 	}
 
-	public static void deleteApplication(String app) throws IOException {
+	public static void deleteApplication(String app) throws IOException,
+			URISyntaxException {
 		terminateApplication(app);
 		sch.removeAttribute(app);
-		File f = new File(String.format("%s/%s", APPS_PATH, app));
+		File f = new File(HttpConnector.class.getClassLoader().getResource(
+				String.format("%s/%s", APPS_PATH, app)).toURI());
 		deleteDirectory(f);
 	}
 
@@ -212,20 +214,20 @@ public class HttpConnector {
 			throw new FileNotFoundException("Failed to delete file: " + f);
 	}
 
-	public static String resolvePath(String p) {
-		p = p.substring("src/main/resources".length());
-		return p;
-	}
+	// public static String resolvePath(String p) {
+	// p = p.substring("src/main/resources".length());
+	// return p;
+	// }
 
 	public static MimetypesFileTypeMap loadMimeTypes() {
 		MimetypesFileTypeMap mimeMap = new MimetypesFileTypeMap();
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(
-					"src/main/resources/mime.types"));
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+					HttpConnector.class.getClassLoader().getResourceAsStream(
+							"mime.types")));
 			String strLine = null;
-			while ((strLine = br.readLine()) != null) {
+			while ((strLine = br.readLine()) != null)
 				mimeMap.addMimeTypes(strLine);
-			}
 			br.close();
 		} catch (IOException e) {
 			log.error("Could not load mime types", e);

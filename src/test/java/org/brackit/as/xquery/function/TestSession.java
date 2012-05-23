@@ -35,8 +35,7 @@ import java.util.Date;
 
 import org.brackit.as.xquery.ASXQuery;
 import org.brackit.as.xquery.compiler.ASCompileChain;
-import org.brackit.as.xquery.function.base.BaseASQueryContextTest;
-import org.junit.Before;
+import org.brackit.as.xquery.function.base.BaseASQueryContext;
 import org.junit.Test;
 
 /**
@@ -44,9 +43,9 @@ import org.junit.Test;
  * @author Henrique Valer
  * 
  */
-public class TestSession extends BaseASQueryContextTest {
+public class TestSession extends BaseASQueryContext {
 
-	@Before
+	@Override
 	public void initFields() throws Exception {
 		super.initFields();
 	};

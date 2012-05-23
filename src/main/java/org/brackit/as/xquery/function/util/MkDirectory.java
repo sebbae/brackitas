@@ -79,8 +79,10 @@ public class MkDirectory extends AbstractFunction {
 			String fDirName = ((Atomic) args[0]).atomize().stringValue().trim();
 			fDirName = (fDirName.startsWith("/")) ? fDirName.substring(1)
 					: fDirName;
-			return new Bool(new File(String.format("%s/%s",
-					HttpConnector.APPS_PATH, fDirName)).mkdirs());
+			return new Bool(new File(HttpConnector.class.getClassLoader()
+					.getResource(
+							String.format("%s/%s", HttpConnector.APPS_PATH,
+									fDirName)).toURI()).mkdirs());
 		} catch (Exception e) {
 			throw new QueryException(e, UtilFun.UTIL_MKDIRECTORY_INT_ERROR, e
 					.getMessage());

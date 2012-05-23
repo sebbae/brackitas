@@ -122,8 +122,9 @@ public class Upload extends AbstractFunction {
 						conn.getURL().getPath().lastIndexOf("/") + 1);
 				in = conn.getInputStream();
 			}
-			File f = new File(String.format("%s/%s/%s",
-					HttpConnector.APPS_PATH, fRelStoragePath, fName));
+			File f = new File(HttpConnector.class.getClassLoader().getResource(
+					String.format("%s/%s/%s", HttpConnector.APPS_PATH,
+							fRelStoragePath, fName)).toURI());
 			OutputStream out = new FileOutputStream(f);
 
 			byte[] buffer = new byte[1024 * 16];

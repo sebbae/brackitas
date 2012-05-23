@@ -57,7 +57,7 @@ public class NullAppServer {
 	
 	private void startHTTP(int port) throws Exception {
 		try {
-			connector = new HttpConnector(BaseASQueryContextTest.metaDataMgr, BaseASQueryContextTest.db
+			connector = new HttpConnector(BaseASQueryContext.metaDataMgr, BaseASQueryContext.db
 					.getSessionMgr(), port);
 			connector.start();
 		} catch (Exception e) {

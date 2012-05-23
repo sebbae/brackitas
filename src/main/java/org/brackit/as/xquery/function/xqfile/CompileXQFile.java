@@ -104,8 +104,10 @@ public class CompileXQFile extends AbstractFunction {
 			out.close();
 			// compilation step
 			try {
-				HttpConnector.compileApplication(new File(String.format(
-						"%s/%s", HttpConnector.APPS_PATH, app)));
+				HttpConnector.compileApplication(new File(HttpConnector.class
+						.getClassLoader().getResource(
+								String.format("%s/%s", HttpConnector.APPS_PATH,
+										app)).toURI()));
 			} catch (NullPointerException e) {
 			}
 			ServletContext servletCtx = ((ASQueryContext) ctx).getReq()

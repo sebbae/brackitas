@@ -32,7 +32,7 @@ import static org.junit.Assert.assertEquals;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.as.xquery.ASXQuery;
 import org.brackit.as.xquery.compiler.ASCompileChain;
-import org.brackit.as.xquery.function.base.BaseASQueryContextTest;
+import org.brackit.as.xquery.function.base.BaseASQueryContext;
 import org.brackit.as.xquery.function.base.NullAppServer;
 import org.brackit.as.xquery.function.base.NullHttpServletRequest;
 import org.brackit.as.xquery.function.base.NullHttpSession;
@@ -46,7 +46,7 @@ import org.junit.Test;
  * @author Henrique Valer
  * 
  */
-public class TestApp extends BaseASQueryContextTest {
+public class TestApp extends BaseASQueryContext {
 
 	public static NullAppServer appServer;
 

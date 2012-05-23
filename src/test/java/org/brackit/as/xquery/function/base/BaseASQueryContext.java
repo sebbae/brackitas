@@ -35,13 +35,14 @@ import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.server.BrackitDB;
 import org.brackit.server.metadata.manager.MetaDataMgr;
 import org.brackit.server.tx.Tx;
+import org.junit.Before;
 
 /**
  * 
  * @author Henrique Valer
  * 
  */
-public class BaseASQueryContextTest {
+public class BaseASQueryContext {
 
 	public static PrintStream buffer;
 
@@ -64,7 +65,8 @@ public class BaseASQueryContextTest {
 		};
 	}
 
-	protected void initFields() throws Exception {
+	@Before
+	public void initFields() throws Exception {
 		db = new BrackitDB(true);
 		metaDataMgr = db.getMetadataMgr();
 		tx = db.getTaMgr().begin();

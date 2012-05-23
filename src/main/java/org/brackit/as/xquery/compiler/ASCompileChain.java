@@ -27,10 +27,19 @@
  */
 package org.brackit.as.xquery.compiler;
 
+import org.brackit.as.xquery.function.app.AppFun;
+import org.brackit.as.xquery.function.http.HttpFun;
+import org.brackit.as.xquery.function.io.IOFunAS;
+import org.brackit.as.xquery.function.request.RequestFun;
+import org.brackit.as.xquery.function.resource.ResourceFun;
+import org.brackit.as.xquery.function.session.SessionFun;
+import org.brackit.as.xquery.function.util.UtilFun;
+import org.brackit.as.xquery.function.xqfile.XqfileFun;
 import org.brackit.server.metadata.manager.MetaDataMgr;
 import org.brackit.server.tx.Tx;
 import org.brackit.server.xquery.DBCompileChain;
 import org.brackit.xquery.compiler.ModuleResolver;
+import org.brackit.xquery.module.Namespaces;
 
 /**
  * @author Sebastian Baechle
@@ -38,6 +47,20 @@ import org.brackit.xquery.compiler.ModuleResolver;
  * 
  */
 public class ASCompileChain extends DBCompileChain {
+
+	static {
+		Namespaces.predefine(IOFunAS.IO_PREFIX, IOFunAS.IO_NSURI);
+		Namespaces.predefine(UtilFun.UTIL_PREFIX, UtilFun.UTIL_NSURI);
+		Namespaces.predefine(SessionFun.SESSION_PREFIX,
+				SessionFun.SESSION_NSURI);
+		Namespaces.predefine(RequestFun.REQUEST_PREFIX,
+				RequestFun.REQUEST_NSURI);
+		Namespaces.predefine(AppFun.APP_PREFIX, AppFun.APP_NSURI);
+		Namespaces.predefine(XqfileFun.XQFILE_PREFIX, XqfileFun.XQFILE_NSURI);
+		Namespaces.predefine(ResourceFun.RESOURCE_PREFIX,
+				ResourceFun.RESOURCE_NSURI);
+		Namespaces.predefine(HttpFun.HTTP_PREFIX, HttpFun.HTTP_NSURI);
+	}
 
 	private ASBaseResolver resolver;
 
@@ -54,8 +77,8 @@ public class ASCompileChain extends DBCompileChain {
 	public ASCompileChain(MetaDataMgr mdm, Tx tx) {
 		super(mdm, tx);
 	}
-	
-	public ASBaseResolver getResolver () {
+
+	public ASBaseResolver getResolver() {
 		return this.resolver;
 	}
 }

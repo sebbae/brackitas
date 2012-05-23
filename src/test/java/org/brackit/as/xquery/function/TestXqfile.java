@@ -31,7 +31,7 @@ import static org.junit.Assert.*;
 
 import org.brackit.as.xquery.ASXQuery;
 import org.brackit.as.xquery.compiler.ASCompileChain;
-import org.brackit.as.xquery.function.base.BaseASQueryContextTest;
+import org.brackit.as.xquery.function.base.BaseASQueryContext;
 import org.brackit.xquery.QueryException;
 import org.junit.After;
 import org.junit.Before;
@@ -42,7 +42,7 @@ import org.junit.Test;
  * @author Henrique Valer
  * 
  */
-public class TestXqfile extends BaseASQueryContextTest {
+public class TestXqfile extends BaseASQueryContext {
 
 	public static String fileName = "test.xq";
 

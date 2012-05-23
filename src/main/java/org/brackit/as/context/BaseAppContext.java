@@ -28,6 +28,7 @@
 package org.brackit.as.context;
 
 import java.io.File;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -41,6 +42,7 @@ import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.module.LibraryModule;
 import org.brackit.xquery.module.Module;
+import org.brackit.xquery.util.io.IOUtils;
 
 /**
  * 
@@ -95,6 +97,8 @@ public class BaseAppContext {
 			putQuery(path, lastModified);
 		} catch (QueryException e) {
 			uncompiledQueries.add(new ASUncompiledQuery(path, lastModified, e));
+		} catch (URISyntaxException e) {
+			uncompiledQueries.add(new ASUncompiledQuery(path, lastModified, e));
 		}
 	}
 
@@ -118,6 +122,7 @@ public class BaseAppContext {
 					putQuery(uq.getPath(), uq.getLastModified());
 					i.remove();
 				} catch (QueryException e) {
+				} catch (URISyntaxException e) {
 				}
 			}
 			i = uncompiledQueries.iterator();
@@ -127,6 +132,7 @@ public class BaseAppContext {
 					putQuery(uq.getPath(), uq.getLastModified());
 					i.remove();
 				} catch (QueryException e) {
+				} catch (URISyntaxException e) {
 				}
 			}
 			i = uncompiledQueries.iterator();
@@ -137,31 +143,34 @@ public class BaseAppContext {
 					i.remove();
 				} catch (QueryException e) {
 					// System.out.println(String.format(
-					// "Problems compiling: %s. \n %s \n", uq.getPath(),
-					// e.getMessage()));
+					// "Problems compiling: %s. \n %s \n", uq.getPath(), e
+					// .getMessage()));
+					uq.setE(e);
+				} catch (URISyntaxException e) {
 					uq.setE(e);
 				}
 			}
 		}
 	}
 
-	private void putQuery(String path, long lastModified) throws QueryException {
-		ASXQuery target = new ASXQuery(chain, new File(String.format(
-				"src/main/resources%s", path)));
+	private void putQuery(String path, long lastModified)
+			throws QueryException, URISyntaxException {
+		File f = new File(path);
+		ASXQuery target = new ASXQuery(chain, f);
 		target.setLastModified(lastModified);
 		Module module = target.getModule();
 		if (module instanceof LibraryModule) {
 			String uri = ((LibraryModule) module).getTargetNS();
-			// ((BaseResolver) chain.getModuleResolver()).register(uri,
-			// (LibraryModule) module);
 			libraries.put(uri, path);
 		}
 		queries.put(path, target);
 	}
 
 	public ASXQuery get(String path) throws Exception {
-		String base = "src/main/resources";
-		File f = new File(base + path);
+		path = (path.startsWith("/")) ? path.substring(1) : path;
+		File f = new File(BaseAppContext.class.getClassLoader().getResource(
+				path).toURI());
+		path = IOUtils.getNormalizedPath(f);
 		ASXQuery x = queries.get(path);
 		if (x != null) {
 			if (f.lastModified() != x.getLastModified()) {
@@ -172,7 +181,7 @@ public class BaseAppContext {
 			while (i.hasNext()) {
 				Module m = i.next();
 				String mPath = libraries.get(m.getTargetNS());
-				File fm = new File(base + mPath);
+				File fm = new File(mPath);
 				ASXQuery qm = queries.get(mPath);
 				if (fm.lastModified() != qm.getLastModified()) {
 					((ASBaseResolver) chain.getResolver())

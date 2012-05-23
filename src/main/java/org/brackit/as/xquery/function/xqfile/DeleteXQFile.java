@@ -94,7 +94,8 @@ public class DeleteXQFile extends AbstractFunction {
 						.unregister(fPathName);
 			} catch (NullPointerException e) {
 			}
-			return new Bool(new File(base).delete());
+			return new Bool(new File(HttpConnector.class.getClassLoader()
+					.getResource(base).toURI()).delete());
 		} catch (Exception e) {
 			throw new QueryException(e, XqfileFun.XQFILE_DELETE_INT_ERROR, e
 					.getMessage());

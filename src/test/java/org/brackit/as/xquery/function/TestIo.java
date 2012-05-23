@@ -37,7 +37,7 @@ import java.io.IOException;
 
 import org.brackit.as.xquery.ASXQuery;
 import org.brackit.as.xquery.compiler.ASCompileChain;
-import org.brackit.as.xquery.function.base.BaseASQueryContextTest;
+import org.brackit.as.xquery.function.base.BaseASQueryContext;
 import org.brackit.xquery.QueryException;
 import org.junit.After;
 import org.junit.Before;
@@ -48,7 +48,7 @@ import org.junit.Test;
  * @author Henrique Valer
  *
  */
-public class TestIo extends BaseASQueryContextTest {
+public class TestIo extends BaseASQueryContext {
 
 	@Before
 	public void initFields() throws Exception {

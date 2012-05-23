@@ -82,9 +82,10 @@ public class DeleteResource extends AbstractFunction {
 					.trim();
 			fPathName = (fPathName.startsWith("/")) ? fPathName.substring(1)
 					: fPathName;
-			String base = String.format("%s/%s", HttpConnector.APPS_PATH,
-					fPathName);
-			return new Bool(new File(base).delete());
+			return new Bool(new File(HttpConnector.class.getClassLoader()
+					.getResource(
+							String.format("%s/%s", HttpConnector.APPS_PATH,
+									fPathName)).toURI()).delete());
 		} catch (Exception e) {
 			throw new QueryException(e, ResourceFun.RSC_DELETE_INT_ERROR, e
 					.getMessage());

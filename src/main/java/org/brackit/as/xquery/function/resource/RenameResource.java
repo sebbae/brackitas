@@ -52,8 +52,7 @@ import org.brackit.xquery.xdm.type.SequenceType;
  */
 @FunctionAnnotation(description = "Renames the given resource. The resource path "
 		+ "($rscPathName) starts at the applications directory, by default: "
-		+ "src/main/resources/apps.", parameters = { "$rscPathName",
-		"$rscNewName" })
+		+ "/apps.", parameters = { "$rscPathName", "$rscNewName" })
 public class RenameResource extends AbstractFunction {
 
 	public static final QNm DEFAULT_NAME = new QNm(ResourceFun.RESOURCE_NSURI,
@@ -85,9 +84,13 @@ public class RenameResource extends AbstractFunction {
 			String fNewName = ((Atomic) args[1]).atomize().stringValue().trim();
 			String baseOld = String.format("%s/%s", HttpConnector.APPS_PATH,
 					fPathName);
+			File o = new File(HttpConnector.class.getClassLoader().getResource(
+					baseOld).toURI());
 			String baseNew = String.format("%s/%s", baseOld.substring(0,
 					baseOld.lastIndexOf("/")), fNewName);
-			return new Bool(new File(baseOld).renameTo(new File(baseNew)));
+			File n = new File(HttpConnector.class.getClassLoader().getResource(
+					baseNew).toURI());
+			return new Bool(o.renameTo(n));
 		} catch (Exception e) {
 			throw new QueryException(e, ResourceFun.RSC_RENAME_INT_ERROR, e
 					.getMessage());

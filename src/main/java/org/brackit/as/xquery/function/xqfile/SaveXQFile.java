@@ -28,6 +28,7 @@
 package org.brackit.as.xquery.function.xqfile;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 
 import org.brackit.as.http.HttpConnector;
@@ -85,7 +86,8 @@ public class SaveXQFile extends AbstractFunction {
 			String fQuery = ((Atomic) args[1]).atomize().stringValue().trim();
 			String base = String.format("%s/%s", HttpConnector.APPS_PATH,
 					fPathName);
-			FileWriter f = new FileWriter(base);
+			FileWriter f = new FileWriter(new File(HttpConnector.class
+					.getClassLoader().getResource(base).toURI()));
 			BufferedWriter out = new BufferedWriter(f);
 			out.write(fQuery.replaceAll("&", "&amp;"));
 			out.close();
