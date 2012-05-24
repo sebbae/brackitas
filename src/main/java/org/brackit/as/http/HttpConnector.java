@@ -30,6 +30,7 @@ package org.brackit.as.http;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
@@ -87,7 +88,7 @@ public class HttpConnector {
 		}
 	}
 
-	public static final String APPS_PATH = "apps";
+	public static final String APPS_PATH = readsAppDirectory();
 
 	public static final String APP_MIME_TYPES = "mimeTypes";
 
@@ -118,6 +119,30 @@ public class HttpConnector {
 		processDeployment(servletContextHandler, sessionMgr, mdm);
 	}
 
+	private static String readsAppDirectory() {
+		try {
+			BufferedReader buf = new BufferedReader(new FileReader(new File(
+					HttpConnector.class.getResource("/brackitas.properties")
+							.toURI())));
+			String line = buf.readLine();
+			while (line != null) {
+				if (line.startsWith("apps.directory")) {
+					String s = line.substring(line.indexOf("/")).trim();
+					return (s.endsWith("/") ? s.substring(0, s.length() - 1)
+							: s);
+				}
+				line = buf.readLine();
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	public void start() throws Exception {
 		try {
 			server.start();
@@ -142,8 +167,7 @@ public class HttpConnector {
 
 	private void processDeployment(ServletContextHandler sch,
 			SessionMgr sessionMgr, MetaDataMgr mdm) throws URISyntaxException {
-		File f = new File(HttpConnector.class.getClassLoader().getResource(
-				APPS_PATH).toURI());
+		File f = new File(APPS_PATH);
 		try {
 			Session session = sessionMgr.getSession(sessionMgr.login());
 			session.setIsolationLevel(IsolationLevel.NONE);
@@ -195,8 +219,7 @@ public class HttpConnector {
 			URISyntaxException {
 		terminateApplication(app);
 		sch.removeAttribute(app);
-		File f = new File(HttpConnector.class.getClassLoader().getResource(
-				String.format("%s/%s", APPS_PATH, app)).toURI());
+		File f = new File(String.format("%s/%s", APPS_PATH, app));
 		deleteDirectory(f);
 	}
 
@@ -213,11 +236,6 @@ public class HttpConnector {
 		if (!f.delete())
 			throw new FileNotFoundException("Failed to delete file: " + f);
 	}
-
-	// public static String resolvePath(String p) {
-	// p = p.substring("src/main/resources".length());
-	// return p;
-	// }
 
 	public static MimetypesFileTypeMap loadMimeTypes() {
 		MimetypesFileTypeMap mimeMap = new MimetypesFileTypeMap();

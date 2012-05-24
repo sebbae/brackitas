@@ -95,19 +95,16 @@ public class CompileXQFile extends AbstractFunction {
 					: fPathName;
 			String fQuery = ((Atomic) args[1]).atomize().stringValue().trim();
 			String app = fPathName.split("/")[0];
-			String base = String.format("%s/%s", HttpConnector.APPS_PATH,
-					fPathName);
 			// saving step
-			FileWriter f = new FileWriter(base);
+			FileWriter f = new FileWriter(String.format("%s/%s",
+					HttpConnector.APPS_PATH, fPathName));
 			BufferedWriter out = new BufferedWriter(f);
 			out.write(fQuery.replaceAll("&", "&amp;"));
 			out.close();
 			// compilation step
 			try {
-				HttpConnector.compileApplication(new File(HttpConnector.class
-						.getClassLoader().getResource(
-								String.format("%s/%s", HttpConnector.APPS_PATH,
-										app)).toURI()));
+				HttpConnector.compileApplication(new File(String.format(
+						"%s/%s", HttpConnector.APPS_PATH, app)));
 			} catch (NullPointerException e) {
 			}
 			ServletContext servletCtx = ((ASQueryContext) ctx).getReq()

@@ -28,7 +28,6 @@
 package org.brackit.as.xquery.function.app;
 
 import java.io.File;
-import java.net.URISyntaxException;
 
 import org.brackit.as.http.HttpConnector;
 import org.brackit.server.session.SessionException;
@@ -78,15 +77,10 @@ public class Deploy extends AbstractFunction {
 			Sequence[] args) throws QueryException {
 		try {
 			String name = ((Atomic) args[0]).atomize().stringValue().trim();
-			HttpConnector.compileApplication(new File(HttpConnector.class
-					.getClassLoader().getResource(
-							String.format("%s/%s", HttpConnector.APPS_PATH,
-									name)).toURI()));
+			HttpConnector.compileApplication(new File(String.format("%s/%s",
+					HttpConnector.APPS_PATH, name)));
 			return Bool.TRUE;
 		} catch (SessionException e) {
-			throw new QueryException(e, AppFun.APP_DEPLOY_INT_ERROR, e
-					.getMessage());
-		} catch (URISyntaxException e) {
 			throw new QueryException(e, AppFun.APP_DEPLOY_INT_ERROR, e
 					.getMessage());
 		}

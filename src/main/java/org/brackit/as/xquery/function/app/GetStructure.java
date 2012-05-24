@@ -87,9 +87,8 @@ public class GetStructure extends AbstractFunction {
 			Sequence[] args) throws QueryException {
 		try {
 			String app = ((Atomic) args[0]).atomize().stringValue().trim();
-			File f = new File(HttpConnector.class.getClassLoader().getResource(
-					String.format("%s/%s", HttpConnector.APPS_PATH, app))
-					.toURI());
+			File f = new File(String.format("%s/%s", HttpConnector.APPS_PATH,
+					app));
 			List<ASUncompiledQuery> luq;
 			try {
 				ServletContext s = ((ASQueryContext) ctx).getReq()

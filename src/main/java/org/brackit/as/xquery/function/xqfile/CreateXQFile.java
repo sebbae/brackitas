@@ -91,14 +91,12 @@ public class CreateXQFile extends AbstractFunction {
 					fPathName);
 			ServletContext servletCtx = ((ASQueryContext) ctx).getReq()
 					.getServletContext();
-			FileWriter f = new FileWriter(new File(HttpConnector.class
-					.getClassLoader().getResource(base).toURI()));
-			BufferedWriter out = new BufferedWriter(f);
+			File f = new File(base);
+			FileWriter fw = new FileWriter(f);
+			BufferedWriter out = new BufferedWriter(fw);
 			out.write(Generate.BSDLicense);
 			out.write(Generate.todo);
 			out.close();
-			Long lastUsed = new File(HttpConnector.class.getClassLoader()
-					.getResource(base).toURI()).lastModified();
 			BaseAppContext bac;
 			try {
 				bac = (BaseAppContext) servletCtx.getAttribute(app);
@@ -107,7 +105,7 @@ public class CreateXQFile extends AbstractFunction {
 						((ASQueryContext) ctx).getMDM(), ((ASQueryContext) ctx)
 								.getTX()));
 			}
-			bac.register(base, lastUsed);
+			bac.register(base, f.lastModified());
 			return Bool.TRUE;
 		} catch (Exception e) {
 			throw new QueryException(e, XqfileFun.XQFILE_CREATE_INT_ERROR, e

@@ -84,8 +84,6 @@ public class DeleteXQFile extends AbstractFunction {
 			fPathName = (fPathName.startsWith("/")) ? fPathName.substring(1)
 					: fPathName;
 			String app = fPathName.split("/")[0];
-			String base = String.format("%s/%s", HttpConnector.APPS_PATH,
-					fPathName);
 			ServletContext servletCtx;
 			try {
 				servletCtx = ((ASQueryContext) ctx).getReq()
@@ -94,8 +92,8 @@ public class DeleteXQFile extends AbstractFunction {
 						.unregister(fPathName);
 			} catch (NullPointerException e) {
 			}
-			return new Bool(new File(HttpConnector.class.getClassLoader()
-					.getResource(base).toURI()).delete());
+			return new Bool(new File(String.format("%s/%s",
+					HttpConnector.APPS_PATH, fPathName)).delete());
 		} catch (Exception e) {
 			throw new QueryException(e, XqfileFun.XQFILE_DELETE_INT_ERROR, e
 					.getMessage());

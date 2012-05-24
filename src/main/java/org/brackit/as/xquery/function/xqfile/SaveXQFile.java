@@ -84,11 +84,9 @@ public class SaveXQFile extends AbstractFunction {
 			fPathName = (fPathName.startsWith("/")) ? fPathName.substring(1)
 					: fPathName;
 			String fQuery = ((Atomic) args[1]).atomize().stringValue().trim();
-			String base = String.format("%s/%s", HttpConnector.APPS_PATH,
-					fPathName);
-			FileWriter f = new FileWriter(new File(HttpConnector.class
-					.getClassLoader().getResource(base).toURI()));
-			BufferedWriter out = new BufferedWriter(f);
+			BufferedWriter out = new BufferedWriter(
+					new FileWriter(new File(String.format("%s/%s",
+							HttpConnector.APPS_PATH, fPathName))));
 			out.write(fQuery.replaceAll("&", "&amp;"));
 			out.close();
 			return Bool.TRUE;

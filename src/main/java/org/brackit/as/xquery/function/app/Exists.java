@@ -74,11 +74,8 @@ public class Exists extends AbstractFunction {
 			Sequence[] args) throws QueryException {
 		try {
 			String app = ((Atomic) args[0]).atomize().stringValue().trim();
-			return new Bool(new File(HttpConnector.class.getClassLoader()
-					.getResource(
-							String
-									.format("%s/%s", HttpConnector.APPS_PATH,
-											app)).toURI()).exists());
+			return new Bool(new File(String.format("%s/%s",
+					HttpConnector.APPS_PATH, app)).exists());
 		} catch (Exception e) {
 			throw new QueryException(e, AppFun.APP_EXISTS_INT_ERROR, e
 					.getMessage());

@@ -84,13 +84,9 @@ public class RenameResource extends AbstractFunction {
 			String fNewName = ((Atomic) args[1]).atomize().stringValue().trim();
 			String baseOld = String.format("%s/%s", HttpConnector.APPS_PATH,
 					fPathName);
-			File o = new File(HttpConnector.class.getClassLoader().getResource(
-					baseOld).toURI());
 			String baseNew = String.format("%s/%s", baseOld.substring(0,
 					baseOld.lastIndexOf("/")), fNewName);
-			File n = new File(HttpConnector.class.getClassLoader().getResource(
-					baseNew).toURI());
-			return new Bool(o.renameTo(n));
+			return new Bool(new File(baseOld).renameTo(new File(baseNew)));
 		} catch (Exception e) {
 			throw new QueryException(e, ResourceFun.RSC_RENAME_INT_ERROR, e
 					.getMessage());

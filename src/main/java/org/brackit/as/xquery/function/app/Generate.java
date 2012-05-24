@@ -824,8 +824,7 @@ public class Generate extends AbstractFunction {
 				genView(app, base);
 				genResources(app, base);
 				genTemplate(app, base, false);
-				HttpConnector.compileApplication(new File(HttpConnector.class
-						.getClassLoader().getResource(base).toURI()));
+				HttpConnector.compileApplication(new File(base));
 				return Bool.TRUE;
 			} else if (model.equals("REG")) {
 				new File(base).mkdir();
@@ -841,8 +840,7 @@ public class Generate extends AbstractFunction {
 				out.close();
 				genResources(app, base);
 				genTemplate(app, base, true);
-				HttpConnector.compileApplication(new File(HttpConnector.class
-						.getClassLoader().getResource(base).toURI()));
+				HttpConnector.compileApplication(new File(base));
 				return Bool.TRUE;
 			} else {
 				throw new QueryException(AppFun.APP_GENERATE_INT_ERROR,
