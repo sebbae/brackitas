@@ -64,7 +64,7 @@ import org.brackit.xquery.xdm.type.SequenceType;
  */
 @FunctionAnnotation(description = "Uploads a resource to the server. The resource path "
 		+ "($rscPathName) starts at the applications directory, by default: "
-		+ "src/main/resources/apps. The resource input ($rscInput) can be of two types: "
+		+ "~/src/main/resources/apps. The resource input ($rscInput) can be of two types: "
 		+ "either the name of the parameter being submited via POST, or a string "
 		+ "containing the location of the resource."
 		+ "On the previous, we can submit an HTML form using POST containing a parameter "

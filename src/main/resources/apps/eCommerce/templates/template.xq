@@ -55,7 +55,7 @@ declare function template:head() as item()+
     <head>
         <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
         <title> AppName </title>
-        <link rel="stylesheet" type="text/css" href="http://localhost:8080/apps/eCommerce/resources/css/brackit.css"/>
+        <link rel="stylesheet" type="text/css" href="http://localhost:8080/eCommerce/resources/css/brackit.css"/>
     </head>
 };
 
@@ -69,7 +69,7 @@ declare function template:header() as item()+
         <table>
             <tr>
                 <td>
-                    <img style="width:200px; height:75px; padding: 10px;" align="middle" src="http://localhost:8080/apps/eCommerce/resources/images/ecommerce.jpg" />
+                    <img style="width:200px; height:75px; padding: 10px;" align="middle" src="http://localhost:8080/eCommerce/resources/images/ecommerce.jpg" />
                 </td>
                 <td>
                     {

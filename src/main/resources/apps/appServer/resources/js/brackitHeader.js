@@ -36,9 +36,9 @@ function testIt(test, fPathName) {
 		var func = prompt(
 				"Enter the name of the function you would like to execute:",
 				"index");
-		window.open("http://localhost:8080/apps/" + fPathName.trim() + "/"
+		window.open("http://localhost:8080/" + fPathName.trim() + "/"
 				+ func.trim());
 	} else {
-		window.open("http://localhost:8080/apps/" + fPathName.trim() + ".xq");
+		window.open("http://localhost:8080/" + fPathName.trim() + ".xq");
 	}
 };

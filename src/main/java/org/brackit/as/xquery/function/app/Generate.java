@@ -116,7 +116,7 @@ public class Generate extends AbstractFunction {
 	public static String tempHead = "declare function template:head() as item() {\n"
 			+ "  <head>\n"
 			+ "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>\n"
-			+ "    <link href=\"http://localhost:8080/apps/%s/resources/css/%s.css\" rel=\"stylesheet\" type=\"text/css\" />\n"
+			+ "    <link href=\"http://localhost:8080/%s/resources/css/%s.css\" rel=\"stylesheet\" type=\"text/css\" />\n"
 			+ "  </head>\n" + "};\n";
 
 	public static String tempHeader = "declare function template:header() as item() {\n"

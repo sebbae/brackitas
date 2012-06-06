@@ -110,13 +110,13 @@ declare function appView:listing($dir as item()*, $app as xs:string, $base as xs
           <p>
             <a>{fn:data($dir/@name)}</a>
             <a href="../fileController/mkDir?app={$app}&amp;name={$base}">
-                <img align="right" width="16" height="16" alt="Create a new folder" title="Create a new folder" src="http://localhost:8080/apps/appServer/resources/images/03_folder.gif"/>            
+                <img align="right" width="16" height="16" alt="Create a new folder" title="Create a new folder" src="http://localhost:8080/appServer/resources/images/03_folder.gif"/>            
             </a>
             <a href="../fileController/upload?app={$app}&amp;name={$base}">
-                <img align="right" width="16" height="16" alt="Upload file" title="Upload file" src="http://localhost:8080/apps/appServer/resources/images/02_upload.gif"/>
+                <img align="right" width="16" height="16" alt="Upload file" title="Upload file" src="http://localhost:8080/appServer/resources/images/02_upload.gif"/>
             </a>
             <a href="../fileController/create?app={$app}&amp;name={$base}">
-                <img align="right" width="16" height="16" alt="Create new XQuery file" title="Create new XQuery file" src="http://localhost:8080/apps/appServer/resources/images/01_create.gif"/>
+                <img align="right" width="16" height="16" alt="Create new XQuery file" title="Create new XQuery file" src="http://localhost:8080/appServer/resources/images/01_create.gif"/>
             </a>
           </p>
         </li>
@@ -279,7 +279,7 @@ declare function appView:generateTextArea($fPathName as xs:string) as item() {
                       fn:string-length(req:get-parameter("query")) > 0) then
                       req:get-parameter("query")
                   else
-                      io:read(fn:concat("src/main/resources/apps/", $fPathName))),
+                      io:read(fn:concat(util:get-property("apps.directory"), $fPathName))),
               "</textarea>")
 };
 

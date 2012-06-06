@@ -50,7 +50,7 @@ import org.brackit.xquery.xdm.type.SequenceType;
  * 
  */
 @FunctionAnnotation(description = "Creates a directory starting from the "
-		+ "applications directory, by default: src/main/resources/apps. "
+		+ "applications directory, by default: ~/src/main/resources/apps. "
 		+ "The intermediary folders are created as well when not previously "
 		+ "existent.", parameters = "$dirPathName")
 public class MkDirectory extends AbstractFunction {

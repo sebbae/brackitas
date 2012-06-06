@@ -25,20 +25,21 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.brackit.as.xquery.function.xqfile;
+package org.brackit.as.xquery.function.util;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.URISyntaxException;
 
-import javax.servlet.ServletContext;
-
-import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.http.HttpConnector;
-import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
-import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
+import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
 import org.brackit.xquery.util.annotation.FunctionAnnotation;
@@ -53,50 +54,60 @@ import org.brackit.xquery.xdm.type.SequenceType;
  * @author Henrique Valer
  * 
  */
-@FunctionAnnotation(description = "Deletes the specified XQuery file under "
-		+ "the file path name ($filePathName). The file path name starts from "
-		+ "the applications directory, by default: ~/src/main/resources/apps.", parameters = "$filePathName")
-public class DeleteXQFile extends AbstractFunction {
+@FunctionAnnotation(description = "Returns the value of the given property. \n"
+		+ "Properties are stored in a file called brackitas.properties under "
+		+ "~/src/main/resources. \n"
+		+ "Every single property is as following: propertyName = propertyValue.", parameters = "$propertyName")
+public class GetASProperty extends AbstractFunction {
 
-	public static final QNm DEFAULT_NAME = new QNm(XqfileFun.XQFILE_NSURI,
-			XqfileFun.XQFILE_PREFIX, "delete");
+	public static final QNm DEFAULT_NAME = new QNm(UtilFun.UTIL_NSURI,
+			UtilFun.UTIL_PREFIX, "get-property");
 
-	public DeleteXQFile() {
+	public GetASProperty() {
 		this(DEFAULT_NAME);
 	}
 
-	public DeleteXQFile(QNm name) {
-		super(name, new Signature(new SequenceType(AtomicType.BOOL,
+	public GetASProperty(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.STR,
 				Cardinality.One), new SequenceType(AtomicType.STR,
 				Cardinality.One)), true);
 	}
 
-	public DeleteXQFile(QNm name, Signature signature) {
+	public GetASProperty(QNm name, Signature signature) {
 		super(name, signature, true);
 	}
 
 	@Override
 	public Sequence execute(StaticContext sctx, QueryContext ctx,
 			Sequence[] args) throws QueryException {
+		String propName = ((Atomic) args[0]).stringValue().trim();
+		String result = readsPropertyFromFile(propName);
+		return new Str((result != null) ? result : "Property does not exist.");
+	}
+
+	private static String readsPropertyFromFile(String propName)
+			throws QueryException {
 		try {
-			String fPathName = ((Atomic) args[0]).atomize().stringValue()
-					.trim();
-			fPathName = (fPathName.startsWith("/")) ? fPathName.substring(1)
-					: fPathName;
-			String app = fPathName.split("/")[0];
-			ServletContext servletCtx;
-			try {
-				servletCtx = ((ASQueryContext) ctx).getReq()
-						.getServletContext();
-				((BaseAppContext) servletCtx.getAttribute(app))
-						.unregister(fPathName);
-			} catch (NullPointerException e) {
+			BufferedReader buf = new BufferedReader(new FileReader(new File(
+					HttpConnector.class.getClassLoader().getResource(
+							HttpConnector.BRACKITAS_PROPERTY_FILE).toURI())));
+			String line = buf.readLine();
+			while (line != null) {
+				if (line.startsWith(propName))
+					return line.substring(line.indexOf("=") + 1).trim();
+				line = buf.readLine();
 			}
-			return new Bool(new File(String.format("%s/%s",
-					HttpConnector.APPS_PATH, fPathName)).delete());
-		} catch (Exception e) {
-			throw new QueryException(e, XqfileFun.XQFILE_DELETE_INT_ERROR, e
+		} catch (FileNotFoundException e) {
+			throw new QueryException(e, UtilFun.UTIL_GETASPROPERTY_INT_ERROR, e
+					.getMessage());
+		} catch (IOException e) {
+			throw new QueryException(e, UtilFun.UTIL_GETASPROPERTY_INT_ERROR, e
+					.getMessage());
+		} catch (URISyntaxException e) {
+			throw new QueryException(e, UtilFun.UTIL_GETASPROPERTY_INT_ERROR, e
 					.getMessage());
 		}
+		return null;
 	}
+
 }

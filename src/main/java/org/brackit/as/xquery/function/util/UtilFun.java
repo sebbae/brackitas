@@ -62,4 +62,7 @@ public class UtilFun {
 	public static final QNm UTIL_RMDIRECTORY_INT_ERROR = new QNm(
 			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "UTIL0006");
 
+	public static final QNm UTIL_GETASPROPERTY_INT_ERROR = new QNm(
+			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "UTIL0007");
+
 }

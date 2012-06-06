@@ -151,11 +151,9 @@ declare function controller:",$formName,"() as item() {
 "
             )
         return
-            if (io:append(fn:concat("src/main/resources/apps/",$name),$newFunc)) then
+            if (io:append(fn:concat(util:get-property("apps.directory"),$name),$newFunc)) then
                 appView:menuContent(appView:createMenu($app),view:msgSuccess("New form function created sucessfully!"))
             else
                 appView:menuContent(appView:createMenu($app),view:msgFailure("Problems creating new form function"))
-(:        io:writeline("src/main/resources/apps/appServer/controllers/testingController.xq",
-            util:plain-print($payload)) :)
         
 };

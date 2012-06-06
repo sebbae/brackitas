@@ -61,7 +61,7 @@ import org.brackit.xquery.xdm.type.SequenceType;
  */
 @FunctionAnnotation(description = "Compiles the given query ($query) and stores "
 		+ "it at the given file path name destination. The file path name "
-		+ "starts from the applications directory, by default: src/main/resources/apps."
+		+ "starts from the applications directory, by default: ~/src/main/resources/apps."
 		+ " The actual process first saves the query on the file path name, then "
 		+ "compiles it. On success, the query is directly available for access "
 		+ "(execution) over HTTP.", parameters = { "$filePathName", "$query" })

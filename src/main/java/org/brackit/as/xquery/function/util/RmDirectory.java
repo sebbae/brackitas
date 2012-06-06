@@ -50,7 +50,7 @@ import org.brackit.xquery.xdm.type.SequenceType;
  * 
  */
 @FunctionAnnotation(description = "Removes a directory recursively from the "
-		+ "applications directory, by default: src/main/resources/apps. "
+		+ "applications directory, by default: ~/src/main/resources/apps. "
 		+ "The subdirectories are deleted as well.", parameters = "$dirPathName")
 public class RmDirectory extends AbstractFunction {
 

@@ -61,6 +61,7 @@ import org.brackit.as.xquery.function.session.Invalidate;
 import org.brackit.as.xquery.function.session.RemoveSessionAtt;
 import org.brackit.as.xquery.function.session.SetAttribute;
 import org.brackit.as.xquery.function.session.SetMaxInactiveInterval;
+import org.brackit.as.xquery.function.util.GetASProperty;
 import org.brackit.as.xquery.function.util.GetMimeType;
 import org.brackit.as.xquery.function.util.ListPredefinedFunctions;
 import org.brackit.as.xquery.function.util.ListPredefinedModules;
@@ -121,6 +122,7 @@ public class ASXQuery extends XQuery {
 		Functions.predefine(new ListPredefinedModules());
 		Functions.predefine(new GetMimeType());
 		Functions.predefine(new RmDirectory());
+		Functions.predefine(new GetASProperty());
 		// App
 		Functions.predefine(new GetNames());
 		Functions.predefine(new Delete());

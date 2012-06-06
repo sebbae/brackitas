@@ -98,4 +98,14 @@ public class TestUtil extends BaseASQueryContext {
 				: false);
 	}
 
+	@Test
+	public void getASProperty() throws QueryException {
+		ASXQuery x = new ASXQuery(new ASCompileChain(metaDataMgr, tx),
+				"util:get-property(\"apps.directory\")");
+		x.serialize(ctx, buffer);
+		assertEquals(
+				"/home/zidane/workspace/brackitas_mig/src/main/resources/apps/",
+				buffer.toString());
+	}
+
 }

@@ -54,7 +54,7 @@ import org.brackit.xquery.xdm.type.SequenceType;
 		+ "Resources are defined as all files that are not XQuery files.")
 @FunctionAnnotation(description = "Deletes the given resource. The resource path "
 		+ "starts at the applications directory, by default: "
-		+ "src/main/resources/apps. ", parameters = "$rscPathName")
+		+ "~/src/main/resources/apps. ", parameters = "$rscPathName")
 public class DeleteResource extends AbstractFunction {
 
 	public static final QNm DEFAULT_NAME = new QNm(ResourceFun.RESOURCE_NSURI,

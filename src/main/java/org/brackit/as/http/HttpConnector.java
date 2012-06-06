@@ -65,6 +65,9 @@ import org.eclipse.jetty.util.log.Log;
  */
 public class HttpConnector {
 
+	// TODO: insert /
+	public static final String BRACKITAS_PROPERTY_FILE = "brackitas.properties";
+
 	private static class SessionEndListener implements HttpSessionListener {
 
 		private final SessionMgr sessionMgr;
@@ -92,7 +95,7 @@ public class HttpConnector {
 
 	public static final String APP_MIME_TYPES = "mimeTypes";
 
-	private static final String APP_CONTROLLER_PREFIX = "/apps/*";
+	private static final String APP_CONTROLLER_PREFIX = "/*";
 
 	private static final Logger log = Logger.getLogger(HttpConnector.class);
 
@@ -122,7 +125,7 @@ public class HttpConnector {
 	private static String readsAppDirectory() {
 		try {
 			BufferedReader buf = new BufferedReader(new FileReader(new File(
-					HttpConnector.class.getResource("/brackitas.properties")
+					HttpConnector.class.getClassLoader().getResource(BRACKITAS_PROPERTY_FILE)
 							.toURI())));
 			String line = buf.readLine();
 			while (line != null) {

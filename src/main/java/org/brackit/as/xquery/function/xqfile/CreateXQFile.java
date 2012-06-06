@@ -59,7 +59,7 @@ import org.brackit.xquery.xdm.type.SequenceType;
  */
 @FunctionAnnotation(description = "Creates and XQuery file under the given"
 		+ "by file path name ($filePathName). The file path name starts from "
-		+ "the applications directory, by default: src/main/resources/apps."
+		+ "the applications directory, by default: ~/src/main/resources/apps."
 		+ " The content of the file is automatically generated and irrelevant.", parameters = "$filePathName")
 public class CreateXQFile extends AbstractFunction {
 

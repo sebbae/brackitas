@@ -33,6 +33,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import org.brackit.as.http.HttpConnector;
 import org.brackit.as.xquery.ASXQuery;
 import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.as.xquery.function.base.BaseASQueryContext;
@@ -48,12 +49,15 @@ import org.junit.Test;
  */
 public class TestResource extends BaseASQueryContext {
 
-	private static String path = "src/main/resources/apps/resourceTestFile.xq";
+	private static final String FILE_NAME = "resourceTestFile.xq";
+
+	private static final String PATH = String.format("%s/%s",
+			HttpConnector.APPS_PATH, FILE_NAME);
 
 	@Before
 	public void initFields() throws Exception {
 		super.initFields();
-		new File(path).createNewFile();
+		new File(PATH).createNewFile();
 	};
 
 	@Test
@@ -90,7 +94,7 @@ public class TestResource extends BaseASQueryContext {
 
 	@After
 	public void removeFile() throws QueryException {
-		new File(path).delete();
+		new File(PATH).delete();
 	}
 
 }

@@ -53,7 +53,7 @@ import org.brackit.xquery.xdm.type.SequenceType;
  */
 @FunctionAnnotation(description = "Saves the given query ($query) at the given file "
 		+ "path name destination. The file path name starts from the applications"
-		+ " directory, by default: src/main/resources/apps.", parameters = {
+		+ " directory, by default: ~/src/main/resources/apps.", parameters = {
 		"$filePathName", "$query" })
 public class SaveXQFile extends AbstractFunction {
 

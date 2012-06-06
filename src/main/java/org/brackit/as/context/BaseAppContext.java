@@ -35,6 +35,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.brackit.as.http.HttpConnector;
 import org.brackit.as.xquery.ASUncompiledQuery;
 import org.brackit.as.xquery.ASXQuery;
 import org.brackit.as.xquery.compiler.ASBaseResolver;
@@ -168,8 +169,7 @@ public class BaseAppContext {
 
 	public ASXQuery get(String path) throws Exception {
 		path = (path.startsWith("/")) ? path.substring(1) : path;
-		File f = new File(BaseAppContext.class.getClassLoader().getResource(
-				path).toURI());
+		File f = new File(String.format("%s/%s", HttpConnector.APPS_PATH, path));
 		path = IOUtils.getNormalizedPath(f);
 		ASXQuery x = queries.get(path);
 		if (x != null) {

@@ -37,7 +37,7 @@
     <script src="http://github.com/mbrevoort/CodeMirror/raw/master/js/codemirror.js" type="text/javascript"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
     <title>CodeMirror: XQuery highlighting demonstration</title>
-    <link rel="stylesheet" type="text/css" href="http://localhost:8080/apps/eCommerce/resources/css/jscolors.css"/>
+    <link rel="stylesheet" type="text/css" href="http://localhost:8080/eCommerce/resources/css/jscolors.css"/>
   </head>
 
   <body style="padding: 20px;">
@@ -55,7 +55,7 @@ The <a href="http://github.com/mbrevoort/CodeMirror/tree/master/contrib/xquery/"
 
 
 <div class="border">
-<code><pre><textarea id="code" cols="120" rows="50"> {util:plain-print(io:read('src/main/resources/apps/eCommerce/queries/buyCartExec.xq'))} </textarea>
+<code><pre><textarea id="code" cols="120" rows="50"> {util:plain-print(io:read(fn:concat(util:get-property("apps.directory"),'eCommerce/queries/buyCartExec.xq')))} </textarea>
 </pre></code>
 </div>
 <div style="width:100%;text-align:center;padding-top:15px;">
@@ -64,7 +64,7 @@ The <a href="http://github.com/mbrevoort/CodeMirror/tree/master/contrib/xquery/"
     <small><a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache License, Version 2.0</a></small></div>
 
 </div>
-<script src="http://localhost:8080/apps/eCommerce/resources/js/test.js" type="text/javascript"></script>
+<script src="http://localhost:8080/eCommerce/resources/js/test.js" type="text/javascript"></script>
   </body>
 </html>
 
