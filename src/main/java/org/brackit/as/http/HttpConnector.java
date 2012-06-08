@@ -32,6 +32,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.Random;
@@ -124,9 +125,9 @@ public class HttpConnector {
 
 	private static String readsAppDirectory() {
 		try {
-			BufferedReader buf = new BufferedReader(new FileReader(new File(
-					HttpConnector.class.getClassLoader().getResource(BRACKITAS_PROPERTY_FILE)
-							.toURI())));
+			BufferedReader buf = new BufferedReader(new InputStreamReader(
+					HttpConnector.class.getClassLoader().getResourceAsStream(
+							"brackitas.properties")));
 			String line = buf.readLine();
 			while (line != null) {
 				if (line.startsWith("apps.directory")) {
@@ -139,8 +140,6 @@ public class HttpConnector {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
 		return null;
