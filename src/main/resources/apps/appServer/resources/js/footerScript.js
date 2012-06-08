@@ -122,14 +122,14 @@
 				cache : false
 			}).done(function(html) {
 				$("#col3_content").html(html);
-			});
-			$.ajax( {
-				type : "POST",
-				data : "app=" + app,
-				url : "../../views/appView/createMenuRequest",
-				cache : false
-			}).done(function(html) {
-				$("#col1").html(html);
+				$.ajax( {
+					type : "POST",
+					data : "app=" + app,
+					url : "../../views/appView/createMenuRequest",
+					cache : false
+				}).done(function(html) {
+					$("#col1").html(html);
+				});				
 			});
 		}
 	});

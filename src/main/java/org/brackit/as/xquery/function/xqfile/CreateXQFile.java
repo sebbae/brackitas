@@ -92,6 +92,8 @@ public class CreateXQFile extends AbstractFunction {
 			ServletContext servletCtx = ((ASQueryContext) ctx).getReq()
 					.getServletContext();
 			File f = new File(base);
+			if (f.exists())
+				return Bool.FALSE;
 			FileWriter fw = new FileWriter(f);
 			BufferedWriter out = new BufferedWriter(fw);
 			out.write(Generate.BSDLicense);

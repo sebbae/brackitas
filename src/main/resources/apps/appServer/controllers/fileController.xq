@@ -86,7 +86,7 @@ declare function controller:create() as item() {
                     appView:menuContent(appView:createMenu($app),
                                        appView:editQuery($fPathName,$app,"",fn:true()))
                 else
-                    appView:menuContent($menu,view:msgFailure("Problems creating new file"))
+                    appView:menuContent($menu,view:msgFailure("Problems creating new file. Are you sure the file doesn't already exists?"))
             else
                 let $msg := 
                     view:msgFailure("File name cannot contain space and must finish with .xq")

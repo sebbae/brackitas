@@ -70,7 +70,7 @@ declare function view:createFileFormMsg($fPath as xs:string,
     <form action="./create">
         <table style="width: 100%; background-color: rgb(224, 224, 240);">
             <tr>
-                <td>
+                <td colspan="2">
                     <div align="center">
                         {$msg}
                     </div>
@@ -85,7 +85,7 @@ declare function view:createFileFormMsg($fPath as xs:string,
                 <td><input type="text" readonly="readonly" name="name" value="{$fPath}"/></td>
             </tr>            
             <tr>
-                <td colspan="3" align="center">
+                <td colspan="2" align="center">
                   <input align="center" type="submit" name="sub" value="Create file"/>
                   <input type="hidden" name="app" value="{$app}"/>
                 </td>

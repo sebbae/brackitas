@@ -30,7 +30,6 @@ package org.brackit.as.xquery.function.xqfile;
 import javax.servlet.ServletContext;
 
 import org.brackit.as.context.BaseAppContext;
-import org.brackit.as.http.HttpConnector;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.as.xquery.ASXQuery;
 import org.brackit.xquery.QueryContext;
@@ -85,8 +84,7 @@ public class IsLibrary extends AbstractFunction {
 			try {
 				BaseAppContext bac = (BaseAppContext) servletCtx
 						.getAttribute(app);
-				ASXQuery x = bac.get(String.format("%s%s.xq",
-						HttpConnector.APPS_PATH, fPathName));
+				ASXQuery x = bac.get(String.format("%s.xq", fPathName));
 				return new Bool(x.getModule() instanceof LibraryModule);
 			} catch (NullPointerException e) {
 				return Bool.FALSE;
