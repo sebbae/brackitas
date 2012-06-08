@@ -30,11 +30,8 @@ package org.brackit.as.http;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URISyntaxException;
 import java.util.Random;
 
 import javax.activation.MimetypesFileTypeMap;
@@ -105,7 +102,7 @@ public class HttpConnector {
 	private static ServletContextHandler sch;
 
 	public HttpConnector(final MetaDataMgr mdm, final SessionMgr sessionMgr,
-			final int port) throws URISyntaxException {
+			final int port) {
 		Log.setLog(new JettyLogger());
 		this.server = new Server(port);
 		server.setSessionIdManager(new HashSessionIdManager(new Random()));
@@ -127,7 +124,7 @@ public class HttpConnector {
 		try {
 			BufferedReader buf = new BufferedReader(new InputStreamReader(
 					HttpConnector.class.getClassLoader().getResourceAsStream(
-							"brackitas.properties")));
+							BRACKITAS_PROPERTY_FILE)));
 			String line = buf.readLine();
 			while (line != null) {
 				if (line.startsWith("apps.directory")) {
@@ -168,7 +165,7 @@ public class HttpConnector {
 	}
 
 	private void processDeployment(ServletContextHandler sch,
-			SessionMgr sessionMgr, MetaDataMgr mdm) throws URISyntaxException {
+			SessionMgr sessionMgr, MetaDataMgr mdm) {
 		File f = new File(APPS_PATH);
 		try {
 			Session session = sessionMgr.getSession(sessionMgr.login());
@@ -217,8 +214,7 @@ public class HttpConnector {
 		}
 	}
 
-	public static void deleteApplication(String app) throws IOException,
-			URISyntaxException {
+	public static void deleteApplication(String app) throws IOException {
 		terminateApplication(app);
 		sch.removeAttribute(app);
 		File f = new File(String.format("%s/%s", APPS_PATH, app));

@@ -28,11 +28,9 @@
 package org.brackit.as.xquery.function.util;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.InputStreamReader;
 
 import org.brackit.as.http.HttpConnector;
 import org.brackit.xquery.QueryContext;
@@ -88,9 +86,9 @@ public class GetASProperty extends AbstractFunction {
 	private static String readsPropertyFromFile(String propName)
 			throws QueryException {
 		try {
-			BufferedReader buf = new BufferedReader(new FileReader(new File(
-					HttpConnector.class.getClassLoader().getResource(
-							HttpConnector.BRACKITAS_PROPERTY_FILE).toURI())));
+			BufferedReader buf = new BufferedReader(new InputStreamReader(
+					HttpConnector.class.getClassLoader().getResourceAsStream(
+							HttpConnector.BRACKITAS_PROPERTY_FILE)));
 			String line = buf.readLine();
 			while (line != null) {
 				if (line.startsWith(propName))
@@ -101,9 +99,6 @@ public class GetASProperty extends AbstractFunction {
 			throw new QueryException(e, UtilFun.UTIL_GETASPROPERTY_INT_ERROR, e
 					.getMessage());
 		} catch (IOException e) {
-			throw new QueryException(e, UtilFun.UTIL_GETASPROPERTY_INT_ERROR, e
-					.getMessage());
-		} catch (URISyntaxException e) {
 			throw new QueryException(e, UtilFun.UTIL_GETASPROPERTY_INT_ERROR, e
 					.getMessage());
 		}

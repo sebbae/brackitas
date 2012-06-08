@@ -28,7 +28,6 @@
 package org.brackit.as.context;
 
 import java.io.File;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -98,8 +97,6 @@ public class BaseAppContext {
 			putQuery(path, lastModified);
 		} catch (QueryException e) {
 			uncompiledQueries.add(new ASUncompiledQuery(path, lastModified, e));
-		} catch (URISyntaxException e) {
-			uncompiledQueries.add(new ASUncompiledQuery(path, lastModified, e));
 		}
 	}
 
@@ -123,7 +120,6 @@ public class BaseAppContext {
 					putQuery(uq.getPath(), uq.getLastModified());
 					i.remove();
 				} catch (QueryException e) {
-				} catch (URISyntaxException e) {
 				}
 			}
 			i = uncompiledQueries.iterator();
@@ -133,7 +129,6 @@ public class BaseAppContext {
 					putQuery(uq.getPath(), uq.getLastModified());
 					i.remove();
 				} catch (QueryException e) {
-				} catch (URISyntaxException e) {
 				}
 			}
 			i = uncompiledQueries.iterator();
@@ -147,15 +142,12 @@ public class BaseAppContext {
 					// "Problems compiling: %s. \n %s \n", uq.getPath(), e
 					// .getMessage()));
 					uq.setE(e);
-				} catch (URISyntaxException e) {
-					uq.setE(e);
 				}
 			}
 		}
 	}
 
-	private void putQuery(String path, long lastModified)
-			throws QueryException, URISyntaxException {
+	private void putQuery(String path, long lastModified) throws QueryException {
 		File f = new File(path);
 		ASXQuery target = new ASXQuery(chain, f);
 		target.setLastModified(lastModified);
