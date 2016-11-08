@@ -30,8 +30,6 @@ package org.brackit.as.xquery.function.request;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.brackit.as.annotation.FunctionAnnotation;
-import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -39,8 +37,12 @@ import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -50,6 +52,18 @@ import org.brackit.xquery.xdm.Sequence;
 @FunctionAnnotation(description = "Returns true if the given request is "
 		+ "multipart content.", parameters = "")
 public class IsMultipartContent extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(RequestFun.REQUEST_NSURI,
+			RequestFun.REQUEST_PREFIX, "is-multipart-content");
+
+	public IsMultipartContent() {
+		this(DEFAULT_NAME);
+	}
+
+	public IsMultipartContent(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.BOOL,
+				Cardinality.One)), true);
+	}
 
 	public IsMultipartContent(QNm name, Signature signature) {
 		super(name, signature, true);
@@ -63,8 +77,7 @@ public class IsMultipartContent extends AbstractFunction {
 			return new Bool(ServletFileUpload.isMultipartContent(req));
 		} catch (Exception e) {
 			throw new QueryException(e,
-					ASErrorCode.REQ_ISMULTIPARTCONTENT_INT_ERROR, e
-							.getMessage());
+					RequestFun.REQ_ISMULTIPARTCONTENT_INT_ERROR, e.getMessage());
 		}
 	}
 }

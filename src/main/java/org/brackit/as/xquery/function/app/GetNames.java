@@ -28,25 +28,29 @@
 package org.brackit.as.xquery.function.app;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.servlet.ServletContext;
 
-import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.context.BaseAppContext;
-import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.function.AbstractFunction;
-import org.brackit.xquery.xdm.Signature;
 import org.brackit.xquery.module.StaticContext;
 import org.brackit.xquery.sequence.ItemSequence;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.xquery.xdm.Item;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AnyItemType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -57,6 +61,18 @@ import org.brackit.xquery.xdm.Sequence;
 		+ "applications present in the application server.", parameters = "")
 public class GetNames extends AbstractFunction {
 
+	public static final QNm DEFAULT_NAME = new QNm(AppFun.APP_NSURI,
+			AppFun.APP_PREFIX, "get-names");
+
+	public GetNames() {
+		this(DEFAULT_NAME);
+	}
+
+	public GetNames(QNm name) {
+		super(name, new Signature(new SequenceType(AnyItemType.ANY,
+				Cardinality.One)), true);
+	}
+
 	public GetNames(QNm name, Signature signature) {
 		super(name, signature, true);
 	}
@@ -65,9 +81,16 @@ public class GetNames extends AbstractFunction {
 	public Sequence execute(StaticContext sctx, QueryContext ctx,
 			Sequence[] args) throws QueryException {
 		try {
-			ServletContext servletCtx = ((ASQueryContext) ctx).getReq()
-					.getServletContext();
-			Enumeration<String> e = servletCtx.getAttributeNames();
+			Enumeration<String> e = null;
+			ServletContext servletCtx = null;
+			try {
+				servletCtx = ((ASQueryContext) ctx).getReq()
+						.getServletContext();
+				e = servletCtx.getAttributeNames();
+			} catch (Exception e1) {
+				HashSet<String> set = new HashSet<String>();
+				e = Collections.enumeration(set);
+			}
 			String n;
 			List<Str> names = new ArrayList<Str>();
 			while (e.hasMoreElements()) {
@@ -78,7 +101,7 @@ public class GetNames extends AbstractFunction {
 			Item[] result = names.toArray(new Item[0]);
 			return new ItemSequence(result);
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.APP_GETNAMES_INT_ERROR, e
+			throw new QueryException(e, AppFun.APP_GETNAMES_INT_ERROR, e
 					.getMessage());
 		}
 	}

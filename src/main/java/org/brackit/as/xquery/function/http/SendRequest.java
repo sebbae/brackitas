@@ -31,10 +31,6 @@ import java.io.PrintStream;
 import java.util.Enumeration;
 import java.util.HashMap;
 
-import org.brackit.as.annotation.FunctionAnnotation;
-import org.brackit.as.annotation.ModuleAnnotation;
-import org.brackit.as.util.FunctionUtils;
-import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -42,15 +38,21 @@ import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.node.SubtreePrinter;
 import org.brackit.xquery.node.d2linked.D2NodeFactory;
 import org.brackit.xquery.node.parser.DocumentParser;
 import org.brackit.xquery.sequence.ItemSequence;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
+import org.brackit.xquery.util.annotation.ModuleAnnotation;
+import org.brackit.xquery.util.io.IOUtils;
+import org.brackit.xquery.util.serialize.SubtreePrinter;
 import org.brackit.xquery.xdm.Collection;
 import org.brackit.xquery.xdm.Node;
 import org.brackit.xquery.xdm.Sequence;
 import org.brackit.xquery.xdm.Signature;
 import org.brackit.xquery.xdm.Stream;
+import org.brackit.xquery.xdm.type.AnyItemType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 import org.eclipse.jetty.client.ContentExchange;
 import org.eclipse.jetty.client.HttpClient;
 
@@ -60,7 +62,7 @@ import org.eclipse.jetty.client.HttpClient;
  * 
  */
 
-@ModuleAnnotation(description = "A module for dealnig with HTTP requests and "
+@ModuleAnnotation(description = "A module for dealing with HTTP requests and "
 		+ "responses.")
 @FunctionAnnotation(description = "Sends an HTTP request and return the "
 		+ "corresponding response. It is a simplified version of the protocol, "
@@ -78,6 +80,19 @@ import org.eclipse.jetty.client.HttpClient;
 		+ "response object followed by the possible many html bodies.", parameters = "$request")
 public class SendRequest extends AbstractFunction {
 
+	public static final QNm DEFAULT_NAME = new QNm(HttpFun.HTTP_NSURI,
+			HttpFun.HTTP_PREFIX, "send-request");
+
+	public SendRequest() {
+		this(DEFAULT_NAME);
+	}
+
+	public SendRequest(QNm name) {
+		super(name, new Signature(new SequenceType(AnyItemType.ANY,
+				Cardinality.One), new SequenceType(AnyItemType.ANY,
+				Cardinality.One)), true);
+	}
+
 	public SendRequest(QNm name, Signature signature) {
 		super(name, signature, true);
 	}
@@ -90,7 +105,7 @@ public class SendRequest extends AbstractFunction {
 		if (args[0] instanceof Atomic) {
 			req = ((Atomic) args[0]).stringValue();
 		} else {
-			PrintStream buf = FunctionUtils.createBuffer();
+			PrintStream buf = IOUtils.createBuffer();
 			SubtreePrinter.print((Node<?>) args[0], buf);
 			req = buf.toString();
 		}
@@ -137,13 +152,13 @@ public class SendRequest extends AbstractFunction {
 										.stringValue();
 								if (name == null || value == null)
 									throw new QueryException(
-											ASErrorCode.HTTP_SENDREQUEST_INT_ERROR,
+											HttpFun.HTTP_SENDREQUEST_INT_ERROR,
 											String
 													.format("Mall formed header element."));
 								reqHeaders.put(name, value);
 							} catch (Exception e) {
 								throw new QueryException(
-										ASErrorCode.HTTP_SENDREQUEST_INT_ERROR,
+										HttpFun.HTTP_SENDREQUEST_INT_ERROR,
 										String
 												.format("Badly formed header element."));
 							}
@@ -151,40 +166,38 @@ public class SendRequest extends AbstractFunction {
 					}
 				} else {
 					throw new QueryException(
-							ASErrorCode.HTTP_SENDREQUEST_INT_ERROR, String
-									.format("Undesired element %s.", childName
+							HttpFun.HTTP_SENDREQUEST_INT_ERROR, String.format(
+									"Undesired element %s.", childName
 											.getLocalName(), args));
 				}
 			}
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.HTTP_SENDREQUEST_INT_ERROR,
-					e.getMessage());
+			throw new QueryException(e, HttpFun.HTTP_SENDREQUEST_INT_ERROR, e
+					.getMessage());
 		}
 
 		// request attributes validation
 		if (!reqAtts.get("method").toUpperCase().equals("GET")
 				&& !reqAtts.get("method").toUpperCase().equals("POST")) {
-			throw new QueryException(ASErrorCode.HTTP_SENDREQUEST_INT_ERROR,
-					String.format("Specified method, %s, is not valid.",
-							reqAtts.get("method")));
+			throw new QueryException(HttpFun.HTTP_SENDREQUEST_INT_ERROR, String
+					.format("Specified method, %s, is not valid.", reqAtts
+							.get("method")));
 		}
 		if (reqAtts.get("href") == null) {
-			throw new QueryException(ASErrorCode.HTTP_SENDREQUEST_INT_ERROR,
+			throw new QueryException(HttpFun.HTTP_SENDREQUEST_INT_ERROR,
 					"Href (URI) not present.");
 		}
 		if (reqAtts.get("status-only") != null) {
 			if (!reqAtts.get("status-only").equals("true")
 					&& !reqAtts.get("status-only").equals("false"))
-				throw new QueryException(
-						ASErrorCode.HTTP_SENDREQUEST_INT_ERROR,
+				throw new QueryException(HttpFun.HTTP_SENDREQUEST_INT_ERROR,
 						"The status-only, if present, must be either \"true\" or \"false\".");
 		}
 		if (reqAtts.get("timeout") != null) {
 			try {
 				Integer.valueOf(reqAtts.get("timeout"));
 			} catch (NumberFormatException e) {
-				throw new QueryException(
-						ASErrorCode.HTTP_SENDREQUEST_INT_ERROR,
+				throw new QueryException(HttpFun.HTTP_SENDREQUEST_INT_ERROR,
 						"Timeout attribute value must be a proper integer.");
 			}
 		}
@@ -224,14 +237,13 @@ public class SendRequest extends AbstractFunction {
 				return new D2NodeFactory().build(new DocumentParser(response
 						.toString()));
 			} else {
-				return new ItemSequence(new D2NodeFactory()
-						.build(new DocumentParser(response.toString())),
-						new Str(exchange.getResponseContent()));
+				return new ItemSequence(new Str(response.toString()), new Str(
+						exchange.getResponseContent()));
 			}
 
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.HTTP_SENDREQUEST_INT_ERROR,
-					e.getMessage());
+			throw new QueryException(e, HttpFun.HTTP_SENDREQUEST_INT_ERROR, e
+					.getMessage());
 		}
 	}
 

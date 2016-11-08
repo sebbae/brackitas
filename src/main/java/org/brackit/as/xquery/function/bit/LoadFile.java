@@ -38,9 +38,10 @@ import org.brackit.xquery.atomic.Atomic;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.function.AbstractFunction;
-import org.brackit.xquery.xdm.Signature;
 import org.brackit.xquery.module.StaticContext;
+import org.brackit.xquery.util.io.IOUtils;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
 
 /**
  * 
@@ -63,7 +64,7 @@ public class LoadFile extends AbstractFunction {
 			String fPathName = ((Atomic) args[0]).stringValue().trim();
 			fPathName = (fPathName.startsWith("/")) ? fPathName.substring(1)
 					: fPathName;
-			return new Str(ASXQuery.getStringFromFile(new File(String.format(
+			return new Str(IOUtils.getStringFromFile(new File(String.format(
 					"src/main/resources/apps/%s", fPathName))));
 		} catch (Exception e) {
 			throw new QueryException(e, ASErrorCode.BIT_LOADFILE_INT_ERROR, e

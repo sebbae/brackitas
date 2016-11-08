@@ -29,10 +29,7 @@ package org.brackit.as.xquery.function.resource;
 
 import java.io.File;
 
-import org.brackit.as.annotation.FunctionAnnotation;
-import org.brackit.as.annotation.ModuleAnnotation;
 import org.brackit.as.http.HttpConnector;
-import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -40,8 +37,13 @@ import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
+import org.brackit.xquery.util.annotation.ModuleAnnotation;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -52,8 +54,21 @@ import org.brackit.xquery.xdm.Sequence;
 		+ "Resources are defined as all files that are not XQuery files.")
 @FunctionAnnotation(description = "Deletes the given resource. The resource path "
 		+ "starts at the applications directory, by default: "
-		+ "src/main/resources/apps. ", parameters = "$rscPathName")
+		+ "~/src/main/resources/apps. ", parameters = "$rscPathName")
 public class DeleteResource extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(ResourceFun.RESOURCE_NSURI,
+			ResourceFun.RESOURCE_PREFIX, "delete");
+
+	public DeleteResource() {
+		this(DEFAULT_NAME);
+	}
+
+	public DeleteResource(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.BOOL,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One)), true);
+	}
 
 	public DeleteResource(QNm name, Signature signature) {
 		super(name, signature, true);
@@ -67,11 +82,10 @@ public class DeleteResource extends AbstractFunction {
 					.trim();
 			fPathName = (fPathName.startsWith("/")) ? fPathName.substring(1)
 					: fPathName;
-			String base = String.format("%s/%s", HttpConnector.APPS_PATH,
-					fPathName);
-			return new Bool(new File(base).delete());
+			return new Bool(new File(String.format("%s/%s",
+					HttpConnector.APPS_PATH, fPathName)).delete());
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.RSC_DELETE_INT_ERROR, e
+			throw new QueryException(e, ResourceFun.RSC_DELETE_INT_ERROR, e
 					.getMessage());
 		}
 	}

@@ -39,10 +39,8 @@ import java.net.URLConnection;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.context.InputStreamName;
 import org.brackit.as.http.HttpConnector;
-import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -52,8 +50,12 @@ import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -62,7 +64,7 @@ import org.brackit.xquery.xdm.Sequence;
  */
 @FunctionAnnotation(description = "Uploads a resource to the server. The resource path "
 		+ "($rscPathName) starts at the applications directory, by default: "
-		+ "src/main/resources/apps. The resource input ($rscInput) can be of two types: "
+		+ "~/src/main/resources/apps. The resource input ($rscInput) can be of two types: "
 		+ "either the name of the parameter being submited via POST, or a string "
 		+ "containing the location of the resource."
 		+ "On the previous, we can submit an HTML form using POST containing a parameter "
@@ -71,6 +73,20 @@ import org.brackit.xquery.xdm.Sequence;
 		+ "upload it to the server." + " ", parameters = { "$rscPathName",
 		"$rscInput" })
 public class Upload extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(ResourceFun.RESOURCE_NSURI,
+			ResourceFun.RESOURCE_PREFIX, "upload");
+
+	public Upload() {
+		this(DEFAULT_NAME);
+	}
+
+	public Upload(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.BOOL,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One)), true);
+	}
 
 	public Upload(QNm name, Signature signature) {
 		super(name, signature, true);
@@ -96,9 +112,14 @@ public class Upload extends AbstractFunction {
 				}
 			} else if (scheme.equals("http") || scheme.equals("https")
 					|| scheme.equals("ftp") || scheme.equals("jar")) {
-				URL url = new URL(((AnyURI) args[0]).stringValue());
+				URL url;
+				if (args[1] instanceof Atomic)
+					url = new URL(((Atomic) args[1]).stringValue());
+				else
+					url = new URL(((AnyURI) args[1]).stringValue());
 				conn = url.openConnection();
-				fName = conn.getURL().getPath();
+				fName = conn.getURL().getPath().substring(
+						conn.getURL().getPath().lastIndexOf("/") + 1);
 				in = conn.getInputStream();
 			}
 			File f = new File(String.format("%s/%s/%s",
@@ -114,7 +135,7 @@ public class Upload extends AbstractFunction {
 			in.close();
 			return Bool.TRUE;
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.RSC_UPLOAD_INT_ERROR, e
+			throw new QueryException(e, ResourceFun.RSC_UPLOAD_INT_ERROR, e
 					.getMessage());
 		} finally {
 			if (conn != null) {

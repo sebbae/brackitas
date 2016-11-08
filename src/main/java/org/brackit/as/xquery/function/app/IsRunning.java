@@ -29,9 +29,7 @@ package org.brackit.as.xquery.function.app;
 
 import javax.servlet.ServletContext;
 
-import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.context.BaseAppContext;
-import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -40,8 +38,12 @@ import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -53,6 +55,19 @@ import org.brackit.xquery.xdm.Sequence;
 		+ "application exists, but is accessible as weel.", parameters = "$pplicationName")
 public class IsRunning extends AbstractFunction {
 
+	public static final QNm DEFAULT_NAME = new QNm(AppFun.APP_NSURI,
+			AppFun.APP_PREFIX, "is-running");
+
+	public IsRunning() {
+		this(DEFAULT_NAME);
+	}
+
+	public IsRunning(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.BOOL,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One)), true);
+	}
+
 	public IsRunning(QNm name, Signature signature) {
 		super(name, signature, true);
 	}
@@ -62,11 +77,17 @@ public class IsRunning extends AbstractFunction {
 			Sequence[] args) throws QueryException {
 		try {
 			String name = ((Atomic) args[0]).atomize().stringValue().trim();
-			ServletContext s = ((ASQueryContext) ctx).getReq()
-					.getServletContext();
-			return new Bool(((BaseAppContext) s.getAttribute(name)).isRunning());
+			boolean isRunning;
+			try {
+				ServletContext s = ((ASQueryContext) ctx).getReq()
+						.getServletContext();
+				isRunning = ((BaseAppContext) s.getAttribute(name)).isRunning();
+			} catch (Exception e) {
+				isRunning = false;
+			}
+			return new Bool(isRunning);
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.APP_ISRUNNING_INT_ERROR, e
+			throw new QueryException(e, AppFun.APP_ISRUNNING_INT_ERROR, e
 					.getMessage());
 		}
 	}

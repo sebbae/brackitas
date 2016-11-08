@@ -48,6 +48,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.context.InputStreamName;
+import org.brackit.as.http.HttpConnector;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.as.xquery.ASXQuery;
 import org.brackit.server.session.Session;
@@ -244,7 +245,7 @@ public class FrontController extends BaseServlet {
 		Request r = new Request();
 		r.URI = req.getRequestURI();
 		String[] URIParts = r.URI.split("/");
-		r.APP = URIParts[2];
+		r.APP = URIParts[1];
 		r.RESOURCE = r.URI.substring(r.URI.lastIndexOf("/") + 1);
 		req.getSession().setAttribute(FrontController.APP_SESSION_ATT,
 				(Atomic) new Str(r.APP));
@@ -255,7 +256,7 @@ public class FrontController extends BaseServlet {
 			throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		String resource = r.URI;
-		File f = new File("src/main/resources" + resource);
+		File f = new File(HttpConnector.APPS_PATH + resource);
 		FileInputStream in = new FileInputStream(f);
 		try {
 			resp.setContentType(String.format("%s; charset=UTF-8",

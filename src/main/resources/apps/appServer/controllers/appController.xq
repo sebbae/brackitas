@@ -107,34 +107,14 @@ declare function appController:load() as item() {
     return 
         let $error := xqfile:get-compilation-error($resource)
         return
-            if (fn:string-length($error) gt 0) then
-                appController:loadAfterAction($error)
-            else
-                let $content :=
-                    if (fn:ends-with($resource, ".xq")) then
-                        appView:editQuery($resource,$app,fn:true())
-                    else
-                        if (fn:starts-with(util:get-mime-type($resource),"text")) then
-                            appView:editQuery($resource,$app,fn:false())
-                        else
-                            rscController:load()
-                return
-                    appView:editXQuery($menu,$content)
-};
-
-declare function appController:loadAfterAction($msg as xs:string) as item() {
-    let $app := req:get-parameter("app"),
-        $resource := fn:normalize-space(req:get-parameter("name")),
-        $menu := appView:createMenu($app)
-    return 
-        let $content :=
-            if (fn:ends-with($resource, ".xq")) then
-                appView:editQueryAfterAction($resource,$app,$msg,fn:true())
-            else
-                if (fn:starts-with(util:get-mime-type($resource),"text")) then
-                    appView:editQueryAfterAction($resource,$app,$msg,fn:false())
+            let $content :=
+                if (fn:ends-with($resource, ".xq")) then
+                    appView:editQuery($resource,$app,$error,fn:true())
                 else
-                    rscController:load()
-        return
-            appView:editXQuery($menu,$content)
+                    if (fn:starts-with(util:get-mime-type($resource),"text")) then
+                        appView:editQuery($resource,$app,$error,fn:false())
+                    else
+                        rscController:load()
+            return
+                appView:menuContent($menu,$content)
 };

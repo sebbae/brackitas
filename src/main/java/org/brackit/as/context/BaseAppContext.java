@@ -34,12 +34,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.brackit.as.http.HttpConnector;
 import org.brackit.as.xquery.ASUncompiledQuery;
 import org.brackit.as.xquery.ASXQuery;
+import org.brackit.as.xquery.compiler.ASBaseResolver;
 import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.module.LibraryModule;
 import org.brackit.xquery.module.Module;
+import org.brackit.xquery.util.io.IOUtils;
 
 /**
  * 
@@ -135,9 +138,9 @@ public class BaseAppContext {
 					putQuery(uq.getPath(), uq.getLastModified());
 					i.remove();
 				} catch (QueryException e) {
-					System.out.println(String.format(
-							"Problems compiling: %s. \n %s \n", uq.getPath(), e
-									.getMessage()));
+					// System.out.println(String.format(
+					// "Problems compiling: %s. \n %s \n", uq.getPath(), e
+					// .getMessage()));
 					uq.setE(e);
 				}
 			}
@@ -145,22 +148,21 @@ public class BaseAppContext {
 	}
 
 	private void putQuery(String path, long lastModified) throws QueryException {
-		ASXQuery target = new ASXQuery(chain, new File(String.format(
-				"src/main/resources%s", path)));
+		File f = new File(path);
+		ASXQuery target = new ASXQuery(chain, f);
 		target.setLastModified(lastModified);
 		Module module = target.getModule();
 		if (module instanceof LibraryModule) {
 			String uri = ((LibraryModule) module).getTargetNS();
-			// ((BaseResolver) chain.getModuleResolver()).register(uri,
-			// (LibraryModule) module);
 			libraries.put(uri, path);
 		}
 		queries.put(path, target);
 	}
 
 	public ASXQuery get(String path) throws Exception {
-		String base = "src/main/resources";
-		File f = new File(base + path);
+		path = (path.startsWith("/")) ? path.substring(1) : path;
+		File f = new File(String.format("%s/%s", HttpConnector.APPS_PATH, path));
+		path = IOUtils.getNormalizedPath(f);
 		ASXQuery x = queries.get(path);
 		if (x != null) {
 			if (f.lastModified() != x.getLastModified()) {
@@ -171,7 +173,7 @@ public class BaseAppContext {
 			while (i.hasNext()) {
 				Module m = i.next();
 				String mPath = libraries.get(m.getTargetNS());
-				File fm = new File(base + mPath);
+				File fm = new File(mPath);
 				ASXQuery qm = queries.get(mPath);
 				if (fm.lastModified() != qm.getLastModified()) {
 					chain.getResolver().unregister(qm.getModule().getTargetNS());

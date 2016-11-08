@@ -28,11 +28,10 @@
 package org.brackit.as.xquery.function.xqfile;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 
-import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.http.HttpConnector;
-import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -40,8 +39,12 @@ import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -50,9 +53,23 @@ import org.brackit.xquery.xdm.Sequence;
  */
 @FunctionAnnotation(description = "Saves the given query ($query) at the given file "
 		+ "path name destination. The file path name starts from the applications"
-		+ " directory, by default: src/main/resources/apps.", parameters = {
+		+ " directory, by default: ~/src/main/resources/apps.", parameters = {
 		"$filePathName", "$query" })
 public class SaveXQFile extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(XqfileFun.XQFILE_NSURI,
+			XqfileFun.XQFILE_PREFIX, "save");
+
+	public SaveXQFile() {
+		this(DEFAULT_NAME);
+	}
+
+	public SaveXQFile(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.BOOL,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One)), true);
+	}
 
 	public SaveXQFile(QNm name, Signature signature) {
 		super(name, signature, true);
@@ -67,15 +84,14 @@ public class SaveXQFile extends AbstractFunction {
 			fPathName = (fPathName.startsWith("/")) ? fPathName.substring(1)
 					: fPathName;
 			String fQuery = ((Atomic) args[1]).atomize().stringValue().trim();
-			String base = String.format("%s/%s", HttpConnector.APPS_PATH,
-					fPathName);
-			FileWriter f = new FileWriter(base);
-			BufferedWriter out = new BufferedWriter(f);
+			BufferedWriter out = new BufferedWriter(
+					new FileWriter(new File(String.format("%s/%s",
+							HttpConnector.APPS_PATH, fPathName))));
 			out.write(fQuery.replaceAll("&", "&amp;"));
 			out.close();
 			return Bool.TRUE;
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.XQFILE_SAVE_INT_ERROR, e
+			throw new QueryException(e, XqfileFun.XQFILE_SAVE_INT_ERROR, e
 					.getMessage());
 		}
 	}

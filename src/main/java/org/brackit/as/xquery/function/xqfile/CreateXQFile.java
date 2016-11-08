@@ -33,11 +33,10 @@ import java.io.FileWriter;
 
 import javax.servlet.ServletContext;
 
-import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.http.HttpConnector;
-import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
+import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.as.xquery.function.app.Generate;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -46,8 +45,12 @@ import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -56,9 +59,22 @@ import org.brackit.xquery.xdm.Sequence;
  */
 @FunctionAnnotation(description = "Creates and XQuery file under the given"
 		+ "by file path name ($filePathName). The file path name starts from "
-		+ "the applications directory, by default: src/main/resources/apps."
+		+ "the applications directory, by default: ~/src/main/resources/apps."
 		+ " The content of the file is automatically generated and irrelevant.", parameters = "$filePathName")
 public class CreateXQFile extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(XqfileFun.XQFILE_NSURI,
+			XqfileFun.XQFILE_PREFIX, "create");
+
+	public CreateXQFile() {
+		this(DEFAULT_NAME);
+	}
+
+	public CreateXQFile(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.BOOL,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One)), true);
+	}
 
 	public CreateXQFile(QNm name, Signature signature) {
 		super(name, signature, true);
@@ -75,17 +91,26 @@ public class CreateXQFile extends AbstractFunction {
 					fPathName);
 			ServletContext servletCtx = ((ASQueryContext) ctx).getReq()
 					.getServletContext();
-			FileWriter f = new FileWriter(base);
-			BufferedWriter out = new BufferedWriter(f);
+			File f = new File(base);
+			if (f.exists())
+				return Bool.FALSE;
+			FileWriter fw = new FileWriter(f);
+			BufferedWriter out = new BufferedWriter(fw);
 			out.write(Generate.BSDLicense);
 			out.write(Generate.todo);
 			out.close();
-			Long lastUsed = new File(base).lastModified();
-			BaseAppContext bac = (BaseAppContext) servletCtx.getAttribute(app);
-			bac.register(HttpConnector.resolvePath(base), lastUsed);
+			BaseAppContext bac;
+			try {
+				bac = (BaseAppContext) servletCtx.getAttribute(app);
+			} catch (Exception e) {
+				bac = new BaseAppContext(app, new ASCompileChain(
+						((ASQueryContext) ctx).getMDM(), ((ASQueryContext) ctx)
+								.getTX()));
+			}
+			bac.register(base, f.lastModified());
 			return Bool.TRUE;
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.XQFILE_CREATE_INT_ERROR, e
+			throw new QueryException(e, XqfileFun.XQFILE_CREATE_INT_ERROR, e
 					.getMessage());
 		}
 	}

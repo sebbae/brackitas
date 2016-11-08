@@ -29,9 +29,7 @@ package org.brackit.as.xquery.function.app;
 
 import java.io.File;
 
-import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.http.HttpConnector;
-import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.server.session.SessionException;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -40,8 +38,12 @@ import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -52,6 +54,19 @@ import org.brackit.xquery.xdm.Sequence;
 		+ "whole application is compiled and the successfully compiled queries "
 		+ "are made avilable for access, and thus execution.", parameters = "$applicationName")
 public class Deploy extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(AppFun.APP_NSURI,
+			AppFun.APP_PREFIX, "deploy");
+
+	public Deploy() {
+		this(DEFAULT_NAME);
+	}
+
+	public Deploy(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.BOOL,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One)), true);
+	}
 
 	public Deploy(QNm name, Signature signature) {
 		super(name, signature, true);
@@ -66,7 +81,7 @@ public class Deploy extends AbstractFunction {
 					HttpConnector.APPS_PATH, name)));
 			return Bool.TRUE;
 		} catch (SessionException e) {
-			throw new QueryException(e, ASErrorCode.APP_DEPLOY_INT_ERROR, e
+			throw new QueryException(e, AppFun.APP_DEPLOY_INT_ERROR, e
 					.getMessage());
 		}
 	}

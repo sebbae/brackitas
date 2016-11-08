@@ -33,9 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
-import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.context.InputStreamName;
-import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -43,9 +41,14 @@ import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.xquery.xdm.Item;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AnyItemType;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -55,6 +58,19 @@ import org.brackit.xquery.xdm.Sequence;
 @FunctionAnnotation(description = "Returns an parameter value present in the current "
 		+ "request object.", parameters = "parameterName")
 public class GetParameter extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(RequestFun.REQUEST_NSURI,
+			RequestFun.REQUEST_PREFIX, "get-parameter");
+
+	public GetParameter() {
+		this(DEFAULT_NAME);
+	}
+
+	public GetParameter(QNm name) {
+		super(name, new Signature(new SequenceType(AnyItemType.ANY,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One)), true);
+	}
 
 	public GetParameter(QNm name, Signature signature) {
 		super(name, signature, true);
@@ -78,7 +94,7 @@ public class GetParameter extends AbstractFunction {
 				return new Str((param == null) ? "" : param.trim());
 			}
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.REQ_GETPARAMETER_INT_ERROR,
+			throw new QueryException(e, RequestFun.REQ_GETPARAMETER_INT_ERROR,
 					e.getMessage());
 		}
 	}

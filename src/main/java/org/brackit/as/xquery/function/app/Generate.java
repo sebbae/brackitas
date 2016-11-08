@@ -32,9 +32,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.http.HttpConnector;
-import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -42,8 +40,12 @@ import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -114,7 +116,7 @@ public class Generate extends AbstractFunction {
 	public static String tempHead = "declare function template:head() as item() {\n"
 			+ "  <head>\n"
 			+ "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>\n"
-			+ "    <link href=\"http://localhost:8080/apps/%s/resources/css/%s.css\" rel=\"stylesheet\" type=\"text/css\" />\n"
+			+ "    <link href=\"http://localhost:8080/%s/resources/css/%s.css\" rel=\"stylesheet\" type=\"text/css\" />\n"
 			+ "  </head>\n" + "};\n";
 
 	public static String tempHeader = "declare function template:header() as item() {\n"
@@ -788,6 +790,20 @@ public class Generate extends AbstractFunction {
 			+ "  tbody tr:hover tbody th.sub { background:#f0e8e8; }\n"
 			+ "  tbody tr:hover td { background:#fff8f8; }\n" + "\n" + "}\n";
 
+	public static final QNm DEFAULT_NAME = new QNm(AppFun.APP_NSURI,
+			AppFun.APP_PREFIX, "generate");
+
+	public Generate() {
+		this(DEFAULT_NAME);
+	}
+
+	public Generate(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.BOOL,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One)), true);
+	}
+
 	public Generate(QNm name, Signature signature) {
 		super(name, signature, true);
 	}
@@ -808,8 +824,7 @@ public class Generate extends AbstractFunction {
 				genView(app, base);
 				genResources(app, base);
 				genTemplate(app, base, false);
-				HttpConnector.compileApplication(new File(String.format(
-						"%s/%s", HttpConnector.APPS_PATH, app)));
+				HttpConnector.compileApplication(new File(base));
 				return Bool.TRUE;
 			} else if (model.equals("REG")) {
 				new File(base).mkdir();
@@ -825,15 +840,14 @@ public class Generate extends AbstractFunction {
 				out.close();
 				genResources(app, base);
 				genTemplate(app, base, true);
-				HttpConnector.compileApplication(new File(String.format(
-						"%s/%s", HttpConnector.APPS_PATH, app)));
+				HttpConnector.compileApplication(new File(base));
 				return Bool.TRUE;
 			} else {
-				throw new QueryException(ASErrorCode.APP_GENERATE_INT_ERROR,
+				throw new QueryException(AppFun.APP_GENERATE_INT_ERROR,
 						"Application type not supported");
 			}
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.APP_GENERATE_INT_ERROR, e
+			throw new QueryException(e, AppFun.APP_GENERATE_INT_ERROR, e
 					.getMessage());
 		}
 	}

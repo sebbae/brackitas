@@ -38,9 +38,15 @@ declare function template:head($title as xs:string) as item() {
     <head>
       <meta http-equiv="Content-Type" content="text/html;charset=utf-8"></meta>
       <title>{$title}</title>
-      <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/codemirror.js"/>
-      <link type="text/css" href="http://localhost:8080/apps/appServer/resources/css/layout_vertical_listnav.css" rel="stylesheet"/>
-      <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/brackitHeader.js"/>
+      <link type="text/css" href="http://localhost:8080/appServer/resources/css/layout_vertical_listnav.css" rel="stylesheet"> </link>
+      <link type="text/css" href="http://localhost:8080/appServer/resources/css/codemirror.css" rel="stylesheet"> </link>
+      <script type="text/javascript" src="http://localhost:8080/appServer/resources/js/jquery-1.7.1.js"> </script>
+      <script type="text/javascript" src="http://localhost:8080/appServer/resources/js/brackitHeader.js"> </script>
+      <script type="text/javascript" src="http://localhost:8080/appServer/resources/js/codemirror.js"> </script>
+      <script type="text/javascript" src="http://localhost:8080/appServer/resources/js/xquery.js"> </script>
+      <script type="text/javascript" src="http://localhost:8080/appServer/resources/js/simple-hint.js"> </script>
+      <script type="text/javascript" src="http://localhost:8080/appServer/resources/js/xquery-hint.js"> </script>
+      <script type="text/javascript" src="http://localhost:8080/appServer/resources/js/jquery-ui-1.8.18.min.js"> </script>
     </head>
 };
 
@@ -49,8 +55,8 @@ declare function template:header() as item() {
         <tr>
             <td>
                 <div id="header" align="center">
-                    <a href="http://localhost:8080/apps/appServer/controllers/appController/index">                  
-                        <img align="middle" alt="Brackit" src="http://localhost:8080/apps/appServer/resources/images/brackit.png"></img>
+                    <a href="http://localhost:8080/appServer/controllers/appController/index">                  
+                        <img align="middle" alt="Brackit" src="http://localhost:8080/appServer/resources/images/brackit.png"></img>
                     </a>
                 </div>
             </td>
@@ -105,6 +111,12 @@ declare function template:baseBody($header as item(),
             <div id="col1">
               {$menu}
             </div>
+            <div id="col2">
+              <div id="col2_content" class="clearfix">
+              </div>
+              <!-- IE Column Clearing -->
+              <div id="ie_clearing">   </div>
+            </div>
             <div id="col3">
               <div id="col3_content" class="clearfix">
                 {$content}
@@ -123,6 +135,10 @@ declare function template:baseBody($header as item(),
       </div>
 };
 
+declare function template:footerScript() as item() {
+    <script type="text/javascript" src="http://localhost:8080/appServer/resources/js/footerScript.js"/>
+};
+
 declare function template:base($head as item(),
                       $header as item(),
                       $teaser as item(),
@@ -135,28 +151,7 @@ declare function template:base($head as item(),
     {$head}
     <body>
       {template:baseBody($header,$teaser,$menu,$content,$footerBrackit,$footerYAML)}
-    </body>
-    </html>
-};
-
-declare function template:footerScript() as item() {
-    <script type="text/javascript" src="http://localhost:8080/apps/appServer/resources/js/brackit.js"/>
-};
-
-declare function template:baseFooterScript($head as item(),
-                                  $header as item(),
-                                  $teaser as item(),
-                                  $menu as item(),
-                                  $content as item(),
-                                  $footerBrackit as item(),
-                                  $footerYAML as item(),
-                                  $footerScript as item()) as item() {
-
-    <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-    {$head}
-    <body>
-      {template:baseBody($header,$teaser,$menu,$content,$footerBrackit,$footerYAML)}
-      {$footerScript}      
+      {template:footerScript()}
     </body>
     </html>
 };

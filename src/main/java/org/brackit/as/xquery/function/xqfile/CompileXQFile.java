@@ -35,12 +35,11 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 
-import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.http.HttpConnector;
-import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.as.xquery.ASUncompiledQuery;
+import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -48,8 +47,12 @@ import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -58,11 +61,25 @@ import org.brackit.xquery.xdm.Sequence;
  */
 @FunctionAnnotation(description = "Compiles the given query ($query) and stores "
 		+ "it at the given file path name destination. The file path name "
-		+ "starts from the applications directory, by default: src/main/resources/apps."
+		+ "starts from the applications directory, by default: ~/src/main/resources/apps."
 		+ " The actual process first saves the query on the file path name, then "
 		+ "compiles it. On success, the query is directly available for access "
 		+ "(execution) over HTTP.", parameters = { "$filePathName", "$query" })
 public class CompileXQFile extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(XqfileFun.XQFILE_NSURI,
+			XqfileFun.XQFILE_PREFIX, "compile");
+
+	public CompileXQFile() {
+		this(DEFAULT_NAME);
+	}
+
+	public CompileXQFile(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.BOOL,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One)), true);
+	}
 
 	public CompileXQFile(QNm name, Signature signature) {
 		super(name, signature, true);
@@ -78,31 +95,40 @@ public class CompileXQFile extends AbstractFunction {
 					: fPathName;
 			String fQuery = ((Atomic) args[1]).atomize().stringValue().trim();
 			String app = fPathName.split("/")[0];
-			String base = String.format("%s/%s", HttpConnector.APPS_PATH,
-					fPathName);
 			// saving step
-			FileWriter f = new FileWriter(base);
+			FileWriter f = new FileWriter(String.format("%s/%s",
+					HttpConnector.APPS_PATH, fPathName));
 			BufferedWriter out = new BufferedWriter(f);
 			out.write(fQuery.replaceAll("&", "&amp;"));
 			out.close();
 			// compilation step
-			HttpConnector.compileApplication(new File(String.format("%s/%s",
-					HttpConnector.APPS_PATH, app)));
+			try {
+				HttpConnector.compileApplication(new File(String.format(
+						"%s/%s", HttpConnector.APPS_PATH, app)));
+			} catch (NullPointerException e) {
+			}
 			ServletContext servletCtx = ((ASQueryContext) ctx).getReq()
 					.getServletContext();
-			BaseAppContext bac = (BaseAppContext) servletCtx.getAttribute(app);
+			BaseAppContext bac;
+			try {
+				bac = (BaseAppContext) servletCtx.getAttribute(app);
+			} catch (Exception e) {
+				bac = new BaseAppContext(app, new ASCompileChain(
+						((ASQueryContext) ctx).getMDM(), ((ASQueryContext) ctx)
+								.getTX()));
+			}
 			List<ASUncompiledQuery> l = bac.getUncompiledQueries();
 			Iterator<ASUncompiledQuery> i = l.iterator();
 			while (i.hasNext()) {
 				ASUncompiledQuery a = i.next();
 				if (a.getPath().contains(fPathName))
 					throw new QueryException(a.getE(),
-							ASErrorCode.XQFILE_COMPILE_INT_ERROR, a.getE()
+							XqfileFun.XQFILE_COMPILE_INT_ERROR, a.getE()
 									.getMessage());
 			}
 			return Bool.TRUE;
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.XQFILE_COMPILE_INT_ERROR, e
+			throw new QueryException(e, XqfileFun.XQFILE_COMPILE_INT_ERROR, e
 					.getMessage());
 		}
 	}

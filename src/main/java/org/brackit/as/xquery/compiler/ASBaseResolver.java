@@ -36,4 +36,10 @@ import org.brackit.xquery.compiler.ModuleResolver;
  *
  */
 public class ASBaseResolver extends BaseResolver implements ModuleResolver {
+	
+	public void unregister(String targetNSUri) {
+		if (modules != null) {
+			modules.remove(targetNSUri);
+		}
+	}
 }

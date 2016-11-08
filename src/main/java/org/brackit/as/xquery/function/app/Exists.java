@@ -29,9 +29,7 @@ package org.brackit.as.xquery.function.app;
 
 import java.io.File;
 
-import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.http.HttpConnector;
-import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -39,8 +37,12 @@ import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -49,6 +51,19 @@ import org.brackit.xquery.xdm.Sequence;
  */
 @FunctionAnnotation(description = "Checks whether an application exists or not.", parameters = "$applicationName")
 public class Exists extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(AppFun.APP_NSURI,
+			AppFun.APP_PREFIX, "exist");
+
+	public Exists() {
+		this(DEFAULT_NAME);
+	}
+
+	public Exists(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.BOOL,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One)), true);
+	}
 
 	public Exists(QNm name, Signature signature) {
 		super(name, signature, true);
@@ -59,10 +74,10 @@ public class Exists extends AbstractFunction {
 			Sequence[] args) throws QueryException {
 		try {
 			String app = ((Atomic) args[0]).atomize().stringValue().trim();
-			String base = String.format("%s/%s", HttpConnector.APPS_PATH, app);
-			return new Bool(new File(base).exists());
+			return new Bool(new File(String.format("%s/%s",
+					HttpConnector.APPS_PATH, app)).exists());
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.APP_EXISTS_INT_ERROR, e
+			throw new QueryException(e, AppFun.APP_EXISTS_INT_ERROR, e
 					.getMessage());
 		}
 	}

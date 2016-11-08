@@ -29,9 +29,7 @@ package org.brackit.as.xquery.function.util;
 
 import java.io.File;
 
-import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.http.HttpConnector;
-import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -39,8 +37,12 @@ import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -48,10 +50,23 @@ import org.brackit.xquery.xdm.Sequence;
  * 
  */
 @FunctionAnnotation(description = "Creates a directory starting from the "
-		+ "applications directory, by default: src/main/resources/apps. "
+		+ "applications directory, by default: ~/src/main/resources/apps. "
 		+ "The intermediary folders are created as well when not previously "
 		+ "existent.", parameters = "$dirPathName")
 public class MkDirectory extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(UtilFun.UTIL_NSURI,
+			UtilFun.UTIL_PREFIX, "mk-dir");
+
+	public MkDirectory() {
+		this(DEFAULT_NAME);
+	}
+
+	public MkDirectory(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.BOOL,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One)), true);
+	}
 
 	public MkDirectory(QNm name, Signature signature) {
 		super(name, signature, true);
@@ -64,11 +79,13 @@ public class MkDirectory extends AbstractFunction {
 			String fDirName = ((Atomic) args[0]).atomize().stringValue().trim();
 			fDirName = (fDirName.startsWith("/")) ? fDirName.substring(1)
 					: fDirName;
-			return new Bool(new File(String.format("%s/%s",
-					HttpConnector.APPS_PATH, fDirName)).mkdirs());
+			String s = String
+					.format("%s/%s", HttpConnector.APPS_PATH, fDirName);
+			return new Bool(new File(s).mkdirs());
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.UTIL_MKDIRECTORY_INT_ERROR,
-					e.getMessage());
+			e.printStackTrace();
+			throw new QueryException(e, UtilFun.UTIL_MKDIRECTORY_INT_ERROR, e
+					.getMessage());
 		}
 	}
 }

@@ -67,6 +67,13 @@ declare function rscController:rename() as item() {
         return
             appView:menuContent(appView:createMenu($app),$content)            
 };
+    
+declare function rscController:renameFileForm() as item() {
+    let $fPathName := req:get-parameter("name"),
+        $app := req:get-parameter("app")
+    return
+        rscView:renameFileForm($fPathName,$app)
+};
 
 declare function rscController:delete() as item() {
     let $fPathName := req:get-parameter("name"),

@@ -119,11 +119,6 @@ public class NullHttpServletRequest implements HttpServletRequest {
 	/**
 	 * Unimplemented unnecessary methods.
 	 */
-	@Override
-	public boolean authenticate(HttpServletResponse response)
-			throws IOException, ServletException {
-		return false;
-	}
 
 	@Override
 	public String getAuthType() {
@@ -160,12 +155,10 @@ public class NullHttpServletRequest implements HttpServletRequest {
 		return 0;
 	}
 
-	@Override
 	public Part getPart(String name) throws IOException, ServletException {
 		return null;
 	}
 
-	@Override
 	public Collection<Part> getParts() throws IOException, ServletException {
 		return null;
 	}
@@ -250,15 +243,12 @@ public class NullHttpServletRequest implements HttpServletRequest {
 		return false;
 	}
 
-	@Override
 	public void login(String username, String password) throws ServletException {
 	}
 
-	@Override
 	public void logout() throws ServletException {
 	}
 
-	@Override
 	public AsyncContext getAsyncContext() {
 		return null;
 	}
@@ -278,7 +268,6 @@ public class NullHttpServletRequest implements HttpServletRequest {
 		return null;
 	}
 
-	@Override
 	public DispatcherType getDispatcherType() {
 		return null;
 	}
@@ -288,17 +277,14 @@ public class NullHttpServletRequest implements HttpServletRequest {
 		return null;
 	}
 
-	@Override
 	public String getLocalAddr() {
 		return null;
 	}
 
-	@Override
 	public String getLocalName() {
 		return null;
 	}
 
-	@Override
 	public int getLocalPort() {
 		return 0;
 	}
@@ -348,7 +334,6 @@ public class NullHttpServletRequest implements HttpServletRequest {
 		return null;
 	}
 
-	@Override
 	public int getRemotePort() {
 		return 0;
 	}
@@ -373,17 +358,14 @@ public class NullHttpServletRequest implements HttpServletRequest {
 		return 0;
 	}
 
-	@Override
 	public ServletContext getServletContext() {
 		return null;
 	}
 
-	@Override
 	public boolean isAsyncStarted() {
 		return false;
 	}
 
-	@Override
 	public boolean isAsyncSupported() {
 		return false;
 	}
@@ -406,15 +388,18 @@ public class NullHttpServletRequest implements HttpServletRequest {
 			throws UnsupportedEncodingException {
 	}
 
-	@Override
 	public AsyncContext startAsync() throws IllegalStateException {
 		return null;
 	}
 
-	@Override
 	public AsyncContext startAsync(ServletRequest servletRequest,
 			ServletResponse servletResponse) throws IllegalStateException {
 		return null;
+	}
+
+	public boolean authenticate(HttpServletResponse response)
+			throws IOException, ServletException {
+		return false;
 	}
 
 }

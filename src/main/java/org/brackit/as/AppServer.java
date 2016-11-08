@@ -64,6 +64,10 @@ public class AppServer {
 
 	private HttpConnector connector;
 
+	public BrackitDB getDb() {
+		return db;
+	}
+	
 	public AppServer(boolean install) throws Exception {
 		startDB(install);
 		startHTTP(8080);

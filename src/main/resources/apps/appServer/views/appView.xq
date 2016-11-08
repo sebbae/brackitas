@@ -45,17 +45,6 @@ declare function appView:default($content as item()) as item() {
                   template:footerYAML())
 };
 
-declare function appView:editXQuery($menu as item(), $content as item()) as item() {
-    template:baseFooterScript(template:head("Brackit Application Server"),
-                              template:header(),
-                              template:teaser(),
-                              $menu,
-                              $content,
-                              template:footerBrackit(),
-                              template:footerYAML(), 
-                              template:footerScript())
-};
-
 declare function appView:menuContent($menu as item(), $content as item()) as item() {
     template:base(template:head("Brackit Application Server"),
                   template:header(),
@@ -121,13 +110,13 @@ declare function appView:listing($dir as item()*, $app as xs:string, $base as xs
           <p>
             <a>{fn:data($dir/@name)}</a>
             <a href="../fileController/mkDir?app={$app}&amp;name={$base}">
-                <img align="right" width="16" height="16" alt="Create a new folder" title="Create a new folder" src="http://localhost:8080/apps/appServer/resources/images/03_folder.gif"/>            
+                <img align="right" width="16" height="16" alt="Create a new folder" title="Create a new folder" src="http://localhost:8080/appServer/resources/images/03_folder.gif"/>            
             </a>
             <a href="../fileController/upload?app={$app}&amp;name={$base}">
-                <img align="right" width="16" height="16" alt="Upload file" title="Upload file" src="http://localhost:8080/apps/appServer/resources/images/02_upload.gif"/>
+                <img align="right" width="16" height="16" alt="Upload file" title="Upload file" src="http://localhost:8080/appServer/resources/images/02_upload.gif"/>
             </a>
             <a href="../fileController/create?app={$app}&amp;name={$base}">
-                <img align="right" width="16" height="16" alt="Create new XQuery file" title="Create new XQuery file" src="http://localhost:8080/apps/appServer/resources/images/01_create.gif"/>
+                <img align="right" width="16" height="16" alt="Create new XQuery file" title="Create new XQuery file" src="http://localhost:8080/appServer/resources/images/01_create.gif"/>
             </a>
           </p>
         </li>
@@ -194,6 +183,11 @@ declare function appView:createMenu($app as xs:string) as item() {
     </ul>
 };
 
+declare function appView:createMenuRequest() as item() {
+    let $app := req:get-parameter("app")
+    return appView:createMenu($app)
+};
+
 declare function appView:createAppForm() as item() {
     <form action="./create">
         <table style="width: 100%; background-color: rgb(224, 224, 240);">
@@ -237,24 +231,27 @@ declare function appView:createAppFormError($msg as xs:string) as item() {
 declare function appView:generateFileOptions($fPathName as xs:string,
                                              $app as xs:string,
                                              $compile as xs:boolean) as item() {
-  <div class="hlist">
+  <div id="fileOptions" class="hlist">
     <ul>
       <li>
         <strong> File: {$fPathName}  </strong>
       </li>
       <li>
-          <input align="middle" type="submit" name="action" value="rename"/>
+        <div id="addForm"><a>add form</a></div>
       </li>      
       <li>
-          <input align="middle" type="submit" name="action" value="save"/>
+        <div id="rename"><a>rename</a></div>
+      </li>      
+      <li>
+        <div id="save"><a>save</a></div>
       </li>
       { if ($compile) then
       <li>
-        <input align="middle" type="submit" name="action" value="compile"/>
+        <div id="compile"><a>compile</a></div>    
       </li>
       else ""}
       <li>
-        <input align="middle" type="submit" name="action" value="delete" onclick="return confirm('Are you sure you want to delete?')"/>
+        <div id="delete"><a>delete</a></div>
       </li>
       <li>
         { 
@@ -265,12 +262,12 @@ declare function appView:generateFileOptions($fPathName as xs:string,
             else 
                  0
         return
-            <button type="button" onclick="{fn:concat("testIt(new Boolean(",$button,"),'",$xqf,"')")}">test it</button>
+            <div id="rename"><a onclick="{fn:concat("testIt(new Boolean(",$button,"),'",$xqf,"')")}">test it</a></div>
         }
-        <input type="hidden" name="name" value="{$fPathName}"/>
-        <input type="hidden" name="app" value="{$app}"/>        
+        <input type="hidden" id="name" name="name" value="{$fPathName}"/>
+        <input type="hidden" id="app" name="app" value="{$app}"/>        
       </li>
-    </ul>
+    </ul>    
   </div>
 };
 
@@ -282,12 +279,13 @@ declare function appView:generateTextArea($fPathName as xs:string) as item() {
                       fn:string-length(req:get-parameter("query")) > 0) then
                       req:get-parameter("query")
                   else
-                      bit:load-file($fPathName)),
+                      io:read(fn:concat(util:get-property("apps.directory"), $fPathName))),
               "</textarea>")
 };
 
 declare function appView:editQuery($resource as xs:string,
                                    $app as xs:string,
+                                   $msg as xs:string,
                                    $compile as xs:boolean) as item() {
   <form action="../fileController/action" method="post">
     <table style="width:100%;">
@@ -298,33 +296,9 @@ declare function appView:editQuery($resource as xs:string,
       </tr>
       <tr>
         <td>
-          <div class="textwrapper">
-            {appView:generateTextArea($resource)}            
-          </div>
+          <div id="editorMessage" align="center">{$msg}</div>
         </td>
-      </tr>
-    </table>
-  </form>  
-};
-
-declare function appView:editQueryAfterAction($resource as xs:string,
-                                              $app as xs:string,
-                                              $msg as xs:string,
-                                              $compile as xs:boolean) as item() {
-  <form action="../fileController/action" method="post">
-    <table style="width:100%;">
-      <tr>
-        <td>
-          {appView:generateFileOptions($resource,$app,$compile)}
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <div align="center">
-            {$msg}
-          </div>
-        </td>
-      </tr>
+      </tr>    
       <tr>
         <td>
           <div class="textwrapper">

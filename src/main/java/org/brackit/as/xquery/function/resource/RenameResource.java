@@ -29,9 +29,7 @@ package org.brackit.as.xquery.function.resource;
 
 import java.io.File;
 
-import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.http.HttpConnector;
-import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -39,8 +37,12 @@ import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * #
@@ -50,9 +52,22 @@ import org.brackit.xquery.xdm.Sequence;
  */
 @FunctionAnnotation(description = "Renames the given resource. The resource path "
 		+ "($rscPathName) starts at the applications directory, by default: "
-		+ "src/main/resources/apps.", parameters = { "$rscPathName",
-		"$rscNewName" })
+		+ "/apps.", parameters = { "$rscPathName", "$rscNewName" })
 public class RenameResource extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(ResourceFun.RESOURCE_NSURI,
+			ResourceFun.RESOURCE_PREFIX, "rename");
+
+	public RenameResource() {
+		this(DEFAULT_NAME);
+	}
+
+	public RenameResource(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.BOOL,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One)), true);
+	}
 
 	public RenameResource(QNm name, Signature signature) {
 		super(name, signature, true);
@@ -73,7 +88,7 @@ public class RenameResource extends AbstractFunction {
 					baseOld.lastIndexOf("/")), fNewName);
 			return new Bool(new File(baseOld).renameTo(new File(baseNew)));
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.RSC_RENAME_INT_ERROR, e
+			throw new QueryException(e, ResourceFun.RSC_RENAME_INT_ERROR, e
 					.getMessage());
 		}
 	}

@@ -33,19 +33,21 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
-import org.brackit.as.annotation.FunctionAnnotation;
-import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.function.AbstractFunction;
-import org.brackit.xquery.xdm.Signature;
 import org.brackit.xquery.module.StaticContext;
 import org.brackit.xquery.sequence.ItemSequence;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.xquery.xdm.Item;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AnyItemType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -55,6 +57,18 @@ import org.brackit.xquery.xdm.Sequence;
 @FunctionAnnotation(description = "Returns a sequence containing the names of all "
 		+ "session attributes defined within the current HTTP session.", parameters = "")
 public class GetAttributeNames extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(SessionFun.SESSION_NSURI,
+			SessionFun.SESSION_PREFIX, "get-attribute-names");
+
+	public GetAttributeNames() {
+		this(DEFAULT_NAME);
+	}
+
+	public GetAttributeNames(QNm name) {
+		super(name, new Signature(new SequenceType(AnyItemType.ANY,
+				Cardinality.ZeroOrMany)), true);
+	}
 
 	public GetAttributeNames(QNm name, Signature signature) {
 		super(name, signature, true);
@@ -74,7 +88,7 @@ public class GetAttributeNames extends AbstractFunction {
 			return new ItemSequence(result);
 		} catch (Exception e) {
 			throw new QueryException(e,
-					ASErrorCode.SESSION_GETATTRIBUTENAMES_INT_ERROR, e
+					SessionFun.SESSION_GETATTRIBUTENAMES_INT_ERROR, e
 							.getMessage());
 		}
 	}

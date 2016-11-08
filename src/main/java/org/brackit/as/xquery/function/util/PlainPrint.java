@@ -29,20 +29,23 @@ package org.brackit.as.xquery.function.util;
 
 import java.io.PrintStream;
 
-import org.brackit.as.annotation.FunctionAnnotation;
-import org.brackit.as.util.FunctionUtils;
-import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.function.AbstractFunction;
-import org.brackit.xquery.xdm.Signature;
 import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.node.SubtreePrinter;
-import org.brackit.xquery.xdm.Node;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
+import org.brackit.xquery.util.io.IOUtils;
+import org.brackit.xquery.xdm.Item;
+import org.brackit.xquery.xdm.Iter;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AnyItemType;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -50,9 +53,22 @@ import org.brackit.xquery.xdm.Sequence;
  * 
  */
 @FunctionAnnotation(description = "Prints a plain version of any given string"
-		+ "value to the default output. Solves problems like printing \"&lt;\" " +
-		"or \"&gt;\" that would be interpreted by the browser as HTML content.", parameters = "$string")
+		+ "value to the default output. Solves problems like printing \"&lt;\" "
+		+ "or \"&gt;\" that would be interpreted by the browser as HTML content.", parameters = "$string")
 public class PlainPrint extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(UtilFun.UTIL_NSURI,
+			UtilFun.UTIL_PREFIX, "plain-print");
+
+	public PlainPrint() {
+		this(DEFAULT_NAME);
+	}
+
+	public PlainPrint(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.STR,
+				Cardinality.ZeroOrOne), new SequenceType(AnyItemType.ANY,
+				Cardinality.One)), true);
+	}
 
 	public PlainPrint(QNm name, Signature signature) {
 		super(name, signature, true);
@@ -61,22 +77,29 @@ public class PlainPrint extends AbstractFunction {
 	@Override
 	public Sequence execute(StaticContext sctx, QueryContext ctx,
 			Sequence[] args) throws QueryException {
+		String vQuery = null;
+		PrintStream buf = IOUtils.createBuffer();
 		try {
-			String vQuery = null;
-			if (args[0] instanceof Atomic) {
-				vQuery = ((Atomic) args[0]).stringValue().trim();
-			} else {
-				PrintStream buf = FunctionUtils.createBuffer();
-				SubtreePrinter s = new SubtreePrinter(buf);
-				s.setPrettyPrint(true);
-				s.print((Node<?>) args[0]);
+			Iter it = args[0].iterate();
+			try {
+				Item item;
+				while ((item = it.next()) != null) {
+					buf.append(item.toString());
+					buf.append('\n');
+				}
 				vQuery = buf.toString();
+			} catch (Exception e) {
+				vQuery = ((Atomic) args[0]).stringValue().trim();
+			} finally {
+				it.close();
 			}
-			vQuery = vQuery.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-			return new Str(vQuery);
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.UTIL_PLAINPRINT_INT_ERROR,
-					e.getMessage());
+			throw new QueryException(e, UtilFun.UTIL_PLAINPRINT_INT_ERROR, e
+					.getMessage());
+		} finally {
+			buf.close();
 		}
+		vQuery = vQuery.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+		return new Str(vQuery);
 	}
 }

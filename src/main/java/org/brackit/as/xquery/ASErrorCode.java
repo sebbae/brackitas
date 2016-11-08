@@ -29,6 +29,7 @@ package org.brackit.as.xquery;
 
 import org.brackit.xquery.ErrorCode;
 import org.brackit.xquery.atomic.QNm;
+import org.brackit.xquery.compiler.Bits;
 import org.brackit.xquery.module.Namespaces;
 
 /**
@@ -77,8 +78,8 @@ public class ASErrorCode extends ErrorCode {
 	public static final QNm BIT_DROPCOLLECTION_INT_ERROR = new QNm(
 			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "BIT0003");
 
-	public static final QNm BIT_EVAL_INT_ERROR = new QNm(Namespaces.BIT_NSURI,
-			Namespaces.BIT_PREFIX, "BIT0004");
+	public static final QNm BIT_EVAL_INT_ERROR = new QNm(Bits.BIT_NSURI,
+			Bits.BIT_PREFIX, "BIT0004");
 
 	public static final QNm BIT_EXISTCOLLECTION_INT_ERROR = new QNm(
 			Namespaces.ERR_NSURI, Namespaces.ERR_PREFIX, "BIT0005");

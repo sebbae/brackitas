@@ -32,6 +32,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.Properties;
 import java.util.Random;
 
 import javax.activation.MimetypesFileTypeMap;
@@ -41,7 +43,6 @@ import javax.servlet.http.HttpSessionListener;
 
 import org.brackit.as.context.BaseAppContext;
 import org.brackit.as.http.app.FrontController;
-import org.brackit.as.util.FunctionUtils;
 import org.brackit.as.xquery.compiler.ASBaseResolver;
 import org.brackit.as.xquery.compiler.ASCompileChain;
 import org.brackit.server.metadata.manager.MetaDataMgr;
@@ -50,6 +51,7 @@ import org.brackit.server.session.SessionException;
 import org.brackit.server.session.SessionMgr;
 import org.brackit.server.tx.IsolationLevel;
 import org.brackit.xquery.QueryException;
+import org.brackit.xquery.util.io.IOUtils;
 import org.brackit.xquery.util.log.Logger;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.session.HashSessionIdManager;
@@ -62,6 +64,9 @@ import org.eclipse.jetty.util.log.Log;
  * 
  */
 public class HttpConnector {
+
+	// TODO: insert /
+	public static final String BRACKITAS_PROPERTY_FILE = "brackitas.properties";
 
 	private static class SessionEndListener implements HttpSessionListener {
 
@@ -86,11 +91,11 @@ public class HttpConnector {
 		}
 	}
 
-	public static final String APPS_PATH = "src/main/resources/apps";
+	public static final String APPS_PATH = readsAppDirectory();
 
 	public static final String APP_MIME_TYPES = "mimeTypes";
 
-	private static final String APP_CONTROLLER_PREFIX = "/apps/*";
+	private static final String APP_CONTROLLER_PREFIX = "/*";
 
 	private static final Logger log = Logger.getLogger(HttpConnector.class);
 
@@ -108,14 +113,29 @@ public class HttpConnector {
 		servletContextHandler.setAttribute(MetaDataMgr.class.getName(), mdm);
 		servletContextHandler.setAttribute(SessionMgr.class.getName(),
 				sessionMgr);
-		servletContextHandler
-				.setAttribute(APP_MIME_TYPES, this.loadMimeTypes());
+		servletContextHandler.setAttribute(APP_MIME_TYPES, loadMimeTypes());
 		servletContextHandler.addEventListener(new SessionEndListener(
 				sessionMgr));
 		servletContextHandler.addServlet(FrontController.class,
 				APP_CONTROLLER_PREFIX);
 		sch = servletContextHandler;
 		processDeployment(servletContextHandler, sessionMgr, mdm);
+	}
+
+	private static String readsAppDirectory() {
+		try {
+			Reader reader = new InputStreamReader(
+					HttpConnector.class.getClassLoader().getResourceAsStream(
+							HttpConnector.BRACKITAS_PROPERTY_FILE));
+			Properties p = new Properties();
+			p.load(reader);
+			return p.getProperty("apps.directory");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public void start() throws Exception {
@@ -142,19 +162,15 @@ public class HttpConnector {
 
 	private void processDeployment(ServletContextHandler sch,
 			SessionMgr sessionMgr, MetaDataMgr mdm) {
-		System.out.println("Deploy applications ... ");
 		File f = new File(APPS_PATH);
-
 		try {
 			Session session = sessionMgr.getSession(sessionMgr.login());
 			session.setIsolationLevel(IsolationLevel.NONE);
 			if (f.isDirectory()) {
 				File[] apps = f.listFiles();
-				for (int i = 0; i < apps.length; i++) {
-					if (apps[i].isDirectory()) {
+				for (int i = 0; i < apps.length; i++)
+					if (apps[i].isDirectory())
 						compileApplication(apps[i]);
-					}
-				}
 			}
 		} catch (Exception e) {
 			log.error(e);
@@ -184,8 +200,8 @@ public class HttpConnector {
 			} else {
 				if (f[i].getName().endsWith(".xq")) {
 					try {
-						String s = FunctionUtils.getNormalizedPath(f[i]);
-						bac.register(resolvePath(s), f[i].lastModified());
+						String s = IOUtils.getNormalizedPath(f[i]);
+						bac.register(s, f[i].lastModified());
 					} catch (Exception e) {
 						log.error(e);
 					}
@@ -215,21 +231,15 @@ public class HttpConnector {
 			throw new FileNotFoundException("Failed to delete file: " + f);
 	}
 
-	public static String resolvePath(String p) {
-		p = p.substring("src/main/resources".length());
-		return p;
-	}
-
-	private MimetypesFileTypeMap loadMimeTypes() {
+	public static MimetypesFileTypeMap loadMimeTypes() {
 		MimetypesFileTypeMap mimeMap = new MimetypesFileTypeMap();
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(
-					getClass().getClassLoader().getResourceAsStream(
+					HttpConnector.class.getClassLoader().getResourceAsStream(
 							"mime.types")));
 			String strLine = null;
-			while ((strLine = br.readLine()) != null) {
+			while ((strLine = br.readLine()) != null)
 				mimeMap.addMimeTypes(strLine);
-			}
 			br.close();
 		} catch (IOException e) {
 			log.error("Could not load mime types", e);

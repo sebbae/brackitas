@@ -33,19 +33,21 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.brackit.as.annotation.FunctionAnnotation;
-import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.atomic.Str;
 import org.brackit.xquery.function.AbstractFunction;
-import org.brackit.xquery.xdm.Signature;
 import org.brackit.xquery.module.StaticContext;
 import org.brackit.xquery.sequence.ItemSequence;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.xquery.xdm.Item;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AnyItemType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -55,6 +57,18 @@ import org.brackit.xquery.xdm.Sequence;
 @FunctionAnnotation(description = "Returns a sequence containing the names of all "
 		+ "parameters available.", parameters = "")
 public class GetParameterNames extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(RequestFun.REQUEST_NSURI,
+			RequestFun.REQUEST_PREFIX, "get-parameter-names");
+
+	public GetParameterNames() {
+		this(DEFAULT_NAME);
+	}
+
+	public GetParameterNames(QNm name) {
+		super(name, new Signature(new SequenceType(AnyItemType.ANY,
+				Cardinality.ZeroOrMany)), true);
+	}
 
 	public GetParameterNames(QNm name, Signature signature) {
 		super(name, signature, true);
@@ -74,7 +88,7 @@ public class GetParameterNames extends AbstractFunction {
 			return new ItemSequence(result);
 		} catch (Exception e) {
 			throw new QueryException(e,
-					ASErrorCode.REQ_GETPARAMETERNAMES_INT_ERROR, e.getMessage());
+					RequestFun.REQ_GETPARAMETERNAMES_INT_ERROR, e.getMessage());
 		}
 	}
 }

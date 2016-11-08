@@ -32,8 +32,8 @@ import java.util.Date;
 
 import javax.servlet.http.HttpSession;
 
-import org.brackit.as.annotation.FunctionAnnotation;
-import org.brackit.as.xquery.ASErrorCode;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
+
 import org.brackit.as.xquery.ASQueryContext;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
@@ -42,6 +42,9 @@ import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
 import org.brackit.xquery.xdm.Signature;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -50,6 +53,18 @@ import org.brackit.xquery.xdm.Sequence;
  */
 @FunctionAnnotation(description = "Returns the creation time of session object in the given format: yyyy-MM-dd-HH:mm.", parameters = "")
 public class GetCreationTime extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(SessionFun.SESSION_NSURI,
+			SessionFun.SESSION_PREFIX, "get-creation-time");
+
+	public GetCreationTime() {
+		this(DEFAULT_NAME);
+	}
+
+	public GetCreationTime(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.DATI,
+				Cardinality.ZeroOrOne)), true);
+	}
 
 	public GetCreationTime(QNm name, Signature signature) {
 		super(name, signature, true);
@@ -60,12 +75,12 @@ public class GetCreationTime extends AbstractFunction {
 			Sequence[] args) throws QueryException {
 		try {
 			HttpSession httpSession = ((ASQueryContext) ctx).getHttpSession();
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH:mm");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 			Date resultdate = new Date(httpSession.getCreationTime());
-			return new org.brackit.xquery.atomic.Date(sdf.format(resultdate));
+			return new org.brackit.xquery.atomic.DateTime(sdf.format(resultdate));
 		} catch (Exception e) {
 			throw new QueryException(e,
-					ASErrorCode.SESSION_GETCREATIONTIME_INT_ERROR, e
+					SessionFun.SESSION_GETCREATIONTIME_INT_ERROR, e
 							.getMessage());
 		}
 	}

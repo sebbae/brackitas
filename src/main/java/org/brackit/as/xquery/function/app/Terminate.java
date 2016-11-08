@@ -27,9 +27,7 @@
  */
 package org.brackit.as.xquery.function.app;
 
-import org.brackit.as.annotation.FunctionAnnotation;
 import org.brackit.as.http.HttpConnector;
-import org.brackit.as.xquery.ASErrorCode;
 import org.brackit.xquery.QueryContext;
 import org.brackit.xquery.QueryException;
 import org.brackit.xquery.atomic.Atomic;
@@ -37,8 +35,12 @@ import org.brackit.xquery.atomic.Bool;
 import org.brackit.xquery.atomic.QNm;
 import org.brackit.xquery.function.AbstractFunction;
 import org.brackit.xquery.module.StaticContext;
-import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.util.annotation.FunctionAnnotation;
 import org.brackit.xquery.xdm.Sequence;
+import org.brackit.xquery.xdm.Signature;
+import org.brackit.xquery.xdm.type.AtomicType;
+import org.brackit.xquery.xdm.type.Cardinality;
+import org.brackit.xquery.xdm.type.SequenceType;
 
 /**
  * 
@@ -49,6 +51,19 @@ import org.brackit.xquery.xdm.Sequence;
 		+ "Termination does not mean the application will be deleted or altered."
 		+ "It simply guaranties that none of the queries are executed.", parameters = "$applicationName")
 public class Terminate extends AbstractFunction {
+
+	public static final QNm DEFAULT_NAME = new QNm(AppFun.APP_NSURI,
+			AppFun.APP_PREFIX, "terminate");
+
+	public Terminate() {
+		this(DEFAULT_NAME);
+	}
+
+	public Terminate(QNm name) {
+		super(name, new Signature(new SequenceType(AtomicType.BOOL,
+				Cardinality.One), new SequenceType(AtomicType.STR,
+				Cardinality.One)), true);
+	}
 
 	public Terminate(QNm name, Signature signature) {
 		super(name, signature, true);
@@ -62,7 +77,7 @@ public class Terminate extends AbstractFunction {
 			HttpConnector.terminateApplication(name);
 			return Bool.TRUE;
 		} catch (Exception e) {
-			throw new QueryException(e, ASErrorCode.APP_TERMINATE_INT_ERROR, e
+			throw new QueryException(e, AppFun.APP_TERMINATE_INT_ERROR, e
 					.getMessage());
 		}
 	}
